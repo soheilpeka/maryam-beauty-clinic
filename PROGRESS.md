@@ -31,6 +31,21 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
 - [x] Mock email/SMS provider (swappable) + rate limiting on slots + bookings
 - [x] Unit + integration tests: slot DST, same-start/partial-overlap/back-to-back,
       concurrency, and reschedule-via-PATCH at the route layer
+- [x] PRE-PHASE-4 AUDIT 2026-09-21 (tsc clean, npm test 43/43 over 5 files, build passes):
+      (1) DST slot tests present - slots-dst.test.ts covers both 2026 America/Toronto
+      transitions on the boundary days themselves (Mar 8 spring forward: 09:00 local =
+      13:00 UTC / UTC-4; Nov 1 fall back: 09:00 local = 14:00 UTC / UTC-5), plus same
+      local grid vs shifting UTC, bookings/days off on those days.
+      (2) Token tests were missing expired + tampered + wrong-booking -> ADDED
+      src/tests/tokens.test.ts (valid control, expired, tampered payload, tampered
+      signature, wrong-secret forgery, wrong issuer, malformed inputs) and 3 route-layer
+      cases in reschedule-route.test.ts (token issued for a different booking -> 403 with
+      the booking untouched; reschedule of an already-cancelled booking -> 404; DELETE
+      idempotent on an already-cancelled booking).
+      (3) Test-DB isolation mechanism was present but unasserted -> added a guard test:
+      DATABASE_URL must equal testDbUrl() when the route is imported, a row written by the
+      handler must be readable via the test client, and prisma/dev.db must stay
+      byte-for-byte the same size across the whole run.
 
 ## Phase 4 - Admin dashboard
 - [ ] Secure login (hashed passwords, safe errors)

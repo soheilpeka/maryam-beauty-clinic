@@ -9,6 +9,8 @@
  * fail instead of returning 200.
  */
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
+import fs from "node:fs";
+import path from "node:path";
 import { NextRequest } from "next/server";
 import { useTestDb, seedTestSalon, resetBookings, closeTestDb, testDbUrl } from "@/tests/db";
 import { signBookingToken } from "@/lib/tokens";
@@ -16,8 +18,11 @@ import { resetRateLimiter } from "@/lib/rate-limit";
 import { localToUtc, parseDayKey, toLocalMinutes } from "@/lib/datetime";
 import type { PrismaClient } from "@prisma/client";
 
+const DEV_DB_PATH = path.join(process.cwd(), "prisma", "dev.db");
+
 let prisma: PrismaClient;
 let salon: { serviceId: string; staffId: string };
+let devDbSizeBefore = 0;
 // Imported after DATABASE_URL points at the test DB (see beforeAll) so the module's
 // memoized PrismaClient talks to the throwaway database instead of dev.db.
 let route: typeof import("@/app/api/bookings/[ref]/route");
@@ -92,6 +97,9 @@ beforeAll(async () => {
   salon = await seedTestSalon(prisma);
   dayKey = nextWorkingDayKey();
   route = await import("@/app/api/bookings/[ref]/route");
+  // Snapshot dev.db last, after every client above has been created: the whole suite must
+  // leave it byte-for-byte untouched.
+  devDbSizeBefore = fs.statSync(DEV_DB_PATH).size;
 });
 
 afterAll(async () => {
@@ -154,6 +162,24 @@ describe("PATCH /api/bookings/[ref] (reschedule via secure link)", () => {
     expect(res.status).toBe(403);
   });
 
+  it("rejects a token issued for a different booking (403)", async () => {
+    const owner = await createBookingRow(START_A, "owner@example.com");
+    const other = await createBookingRow(START_FREE, "other@example.com");
+    // A perfectly valid token - but for `other`. It must not touch `owner`'s booking.
+    const token = await signBookingToken({ sub: other.id, cust: other.customerId });
+
+    const res = await route.PATCH(
+      patchRequest(owner.ref, { token, dayKey, startMinutes: START_FREE }),
+      { params: Promise.resolve({ ref: owner.ref }) },
+    );
+
+    expect(res.status).toBe(403);
+    expect((await res.json()).error).toBe("INVALID_TOKEN");
+
+    const reloaded = await prisma.booking.findUniqueOrThrow({ where: { id: owner.id } });
+    expect(toLocalMinutes(reloaded.startUtc)).toBe(START_A);
+  });
+
   it("rejects a body with no new slot (400 VALIDATION)", async () => {
     const booking = await createBookingRow(START_A, "no-slot@example.com");
     const token = await signBookingToken({ sub: booking.id, cust: booking.customerId });
@@ -164,6 +190,24 @@ describe("PATCH /api/bookings/[ref] (reschedule via secure link)", () => {
 
     expect(res.status).toBe(400);
     expect((await res.json()).error).toBe("VALIDATION");
+  });
+
+  it("refuses to reschedule a booking that is already cancelled (404)", async () => {
+    const booking = await createBookingRow(START_A, "cancelled-reschedule@example.com");
+    const token = await signBookingToken({ sub: booking.id, cust: booking.customerId });
+    await prisma.booking.update({ where: { id: booking.id }, data: { status: "CANCELLED" } });
+
+    const res = await route.PATCH(
+      patchRequest(booking.ref, { token, dayKey, startMinutes: START_FREE }),
+      { params: Promise.resolve({ ref: booking.ref }) },
+    );
+
+    expect(res.status).toBe(404);
+    expect((await res.json()).error).toBe("NOT_FOUND");
+
+    const reloaded = await prisma.booking.findUniqueOrThrow({ where: { id: booking.id } });
+    expect(reloaded.status).toBe("CANCELLED");
+    expect(toLocalMinutes(reloaded.startUtc)).toBe(START_A);
   });
 });
 
@@ -181,5 +225,41 @@ describe("DELETE /api/bookings/[ref] (cancel via secure link)", () => {
 
     const reloaded = await prisma.booking.findUniqueOrThrow({ where: { id: booking.id } });
     expect(reloaded.status).toBe("CANCELLED");
+  });
+
+  it("is idempotent on an already cancelled booking", async () => {
+    const booking = await createBookingRow(START_A, "cancel-again@example.com");
+    const token = await signBookingToken({ sub: booking.id, cust: booking.customerId });
+    await prisma.booking.update({ where: { id: booking.id }, data: { status: "CANCELLED" } });
+
+    const res = await route.DELETE(deleteRequest(booking.ref, token), {
+      params: Promise.resolve({ ref: booking.ref }),
+    });
+
+    expect(res.status).toBe(200);
+    expect((await res.json()).status).toBe("CANCELLED");
+  });
+});
+
+describe("test database isolation", () => {
+  it("routes all reads and writes to the test DB, never dev.db", async () => {
+    // The route caches its client on globalThis, so correctness depends on it having been
+    // created while DATABASE_URL pointed at the throwaway test database.
+    expect(process.env.DATABASE_URL).toBe(testDbUrl());
+
+    // Behavioral proof the route and the test client share one database: the handler
+    // writes a row the test client reads back.
+    const booking = await createBookingRow(START_A, "isolation@example.com");
+    const token = await signBookingToken({ sub: booking.id, cust: booking.customerId });
+    const res = await route.PATCH(
+      patchRequest(booking.ref, { token, dayKey, startMinutes: START_FREE }),
+      { params: Promise.resolve({ ref: booking.ref }) },
+    );
+    expect(res.status).toBe(200);
+    const reloaded = await prisma.booking.findUniqueOrThrow({ where: { id: booking.id } });
+    expect(toLocalMinutes(reloaded.startUtc)).toBe(START_FREE);
+
+    // The production database was left untouched by the entire file.
+    expect(fs.statSync(DEV_DB_PATH).size).toBe(devDbSizeBefore);
   });
 });
