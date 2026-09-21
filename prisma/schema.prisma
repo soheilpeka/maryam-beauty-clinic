@@ -1,0 +1,220 @@
+// Maryam Beauty Clinic - Prisma schema
+// All datetimes are stored as UTC and rendered in the salon timezone (see SALON_TIMEZONE).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+/// A service offered by the salon (price is integer cents, CAD).
+model Service {
+  id          String   @id @default(cuid())
+  /// Stable key used to link translations and booking references
+  slug        String   @unique
+  name        String
+  description String?
+  /// Price in cents (CAD)
+  price       Int
+  /// Duration in minutes
+  duration    Int
+  /// Service category used for grouping on the public site
+  category    String   @default("General")
+  /// Optional buffer minutes added after the service before the next booking
+  bufferMin   Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  order       Int      @default(0)
+  bookings    Booking[]
+  services    StaffService[]
+
+  @@index([active])
+}
+
+model Staff {
+  id          String         @id @default(cuid())
+  /// Stable key used for translations
+  slug        String         @unique
+  name        String
+  role        String         @default("Specialist")
+  bio         String?
+  avatarUrl   String?
+  active      Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  bookings    Booking[]
+  services    StaffService[]
+  schedules   StaffSchedule[]
+  daysOff     DayOff[]
+
+  @@index([active])
+}
+
+/// Many-to-many between staff and the services they can perform.
+model StaffService {
+  staffId   String
+  serviceId String
+  staff     Staff   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([staffId, serviceId])
+}
+
+/// Weekly recurring availability per staff member. startTime/endTime are minutes-from-midnight
+/// in the salon timezone, dayOfWeek is 0=Sunday..6=Saturday (JS Date.getDay()).
+model StaffSchedule {
+  id        String      @id @default(cuid())
+  staffId   String
+  dayOfWeek Int
+  startTime Int
+  endTime   Int
+  staff     Staff       @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  breaks    Break[]
+
+  @@unique([staffId, dayOfWeek, startTime])
+  @@index([staffId, dayOfWeek])
+}
+
+/// A break inside a StaffSchedule window (minutes-from-midnight, salon local time).
+model Break {
+  id        String       @id @default(cuid())
+  scheduleId String
+  startTime Int
+  endTime   Int
+  schedule  StaffSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@index([scheduleId])
+}
+
+/// Full or partial days off (vacation, holidays). Optional start/end minutes allow half days.
+/// Dates are stored as UTC midnight of the salon-local date.
+model DayOff {
+  id       String   @id @default(cuid())
+  staffId  String?
+  staff    Staff?   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  date     DateTime
+  /// Optional partial-day off, minutes-from-midnight salon local time
+  startMin Int?
+  endMin   Int?
+  note     String?
+
+  @@index([staffId, date])
+}
+
+/// Normalized customer record, keyed by email so repeat bookings are linked.
+model Customer {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  phone     String
+  notes     String?
+  createdAt DateTime  @default(now())
+  bookings  Booking[]
+
+  @@index([email])
+}
+
+model Booking {
+  id         String       @id @default(cuid())
+  /// Public reference shown to the customer
+  ref        String       @unique
+  customerId String
+  serviceId  String
+  staffId    String
+  /// UTC start of the appointment
+  startUtc   DateTime
+  /// UTC end = start + service duration + buffer
+  endUtc     DateTime
+  status     BookingStatus @default(PENDING)
+  /// Total price in cents (CAD) snapshot at booking time
+  priceTotal Int
+  /// Optional customer note
+  note       String?
+  /// Timestamp of the last status change
+  updatedAt  DateTime     @updatedAt
+  createdAt  DateTime     @default(now())
+
+  customer   Customer     @relation(fields: [customerId], references: [id])
+  service    Service      @relation(fields: [serviceId], references: [id])
+  staff      Staff        @relation(fields: [staffId], references: [id])
+
+  /// Race-safety: one staff member can have only one booking starting at a given UTC instant.
+  @@unique([staffId, startUtc])
+  @@index([serviceId, startUtc])
+  @@index([customerId])
+  @@index([status, startUtc])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+/// Salon-level configuration (single row, id = "default").
+model BusinessSetting {
+  id                String  @id @default("default")
+  name              String  @default("Maryam Beauty Clinic")
+  timezone          String  @default("America/Toronto")
+  currency          String  @default("CAD")
+  phone             String?
+  email             String?
+  address           String?
+  city              String?
+  mapEmbedUrl       String?
+  /// Minutes to book in the future at minimum (lead time)
+  leadTimeMin       Int     @default(60)
+  /// How many days ahead customers can book
+  bookingWindowDays Int     @default(60)
+  slotIntervalMin   Int     @default(30)
+}
+
+/// DEMO placeholder gallery image metadata. Do not imply real customer photos.
+model GalleryItem {
+  id       String  @id @default(cuid())
+  title    String
+  imageUrl String
+  altText  String
+  active   Boolean @default(true)
+  order    Int     @default(0)
+}
+
+/// DEMO placeholder FAQ entry. Marked demo in the seed; these are editorial samples.
+model FaqItem {
+  id       String  @id @default(cuid())
+  question String
+  answer   String
+  locale   String
+  active   Boolean @default(true)
+  order    Int     @default(0)
+
+  @@index([locale, active])
+}
+
+/// DEMO placeholder testimonial. Explicitly a demo entry, not a real customer review.
+model Review {
+  id     String  @id @default(cuid())
+  author String
+  /// DEMO marker is enforced in the seed; rating is a placeholder
+  rating Int
+  text   String
+  locale String
+  source String  @default("demo")
+  active Boolean @default(true)
+  order  Int     @default(0)
+
+  @@index([locale, active])
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  /// bcrypt hash, never the plaintext
+  passwordHash String
+  name         String?
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+}

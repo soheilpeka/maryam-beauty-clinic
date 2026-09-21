@@ -1,0 +1,237 @@
+{
+  "Meta": {
+    "title": "Maryam Beauty Clinic | Clinique de beaute a Montreal",
+    "description": "Reservez soins du visage, sourcils, cils et massage a la clinique Maryam Beauty Clinic a Montreal. Reservation en ligne, specialistes experts, une experience calme et elegante.",
+    "bookingTitle": "Prendre rendez-vous | Maryam Beauty Clinic",
+    "bookingDescription": "Choisissez un service, un specialiste, une date et une heure, puis confirmez votre rendez-vous en quelques secondes."
+  },
+  "Nav": {
+    "home": "Accueil",
+    "services": "Services",
+    "staff": "Notre equipe",
+    "gallery": "Galerie",
+    "reviews": "Avis",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "book": "Reserver",
+    "admin": "Admin",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "switchLanguage": "Passer au francais",
+    "languageCode": "FR",
+    "toggleTheme": "Activer le mode sombre",
+    "skipToContent": "Aller au contenu"
+  },
+  "Hero": {
+    "eyebrow": "Clinique de beaute a Montreal",
+    "title": "Revelez votre eclat naturel",
+    "subtitle": "Soins avancees, sourcils, cils et massage dans un espace calme et elegant. Reservez en ligne en moins d'une minute.",
+    "cta": "Prendre rendez-vous",
+    "ctaSecondary": "Voir les services",
+    "stat1": "Annees d'experience",
+    "stat2": "Specialistes",
+    "stat3": "Soins"
+  },
+  "Sections": {
+    "servicesTitle": "Nos services",
+    "servicesSubtitle": "Prix et durees transparents. Reservez le soin qui convient a votre journee.",
+    "staffTitle": "Notre equipe",
+    "staffSubtitle": "Des specialistes certifies qui prennent le temps de comprendre votre peau.",
+    "galleryTitle": "Dans la clinique",
+    "gallerySubtitle": "Photos demo de notre espace. Remplacez-les par de vraies photos avant le lancement.",
+    "reviewsTitle": "Ce que disent nos clientes",
+    "reviewsSubtitle": "Temoignages demo affiches en tant qu'exemples pour ce projet.",
+    "faqTitle": "Questions frequentes",
+    "contactTitle": "Contactez-nous",
+    "contactSubtitle": "Rendez-vous-nous a Montreal ou envoyez-nous un message.",
+    "from": "a partir de",
+    "viewAll": "Tout voir",
+    "demoBadge": "Contenu demo"
+  },
+  "Service": {
+    "min": "min",
+    "hour": "h",
+    "perPerson": "par personne",
+    "book": "Reserver"
+  },
+  "Contact": {
+    "phoneLabel": "Telephone",
+    "emailLabel": "Courriel",
+    "addressLabel": "Adresse",
+    "hoursLabel": "Heures d'ouverture",
+    "nameLabel": "Votre nom",
+    "emailLabelField": "Courriel",
+    "messageLabel": "Message",
+    "send": "Envoyer le message",
+    "sending": "Envoi...",
+    "sent": "Merci ! Votre message a ete envoye. Ceci est un formulaire demo.",
+    "mapTitle": "Placeholder de carte"
+  },
+  "Footer": {
+    "about": "Une clinique de beaute au coeur de Montreal, concentree sur les soins efficaces et une experience apaisante.",
+    "quickLinks": "Liens rapides",
+    "contact": "Contact",
+    "hours": "Heures",
+    "rights": "Tous droits reserves.",
+    "demoNotice": "Site demo. Le contenu est des donnees d'exemple."
+  },
+  "Booking": {
+    "title": "Prendre rendez-vous",
+    "step": "Etape {current} sur {total}",
+    "steps": {
+      "service": "Service",
+      "staff": "Specialiste",
+      "date": "Date et heure",
+      "details": "Vos coordonnees",
+      "confirm": "Confirmation"
+    },
+    "chooseService": "Choisissez un service",
+    "chooseStaff": "Choisissez un specialiste",
+    "anyStaff": "Tous les specialistes",
+    "anyStaffHint": "Nous choisirons le premier specialiste disponible.",
+    "staffFor": "Specialistes pour ce service",
+    "chooseDate": "Choisissez une date et une heure",
+    "chooseDetails": "Vos coordonnees",
+    "selectDate": "Choisissez une date",
+    "selectTime": "Choisissez une heure",
+    "morning": "Matin",
+    "afternoon": "Apres-midi",
+    "evening": "Soir",
+    "noSlots": "Aucune heure disponible ce jour. Veuillez choisir une autre date.",
+    "loadingSlots": "Chargement des horaires disponibles...",
+    "back": "Retour",
+    "continue": "Continuer",
+    "confirm": "Confirmer le rendez-vous",
+    "confirming": "Confirmation...",
+    "summary": "Resume du rendez-vous",
+    "service": "Service",
+    "specialist": "Specialiste",
+    "date": "Date",
+    "time": "Heure",
+    "duration": "Duree",
+    "price": "Prix",
+    "total": "Total",
+    "noteLabel": "Note (optionnel)",
+    "notePlaceholder": "Quelque chose que nous devrions savoir ?",
+    "nameLabel": "Nom complet",
+    "emailLabel": "Courriel",
+    "phoneLabel": "Telephone",
+    "successTitle": "Votre rendez-vous est reserve",
+    "successBody": "Nous avons envoye une confirmation a {email}. Conservez le lien ci-dessous pour gerer votre rendez-vous.",
+    "manageLink": "Gerer / annuler votre rendez-vous",
+    "bookAnother": "Prendre un autre rendez-vous",
+    "errorGeneric": "Une erreur est survenue. Veuillez reessayer.",
+    "errorSlotTaken": "Cette heure vient d'etre reservee. Veuillez choisir une autre heure.",
+    "errorConflict": "Ce creneau est deja reserve. Veuillez choisir une autre heure.",
+    "errorClosed": "Nous sommes fermes ce jour. Veuillez choisir une autre date.",
+    "errorTooSoon": "Les rendez-vous doivent etre pris au moins une heure a l'avance.",
+    "editDetails": "Modifier les coordonnees"
+  },
+  "Manage": {
+    "title": "Gerer votre rendez-vous",
+    "bookingRef": "Reference",
+    "reschedule": "Replanifier",
+    "cancel": "Annuler le rendez-vous",
+    "save": "Enregistrer",
+    "canceledTitle": "Rendez-vous annule",
+    "canceledBody": "Votre rendez-vous a ete annule. Vous pouvez reprendre rendez-vous a tout moment.",
+    "invalidLinkTitle": "Lien invalide ou expire",
+    "invalidLinkBody": "Ce lien de rendez-vous n'est pas valide ou a expire. Contactez-nous si vous avez besoin d'aide.",
+    "status": {
+      "PENDING": "En attente de confirmation",
+      "CONFIRMED": "Confirme",
+      "CANCELLED": "Annule",
+      "COMPLETED": "Termine",
+      "NO_SHOW": "Non presente"
+    },
+    "confirmCancel": "Annuler ce rendez-vous ? Cette action est irreversible."
+  },
+  "Validation": {
+    "name": {
+      "min": "Veuillez saisir votre nom complet (au moins 2 caracteres).",
+      "max": "Le nom est trop long (80 caracteres maximum)."
+    },
+    "email": {
+      "invalid": "Veuillez saisir une adresse courriel valide."
+    },
+    "phone": {
+      "invalid": "Veuillez saisir un numero de telephone valide (au moins 7 chiffres)."
+    },
+    "note": {
+      "max": "La note est trop longue (500 caracteres maximum)."
+    },
+    "service": {
+      "required": "Veuillez choisir un service."
+    },
+    "staff": {
+      "required": "Veuillez choisir un specialiste."
+    },
+    "date": {
+      "invalid": "Veuillez choisir une date valide."
+    },
+    "password": {
+      "min": "Le mot de passe doit contenir au moins 8 caracteres."
+    },
+    "form": "Veuillez corriger les champs surlignes."
+  },
+  "Admin": {
+    "title": "Tableau de bord admin",
+    "signIn": "Se connecter",
+    "email": "Courriel",
+    "password": "Mot de passe",
+    "signInButton": "Se connecter",
+    "signingIn": "Connexion...",
+    "signOut": "Se deconnecter",
+    "invalidCredentials": "Courriel ou mot de passe invalide.",
+    "dashboard": "Tableau de bord",
+    "calendar": "Calendrier",
+    "bookings": "Rendez-vous",
+    "services": "Services",
+    "staff": "Equipe",
+    "customers": "Clientes",
+    "settings": "Parametres",
+    "stats": {
+      "title": "Statistiques",
+      "today": "Aujourd'hui",
+      "upcoming": "A venir",
+      "revenue": "Revenus prevus",
+      "perDay": "Rendez-vous par jour",
+      "popular": "Services populaires",
+      "noData": "Aucun rendez-vous encore."
+    },
+    "approve": "Approuver",
+    "cancel": "Annuler",
+    "cancelBooking": "Annuler le rendez-vous",
+    "confirmCancel": "Annuler ce rendez-vous ? La cliente sera informee.",
+    "customer": "Cliente",
+    "service": "Service",
+    "specialist": "Specialiste",
+    "when": "Quand",
+    "status": "Statut",
+    "price": "Prix",
+    "actions": "Actions",
+    "noBookings": "Aucun rendez-vous ce jour.",
+    "prevDay": "Jour precedent",
+    "nextDay": "Jour suivant",
+    "today": "Aujourd'hui",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "duration": "Duree (min)",
+    "buffer": "Marge (min)",
+    "priceCents": "Prix (CAD)",
+    "category": "Categorie",
+    "save": "Enregistrer",
+    "saved": "Enregistre",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "name": "Nom",
+    "role": "Role",
+    "email": "Courriel",
+    "phone": "Telephone",
+    "workingHours": "Heures de travail",
+    "daysOff": "Jours de congé",
+    "logout": "Se deconnecter",
+    "unauthorized": "Vous n'etes pas connecte."
+  }
+}

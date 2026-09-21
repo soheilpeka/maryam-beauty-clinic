@@ -1,0 +1,237 @@
+{
+  "Meta": {
+    "title": "Maryam Beauty Clinic | Beauty Clinic in Montreal",
+    "description": "Book facials, brows, lashes and massage at Maryam Beauty Clinic in Montreal. Online booking, expert specialists, a calm and elegant experience.",
+    "bookingTitle": "Book an appointment | Maryam Beauty Clinic",
+    "bookingDescription": "Choose a service, specialist, date and time, then confirm your booking in seconds."
+  },
+  "Nav": {
+    "home": "Home",
+    "services": "Services",
+    "staff": "Our Team",
+    "gallery": "Gallery",
+    "reviews": "Reviews",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "book": "Book now",
+    "admin": "Admin",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "switchLanguage": "Switch to French",
+    "languageCode": "EN",
+    "toggleTheme": "Toggle dark mode",
+    "skipToContent": "Skip to content"
+  },
+  "Hero": {
+    "eyebrow": "Beauty clinic in Montreal",
+    "title": "Reveal your natural glow",
+    "subtitle": "Advanced skincare, brows, lashes and massage in a calm, elegant space. Book online in under a minute.",
+    "cta": "Book an appointment",
+    "ctaSecondary": "View services",
+    "stat1": "Years of experience",
+    "stat2": "Specialists",
+    "stat3": "Treatments"
+  },
+  "Sections": {
+    "servicesTitle": "Our services",
+    "servicesSubtitle": "Transparent prices and durations. Book the treatment that fits your day.",
+    "staffTitle": "Meet the team",
+    "staffSubtitle": "Certified specialists who take the time to understand your skin.",
+    "galleryTitle": "Inside the clinic",
+    "gallerySubtitle": "Demo photos of our space. Replace with real photos before launch.",
+    "reviewsTitle": "What guests say",
+    "reviewsSubtitle": "Demo testimonials shown as placeholders for this sample project.",
+    "faqTitle": "Frequently asked questions",
+    "contactTitle": "Contact us",
+    "contactSubtitle": "Visit us in Montreal or send us a message.",
+    "from": "from",
+    "viewAll": "View all",
+    "demoBadge": "Demo content"
+  },
+  "Service": {
+    "min": "min",
+    "hour": "h",
+    "perPerson": "per person",
+    "book": "Book"
+  },
+  "Contact": {
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "addressLabel": "Address",
+    "hoursLabel": "Opening hours",
+    "nameLabel": "Your name",
+    "emailLabelField": "Email",
+    "messageLabel": "Message",
+    "send": "Send message",
+    "sending": "Sending...",
+    "sent": "Thank you! Your message has been sent. This is a demo form.",
+    "mapTitle": "Map placeholder"
+  },
+  "Footer": {
+    "about": "A beauty clinic in the heart of Montreal, focused on results-driven skincare and a calming experience.",
+    "quickLinks": "Quick links",
+    "contact": "Contact",
+    "hours": "Hours",
+    "rights": "All rights reserved.",
+    "demoNotice": "Demo site. Content is placeholder data."
+  },
+  "Booking": {
+    "title": "Book an appointment",
+    "step": "Step {current} of {total}",
+    "steps": {
+      "service": "Service",
+      "staff": "Specialist",
+      "date": "Date & time",
+      "details": "Your details",
+      "confirm": "Confirmation"
+    },
+    "chooseService": "Choose a service",
+    "chooseStaff": "Choose a specialist",
+    "anyStaff": "Any specialist",
+    "anyStaffHint": "We will pick the first available specialist.",
+    "staffFor": "Specialists who perform this service",
+    "chooseDate": "Choose a date and time",
+    "chooseDetails": "Your contact details",
+    "selectDate": "Select a date",
+    "selectTime": "Select a time",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "noSlots": "No times available on this day. Please try another date.",
+    "loadingSlots": "Loading available times...",
+    "back": "Back",
+    "continue": "Continue",
+    "confirm": "Confirm booking",
+    "confirming": "Confirming...",
+    "summary": "Booking summary",
+    "service": "Service",
+    "specialist": "Specialist",
+    "date": "Date",
+    "time": "Time",
+    "duration": "Duration",
+    "price": "Price",
+    "total": "Total",
+    "noteLabel": "Note (optional)",
+    "notePlaceholder": "Anything we should know?",
+    "nameLabel": "Full name",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "successTitle": "Your appointment is booked",
+    "successBody": "We sent a confirmation to {email}. Keep the link below to manage your appointment.",
+    "manageLink": "Manage / cancel your booking",
+    "bookAnother": "Book another appointment",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "errorSlotTaken": "This time was just taken. Please choose another time.",
+    "errorConflict": "This slot is already booked. Please choose another time.",
+    "errorClosed": "We are closed on this day. Please choose another date.",
+    "errorTooSoon": "Bookings must be made at least an hour in advance.",
+    "editDetails": "Edit details"
+  },
+  "Manage": {
+    "title": "Manage your booking",
+    "bookingRef": "Reference",
+    "reschedule": "Reschedule",
+    "cancel": "Cancel booking",
+    "save": "Save changes",
+    "canceledTitle": "Booking canceled",
+    "canceledBody": "Your appointment has been canceled. You can book again any time.",
+    "invalidLinkTitle": "Invalid or expired link",
+    "invalidLinkBody": "This booking link is not valid or has expired. Please contact us if you need help.",
+    "status": {
+      "PENDING": "Pending confirmation",
+      "CONFIRMED": "Confirmed",
+      "CANCELLED": "Canceled",
+      "COMPLETED": "Completed",
+      "NO_SHOW": "Did not show"
+    },
+    "confirmCancel": "Cancel this appointment? This cannot be undone."
+  },
+  "Validation": {
+    "name": {
+      "min": "Please enter your full name (at least 2 characters).",
+      "max": "Name is too long (80 characters max)."
+    },
+    "email": {
+      "invalid": "Please enter a valid email address."
+    },
+    "phone": {
+      "invalid": "Please enter a valid phone number (at least 7 digits)."
+    },
+    "note": {
+      "max": "The note is too long (500 characters max)."
+    },
+    "service": {
+      "required": "Please choose a service."
+    },
+    "staff": {
+      "required": "Please choose a specialist."
+    },
+    "date": {
+      "invalid": "Please choose a valid date."
+    },
+    "password": {
+      "min": "Password must be at least 8 characters."
+    },
+    "form": "Please correct the highlighted fields."
+  },
+  "Admin": {
+    "title": "Admin dashboard",
+    "signIn": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "signInButton": "Sign in",
+    "signingIn": "Signing in...",
+    "signOut": "Sign out",
+    "invalidCredentials": "Invalid email or password.",
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "bookings": "Bookings",
+    "services": "Services",
+    "staff": "Staff",
+    "customers": "Customers",
+    "settings": "Settings",
+    "stats": {
+      "title": "Statistics",
+      "today": "Today",
+      "upcoming": "Upcoming",
+      "revenue": "Projected revenue",
+      "perDay": "Bookings per day",
+      "popular": "Popular services",
+      "noData": "No bookings yet."
+    },
+    "approve": "Approve",
+    "cancel": "Cancel",
+    "cancelBooking": "Cancel booking",
+    "confirmCancel": "Cancel this booking? The customer will be notified.",
+    "customer": "Customer",
+    "service": "Service",
+    "specialist": "Specialist",
+    "when": "When",
+    "status": "Status",
+    "price": "Price",
+    "actions": "Actions",
+    "noBookings": "No bookings on this day.",
+    "prevDay": "Previous day",
+    "nextDay": "Next day",
+    "today": "Today",
+    "active": "Active",
+    "inactive": "Inactive",
+    "duration": "Duration (min)",
+    "buffer": "Buffer (min)",
+    "priceCents": "Price (CAD)",
+    "category": "Category",
+    "save": "Save",
+    "saved": "Saved",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "name": "Name",
+    "role": "Role",
+    "email": "Email",
+    "phone": "Phone",
+    "workingHours": "Working hours",
+    "daysOff": "Days off",
+    "logout": "Sign out",
+    "unauthorized": "You are not signed in."
+  }
+}
