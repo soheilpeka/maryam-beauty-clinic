@@ -139,8 +139,9 @@ model Booking {
   service    Service      @relation(fields: [serviceId], references: [id])
   staff      Staff        @relation(fields: [staffId], references: [id])
 
-  /// Race-safety: one staff member can have only one booking starting at a given UTC instant.
-  @@unique([staffId, startUtc])
+  /// Race-safety is enforced by an atomic INSERT ... WHERE NOT EXISTS (overlap) in
+  /// src/lib/booking.ts; see the note there for why a (staffId, startUtc) unique index is
+  /// deliberately NOT used (it would also block re-booking a slot after a cancellation).
   @@index([serviceId, startUtc])
   @@index([customerId])
   @@index([status, startUtc])

@@ -131,6 +131,16 @@
     "title": "Manage your booking",
     "bookingRef": "Reference",
     "reschedule": "Reschedule",
+    "rescheduleHint": "Pick a new date and time below.",
+    "newDate": "New date",
+    "newTime": "New time",
+    "saving": "Saving...",
+    "rescheduledTitle": "Appointment moved",
+    "rescheduledBody": "Your appointment is now on {when}.",
+    "errorSlotGone": "That time is no longer available. Please choose another.",
+    "back": "Back",
+    "noSlots": "No times available on this day. Try another date.",
+    "loadingSlots": "Loading available times...",
     "cancel": "Cancel booking",
     "save": "Save changes",
     "canceledTitle": "Booking canceled",
@@ -235,3 +245,4 @@
     "unauthorized": "You are not signed in."
   }
 }
+

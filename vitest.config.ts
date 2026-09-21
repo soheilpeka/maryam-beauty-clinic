@@ -9,6 +9,12 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    // The booking tests share one throwaway SQLite file (prisma/test.db) that a test file
+    // recreates in beforeAll and disconnects from in afterAll. Run files sequentially:
+    // with parallel workers one file deletes the DB while another process still has it
+    // open, and on Windows the open handle keeps the table data alive so the recreate
+    // fails with "table already exists".
+    fileParallelism: false,
     globals: true,
     setupFiles: ["./src/tests/setup.ts"],
     include: ["src/**/*.{test,spec}.{ts,tsx}"],

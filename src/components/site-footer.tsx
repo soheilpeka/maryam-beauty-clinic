@@ -1,10 +1,11 @@
-import { useTranslations } from "next-intl";
+import { getTranslations, getLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { prisma } from "@/lib/prisma";
 
 export async function SiteFooter() {
-  const t = useTranslations("Footer");
-  const tNav = useTranslations("Nav");
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: "Footer" });
+  const tNav = await getTranslations({ locale, namespace: "Nav" });
   const setting = await prisma.businessSetting.findUnique({ where: { id: "default" } });
 
   return (

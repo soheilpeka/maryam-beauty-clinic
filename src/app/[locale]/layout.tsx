@@ -8,9 +8,6 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import "../globals.css";
 
-// Pages read from the database on every request (bookings, availability), so render on demand.
-export const dynamic = "force-dynamic";
-
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }

@@ -1,9 +1,10 @@
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 
 export default async function NotFoundPage({ params }: { params?: Promise<{ locale?: string }> }) {
   const resolved = await params;
   const locale = resolved?.locale === "fr" ? "fr" : "en";
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Nav" });
 
   return (

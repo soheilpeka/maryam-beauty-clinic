@@ -131,6 +131,16 @@
     "title": "Gerer votre rendez-vous",
     "bookingRef": "Reference",
     "reschedule": "Replanifier",
+    "rescheduleHint": "Choisissez une nouvelle date et heure ci-dessous.",
+    "newDate": "Nouvelle date",
+    "newTime": "Nouvelle heure",
+    "saving": "Enregistrement...",
+    "rescheduledTitle": "Rendez-vous deplace",
+    "rescheduledBody": "Votre rendez-vous est maintenant le {when}.",
+    "errorSlotGone": "Cet horaire n'est plus disponible. Veuillez en choisir un autre.",
+    "back": "Retour",
+    "noSlots": "Aucun horaire disponible ce jour. Essayez une autre date.",
+    "loadingSlots": "Chargement des horaires disponibles...",
     "cancel": "Annuler le rendez-vous",
     "save": "Enregistrer",
     "canceledTitle": "Rendez-vous annule",
@@ -235,3 +245,4 @@
     "unauthorized": "Vous n'etes pas connecte."
   }
 }
+

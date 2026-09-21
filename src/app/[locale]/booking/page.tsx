@@ -3,8 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { BookingFlow } from "@/components/booking/booking-flow";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata({
   params,
 }: {
