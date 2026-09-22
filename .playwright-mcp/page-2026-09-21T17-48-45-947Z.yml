@@ -1,0 +1,320 @@
+- generic [ref=f1e3]:
+  - region "top of page"
+  - generic [ref=f1e10]:
+    - banner [ref=f1e11]:
+      - generic [ref=f1e17]:
+        - generic:
+          - generic:
+            - generic "0decae_20dcbe2628e24e9b904b02bfddb14f13~mv2.png" [ref=f1e18] [cursor=pointer]:
+              - link [ref=f1e19]:
+                - /url: https://www.maryambeautyclinic.ca
+                - img "Maryam Beauty Clinic LOGO" [ref=f1e20]
+            - navigation "Site" [ref=f1e22]:
+              - list [ref=f1e23]:
+                - listitem [ref=f1e24] [cursor=pointer]:
+                  - link [ref=f1e25]:
+                    - /url: https://www.maryambeautyclinic.ca/blog
+                    - paragraph [ref=f1e28]: BLOG
+                - listitem [ref=f1e29] [cursor=pointer]:
+                  - link [ref=f1e30]:
+                    - /url: https://www.maryambeautyclinic.ca/book-online
+                    - paragraph [ref=f1e33]: BOOK ONLINE
+                - listitem [ref=f1e34] [cursor=pointer]:
+                  - link [ref=f1e35]:
+                    - /url: https://www.maryambeautyclinic.ca/pricing-plans/packages
+                    - paragraph [ref=f1e38]: PACKAGES
+                - listitem [ref=f1e39] [cursor=pointer]:
+                  - link [ref=f1e40]:
+                    - /url: https://www.maryambeautyclinic.ca
+                    - paragraph [ref=f1e43]: CONTACT
+                - listitem [ref=f1e44] [cursor=pointer]:
+                  - paragraph [ref=f1e48]: More
+            - heading [level=1] [ref=f1e49]:
+              - link "Maryam Beauty Clinic" [ref=f1e51] [cursor=pointer]:
+                - /url: https://www.maryambeautyclinic.ca
+            - button "Log In" [ref=f1e53] [cursor=pointer]
+            - button [ref=f1e64] [cursor=pointer]
+    - main [ref=f1e69]:
+      - generic [ref=f1e74]:
+        - list "Social Bar" [ref=f1e76]:
+          - listitem [ref=f1e77]:
+            - link "Facebook" [ref=f1e78] [cursor=pointer]:
+              - /url: https://www.facebook.com/profile.php?id=61551878311257
+              - img "Facebook" [ref=f1e79]
+          - listitem [ref=f1e80]:
+            - link "Insragram" [ref=f1e81] [cursor=pointer]:
+              - /url: https://www.instagram.com/maryambeauty_academy/
+              - img "Insragram" [ref=f1e82]
+        - navigation "Page" [ref=f1e83]:
+          - list [ref=f1e84]:
+            - listitem [ref=f1e85]:
+              - link "HOME":
+                - /url: https://www.maryambeautyclinic.ca
+                - img [ref=f1e86] [cursor=pointer]
+            - listitem [ref=f1e89]:
+              - link "WINTER SPECIALS":
+                - /url: https://www.maryambeautyclinic.ca
+                - img [ref=f1e90] [cursor=pointer]
+            - listitem [ref=f1e92]:
+              - link "BOOK NOW":
+                - /url: https://www.maryambeautyclinic.ca
+                - img [ref=f1e93] [cursor=pointer]
+            - listitem [ref=f1e95]:
+              - link "TESTIMONIALS":
+                - /url: https://www.maryambeautyclinic.ca
+                - img [ref=f1e96] [cursor=pointer]
+            - listitem [ref=f1e98]:
+              - link "CONTACT":
+                - /url: https://www.maryambeautyclinic.ca
+                - img [ref=f1e99] [cursor=pointer]
+            - listitem [ref=f1e101]:
+              - link "Gallery":
+                - /url: https://www.maryambeautyclinic.ca
+                - img [ref=f1e102] [cursor=pointer]
+        - generic:
+          - generic:
+            - generic:
+              - generic [ref=f1e104]:
+                - generic:
+                  - generic:
+                    - heading "Welcome to Maryam Beauty Clinic" [level=3] [ref=f1e109]
+                    - heading "Experience the Best of Beauty Treatments" [level=6] [ref=f1e114]
+              - generic [ref=f1e115]:
+                - generic:
+                  - generic:
+                    - generic [ref=f1e124]:
+                      - generic:
+                        - generic:
+                          - generic [ref=f1e128]:
+                            - generic:
+                              - generic:
+                                - heading "Laser" [level=6] [ref=f1e131]
+                                - link "BOOK NOW" [ref=f1e134] [cursor=pointer]:
+                                  - /url: https://www.maryambeautyclinic.ca/book-online
+                          - generic [ref=f1e136]:
+                            - generic:
+                              - generic:
+                                - heading "Microneedling" [level=6] [ref=f1e139]
+                                - link "BOOK NOW" [ref=f1e142] [cursor=pointer]:
+                                  - /url: https://www.maryambeautyclinic.ca/book-online
+                          - img "Laser hair removal, Get visibly smooth skin with our advanced laser hair removal. We carefully customize each treatment for long-lasting results." [ref=f1e146]
+                          - img "Facial treatment, Our Phi certified esthetician performs organic facial using gentle products and new technology like Microneedling for smooth and healthy glowing skin" [ref=f1e149]
+                          - generic [ref=f1e150]:
+                            - generic:
+                              - generic:
+                                - heading "Facial" [level=6] [ref=f1e153]
+                                - link "BOOK NOW" [ref=f1e155] [cursor=pointer]:
+                                  - /url: https://www.maryambeautyclinic.ca/book-online
+                          - img "3-2.png" [ref=f1e159]
+                          - img "Body contouring, Advanced RF body contouring technology targets fat cells on the abdomen and love handles for a toned and slender figure" [ref=f1e162]
+                          - generic [ref=f1e163]:
+                            - generic:
+                              - generic:
+                                - heading "Body Contouring" [level=6] [ref=f1e166]
+                                - link "BOOK NOW" [ref=f1e169] [cursor=pointer]:
+                                  - /url: https://www.maryambeautyclinic.ca/book-online
+                    - generic [ref=f1e176]:
+                      - generic:
+                        - generic:
+                          - generic [ref=f1e180]:
+                            - generic:
+                              - generic:
+                                - heading "Hair growth Treatment" [level=6] [ref=f1e183]
+                                - link "BOOK NOW" [ref=f1e186] [cursor=pointer]:
+                                  - /url: https://www.maryambeautyclinic.ca/book-online
+                          - img "Hair growth, Our experts use state-of-the-art hair restoration technology including Microneedling for healthy, thick hair growth among men and women" [ref=f1e190]
+                          - img "Eyebrow Microblading, Our Phi Certified estheticians use new techniques to enhance eyebrows' shape that beautifully complement facial features" [ref=f1e193]
+                          - search [ref=f1e198]:
+                            - searchbox "Search..." [ref=f1e208]
+                    - generic [ref=f1e209]:
+                      - generic:
+                        - generic:
+                          - heading "Eyebrow Microblading" [level=6] [ref=f1e212]
+                          - link "BOOK NOW" [ref=f1e216] [cursor=pointer]:
+                            - /url: https://www.maryambeautyclinic.ca/book-online
+              - generic [ref=f1e218]:
+                - generic:
+                  - generic:
+                    - heading "View Gallery" [level=2] [ref=f1e222]
+                    - paragraph [ref=f1e223]:
+                      - generic [ref=f1e224]: There may be no better way to communicate what we do than through images. As you browse our site, take a few moments to let your eyes linger here, and see if you can get a feel for our signature touch.
+                    - region [ref=f1e231]:
+                      - generic [ref=f1e233]:
+                        - generic [ref=f1e234] [cursor=pointer]:
+                          - button "image"
+                        - generic [aria-hidden] [ref=f1e240] [cursor=pointer]:
+                          - button
+                        - generic [aria-hidden] [ref=f1e246] [cursor=pointer]:
+                          - button
+                        - generic [aria-hidden] [ref=f1e252] [cursor=pointer]:
+                          - button
+                        - generic [aria-hidden] [ref=f1e264] [cursor=pointer]:
+                          - button
+                        - generic [aria-hidden] [ref=f1e276] [cursor=pointer]:
+                          - button
+                        - generic [aria-hidden] [ref=f1e282] [cursor=pointer]:
+                          - button
+                        - generic [aria-hidden] [ref=f1e294] [cursor=pointer]:
+                          - button
+                        - generic [aria-hidden] [ref=f1e300] [cursor=pointer]:
+                          - button
+                        - generic [aria-hidden] [ref=f1e306] [cursor=pointer]:
+                          - button
+              - generic [ref=f1e318]:
+                - generic:
+                  - generic:
+                    - region "WINTER SPECIALS"
+                    - generic [ref=f1e332]:
+                      - generic:
+                        - generic:
+                          - heading "Special Offers" [level=2] [ref=f1e335]
+                          - paragraph [ref=f1e338]:
+                            - generic [ref=f1e339]: Get exciting discount on our services
+                          - paragraph [ref=f1e340]:
+                            - generic [ref=f1e341]: "January Special:"
+                          - link "BOOK NOW" [ref=f1e343] [cursor=pointer]:
+                            - /url: https://www.maryambeautyclinic.ca/book-online
+              - generic [ref=f1e345]:
+                - generic:
+                  - generic:
+                    - region "BOOK NOW"
+                    - generic [ref=f1e354]:
+                      - generic:
+                        - generic:
+                          - heading "Popular services" [level=2] [ref=f1e359]
+                          - list [ref=f1e369]:
+                            - listitem [ref=f1e370]:
+                              - group "Service Information" [ref=f1e373]:
+                                - generic [ref=f1e374]:
+                                  - generic [ref=f1e375]:
+                                    - link "Women's Laser Hair removal" [ref=f1e377] [cursor=pointer]:
+                                      - /url: https://www.maryambeautyclinic.ca/service-page/laser-hair-removal
+                                      - heading "Women's Laser Hair removal" [level=2] [ref=f1e378]
+                                    - paragraph [ref=f1e380]: From $70 (depends on the area)
+                                    - separator [ref=f1e381]
+                                  - generic [ref=f1e382]:
+                                    - paragraph [ref=f1e383]: 30 min
+                                    - generic [ref=f1e384]: 70 Canadian dollars
+                                    - paragraph [aria-hidden] [ref=f1e385]: $70
+                                - button "More Info" [ref=f1e388] [cursor=pointer]
+                            - listitem [ref=f1e390]:
+                              - group "Service Information" [ref=f1e393]:
+                                - generic [ref=f1e394]:
+                                  - generic [ref=f1e395]:
+                                    - link "Hair growth Treatment" [ref=f1e397] [cursor=pointer]:
+                                      - /url: https://www.maryambeautyclinic.ca/service-page/hair-growth-treatment
+                                      - heading "Hair growth Treatment" [level=2] [ref=f1e398]
+                                    - paragraph [ref=f1e400]: From $200 (depends on the area)
+                                    - separator [ref=f1e401]
+                                  - generic [ref=f1e402]:
+                                    - paragraph [ref=f1e403]: 30 min
+                                    - generic [ref=f1e404]: 200 Canadian dollars
+                                    - paragraph [aria-hidden] [ref=f1e405]: $200
+                                - button "More Info" [ref=f1e408] [cursor=pointer]
+                            - listitem [ref=f1e410]:
+                              - group "Service Information" [ref=f1e413]:
+                                - generic [ref=f1e414]:
+                                  - generic [ref=f1e415]:
+                                    - link "Microneedling" [ref=f1e417] [cursor=pointer]:
+                                      - /url: https://www.maryambeautyclinic.ca/service-page/microneedling
+                                      - heading "Microneedling" [level=2] [ref=f1e418]
+                                    - paragraph [ref=f1e420]: From $200 (depends on the area)
+                                    - separator [ref=f1e421]
+                                  - generic [ref=f1e422]:
+                                    - paragraph [ref=f1e423]: 1 hr 30 min
+                                    - generic [ref=f1e424]: 200 Canadian dollars
+                                    - paragraph [aria-hidden] [ref=f1e425]: $200
+                                - button "More Info" [ref=f1e428] [cursor=pointer]
+                            - listitem [ref=f1e430]:
+                              - group "Service Information" [ref=f1e433]:
+                                - generic [ref=f1e434]:
+                                  - generic [ref=f1e435]:
+                                    - link "Facial Classic" [ref=f1e437] [cursor=pointer]:
+                                      - /url: https://www.maryambeautyclinic.ca/service-page/facial-classic
+                                      - heading "Facial Classic" [level=2] [ref=f1e438]
+                                    - paragraph [ref=f1e440]: $100
+                                    - separator [ref=f1e441]
+                                  - generic [ref=f1e442]:
+                                    - paragraph [ref=f1e443]: 1 hr
+                                    - generic [ref=f1e444]: 100 Canadian dollars
+                                    - paragraph [aria-hidden] [ref=f1e445]: $100
+                                - button "More Info" [ref=f1e448] [cursor=pointer]
+                            - listitem [ref=f1e450]:
+                              - group "Service Information" [ref=f1e453]:
+                                - generic [ref=f1e454]:
+                                  - generic [ref=f1e455]:
+                                    - link "Microblading" [ref=f1e457] [cursor=pointer]:
+                                      - /url: https://www.maryambeautyclinic.ca/service-page/microblading
+                                      - heading "Microblading" [level=2] [ref=f1e458]
+                                    - paragraph [ref=f1e460]: From $450
+                                    - separator [ref=f1e461]
+                                  - generic [ref=f1e462]:
+                                    - paragraph [ref=f1e463]: 2 hr
+                                    - generic [ref=f1e464]: 550 Canadian dollars
+                                    - paragraph [aria-hidden] [ref=f1e465]: $550
+                                - button "More Info" [ref=f1e468] [cursor=pointer]
+              - generic [ref=f1e470]:
+                - generic:
+                  - generic:
+                    - region "TESTIMONIALS"
+                    - generic [ref=f1e479]:
+                      - generic:
+                        - generic:
+                          - heading "Testimonials" [level=2] [ref=f1e484]
+                          - paragraph [ref=f1e486]: I am so happy with the service I received at Maryam Beauty Clinic. The staff was friendly and professional, and the results were amazing. I would definitely recommend this place to anyone looking for quality beauty treatments.
+                          - heading "“" [level=4] [ref=f1e487]
+                          - paragraph [ref=f1e488]: I recently visited Maryam Beauty Clinic for a facial, and I was blown away by the results. My skin looked and felt amazing after just one treatment. I will definitely be going back for more services in the future.
+                          - heading "“" [level=4] [ref=f1e489]
+                          - paragraph [ref=f1e490]: I had an amazing experience at Maryam Beauty Clinic. The staff was knowledgeable and professional, and the treatments were top-notch. I would highly recommend this place to anyone looking for a relaxing and rejuvenating beauty experience.
+                          - heading "“" [level=4] [ref=f1e491]
+                          - paragraph [ref=f1e492]:
+                            - generic [ref=f1e493]: Samantha Smith, Thornhill
+                          - paragraph [ref=f1e494]:
+                            - generic [ref=f1e495]: Amy Jones, North York
+                          - paragraph [ref=f1e496]:
+                            - generic [ref=f1e497]: Olivia Heart, Richmond Hill
+              - generic [ref=f1e498]:
+                - generic:
+                  - generic:
+                    - generic [ref=f1e514]:
+                      - generic:
+                        - generic:
+                          - heading "Visit Us" [level=2] [ref=f1e517]
+                          - generic:
+                            - paragraph [ref=f1e520]:
+                              - generic [ref=f1e521]: Yonge & Steeles
+                            - paragraph [ref=f1e522]:
+                              - generic [ref=f1e523]: "180 Steeles Avenue West #27, Thornhill, ON, Canada maryamvares@gmail.com \\ Tel / SMS: 647-615-8051 OPENING HOURS Mon - Fri: 10am - 5pm \\ Saturday: 11am - 4pm \\ Sunday: Closed"
+                          - generic [ref=f1e526]:
+                            - generic:
+                              - generic:
+                                - textbox "Name" [ref=f1e529]
+                                - textbox "Email" [ref=f1e532]
+                                - textbox "Phone" [ref=f1e535]
+                                - textbox [ref=f1e537]:
+                                  - /placeholder: Message
+                                - button "Submit" [ref=f1e539] [cursor=pointer]
+                          - generic:
+                            - generic:
+                              - generic:
+                                - link "Get Directions" [ref=f1e542] [cursor=pointer]:
+                                  - /url: https://www.maryambeautyclinic.ca/map
+                                - link [ref=f1e545] [cursor=pointer]:
+                                  - /url: https://www.maryambeautyclinic.ca/map
+                    - region "CONTACT"
+    - contentinfo [ref=f1e550]:
+      - generic [ref=f1e556]:
+        - generic:
+          - generic:
+            - list "Social Bar" [ref=f1e558]:
+              - listitem [ref=f1e559]:
+                - link "Facebook" [ref=f1e560] [cursor=pointer]:
+                  - /url: https://www.facebook.com/profile.php?id=61553659672708
+                  - img "Facebook" [ref=f1e561]
+              - listitem [ref=f1e562]:
+                - link "Instagram" [ref=f1e563] [cursor=pointer]:
+                  - /url: https://www.instagram.com/maryambeauty_clinic/
+                  - img "Instagram" [ref=f1e564]
+            - paragraph [ref=f1e565]:
+              - generic [ref=f1e566]: © 2023 Powered and secured by Maryam Beauty Clinic
+  - region "bottom of page"

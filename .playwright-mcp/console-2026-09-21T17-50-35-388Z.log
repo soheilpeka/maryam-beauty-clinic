@@ -1,0 +1,113 @@
+[     758ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://panorama.wixapps.net/api/v1/bulklog:0
+[    1109ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://panorama.wixapps.net/api/v1/bulklog:0
+[    1598ms] [ERROR] TypeError: Failed to fetch
+    at t (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:57:6397)
+    at Object.flushHandler (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:124724)
+    at ta.flush (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123443)
+    at flushThrottled.ti.leading (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123354)
+    at b (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:199563)
+    at O (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:199850)
+    at S (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:199788) @ https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:1
+[    1625ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://panorama.wixapps.net/api/v1/bulklog:0
+[    1951ms] [ERROR] Access to fetch at 'https://panorama.wixapps.net/api/v1/bulklog' from origin 'https://www.maryambeautyclinic.ca' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://www.maryambeautyclinic.ca/pricing-plans/packages:0
+[    1951ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://panorama.wixapps.net/api/v1/bulklog:0
+[    1951ms] TypeError: Failed to fetch
+    at value (https://www.maryambeautyclinic.ca/pricing-plans/packages:94:5834)
+    at Object.flushHandler (https://static.parastorage.com/services/wix-thunderbolt/dist/main.c8b9bed4.bundle.min.js:1:31091)
+    at ti.flush (https://static.parastorage.com/services/wix-thunderbolt/dist/main.c8b9bed4.bundle.min.js:1:29898)
+    at ti.enqueue (https://static.parastorage.com/services/wix-thunderbolt/dist/main.c8b9bed4.bundle.min.js:1:30025)
+    at https://static.parastorage.com/services/wix-thunderbolt/dist/main.c8b9bed4.bundle.min.js:1:30345
+    at O.invoke (https://static.parastorage.com/services/wix-thunderbolt/dist/main.c8b9bed4.bundle.min.js:1:10160)
+    at U.report (https://static.parastorage.com/services/wix-thunderbolt/dist/main.c8b9bed4.bundle.min.js:1:13681)
+    at U.reportTransactionFinish (https://static.parastorage.com/services/wix-thunderbolt/dist/main.c8b9bed4.bundle.min.js:1:14592)
+    at T.finish (https://static.parastorage.com/services/wix-thunderbolt/dist/main.c8b9bed4.bundle.min.js:1:8630)
+    at M (https://www.maryambeautyclinic.ca/pricing-plans/packages:1871:4319)
+[    2106ms] [ERROR] TypeError: Failed to fetch
+    at t (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:57:6397)
+    at Object.flushHandler (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:124724)
+    at ta.flush (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123443)
+    at ta.enqueue (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123570)
+    at https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123879
+    at A.invoke (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:103701)
+    at W.report (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:107209)
+    at W.reportTransactionFinish (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:108120)
+    at x.finish (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:102171)
+    at U (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:257707)
+    at _.interactionEnded (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:258326)
+    at S (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:52548)
+    at Object.C [as runAsyncAndReport] (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:52950)
+    at async Promise.all (index 25)
+    at async Object.initWixCodeApiForApplication (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:154245)
+    at async Object.C [as runAsyncAndReport] (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:52933)
+    at async G (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:121257)
+    at async Promise.all (index 0)
+    at async Z (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:121784)
+    at async Object.C [as runAsyncAndReport] (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:52933)
+    at async Object.init (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:125503)
+    at async Promise.all (index 1)
+    at async runPlatformOnPage (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:308047)
+    at async fq (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:58:1480)
+    at async runPlatformOnPage (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:58:6518) @ https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:1
+[    2210ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://panorama.wixapps.net/api/v1/bulklog:0
+[    2484ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ https://www.facebook.com/tr/?id=1397305741220375&ev=PageView&dl=https%3A%2F%2Fwww.maryambeautyclinic.ca&rl=&if=false&ts=1790013037178&iw=false&sw=1920&sh=1080&cud[external_id]=%23%23%23%23%23*%23%23-%23%23*%23-%23%23*%23-**%23%23-%23*%23*%23*%23%23*%23*%23&ncud[external_id]=%23%23%23%23%23*%23%23-%23%23*%23-%23%23*%23-**%23%23-%23*%23*%23*%23%23*%23*%23&ud[external_id]=e522dd2f7ec251056f5a1862692f5281c19b06478e10e10732eca28a3cb7b853&aud[external_id]=e522dd2f7ec251056f5a1862692f5281c19b06478e10e10732eca28a3cb7b853&v=2.9.403&r=stable&a=plwix&ec=0&o=4124&aems=0%3B0&fbp=fb.1.1790012927235.647011691653661234&pm=1&hrl=f0ead0&ler=empty&cdl=API_unavailable&plt=536.7000000011176&ups[pv]=%7B%7D&ups[rpv]=%7B%7D&it=1790013037169&coo=false&cs_cc=1&dlc=1&expv2[0]=pl1&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra0&expv2[4]=rp0&expv2[5]=im1&expv2[6]=hf0&expv2[7]=sd1&expv2[8]=sp1&expv2[9]=ek1&expv2[10]=pc1&expv2[11]=gs1&expv2[12]=zs1&expv2[13]=cp1&expv2[14]=es1&expv2[15]=ac1&expv2[16]=so1&expv2[17]=wc1&expv2[18]=la1&expv2[19]=sf1&expv2[20]=da1&expv2[21]=io1&expv2[22]=ae1&expv2[23]=sx1&expv2[24]=if1&expv2[25]=fd1&expv2[26]=bg1&expv2[27]=mg1&expv2[28]=kl1&expv2[29]=sg1&expv2[30]=mk1&expv2[31]=sn1&expv2[32]=ec1&expv2[33]=mp1&expv2[34]=ps1&expv2[35]=fx1&expv2[36]=vt1&expv2[37]=dp1&expv2[38]=fw1&expv2[39]=cn1&expv2[40]=tz1&expv2[41]=pe1&expv2[42]=ee1&expv2[43]=bu1&expv2[44]=ta1&expv2[45]=ot0&expv2[46]=ep1&rqm=GET:0
+[    2484ms] [ERROR] TypeError: Failed to fetch
+    at t (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:57:6397)
+    at Object.flushHandler (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:124724)
+    at ta.flush (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123443)
+    at ta.enqueue (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123570)
+    at https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123879
+    at A.invoke (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:103701)
+    at W.report (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:107209)
+    at W.reportTransactionStart (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:107653)
+    at x.start (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:102082)
+    at U (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:257681)
+    at _.interactionStarted (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:258159)
+    at w (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:52324)
+    at Object.C [as runAsyncAndReport] (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:52922)
+    at https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:154297
+    at c (https://static.parastorage.com/unpkg/lodash@4.17.23/lodash.min.js:10:339)
+    at Z.yf [as map] (https://static.parastorage.com/unpkg/lodash@4.17.23/lodash.min.js:85:225)
+    at Object.initWixCodeApiForApplication (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:154267)
+    at async Object.C [as runAsyncAndReport] (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:52933)
+    at async G (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:121257)
+    at async Promise.all (index 2)
+    at async Z (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:121784)
+    at async Object.C [as runAsyncAndReport] (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:52933)
+    at async Object.init (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:125503)
+    at async Promise.all (index 1)
+    at async runPlatformOnPage (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:56:308047)
+    at async fq (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:58:1480)
+    at async runPlatformOnPage (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:58:6518) @ https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:1
+[    2515ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://panorama.wixapps.net/api/v1/bulklog:0
+[    2531ms] [WARNING] [deprecation] site.getRouterPublicData() is deprecated, use site.getAppPageData() instead. @ https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:1
+[    2695ms] [ERROR] TypeError: Failed to fetch
+    at t (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:57:6397)
+    at Object.flushHandler (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:124724)
+    at ta.flush (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123443)
+    at flushThrottled.ti.leading (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123354)
+    at b (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:199563)
+    at O (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:199850)
+    at S (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:199788)
+    at n (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:51036) @ https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:1
+[    2712ms] [WARNING] react-i18next:: It seems you are still using the old wait option, you may migrate to the new useSuspense behaviour. @ https://browser.sentry-cdn.com/7.120.3/bundle.tracing.es5.min.js:1
+[    3131ms] [ERROR] TypeError: Failed to fetch
+    at t (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:57:6397)
+    at Object.flushHandler (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:124724)
+    at ta.flush (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123443)
+    at flushThrottled.ti.leading (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:123354)
+    at b (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:199563)
+    at O (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:199850)
+    at S (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:199788)
+    at n (https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:2:51036) @ https://www.maryambeautyclinic.ca/_partials/wix-thunderbolt/dist/clientWorker.ea1cfc98.bundle.min.js:1
+[    3264ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://panorama.wixapps.net/api/v1/bulklog:0
+[    4063ms] [ERROR] Failed to load resource: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT @ https://static.wixstatic.com/media/0decae_20dcbe2628e24e9b904b02bfddb14f13~mv2.png/v1/fill/w_87,h_93,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/0decae_20dcbe2628e24e9b904b02bfddb14f13~mv2.png:0
+[    4064ms] [ERROR] Failed to load resource: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT @ https://static.wixstatic.com/media/e0678ef25486466ba65ef6ad47b559e1.png/v1/fill/w_33,h_33,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/e0678ef25486466ba65ef6ad47b559e1.png:0
+[    4064ms] [ERROR] Failed to load resource: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT @ https://static.wixstatic.com/media/da7ef6dd1302486c9a67baebe4b364bc.png/v1/fill/w_33,h_33,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/da7ef6dd1302486c9a67baebe4b364bc.png:0
+[    7070ms] [WARNING] The resource https://static.parastorage.com/services/pricing-plans-tpa/1.5408.0/PackagePickerViewerWidgetNoCss.bundle.min.js was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://www.maryambeautyclinic.ca/pricing-plans/packages:0
+[    7070ms] [WARNING] The resource https://static.parastorage.com/services/ecom-platform-cart-icon/1.2405.0/CartIconViewerWidgetNoCss.bundle.min.js was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://www.maryambeautyclinic.ca/pricing-plans/packages:0
+[    8078ms] [ERROR] Failed to load resource: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT @ https://static.wixstatic.com/media/0decae_20dcbe2628e24e9b904b02bfddb14f13%7Emv2.png/v1/fill/w_32%2Ch_32%2Clg_1%2Cusm_0.66_1.00_0.01/0decae_20dcbe2628e24e9b904b02bfddb14f13%7Emv2.png:0
+[   11083ms] [WARNING] The resource https://static.parastorage.com/services/pricing-plans-tpa/1.5408.0/PackagePickerViewerWidgetNoCss.bundle.min.js was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://www.maryambeautyclinic.ca/pricing-plans/packages:0
+[   11084ms] [WARNING] The resource https://static.parastorage.com/services/ecom-platform-cart-icon/1.2405.0/CartIconViewerWidgetNoCss.bundle.min.js was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://www.maryambeautyclinic.ca/pricing-plans/packages:0
+[   12085ms] [ERROR] Failed to load resource: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT @ https://static.wixstatic.com/media/0decae_20dcbe2628e24e9b904b02bfddb14f13%7Emv2.png/v1/fill/w_192%2Ch_192%2Clg_1%2Cusm_0.66_1.00_0.01/0decae_20dcbe2628e24e9b904b02bfddb14f13%7Emv2.png:0
+[   15090ms] [WARNING] The resource https://static.parastorage.com/services/pricing-plans-tpa/1.5408.0/PackagePickerViewerWidgetNoCss.bundle.min.js was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://www.maryambeautyclinic.ca/pricing-plans/packages:0
+[   15090ms] [WARNING] The resource https://static.parastorage.com/services/ecom-platform-cart-icon/1.2405.0/CartIconViewerWidgetNoCss.bundle.min.js was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://www.maryambeautyclinic.ca/pricing-plans/packages:0

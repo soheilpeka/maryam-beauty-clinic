@@ -47,19 +47,40 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
       handler must be readable via the test client, and prisma/dev.db must stay
       byte-for-byte the same size across the whole run.
 
+## Phase 3.5 - SCOPE CHANGE: request-and-approve booking (2026-09-22)
+- [x] Public flow simplified to a request: service -> staff (or "any") -> preferred date +
+      preferred time (plain date/time pickers, NO computed slots) -> name/phone/email/note.
+- [x] POST /api/bookings creates a PENDING booking with NO availability check; confirmation
+      screen "Request received, we will confirm shortly."; admin notified immediately.
+- [x] Removed the public slot engine: src/lib/availability.ts, /api/bookings/slots,
+      /api/availability/days, and the day/time chip picker UI. Kept the DST-correct datetime
+      utilities and the bookingsOverlap predicate (now the admin confirm guard).
+- [x] Secure customer cancel link kept for PENDING and CONFIRMED requests; public
+      rescheduling removed (it depended on the slot engine).
+- [x] Admin confirm uses the atomic overlap-safe guard (UPDATE ... WHERE NOT EXISTS) with
+      optional time adjust; decline notifies the customer with an optional reason.
+- [x] Tests updated: removed public slot tests; added request submit, confirm (incl. conflict
+      + duplicate-confirm race), decline, and cancel-of-pending tests.
+
 ## Phase 4 - Admin dashboard
-- [ ] Secure login (hashed passwords, safe errors)
-- [ ] Calendar view of bookings; approve/cancel
+- [x] Secure login (hashed passwords, safe errors, CSRF, rate limiting)
+- [ ] Requests view: PENDING first then CONFIRMED; confirm/decline with conflict guard
 - [ ] CRUD: services, staff, working hours, days off, customers
 - [ ] Stats: bookings per day, popular services
 
 ## Phase 5 - Tests, polish, README
-- [ ] Tests: slot calculation, double-booking prevention, form validation, booking flow
+- [ ] Tests: double-booking prevention at confirm, form validation, request flow
 - [ ] Playwright: booking flow + mobile layout
 - [ ] security-review skill run
 - [ ] README: how to run, what was tested, what is mocked (email/SMS/payments)
 
 ## Notes
+- 2026-09-22: SCOPE CHANGE - booking is now request-and-approve instead of real-time slot booking.
+  PROJECT_SPEC.md sections 3 and 4 were rewritten to match (see the change log there). Public
+  availability computation was removed entirely; the overlap-safe guard now runs once, at admin
+  confirm time. DST datetime utilities are unchanged and still drive all storage/display.
+- 2026-09-22: FIXED admin login redirect - next-intl's useRouter already prefixes the locale, so
+  router.push(`/${locale}/admin`) produced /en/en/admin (404). Now pushes the locale-relative path.
 - 2026-09-21: FIXED root cause of "Expected a suspended thenable" (digest 2819910423): site-footer.tsx was an async Server Component calling the useTranslations() hook. Switched it to await getTranslations() + getLocale() from next-intl/server. Removed the force-dynamic workaround from layout + booking pages; /en and /fr now prerender as SSG again. Booking pages stay dynamic via searchParams.
 - 2026-09-21: Prisma 7 gotchas found by build: PrismaLibSql takes a Config object (not a client), @prisma/config has no adapter key (adapter goes on PrismaClient), and db push --skip-generate was removed.
 - 2026-09-21: Prisma 7 requires driver adapters; installed @prisma/adapter-libsql + libsql, added prisma.config.ts.

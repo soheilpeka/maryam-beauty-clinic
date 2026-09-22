@@ -1,0 +1,331 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Maryam Beauty Clinic home" [ref=e4] [cursor=pointer]:
+        - /url: "#top"
+        - generic [ref=e5]: Maryam
+        - generic [ref=e6]: Beauty Clinic
+      - navigation [ref=e7]:
+        - link "Treatments" [ref=e8] [cursor=pointer]:
+          - /url: "#treatments"
+        - link "About" [ref=e9] [cursor=pointer]:
+          - /url: "#about"
+        - link "Results" [ref=e10] [cursor=pointer]:
+          - /url: "#results"
+        - link "Offers" [ref=e11] [cursor=pointer]:
+          - /url: "#offers"
+        - link "Contact" [ref=e12] [cursor=pointer]:
+          - /url: "#contact"
+      - link "Book Appointment" [ref=e14] [cursor=pointer]:
+        - /url: "#booking"
+  - main [ref=e15]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - paragraph [ref=e19]: Premium aesthetic clinic · Toronto
+        - heading "Confidence begins with your skin." [level=1] [ref=e20]
+        - paragraph [ref=e21]: Personalized aesthetic treatments designed to help you look and feel your best.
+        - generic [ref=e22]:
+          - link "Book Your Appointment" [ref=e23] [cursor=pointer]:
+            - /url: "#booking"
+          - link "Explore Treatments" [ref=e24] [cursor=pointer]:
+            - /url: "#treatments"
+        - list [ref=e25]:
+          - listitem [ref=e26]: Personalized care
+          - listitem [ref=e27]: Advanced treatments
+          - listitem [ref=e29]: Results-focused
+      - generic [ref=e31]:
+        - img "A calm woman with luminous, healthy skin" [ref=e33]
+        - generic [ref=e34]:
+          - paragraph [ref=e35]: 10+ yrs
+          - paragraph [ref=e36]: Trusted expertise
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]: Our philosophy
+        - heading "Beauty is personal." [level=2] [ref=e44]
+        - paragraph [ref=e46]: At Maryam Beauty Clinic, no two treatment plans look alike. We begin by listening — to your goals, your concerns and the way you want to feel in your own skin.
+        - paragraph [ref=e48]: From there, our specialists design a considered, results-focused approach using modern aesthetic technology and genuine, personal care.
+      - img "Serene treatment moment at Maryam Beauty Clinic" [ref=e51]
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - generic [ref=e56]: Treatments
+          - heading "Treatments designed around you." [level=2] [ref=e60]
+        - paragraph [ref=e62]: A focused menu of aesthetic treatments, each tailored to your skin and your goals.
+      - generic [ref=e63]:
+        - link "Laser Hair Removal Most requested Laser Hair Removal Long-term hair reduction with advanced technology, tailored to your skin and comfort. Explore" [ref=e65] [cursor=pointer]:
+          - /url: "#booking"
+          - generic [ref=e66]:
+            - img "Laser Hair Removal" [ref=e67]
+            - generic [ref=e68]: Most requested
+          - generic [ref=e69]:
+            - heading "Laser Hair Removal" [level=3] [ref=e71]
+            - paragraph [ref=e76]: Long-term hair reduction with advanced technology, tailored to your skin and comfort.
+            - generic [ref=e77]: Explore
+        - link "Microneedling Skin Microneedling Refine texture, soften fine lines and restore a smooth, luminous complexion. Explore" [ref=e79] [cursor=pointer]:
+          - /url: "#booking"
+          - generic [ref=e80]:
+            - img "Microneedling" [ref=e81]
+            - generic [ref=e82]: Skin
+          - generic [ref=e83]:
+            - heading "Microneedling" [level=3] [ref=e85]
+            - paragraph [ref=e90]: Refine texture, soften fine lines and restore a smooth, luminous complexion.
+            - generic [ref=e91]: Explore
+        - link "Signature Facials Skin Signature Facials Deeply restorative facials designed around your skin’s unique needs. Explore" [ref=e93] [cursor=pointer]:
+          - /url: "#booking"
+          - generic [ref=e94]:
+            - img "Signature Facials" [ref=e95]
+            - generic [ref=e96]: Skin
+          - generic [ref=e97]:
+            - heading "Signature Facials" [level=3] [ref=e99]
+            - paragraph [ref=e104]: Deeply restorative facials designed around your skin’s unique needs.
+            - generic [ref=e105]: Explore
+        - link "Body Contouring Body Body Contouring Non-invasive contouring to sculpt, tighten and define with natural results. Explore" [ref=e107] [cursor=pointer]:
+          - /url: "#booking"
+          - generic [ref=e108]:
+            - img "Body Contouring" [ref=e109]
+            - generic [ref=e110]: Body
+          - generic [ref=e111]:
+            - heading "Body Contouring" [level=3] [ref=e113]
+            - paragraph [ref=e118]: Non-invasive contouring to sculpt, tighten and define with natural results.
+            - generic [ref=e119]: Explore
+        - link "Hair Growth Restore Hair Growth Targeted therapies to support fuller, healthier hair over time. Explore" [ref=e121] [cursor=pointer]:
+          - /url: "#booking"
+          - generic [ref=e122]:
+            - img "Hair Growth" [ref=e123]
+            - generic [ref=e124]: Restore
+          - generic [ref=e125]:
+            - heading "Hair Growth" [level=3] [ref=e127]
+            - paragraph [ref=e132]: Targeted therapies to support fuller, healthier hair over time.
+            - generic [ref=e133]: Explore
+    - generic [ref=e135]:
+      - img "Laser hair removal treatment" [ref=e138]
+      - generic [ref=e139]:
+        - generic [ref=e140]: Featured treatment
+        - heading "Laser Hair Removal" [level=2] [ref=e144]
+        - paragraph [ref=e146]: Smooth skin. Less maintenance.
+        - paragraph [ref=e148]: Our laser treatments are tailored to your skin and hair type, gradually reducing unwanted hair while keeping comfort and safety at the center of every session.
+        - list [ref=e150]:
+          - listitem [ref=e151]: Long-term hair reduction
+          - listitem [ref=e155]: Personalized treatment plans
+          - listitem [ref=e159]: Advanced, comfortable technology
+          - listitem [ref=e163]: Suitable for a range of skin tones
+        - link "Explore Laser Hair Removal" [ref=e169] [cursor=pointer]:
+          - /url: "#booking"
+    - generic [ref=e172]:
+      - img "Radiant, healthy skin" [ref=e175]
+      - generic [ref=e176]:
+        - generic [ref=e177]: Skin
+        - heading "Healthy skin starts with the right treatment." [level=2] [ref=e181]
+        - paragraph [ref=e183]: Our skin treatments are built on a careful assessment of your complexion, so every session works toward calm, clear and genuinely healthy skin.
+        - list [ref=e185]:
+          - listitem [ref=e186]:
+            - generic [ref=e187]: Microneedling
+            - generic [ref=e188]: Texture & tone
+          - listitem [ref=e189]:
+            - generic [ref=e190]: Signature Facials
+            - generic [ref=e191]: Deep restoration
+          - listitem [ref=e192]:
+            - generic [ref=e193]: Skin Rejuvenation
+            - generic [ref=e194]: Luminous glow
+        - link "Explore Skin Treatments" [ref=e197] [cursor=pointer]:
+          - /url: "#treatments"
+    - generic [ref=e199]:
+      - generic [ref=e201]:
+        - generic [ref=e202]: Results
+        - heading "Real treatments. Real results." [level=2] [ref=e206]
+      - generic [ref=e208]:
+        - generic [ref=e209]:
+          - img "After treatment" [ref=e210]
+          - generic [ref=e211]:
+            - img "Before treatment" [ref=e212]
+            - generic [ref=e213]: Before
+          - generic [ref=e214]: After
+        - generic [ref=e220]:
+          - paragraph [ref=e221]: Skin rejuvenation
+          - paragraph [ref=e222]: Drag to reveal the difference after a personalized treatment series.
+          - paragraph [ref=e223]: Individual results vary. Images are representative placeholders, ready to be replaced with the clinic’s approved photography.
+      - generic [ref=e225]:
+        - button "All" [ref=e226]
+        - button "Laser" [ref=e227]
+        - button "Skin" [ref=e228]
+        - button "Body" [ref=e229]
+        - button "Brows" [ref=e230]
+      - generic [ref=e231]:
+        - figure [ref=e232]:
+          - img "Skin rejuvenation · 3 sessions" [ref=e234]
+          - generic [ref=e236]:
+            - text: Skin
+            - paragraph [ref=e237]: Skin rejuvenation · 3 sessions
+        - figure [ref=e238]:
+          - img "Laser hair removal · 6 sessions" [ref=e240]
+          - generic [ref=e242]:
+            - text: Laser
+            - paragraph [ref=e243]: Laser hair removal · 6 sessions
+        - figure [ref=e244]:
+          - img "Microblading · single visit" [ref=e246]
+          - generic [ref=e248]:
+            - text: Brows
+            - paragraph [ref=e249]: Microblading · single visit
+        - figure [ref=e250]:
+          - img "Body contouring · 4 sessions" [ref=e252]
+          - generic [ref=e254]:
+            - text: Body
+            - paragraph [ref=e255]: Body contouring · 4 sessions
+        - figure [ref=e256]:
+          - img "Microneedling · 3 sessions" [ref=e258]
+          - generic [ref=e260]:
+            - text: Skin
+            - paragraph [ref=e261]: Microneedling · 3 sessions
+        - figure [ref=e262]:
+          - img "Signature facial · monthly" [ref=e264]
+          - generic [ref=e266]:
+            - text: Skin
+            - paragraph [ref=e267]: Signature facial · monthly
+    - generic [ref=e268]:
+      - generic [ref=e269]: Kind words
+      - blockquote [ref=e273]:
+        - paragraph [ref=e274]: “From the consultation to my final session, everything felt considered and calm. My skin has never looked healthier — and I finally feel like myself.”
+        - generic [ref=e275]:
+          - img "Elena R." [ref=e277]
+          - generic [ref=e278]:
+            - paragraph [ref=e279]: Elena R.
+            - paragraph [ref=e280]: Microneedling & Facials
+      - generic [ref=e281]:
+        - button "Previous testimonial" [ref=e282]
+        - generic [ref=e285]:
+          - button "Testimonial 1" [ref=e286]
+          - button "Testimonial 2" [ref=e287]
+          - button "Testimonial 3" [ref=e288]
+        - button "Next testimonial" [ref=e289]
+    - generic [ref=e293]:
+      - generic [ref=e294]:
+        - generic [ref=e295]: Offers
+        - heading "Something special for you." [level=2] [ref=e299]
+      - generic [ref=e300]:
+        - link [ref=e302] [cursor=pointer]:
+          - /url: "#booking"
+          - generic [ref=e303]:
+            - paragraph [ref=e304]: Laser Hair Removal
+            - heading "Complimentary consultation" [level=3] [ref=e305]
+            - paragraph [ref=e306]: Begin your journey with a personalized skin and treatment assessment at no cost.
+          - generic [ref=e307]: Book Now
+        - link [ref=e312] [cursor=pointer]:
+          - /url: "#booking"
+          - generic [ref=e313]:
+            - paragraph [ref=e314]: Signature Facial
+            - heading "First visit ritual" [level=3] [ref=e315]
+            - paragraph [ref=e316]: A tailored first facial with an extended skin analysis and take-home routine.
+          - generic [ref=e317]: Book Now
+        - link [ref=e322] [cursor=pointer]:
+          - /url: "#booking"
+          - generic [ref=e323]:
+            - paragraph [ref=e324]: Skin Series
+            - heading "Curated packages" [level=3] [ref=e325]
+            - paragraph [ref=e326]: Thoughtfully bundled microneedling and rejuvenation series for lasting results.
+          - generic [ref=e327]: Book Now
+    - generic [ref=e333]:
+      - generic [ref=e334]:
+        - generic [ref=e335]: The clinic
+        - heading "Discover the Maryam Beauty Clinic experience." [level=2] [ref=e339]
+        - paragraph [ref=e341]: A calm, considered space where advanced aesthetic treatments meet genuine, personal care. Every visit is designed to feel unhurried, private and entirely your own.
+        - generic [ref=e343]:
+          - generic [ref=e344]:
+            - term [ref=e345]: Personalized care
+            - definition [ref=e346]: Plans shaped around you
+          - generic [ref=e347]:
+            - term [ref=e348]: Professional service
+            - definition [ref=e349]: Skilled, certified hands
+          - generic [ref=e350]:
+            - term [ref=e351]: Modern treatments
+            - definition [ref=e352]: Advanced aesthetic technology
+        - link "Meet the Clinic" [ref=e355] [cursor=pointer]:
+          - /url: "#contact"
+      - img "Interior of Maryam Beauty Clinic" [ref=e358]
+    - generic [ref=e360]:
+      - paragraph [ref=e362]: Book with us
+      - heading "Ready to feel your best?" [level=2] [ref=e364]
+      - paragraph [ref=e366]: Book your consultation and let's create a treatment plan designed for you.
+      - generic [ref=e368]:
+        - link "Book Your Appointment" [ref=e369] [cursor=pointer]:
+          - /url: "#booking"
+        - link "Contact Us" [ref=e370] [cursor=pointer]:
+          - /url: "#contact"
+    - generic [ref=e373]:
+      - generic [ref=e374]:
+        - generic [ref=e375]: Visit
+        - heading "Maryam Beauty Clinic" [level=2] [ref=e379]
+        - generic [ref=e380]:
+          - list [ref=e381]:
+            - listitem [ref=e382]:
+              - generic [ref=e387]:
+                - paragraph [ref=e388]: Location
+                - generic [ref=e389]: 128 Yorkville Avenue, Suite 200Toronto, ON M5R 1C2
+            - listitem [ref=e390]:
+              - generic [ref=e394]:
+                - paragraph [ref=e395]: Phone
+                - link "(416) 555-0192" [ref=e397] [cursor=pointer]:
+                  - /url: tel:+14165550192
+            - listitem [ref=e398]:
+              - generic [ref=e403]:
+                - paragraph [ref=e404]: Email
+                - link "hello@maryambeautyclinic.ca" [ref=e406] [cursor=pointer]:
+                  - /url: mailto:hello@maryambeautyclinic.ca
+            - listitem [ref=e407]:
+              - generic [ref=e412]:
+                - paragraph [ref=e413]: Hours
+                - generic [ref=e415]:
+                  - generic [ref=e416]:
+                    - generic [ref=e417]: Monday – Friday
+                    - generic [ref=e418]: 10:00 – 19:00
+                  - generic [ref=e419]:
+                    - generic [ref=e420]: Saturday
+                    - generic [ref=e421]: 10:00 – 17:00
+                  - generic [ref=e422]:
+                    - generic [ref=e423]: Sunday
+                    - generic [ref=e424]: By appointment
+          - generic [ref=e425]:
+            - link "Instagram" [ref=e426] [cursor=pointer]:
+              - /url: "#"
+            - link "Facebook" [ref=e427] [cursor=pointer]:
+              - /url: "#"
+            - link "TikTok" [ref=e428] [cursor=pointer]:
+              - /url: "#"
+      - generic [ref=e432]:
+        - paragraph [ref=e437]: Yorkville
+        - paragraph [ref=e438]: Toronto, Ontario
+        - paragraph [ref=e439]: Map placeholder
+  - contentinfo [ref=e440]:
+    - generic [ref=e441]:
+      - generic [ref=e442]:
+        - generic [ref=e443]:
+          - link "Maryam Beauty Clinic" [ref=e444] [cursor=pointer]:
+            - /url: "#top"
+            - generic [ref=e445]: Maryam
+            - generic [ref=e446]: Beauty Clinic
+          - paragraph [ref=e447]: Personalized aesthetic treatments in the heart of Toronto.
+        - navigation [ref=e448]:
+          - link "Treatments" [ref=e449] [cursor=pointer]:
+            - /url: "#treatments"
+          - link "About" [ref=e450] [cursor=pointer]:
+            - /url: "#about"
+          - link "Results" [ref=e451] [cursor=pointer]:
+            - /url: "#results"
+          - link "Offers" [ref=e452] [cursor=pointer]:
+            - /url: "#offers"
+          - link "Contact" [ref=e453] [cursor=pointer]:
+            - /url: "#contact"
+        - generic [ref=e454]:
+          - link "Instagram" [ref=e455] [cursor=pointer]:
+            - /url: "#"
+          - link "Facebook" [ref=e456] [cursor=pointer]:
+            - /url: "#"
+          - link "TikTok" [ref=e457] [cursor=pointer]:
+            - /url: "#"
+      - generic [ref=e458]:
+        - paragraph [ref=e459]: © 2026 Maryam Beauty Clinic. All rights reserved.
+        - generic [ref=e460]:
+          - link "Privacy" [ref=e461] [cursor=pointer]:
+            - /url: "#"
+          - link "Terms" [ref=e462] [cursor=pointer]:
+            - /url: "#"
+  - alert [ref=e463]

@@ -1,0 +1,104 @@
+- generic [ref=f4e3]:
+  - region "top of page" [active]
+  - button "Skip to Main Content"
+  - generic [ref=f4e10]:
+    - banner [ref=f4e11]:
+      - generic [ref=f4e17]:
+        - generic:
+          - generic:
+            - generic "0decae_20dcbe2628e24e9b904b02bfddb14f13~mv2.png" [ref=f4e18] [cursor=pointer]:
+              - link [ref=f4e19]:
+                - /url: https://www.maryambeautyclinic.ca
+                - img "Maryam Beauty Clinic LOGO" [ref=f4e20]
+            - navigation "Site" [ref=f4e22]:
+              - list [ref=f4e23]:
+                - listitem [ref=f4e24] [cursor=pointer]:
+                  - link [ref=f4e25]:
+                    - /url: https://www.maryambeautyclinic.ca/blog
+                    - paragraph [ref=f4e28]: BLOG
+                - listitem [ref=f4e29] [cursor=pointer]:
+                  - link [ref=f4e30]:
+                    - /url: https://www.maryambeautyclinic.ca/book-online
+                    - paragraph [ref=f4e33]: BOOK ONLINE
+                - listitem [ref=f4e34] [cursor=pointer]:
+                  - link [ref=f4e35]:
+                    - /url: https://www.maryambeautyclinic.ca/pricing-plans/packages
+                    - paragraph [ref=f4e38]: PACKAGES
+                - listitem [ref=f4e39] [cursor=pointer]:
+                  - link [ref=f4e40]:
+                    - /url: https://www.maryambeautyclinic.ca
+                    - paragraph [ref=f4e43]: CONTACT
+                - listitem [ref=f4e44] [cursor=pointer]:
+                  - paragraph [ref=f4e48]: More
+            - heading [level=1] [ref=f4e49]:
+              - link "Maryam Beauty Clinic" [ref=f4e51] [cursor=pointer]:
+                - /url: https://www.maryambeautyclinic.ca
+            - button "Log In" [ref=f4e53] [cursor=pointer]
+            - button "Cart with 0 items" [ref=f4e64] [cursor=pointer]:
+              - img [ref=f4e66]:
+                - generic [ref=f4e69]: "0"
+    - main [ref=f4e70]:
+      - generic [ref=f4e86]:
+        - generic [ref=f4e87]:
+          - heading "Shop Our Packages" [level=1] [ref=f4e88]
+          - paragraph [ref=f4e89]: For all your beauty needs
+        - list [ref=f4e90]:
+          - listitem [ref=f4e91]:
+            - generic [ref=f4e93]:
+              - generic [ref=f4e94]:
+                - heading "Microneedling" [level=2] [ref=f4e95]
+                - generic [ref=f4e97]:
+                  - generic [aria-hidden] [ref=f4e98]: $
+                  - generic [aria-hidden] [ref=f4e99]: "500"
+                  - generic [ref=f4e100]: 500$
+                - generic [ref=f4e101]: 3 Sessions
+                - generic [ref=f4e103]: Valid for 3 months
+                - button "Buy Now" [ref=f4e106] [cursor=pointer]
+              - list [ref=f4e108]:
+                - listitem [ref=f4e109]: 3 Treatments
+                - listitem [ref=f4e110]: Free consultation
+          - listitem [ref=f4e111]:
+            - generic [ref=f4e112]:
+              - generic [ref=f4e113]: Best Value
+              - generic [ref=f4e114]:
+                - generic [ref=f4e115]:
+                  - heading "Hair Removal Full Body" [level=2] [ref=f4e116]
+                  - generic [ref=f4e118]:
+                    - generic [aria-hidden] [ref=f4e119]: $
+                    - generic [aria-hidden] [ref=f4e120]: 1,500
+                    - generic [ref=f4e121]: 1,500$
+                  - generic [ref=f4e122]: 1 Year
+                  - generic [ref=f4e124]: Valid for 12 months
+                  - button "Buy Now" [ref=f4e127] [cursor=pointer]
+                - list [ref=f4e129]:
+                  - listitem [ref=f4e130]: Free consultation
+          - listitem [ref=f4e131]:
+            - generic [ref=f4e133]:
+              - generic [ref=f4e134]:
+                - heading "Monthly Facial" [level=2] [ref=f4e135]
+                - generic [ref=f4e137]:
+                  - generic [aria-hidden] [ref=f4e138]: $
+                  - generic [aria-hidden] [ref=f4e139]: "0"
+                  - generic [ref=f4e140]: 0$
+                - generic [ref=f4e141]: Free Consultation
+                - generic [ref=f4e143]: Free Plan
+                - button "Buy Now" [ref=f4e146] [cursor=pointer]
+              - list [ref=f4e148]:
+                - listitem [ref=f4e149]: 4 + 1 Session Free
+                - listitem [ref=f4e150]: Types of Facials
+    - contentinfo [ref=f4e160]:
+      - generic [ref=f4e166]:
+        - generic:
+          - generic:
+            - list "Social Bar" [ref=f4e168]:
+              - listitem [ref=f4e169]:
+                - link "Facebook" [ref=f4e170] [cursor=pointer]:
+                  - /url: https://www.facebook.com/profile.php?id=61553659672708
+                  - img "Facebook" [ref=f4e171]
+              - listitem [ref=f4e172]:
+                - link "Instagram" [ref=f4e173] [cursor=pointer]:
+                  - /url: https://www.instagram.com/maryambeauty_clinic/
+                  - img "Instagram" [ref=f4e174]
+            - paragraph [ref=f4e175]:
+              - generic [ref=f4e176]: © 2023 Powered and secured by Maryam Beauty Clinic
+  - region "bottom of page"

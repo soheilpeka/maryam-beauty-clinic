@@ -1,0 +1,458 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Maryam Beauty Clinic home" [ref=e5] [cursor=pointer]:
+        - /url: /en
+        - generic [ref=e6]: Maryam
+        - generic [ref=e7]: Beauty Clinic
+      - generic [ref=e8]:
+        - button "Switch language" [ref=e9]: EN
+        - link "Book Appointment" [ref=e13] [cursor=pointer]:
+          - /url: /en/booking
+        - button "Open menu" [ref=e14]
+  - main [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - paragraph [ref=e22]: Premium aesthetic clinic
+          - heading "Sections.title" [level=1] [ref=e23]
+          - paragraph [ref=e24]: Sections.subtitle
+          - generic [ref=e25]:
+            - link "Book Appointment" [ref=e26] [cursor=pointer]:
+              - /url: /en/booking
+            - link "Contact Us" [ref=e27] [cursor=pointer]:
+              - /url: /en/book-online
+          - generic [ref=e28]:
+            - definition [ref=e30]: Sections.stat1
+            - definition [ref=e32]: Sections.stat2
+            - definition [ref=e34]: Sections.stat3
+        - img "A calm woman with luminous, healthy skin" [ref=e37]
+      - generic [ref=e40]:
+        - img "Serene treatment moment at Maryam Beauty Clinic" [ref=e43]
+        - generic [ref=e44]:
+          - paragraph [ref=e45]: Our philosophy
+          - heading "Beauty is personal." [level=2] [ref=e46]
+          - generic [ref=e47]:
+            - paragraph [ref=e48]: At Maryam Beauty Clinic, no two treatment plans look alike. We begin by listening — to your goals, your concerns and the way you want to feel in your own skin.
+            - paragraph [ref=e49]: From there, our specialists design a considered, results-focused approach using modern aesthetic technology and genuine, personal care.
+          - link "Explore" [ref=e50] [cursor=pointer]:
+            - /url: /en/service-page/womens-laser-hair-removal
+            - text: Explore
+            - generic [aria-hidden] [ref=e51]: →
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - paragraph [ref=e56]: Treatments
+            - heading "A focused menu of aesthetic treatments" [level=2] [ref=e57]
+            - paragraph [ref=e58]: Each tailored to your skin and your goals.
+          - link "View all services" [ref=e59] [cursor=pointer]:
+            - /url: /en/book-online
+            - text: View all services
+            - generic [aria-hidden] [ref=e60]: →
+        - generic [ref=e61]:
+          - link "Women's Laser Hair removal Laser Women's Laser Hair removal Long-term hair reduction for women with Sharplight DPC laser technology, tailored to your skin and comfort. From $70 (depends on the area) 30 min" [ref=e62] [cursor=pointer]:
+            - /url: /en/service-page/womens-laser-hair-removal
+            - img "Women's Laser Hair removal" [ref=e64]
+            - paragraph [ref=e65]: Laser
+            - heading "Women's Laser Hair removal" [level=3] [ref=e66]
+            - paragraph [ref=e67]: Long-term hair reduction for women with Sharplight DPC laser technology, tailored to your skin and comfort.
+            - generic [ref=e68]:
+              - generic [ref=e69]: From $70 (depends on the area)
+              - generic [ref=e70]: 30 min
+          - link "Hair growth Treatment Hair Hair growth Treatment Mesotherapy for hair - a non-surgical treatment delivering vitamins and nutrients to the scalp to support healthy hair growth. From $200 (depends on the area) 30 min" [ref=e71] [cursor=pointer]:
+            - /url: /en/service-page/hair-growth-treatment
+            - img "Hair growth Treatment" [ref=e73]
+            - paragraph [ref=e74]: Hair
+            - heading "Hair growth Treatment" [level=3] [ref=e75]
+            - paragraph [ref=e76]: Mesotherapy for hair - a non-surgical treatment delivering vitamins and nutrients to the scalp to support healthy hair growth.
+            - generic [ref=e77]:
+              - generic [ref=e78]: From $200 (depends on the area)
+              - generic [ref=e79]: 30 min
+          - link "Microneedling Microneedling Microneedling Phi Microneedling to refine texture, soften fine lines and restore a smooth, luminous complexion. From $200 (depends on the area) 1 hr 30 min" [ref=e80] [cursor=pointer]:
+            - /url: /en/service-page/microneedling
+            - img "Microneedling" [ref=e82]
+            - paragraph [ref=e83]: Microneedling
+            - heading "Microneedling" [level=3] [ref=e84]
+            - paragraph [ref=e85]: Phi Microneedling to refine texture, soften fine lines and restore a smooth, luminous complexion.
+            - generic [ref=e86]:
+              - generic [ref=e87]: From $200 (depends on the area)
+              - generic [ref=e88]: 1 hr 30 min
+          - 'link "Facial Classic Facial Facial Classic Our signature facial: skin analysis, cleanse, exfoliation and deep moisturizing for every skin type. $100 1 hr" [ref=e89] [cursor=pointer]':
+            - /url: /en/service-page/facial-classic
+            - img "Facial Classic" [ref=e91]
+            - paragraph [ref=e92]: Facial
+            - heading "Facial Classic" [level=3] [ref=e93]
+            - paragraph [ref=e94]: "Our signature facial: skin analysis, cleanse, exfoliation and deep moisturizing for every skin type."
+            - generic [ref=e95]:
+              - generic [ref=e96]: $100
+              - generic [ref=e97]: 1 hr
+          - link "Microblading Eyebrow & Lash Microblading Phi Microblading - semi-permanent eyebrow tattooing that creates full, natural-looking brows for up to two years. From $450 2 hr" [ref=e98] [cursor=pointer]:
+            - /url: /en/service-page/microblading
+            - img "Microblading" [ref=e100]
+            - paragraph [ref=e101]: Eyebrow & Lash
+            - heading "Microblading" [level=3] [ref=e102]
+            - paragraph [ref=e103]: Phi Microblading - semi-permanent eyebrow tattooing that creates full, natural-looking brows for up to two years.
+            - generic [ref=e104]:
+              - generic [ref=e105]: From $450
+              - generic [ref=e106]: 2 hr
+      - generic [ref=e108]:
+        - img "Laser hair removal treatment" [ref=e110]
+        - generic [ref=e111]:
+          - paragraph [ref=e112]: Featured treatment
+          - heading "Women's Laser Hair removal" [level=2] [ref=e113]
+          - paragraph [ref=e114]: Smooth skin. Less maintenance.
+          - paragraph [ref=e115]: Long-term hair reduction for women with Sharplight DPC laser technology, tailored to your skin and comfort.
+          - list [ref=e116]:
+            - listitem [ref=e117]: Sharplight DPC (Dynamic Pulse Control) laser technology
+            - listitem [ref=e119]: Treatments for all skin types and hair colours
+            - listitem [ref=e121]: Serving Toronto, Markham, Vaughan, Richmond Hill, North York & Thornhill
+            - listitem [ref=e123]: Experienced therapists, tailored treatment plans
+          - link "Explore Women's Laser Hair removal" [ref=e125] [cursor=pointer]:
+            - /url: /en/service-page/womens-laser-hair-removal
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - paragraph [ref=e129]: Treatments
+          - heading "All Services" [level=2] [ref=e130]
+          - paragraph [ref=e131]: Each tailored to your skin and your goals.
+        - generic [ref=e132]:
+          - link [ref=e133] [cursor=pointer]:
+            - /url: /en/service-page/womens-laser-hair-removal
+            - generic [ref=e134]:
+              - heading "Women's Laser Hair removal" [level=3] [ref=e135]
+              - paragraph [ref=e136]: Long-term hair reduction for women with Sharplight DPC laser technology, tailored to your skin and comfort.
+            - generic [ref=e137]:
+              - generic [ref=e138]:
+                - paragraph [ref=e139]: From $70 (depends on the area)
+                - paragraph [ref=e140]: 30 min
+              - generic [aria-hidden] [ref=e141]: →
+          - link [ref=e142] [cursor=pointer]:
+            - /url: /en/service-page/hair-growth-treatment
+            - generic [ref=e143]:
+              - heading "Hair growth Treatment" [level=3] [ref=e144]
+              - paragraph [ref=e145]: Mesotherapy for hair - a non-surgical treatment delivering vitamins and nutrients to the scalp to support healthy hair growth.
+            - generic [ref=e146]:
+              - generic [ref=e147]:
+                - paragraph [ref=e148]: From $200 (depends on the area)
+                - paragraph [ref=e149]: 30 min
+              - generic [aria-hidden] [ref=e150]: →
+          - link [ref=e151] [cursor=pointer]:
+            - /url: /en/service-page/microneedling
+            - generic [ref=e152]:
+              - heading "Microneedling" [level=3] [ref=e153]
+              - paragraph [ref=e154]: Phi Microneedling to refine texture, soften fine lines and restore a smooth, luminous complexion.
+            - generic [ref=e155]:
+              - generic [ref=e156]:
+                - paragraph [ref=e157]: From $200 (depends on the area)
+                - paragraph [ref=e158]: 1 hr 30 min
+              - generic [aria-hidden] [ref=e159]: →
+          - link [ref=e160] [cursor=pointer]:
+            - /url: /en/service-page/facial-classic
+            - generic [ref=e161]:
+              - heading "Facial Classic" [level=3] [ref=e162]
+              - paragraph [ref=e163]: "Our signature facial: skin analysis, cleanse, exfoliation and deep moisturizing for every skin type."
+            - generic [ref=e164]:
+              - generic [ref=e165]:
+                - paragraph [ref=e166]: $100
+                - paragraph [ref=e167]: 1 hr
+              - generic [aria-hidden] [ref=e168]: →
+          - link [ref=e169] [cursor=pointer]:
+            - /url: /en/service-page/microblading
+            - generic [ref=e170]:
+              - heading "Microblading" [level=3] [ref=e171]
+              - paragraph [ref=e172]: Phi Microblading - semi-permanent eyebrow tattooing that creates full, natural-looking brows for up to two years.
+            - generic [ref=e173]:
+              - generic [ref=e174]:
+                - paragraph [ref=e175]: From $450
+                - paragraph [ref=e176]: 2 hr
+              - generic [aria-hidden] [ref=e177]: →
+        - link "View all services" [ref=e179] [cursor=pointer]:
+          - /url: /en/book-online
+      - generic [ref=e181]:
+        - generic [ref=e182]:
+          - paragraph [ref=e183]: Skin
+          - heading "Healthy skin starts with the right treatment." [level=2] [ref=e184]
+          - paragraph [ref=e185]: Our skin treatments are built on a careful assessment of your complexion, so every session works toward calm, clear and genuinely healthy skin.
+          - list [ref=e186]:
+            - listitem [ref=e187]:
+              - link "Mini Facial" [ref=e188] [cursor=pointer]:
+                - /url: /en/service-page/mini-facial
+            - listitem [ref=e189]:
+              - link "Facial Classic" [ref=e190] [cursor=pointer]:
+                - /url: /en/service-page/facial-classic
+            - listitem [ref=e191]:
+              - link "Facial VIP" [ref=e192] [cursor=pointer]:
+                - /url: /en/service-page/facial-vip
+            - listitem [ref=e193]:
+              - link "Carboxy Therapy" [ref=e194] [cursor=pointer]:
+                - /url: /en/service-page/carboxy-therapy
+            - listitem [ref=e195]:
+              - link "Chemical Peeling" [ref=e196] [cursor=pointer]:
+                - /url: /en/service-page/chemical-peeling
+            - listitem [ref=e197]:
+              - link "High Frequency Facial" [ref=e198] [cursor=pointer]:
+                - /url: /en/service-page/high-frequency-facial
+          - link "Explore Skin" [ref=e199] [cursor=pointer]:
+            - /url: /en/book-online
+            - text: Explore Skin
+            - generic [aria-hidden] [ref=e200]: →
+        - img "Radiant, healthy skin" [ref=e202]
+      - generic [ref=e204]:
+        - generic [ref=e205]:
+          - paragraph [ref=e206]: Results
+          - heading "Real treatments. Real results." [level=2] [ref=e207]
+          - paragraph [ref=e208]: There may be no better way to communicate what we do than through images. As you browse our site, take a few moments to let your eyes linger here, and see if you can get a feel for our signature touch.
+        - generic [ref=e209]:
+          - figure [ref=e210]:
+            - img "Get visibly smooth skin with our advanced laser technology." [ref=e212]
+            - generic [ref=e213]:
+              - text: Laser
+              - paragraph [ref=e214]: Laser hair removal
+          - figure [ref=e215]:
+            - img "Our Phi certified esthetician performs organic facials." [ref=e217]
+            - generic [ref=e218]:
+              - text: Skin
+              - paragraph [ref=e219]: Facial treatment
+          - figure [ref=e220]:
+            - img "Phi microneedling for refined texture and renewed skin." [ref=e222]
+            - generic [ref=e223]:
+              - text: Skin
+              - paragraph [ref=e224]: Microneedling
+          - figure [ref=e225]:
+            - img "Advanced RF body contouring technology targets stubborn areas." [ref=e227]
+            - generic [ref=e228]:
+              - text: Body
+              - paragraph [ref=e229]: Body contouring
+        - link "View Gallery" [ref=e231] [cursor=pointer]:
+          - /url: /en/gallery
+        - paragraph [ref=e232]: All, Laser, Skin, Body, Brows
+      - generic [ref=e234]:
+        - paragraph [ref=e235]: Kind words
+        - heading "What our clients say" [level=2] [ref=e236]
+        - generic [ref=e237]:
+          - figure "Samantha Smith, Thornhill" [ref=e238]:
+            - blockquote [ref=e239]:
+              - paragraph [ref=e240]: “I am so happy with the service I received at Maryam Beauty Clinic. The staff was friendly and professional, and the results were amazing. I would definitely recommend this place to anyone looking for quality beauty treatments.”
+            - generic [ref=e241]:
+              - text: Samantha Smith
+              - generic [ref=e242]: ", Thornhill"
+          - figure "Amy Jones, North York" [ref=e243]:
+            - blockquote [ref=e244]:
+              - paragraph [ref=e245]: “I recently visited Maryam Beauty Clinic for a facial, and I was blown away by the results. My skin looked and felt amazing after just one treatment. I will definitely be going back for more services in the future.”
+            - generic [ref=e246]:
+              - text: Amy Jones
+              - generic [ref=e247]: ", North York"
+          - figure "Olivia Heart, Richmond Hill" [ref=e248]:
+            - blockquote [ref=e249]:
+              - paragraph [ref=e250]: “I had an amazing experience at Maryam Beauty Clinic. The staff was knowledgeable and professional, and the treatments were top-notch. I would highly recommend this place to anyone looking for a relaxing and rejuvenating beauty experience.”
+            - generic [ref=e251]:
+              - text: Olivia Heart
+              - generic [ref=e252]: ", Richmond Hill"
+      - generic [ref=e254]:
+        - generic [ref=e255]:
+          - paragraph [ref=e256]: Offers
+          - heading "Something special for you." [level=2] [ref=e257]
+          - paragraph [ref=e258]: Get exciting discounts on our services.
+        - generic [ref=e259]:
+          - generic [ref=e260]:
+            - generic [ref=e261]: Best Value
+            - heading "Microneedling" [level=3] [ref=e262]
+            - paragraph [ref=e263]: $500
+            - paragraph [ref=e264]: 3 Sessions · Valid for 3 months
+            - list [ref=e265]:
+              - listitem [ref=e266]: 3 Treatments
+              - listitem [ref=e268]: Free consultation
+            - link "Book this package" [ref=e270] [cursor=pointer]:
+              - /url: /en/booking
+          - generic [ref=e271]:
+            - heading "Hair Removal Full Body" [level=3] [ref=e272]
+            - paragraph [ref=e273]: $1,500
+            - paragraph [ref=e274]: 1 Year · Valid for 12 months
+            - list [ref=e275]:
+              - listitem [ref=e276]: Free consultation
+            - link "Book this package" [ref=e278] [cursor=pointer]:
+              - /url: /en/booking
+          - generic [ref=e279]:
+            - heading "Monthly Facial" [level=3] [ref=e280]
+            - paragraph [ref=e281]: $0
+            - paragraph [ref=e282]: Free Consultation · Valid for Free Plan
+            - list [ref=e283]:
+              - listitem [ref=e284]: 4 + 1 Session Free
+              - listitem [ref=e286]: Types of Facials
+            - link "Book this package" [ref=e288] [cursor=pointer]:
+              - /url: /en/booking
+      - generic [ref=e290]:
+        - generic [ref=e291]:
+          - paragraph [ref=e292]: The clinic
+          - heading "Discover the Maryam Beauty Clinic experience." [level=2] [ref=e293]
+          - paragraph [ref=e294]: A calm, considered space where advanced aesthetic treatments meet genuine, personal care. Every visit is designed to feel unhurried, private and entirely your own.
+          - generic [ref=e295]:
+            - generic [ref=e296]: Toronto
+            - generic [ref=e297]: Markham
+            - generic [ref=e298]: Vaughan
+            - generic [ref=e299]: Richmond Hill
+            - generic [ref=e300]: North York
+            - generic [ref=e301]: Thornhill
+          - link "Contact Us" [ref=e302] [cursor=pointer]:
+            - /url: /en/contact
+            - text: Contact Us
+            - generic [aria-hidden] [ref=e303]: →
+        - img "Interior of Maryam Beauty Clinic" [ref=e305]
+      - generic [ref=e307]:
+        - generic [ref=e308]:
+          - generic [ref=e309]:
+            - paragraph [ref=e310]: Journal
+            - heading "Blog" [level=2] [ref=e311]
+          - link "All Posts" [ref=e312] [cursor=pointer]:
+            - /url: /en/blog
+            - text: All Posts
+            - generic [aria-hidden] [ref=e313]: →
+        - generic [ref=e314]:
+          - link [ref=e315] [cursor=pointer]:
+            - /url: /en/post/what-is-the-best-laser-tattoo-removing-machine
+            - paragraph [ref=e316]: Tattoo removal
+            - heading "What is the best laser tattoo removing machine?" [level=3] [ref=e317]
+            - paragraph [ref=e318]: Choosing the right laser tattoo removal device is essential to ensure the best possible results with minimal risks. This article looks at factors to consider when choosing a laser tattoo removal machine in Toronto.
+            - paragraph [ref=e319]: by Maryam Vares · May 23, 2024 · 3 min read
+          - link [ref=e320] [cursor=pointer]:
+            - /url: /en/post/is-it-true-that-tattoo-laser-removal-leaves-a-scar
+            - paragraph [ref=e321]: Tattoo removal
+            - heading "Is it true that tattoo laser removal leaves a scar?" [level=3] [ref=e322]
+            - paragraph [ref=e323]: Many people are looking for ways to wipe off their inked memories and one common method is laser treatment. But does laser tattoo removal leave scars? Let's look at the facts and debunk some myths.
+            - paragraph [ref=e324]: by Maryam Vares · May 23, 2024 · 5 min read
+          - link [ref=e325] [cursor=pointer]:
+            - /url: /en/post/what-is-the-best-for-treating-acne-permanently
+            - paragraph [ref=e326]: Acne & Spot Treatments
+            - heading "What is the best for treating acne permanently?" [level=3] [ref=e327]
+            - paragraph [ref=e328]: There isn't any such thing as a universal remedy for acne; however, some effective approaches can help contain and considerably reduce the severity and frequency of breakouts.
+            - paragraph [ref=e329]: by Maryam Vares · May 21, 2024 · 4 min read
+      - generic [ref=e331]:
+        - paragraph [ref=e332]: Book with us
+        - heading "Ready to feel your best?" [level=2] [ref=e333]
+        - paragraph [ref=e334]: Book your consultation and let's create a treatment plan designed for you.
+        - generic [ref=e335]:
+          - link "Book Your Appointment" [ref=e336] [cursor=pointer]:
+            - /url: /en/booking
+          - link "Contact Us" [ref=e337] [cursor=pointer]:
+            - /url: /en/contact
+  - contentinfo [ref=e338]:
+    - generic [ref=e339]:
+      - generic [ref=e340]:
+        - generic [ref=e341]:
+          - link "Maryam Beauty Clinic" [ref=e342] [cursor=pointer]:
+            - /url: /en
+            - generic [ref=e343]: Maryam
+            - generic [ref=e344]: Beauty Clinic
+          - paragraph [ref=e345]: Personalized aesthetic treatments at Yonge & Steeles, serving Thornhill, North York and the Greater Toronto Area.
+          - generic [ref=e346]:
+            - link "Facebook" [ref=e347] [cursor=pointer]:
+              - /url: https://www.facebook.com/profile.php?id=61551878311257
+              - generic [ref=e348]: F
+            - link "Instagram" [ref=e349] [cursor=pointer]:
+              - /url: https://www.instagram.com/maryambeauty_clinic/
+              - generic [ref=e350]: I
+        - generic [ref=e351]:
+          - paragraph [ref=e352]: Treatments
+          - generic [ref=e353]:
+            - generic [ref=e354]:
+              - paragraph [ref=e355]: Laser
+              - list [ref=e356]:
+                - listitem [ref=e357]:
+                  - link "Women's Laser Hair removal" [ref=e358] [cursor=pointer]:
+                    - /url: /en/service-page/womens-laser-hair-removal
+                - listitem [ref=e359]:
+                  - link "Men's Laser Hair Removal" [ref=e360] [cursor=pointer]:
+                    - /url: /en/service-page/mens-laser-hair-removal
+                - listitem [ref=e361]:
+                  - link "Acne Treatment" [ref=e362] [cursor=pointer]:
+                    - /url: /en/service-page/acne-treatment
+                - listitem [ref=e363]:
+                  - link "Photo Facial Treatment" [ref=e364] [cursor=pointer]:
+                    - /url: /en/service-page/photo-facial-treatment
+                - listitem [ref=e365]:
+                  - link "Spot Treatment" [ref=e366] [cursor=pointer]:
+                    - /url: /en/service-page/spot-treatment
+                - listitem [ref=e367]:
+                  - link "Carbon Laser (Hollywood peeling)" [ref=e368] [cursor=pointer]:
+                    - /url: /en/service-page/carbon-laser
+            - generic [ref=e369]:
+              - paragraph [ref=e370]: Microneedling
+              - list [ref=e371]:
+                - listitem [ref=e372]:
+                  - link "Microneedling" [ref=e373] [cursor=pointer]:
+                    - /url: /en/service-page/microneedling
+            - generic [ref=e374]:
+              - paragraph [ref=e375]: Facial
+              - list [ref=e376]:
+                - listitem [ref=e377]:
+                  - link "Mini Facial" [ref=e378] [cursor=pointer]:
+                    - /url: /en/service-page/mini-facial
+                - listitem [ref=e379]:
+                  - link "Facial Classic" [ref=e380] [cursor=pointer]:
+                    - /url: /en/service-page/facial-classic
+                - listitem [ref=e381]:
+                  - link "Facial VIP" [ref=e382] [cursor=pointer]:
+                    - /url: /en/service-page/facial-vip
+                - listitem [ref=e383]:
+                  - link "Carboxy Therapy" [ref=e384] [cursor=pointer]:
+                    - /url: /en/service-page/carboxy-therapy
+                - listitem [ref=e385]:
+                  - link "Chemical Peeling" [ref=e386] [cursor=pointer]:
+                    - /url: /en/service-page/chemical-peeling
+                - listitem [ref=e387]:
+                  - link "High Frequency Facial" [ref=e388] [cursor=pointer]:
+                    - /url: /en/service-page/high-frequency-facial
+            - generic [ref=e389]:
+              - paragraph [ref=e390]: Hair
+              - list [ref=e391]:
+                - listitem [ref=e392]:
+                  - link "Hair growth Treatment" [ref=e393] [cursor=pointer]:
+                    - /url: /en/service-page/hair-growth-treatment
+            - generic [ref=e394]:
+              - paragraph [ref=e395]: Eyebrow & Lash
+              - list [ref=e396]:
+                - listitem [ref=e397]:
+                  - link "Shaping Eyebrow" [ref=e398] [cursor=pointer]:
+                    - /url: /en/service-page/shaping-eyebrow
+                - listitem [ref=e399]:
+                  - link "Brow Laminate & Lift" [ref=e400] [cursor=pointer]:
+                    - /url: /en/service-page/brow-laminate-lift
+                - listitem [ref=e401]:
+                  - link "Microblading" [ref=e402] [cursor=pointer]:
+                    - /url: /en/service-page/microblading
+                - listitem [ref=e403]:
+                  - link "Eyelash Extensions" [ref=e404] [cursor=pointer]:
+                    - /url: /en/service-page/eyelash-extensions
+                - listitem [ref=e405]:
+                  - link "Lash Lift & Laminate" [ref=e406] [cursor=pointer]:
+                    - /url: /en/service-page/lash-lift-laminate
+                - listitem [ref=e407]:
+                  - link "Tattoo removal" [ref=e408] [cursor=pointer]:
+                    - /url: /en/service-page/tattoo-removal
+        - generic [ref=e409]:
+          - paragraph [ref=e410]: Contact
+          - generic [ref=e411]:
+            - generic [ref=e412]:
+              - paragraph [ref=e413]: Yonge & Steeles
+              - paragraph [ref=e414]: "180 Steeles Avenue West #27, Thornhill, ON, Canada"
+            - generic [ref=e415]:
+              - link "647-615-8051" [ref=e416] [cursor=pointer]:
+                - /url: tel:+16476158051
+              - link "maryamvares@gmail.com" [ref=e417] [cursor=pointer]:
+                - /url: mailto:maryamvares@gmail.com
+          - paragraph [ref=e418]: Opening hours
+          - list [ref=e419]:
+            - listitem [ref=e420]:
+              - generic [ref=e421]: Mon - Fri
+              - generic [ref=e422]: 10am - 5pm
+            - listitem [ref=e423]:
+              - generic [ref=e424]: Saturday
+              - generic [ref=e425]: 11am - 4pm
+            - listitem [ref=e426]:
+              - generic [ref=e427]: Sunday
+              - generic [ref=e428]: Closed
+      - generic [ref=e429]:
+        - paragraph [ref=e430]: © 2026 Maryam Beauty Clinic. All rights reserved.
+        - paragraph [ref=e431]: "Demo build: booking is fully functional; payments, email and SMS are mocked."
+  - alert [ref=e432]

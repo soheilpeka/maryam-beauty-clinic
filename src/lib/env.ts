@@ -27,10 +27,22 @@ export const env = {
     const v = process.env.NOTIFICATION_PROVIDER;
     return v === "console" ? "console" : "mock";
   },
-  get adminSeedEmail(): string {
-    return process.env.ADMIN_SEED_EMAIL ?? "admin@maryambeautyclinic.example";
+  /** Name of the admin session cookie. */
+  get sessionCookieName(): string {
+    return process.env.ADMIN_SESSION_COOKIE ?? "mbc_admin_session";
   },
-  get adminSeedPassword(): string {
-    return process.env.ADMIN_SEED_PASSWORD ?? "DemoAdmin2026!";
+  /**
+   * Initial admin account for the bootstrap script (prisma/bootstrap-admin.ts). There is no
+   * default password anywhere in the codebase; the script refuses to run without these.
+   */
+  get adminInitialEmail(): string {
+    const v = process.env.ADMIN_INITIAL_EMAIL;
+    if (!v) throw new Error("ADMIN_INITIAL_EMAIL is not set (needed to create the first admin)");
+    return v.trim().toLowerCase();
+  },
+  get adminInitialPassword(): string {
+    const v = process.env.ADMIN_INITIAL_PASSWORD;
+    if (!v) throw new Error("ADMIN_INITIAL_PASSWORD is not set (needed to create the first admin)");
+    return v;
   },
 } as const;

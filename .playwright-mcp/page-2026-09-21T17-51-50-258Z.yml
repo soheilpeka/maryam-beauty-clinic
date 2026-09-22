@@ -1,0 +1,94 @@
+- generic [ref=f11e3]:
+  - region "top of page" [active]
+  - button "Skip to Main Content"
+  - generic [ref=f11e11]:
+    - banner [ref=f11e12]:
+      - generic [ref=f11e18]:
+        - generic:
+          - generic:
+            - generic "0decae_20dcbe2628e24e9b904b02bfddb14f13~mv2.png" [ref=f11e19] [cursor=pointer]:
+              - link [ref=f11e20]:
+                - /url: https://www.maryambeautyclinic.ca
+                - img "Maryam Beauty Clinic LOGO" [ref=f11e21]
+            - navigation "Site" [ref=f11e23]:
+              - list [ref=f11e24]:
+                - listitem [ref=f11e25] [cursor=pointer]:
+                  - link [ref=f11e26]:
+                    - /url: https://www.maryambeautyclinic.ca/blog
+                    - paragraph [ref=f11e29]: BLOG
+                - listitem [ref=f11e30] [cursor=pointer]:
+                  - link [ref=f11e31]:
+                    - /url: https://www.maryambeautyclinic.ca/book-online
+                    - paragraph [ref=f11e34]: BOOK ONLINE
+                - listitem [ref=f11e35] [cursor=pointer]:
+                  - link [ref=f11e36]:
+                    - /url: https://www.maryambeautyclinic.ca/pricing-plans/packages
+                    - paragraph [ref=f11e39]: PACKAGES
+                - listitem [ref=f11e40] [cursor=pointer]:
+                  - link [ref=f11e41]:
+                    - /url: https://www.maryambeautyclinic.ca
+                    - paragraph [ref=f11e44]: CONTACT
+                - listitem [ref=f11e45] [cursor=pointer]:
+                  - paragraph [ref=f11e49]: More
+            - heading [level=1] [ref=f11e50]:
+              - link "Maryam Beauty Clinic" [ref=f11e52] [cursor=pointer]:
+                - /url: https://www.maryambeautyclinic.ca
+            - button "Log In" [ref=f11e54] [cursor=pointer]
+            - button "Cart with 0 items" [ref=f11e65] [cursor=pointer]:
+              - img [ref=f11e67]:
+                - generic [ref=f11e70]: "0"
+    - main [ref=f11e71]:
+      - generic [ref=f11e77]:
+        - generic:
+          - generic:
+            - generic [ref=f11e85]:
+              - generic "Microneedling" [ref=f11e86]:
+                - generic [ref=f11e93]:
+                  - generic [ref=f11e94]: Microneedling Cover Page at Yonge & Steeles
+                  - text: Image not found
+                - heading "Microneedling" [level=1] [ref=f11e95]
+              - region "Microneedling details" [ref=f11e97]:
+                - generic [ref=f11e100]:
+                  - paragraph [ref=f11e104]: From $200 (depends on the area)
+                  - generic [ref=f11e107]:
+                    - generic [ref=f11e108]:
+                      - text: 1 hr 30 min
+                      - generic [ref=f11e109]: 1 h 30 min
+                    - generic [ref=f11e110]:
+                      - generic [ref=f11e111]: 200 Canadian dollars
+                      - generic [ref=f11e113]: $200
+                    - generic [ref=f11e114]: Yonge & Steeles
+                  - generic [ref=f11e117]:
+                    - heading "Service Description" [level=2] [ref=f11e118]
+                    - paragraph [ref=f11e119]: Phi Microneedling provided by Maryam Beauty Clinic is perfect for bringing your skin back to life with visible improvements of a clean, radiant complexion. We are conveniently located at Yonge & Steeles, allowing us to serve customers from Markham, Toronto, Richmond Hill, Vaughan, Thornhill as well as North York, and provide them with high-quality laser treatments and skincare services individually developed based on their specific needs. Phi Microneedling is an innovative procedure that employs little needles that create small microchannels within the epidermis. It’s basically a noninvasive technique aimed at increasing the amount of collagen produced by the body which is a protein responsible for maintaining young-looking and tight skin. Phi Microneedling strengthens collagen levels in order to minimize fine lines, wrinkles, scars while also reducing roughness and improving complexion tone. In addition to stimulating collagen production, these microchannels assist in more effective penetration of topical skincare products during the Phi Microneedling process. This means that all the useful elements contained in your cosmetics will be able to get deeper into your dermal layers so that they can perform better resulting in a more transformed look for you. Throughout treatment at Maryam Beauty Clinic we ensure that our clients feel comfortable and satisfied. We pay attention to each client’s personal needs by analyzing their unique type of skin before designing individualized therapy courses just for them. We employ highly trained professionals using modern tools who render safe and convenient techniques of intervention. Look forward to having fresh glowing skin instead of dull lifeless one thanks to Phi Microneedling treatment being done on you. Make appointments with us at Maryam Beauty Clinic now in order to start moving towards achieving a healthy pretty skin you always dreamt about. Our skilled team would make your journey enjoyable while attaining stunning results if you trust our expertise on this matter. Like many people before you who sought our tailored treatments have gone through.
+                  - region [ref=f11e125]:
+                    - generic "Best Microneedling at Yonge & Steeles" [ref=f11e128]:
+                      - generic [ref=f11e131]:
+                        - img "Best Microneedling at Yonge & Steeles" [ref=f11e132]
+                        - img "Best Microneedling at Yonge & Steeles" [ref=f11e133]
+                  - generic [ref=f11e136]:
+                    - heading "Contact Details" [level=2] [ref=f11e137]
+                    - list [ref=f11e138]:
+                      - listitem [ref=f11e139]:
+                        - paragraph [ref=f11e140]: Yonge & Steeles
+                        - paragraph [ref=f11e141]: "180 Steeles Avenue West #27, Thornhill, ON, Canada"
+                  - separator [ref=f11e143]
+            - link "See results of the treatment" [ref=f11e145] [cursor=pointer]:
+              - /url: https://www.instagram.com/maryambeauty_clinic/
+            - iframe [ref=f11e150]
+    - contentinfo [ref=f11e151]:
+      - generic [ref=f11e157]:
+        - generic:
+          - generic:
+            - list "Social Bar" [ref=f11e159]:
+              - listitem [ref=f11e160]:
+                - link "Facebook" [ref=f11e161] [cursor=pointer]:
+                  - /url: https://www.facebook.com/profile.php?id=61553659672708
+                  - img "Facebook" [ref=f11e162]
+              - listitem [ref=f11e163]:
+                - link "Instagram" [ref=f11e164] [cursor=pointer]:
+                  - /url: https://www.instagram.com/maryambeauty_clinic/
+                  - img "Instagram" [ref=f11e165]
+            - paragraph [ref=f11e166]:
+              - generic [ref=f11e167]: © 2023 Powered and secured by Maryam Beauty Clinic
+  - region "bottom of page"

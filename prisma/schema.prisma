@@ -218,4 +218,38 @@ model AdminUser {
   name         String?
   role         String   @default("admin")
   createdAt    DateTime @default(now())
+  sessions     AdminSession[]
+}
+
+/// Server-side session for the admin dashboard. The cookie carries the raw token; the DB
+/// stores only its sha256 digest so a leaked database cannot be replayed as a live session.
+/// Deleting a row (logout) invalidates the session server-side, even if the cookie remains.
+/// Per-email login failure tracking for rate limiting. Keyed by the submitted email
+/// (lowercased) so the limiter behaves identically for existing and non-existing accounts,
+/// which avoids leaking which emails are real.
+model LoginFailure {
+  /// Normalized submitted email
+  email       String   @id
+  attempts    Int      @default(0)
+  windowStart DateTime @default(now())
+  /// Until when the email is locked after too many failures (null = not locked)
+  lockedUntil DateTime?
+  updatedAt   DateTime @updatedAt
+
+  @@index([lockedUntil])
+}
+
+model AdminSession {
+  id        String   @id @default(cuid())
+  adminId   String
+  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  /// sha256 of the raw session token (the raw token only ever lives in the cookie)
+  tokenHash String   @unique
+  /// sha256 of the CSRF token bound to this session
+  csrfHash  String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([adminId])
+  @@index([expiresAt])
 }

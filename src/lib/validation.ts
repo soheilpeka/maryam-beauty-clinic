@@ -23,7 +23,8 @@ export const customerSchema = z.object({
 
 export type CustomerInput = z.infer<typeof customerSchema>;
 
-export const bookingMutationSchema = z.object({
+/** Public request submission: a preferred date + preferred time, no computed slots. */
+export const bookingRequestSchema = z.object({
   serviceId: z.string().min(1, { message: "validation.service.required" }),
   staffId: z.string().min(1, { message: "validation.staff.required" }),
   dayKey: z
@@ -33,13 +34,20 @@ export const bookingMutationSchema = z.object({
   customer: customerSchema,
 });
 
-export type BookingMutation = z.infer<typeof bookingMutationSchema>;
+export type BookingRequestInput = z.infer<typeof bookingRequestSchema>;
 
-export const rescheduleSchema = z.object({
+/** Admin-side time adjust when confirming a request. */
+export const confirmRequestSchema = z.object({
   dayKey: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "validation.date.invalid" }),
   startMinutes: z.number().int().min(0).max(1439),
+  staffId: z.string().min(1).optional(),
+});
+
+/** Admin decline: an optional reason shown to the customer. */
+export const declineRequestSchema = z.object({
+  reason: z.string().trim().max(500, { message: "validation.note.max" }).optional().or(z.literal("")),
 });
 
 export const adminLoginSchema = z.object({

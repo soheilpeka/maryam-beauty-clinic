@@ -1,51 +1,101 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter/index.css";
+@import "@fontsource-variable/fraunces/index.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Maryam Beauty Clinic - design system.
+ * Tokens are converted from the reference site's OK/Lab values (D65) and kept in sync
+ * with the visual language: warm ivory background, near-black warm ink, dusty-rose
+ * brand accent, champagne/gold highlights, Fraunces display + Inter body.
+ */
 :root {
-  --color-brand-50: #fdf6f1;
-  --color-brand-100: #f9e8dd;
-  --color-brand-200: #f2d0bd;
-  --color-brand-300: #e8b295;
-  --color-brand-400: #db8d68;
-  --color-brand-500: #cb6f47;
-  --color-brand-600: #b65634;
-  --color-brand-700: #94422a;
-  --color-brand-800: #6f3121;
-  --color-brand-900: #4a2016;
-  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --color-background: #fbf7f2;
+  --color-foreground: #28211d;
+  --color-primary: #2f2723;
+  --color-primary-foreground: #fcf8f3;
+  --color-brand: #b37877;
+  --color-brand-foreground: #fdfbf8;
+  --color-brand-soft: #fce1df;
+  --color-gold: #caa56e;
+  --color-champagne: #f2e4d4;
+  --color-accent: #f6e9e0;
+  --color-muted: #f6efe7;
+  --color-muted-foreground: #706761;
+  --color-border: #e3ddd7;
+  --color-card: #fefcf9;
+  --color-card-foreground: #28211d;
+  --color-secondary: #f6efe7;
+  --color-secondary-foreground: #3a322c;
+  --color-destructive: #b3473b;
+
+  --font-serif: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --radius: 0.75rem;
+
+  /* Editorial display scale - Fraunces at light weight, tight leading. */
+  --display-1: 4.063rem;   /* 65px h1 */
+  --display-2: 3.5rem;     /* 56px h2 */
 }
 
 @theme inline {
-  --color-brand-50: var(--color-brand-50);
-  --color-brand-100: var(--color-brand-100);
-  --color-brand-200: var(--color-brand-200);
-  --color-brand-300: var(--color-brand-300);
-  --color-brand-400: var(--color-brand-400);
-  --color-brand-500: var(--color-brand-500);
-  --color-brand-600: var(--color-brand-600);
-  --color-brand-700: var(--color-brand-700);
-  --color-brand-800: var(--color-brand-800);
-  --color-brand-900: var(--color-brand-900);
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-brand: var(--color-brand);
+  --color-brand-foreground: var(--color-brand-foreground);
+  --color-brand-soft: var(--color-brand-soft);
+  --color-gold: var(--color-gold);
+  --color-champagne: var(--color-champagne);
+  --color-accent: var(--color-accent);
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-border: var(--color-border);
+  --color-card: var(--color-card);
+  --color-card-foreground: var(--color-card-foreground);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: var(--color-secondary-foreground);
+  --color-destructive: var(--color-destructive);
   --font-serif: var(--font-serif);
   --font-sans: var(--font-sans);
+  --radius: var(--radius);
 }
 
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 6rem;
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: #faf8f6;
-  color: #1c1917;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-feature-settings: "kern", "liga";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-.dark body {
-  background-color: #17130f;
-  color: #f5f0ea;
+.dark {
+  --color-background: #1a1613;
+  --color-foreground: #f2eae2;
+  --color-primary: #f6efe7;
+  --color-primary-foreground: #241d18;
+  --color-brand: #cf9b95;
+  --color-brand-soft: #4a2f2d;
+  --color-gold: #d8ba86;
+  --color-champagne: #3a2f24;
+  --color-accent: #2a231e;
+  --color-muted: #241f1b;
+  --color-muted-foreground: #b5a99e;
+  --color-border: #382f28;
+  --color-card: #211c18;
+  --color-card-foreground: #f2eae2;
+  --color-secondary: #2a241f;
+  --color-secondary-foreground: #e8ded3;
 }
 
 /* Respect reduced motion: disable smooth scroll and long transitions. */
@@ -64,9 +114,30 @@ body {
 
 /* Visible focus ring for keyboard users (accessibility). */
 :focus-visible {
-  outline: 3px solid var(--color-brand-500);
+  outline: 2px solid var(--color-brand);
   outline-offset: 2px;
   border-radius: 0.25rem;
+}
+
+@utility font-serif {
+  font-family: var(--font-serif);
+}
+
+/* Editorial display headings: light-weight Fraunces with optical sizing. */
+@utility display-heading {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  font-optical-sizing: auto;
+}
+
+@utility eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--color-brand);
 }
 
 @keyframes fade-in-up {
@@ -84,6 +155,17 @@ body {
   animation: fade-in-up 0.6s ease-out both;
 }
 
-@utility font-serif {
-  font-family: var(--font-serif);
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@utility animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+/* Thin, elegant hairline rule used between editorial sections. */
+@utility hairline {
+  height: 1px;
+  background-color: var(--color-border);
 }

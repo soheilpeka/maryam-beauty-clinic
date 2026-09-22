@@ -134,4 +134,111 @@ export function sendBookingNotifications(data: BookingNotificationData): Promise
   ]);
 }
 
+export interface NewRequestData {
+  ref: string;
+  customerName: string;
+  serviceName: string;
+  staffName: string;
+  /** Customer's preferred date/time, already localized for display */
+  whenLabel: string;
+  customerEmail: string;
+  customerPhone: string;
+  note?: string | null;
+  adminEmail: string;
+  /** Admin URL to the requests list */
+  adminUrl: string;
+  locale: string;
+}
+
+/** Alert the salon that a new request needs a decision. */
+export function newRequestAdminEmail(data: NewRequestData): NotificationMessage {
+  if (data.locale === "fr") {
+    return {
+      to: data.adminEmail,
+      subject: `Nouvelle demande de rendez-vous (${data.ref})`,
+      body: [
+        `Nouvelle demande a confirmer :`,
+        `Client : ${data.customerName}`,
+        `Service : ${data.serviceName}`,
+        `Specialiste : ${data.staffName}`,
+        `Souhaite : ${data.whenLabel}`,
+        `Email : ${data.customerEmail}`,
+        `Telephone : ${data.customerPhone}`,
+        data.note ? `Note : ${data.note}` : null,
+        ``,
+        `Confirerez ou refusez ici :`,
+        `${data.adminUrl}`,
+        ``,
+        `Reference : ${data.ref}`,
+      ].filter(Boolean).join("\n"),
+    };
+  }
+  return {
+    to: data.adminEmail,
+    subject: `New appointment request (${data.ref})`,
+    body: [
+      `A new request needs your decision:`,
+      `Customer: ${data.customerName}`,
+      `Service: ${data.serviceName}`,
+      `Specialist: ${data.staffName}`,
+      `Requested: ${data.whenLabel}`,
+      `Email: ${data.customerEmail}`,
+      `Phone: ${data.customerPhone}`,
+      data.note ? `Note: ${data.note}` : null,
+      ``,
+      `Confirm or decline here:`,
+      `${data.adminUrl}`,
+      ``,
+      `Reference: ${data.ref}`,
+    ].filter(Boolean).join("\n"),
+  };
+}
+
+/** Fire-and-forget admin alert; only an email is sent (no admin phone number is stored). */
+export function notifyAdminNewRequest(data: NewRequestData): Promise<void[]> {
+  return Promise.all([notificationProvider.sendEmail(newRequestAdminEmail(data))]);
+}
+
+export interface DeclinedData {
+  customerName: string;
+  customerEmail: string;
+  ref: string;
+  reason?: string | null;
+  locale: string;
+}
+
+/** Tell the customer their request was declined, with an optional reason. */
+export function bookingDeclinedEmail(data: DeclinedData): NotificationMessage {
+  if (data.locale === "fr") {
+    return {
+      to: data.customerEmail,
+      subject: `Votre demande n'a pas pu etre confirmee (${data.ref})`,
+      body: [
+        `Bonjour ${data.customerName},`,
+        ``,
+        `Malheureusement nous n'avons pas pu confirmer votre demande de rendez-vous ${data.ref}.`,
+        data.reason ? `Raison : ${data.reason}` : null,
+        `Nous vous invitons a reprendre rendez-vous a un autre moment.`,
+        ``,
+        `A bientot,`,
+        `Maryam Beauty Clinic`,
+      ].filter(Boolean).join("\n"),
+    };
+  }
+  return {
+    to: data.customerEmail,
+    subject: `Your request could not be confirmed (${data.ref})`,
+    body: [
+      `Hi ${data.customerName},`,
+      ``,
+      `Unfortunately we could not confirm your appointment request ${data.ref}.`,
+      data.reason ? `Reason: ${data.reason}` : null,
+      `Please feel free to request another time.`,
+      ``,
+      `See you soon,`,
+      `Maryam Beauty Clinic`,
+    ].filter(Boolean).join("\n"),
+  };
+}
+
 export const NOTIFICATION_PROVIDER_NAME = env.notificationProvider;

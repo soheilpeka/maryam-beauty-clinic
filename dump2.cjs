@@ -1,0 +1,11 @@
+const en = require("./messages/en.json");
+const fr = require("./messages/fr.json");
+console.log("EN Contact.hoursLabel:", JSON.stringify(en.Contact.hoursLabel));
+console.log("EN Validation:", JSON.stringify(en.Validation, null, 1));
+console.log("FR Validation:", JSON.stringify(fr.Validation, null, 1));
+console.log("EN Admin.signIn:", JSON.stringify(en.Admin.signIn), "| title:", JSON.stringify(en.Admin.title));
+console.log("FR Admin.signIn:", JSON.stringify(fr.Admin.signIn), "| title:", JSON.stringify(fr.Admin.title));
+console.log("EN Nav keys:", Object.keys(en.Nav).join(", "));
+console.log("FR Nav keys:", Object.keys(fr.Nav).join(", "));
+console.log("EN Sections.clinicEyebrow:", JSON.stringify(en.Sections.clinicEyebrow));
+console.log("FR Sections (first 400):", JSON.stringify(fr.Sections).slice(0, 400));

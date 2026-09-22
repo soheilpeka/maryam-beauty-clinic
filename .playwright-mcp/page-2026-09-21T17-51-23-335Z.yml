@@ -1,0 +1,94 @@
+- generic [ref=f7e3]:
+  - region "top of page" [active]
+  - button "Skip to Main Content"
+  - generic [ref=f7e11]:
+    - banner [ref=f7e12]:
+      - generic [ref=f7e18]:
+        - generic:
+          - generic:
+            - generic "0decae_20dcbe2628e24e9b904b02bfddb14f13~mv2.png" [ref=f7e19] [cursor=pointer]:
+              - link [ref=f7e20]:
+                - /url: https://www.maryambeautyclinic.ca
+                - img "Maryam Beauty Clinic LOGO" [ref=f7e21]
+            - navigation "Site" [ref=f7e23]:
+              - list [ref=f7e24]:
+                - listitem [ref=f7e25] [cursor=pointer]:
+                  - link [ref=f7e26]:
+                    - /url: https://www.maryambeautyclinic.ca/blog
+                    - paragraph [ref=f7e29]: BLOG
+                - listitem [ref=f7e30] [cursor=pointer]:
+                  - link [ref=f7e31]:
+                    - /url: https://www.maryambeautyclinic.ca/book-online
+                    - paragraph [ref=f7e34]: BOOK ONLINE
+                - listitem [ref=f7e35] [cursor=pointer]:
+                  - link [ref=f7e36]:
+                    - /url: https://www.maryambeautyclinic.ca/pricing-plans/packages
+                    - paragraph [ref=f7e39]: PACKAGES
+                - listitem [ref=f7e40] [cursor=pointer]:
+                  - link [ref=f7e41]:
+                    - /url: https://www.maryambeautyclinic.ca
+                    - paragraph [ref=f7e44]: CONTACT
+                - listitem [ref=f7e45] [cursor=pointer]:
+                  - paragraph [ref=f7e49]: More
+            - heading [level=1] [ref=f7e50]:
+              - link "Maryam Beauty Clinic" [ref=f7e52] [cursor=pointer]:
+                - /url: https://www.maryambeautyclinic.ca
+            - button "Log In" [ref=f7e54] [cursor=pointer]
+            - button "Cart with 0 items" [ref=f7e65] [cursor=pointer]:
+              - img [ref=f7e67]:
+                - generic [ref=f7e70]: "0"
+    - main [ref=f7e71]:
+      - generic [ref=f7e77]:
+        - generic:
+          - generic:
+            - generic [ref=f7e85]:
+              - generic "Women's Laser Hair removal" [ref=f7e86]:
+                - generic [ref=f7e93]:
+                  - generic [ref=f7e94]: Women Services Cover Image at Yonge & Steeles
+                  - text: Image not found
+                - heading "Women's Laser Hair removal" [level=1] [ref=f7e95]
+              - region "Women's Laser Hair removal details" [ref=f7e97]:
+                - generic [ref=f7e100]:
+                  - paragraph [ref=f7e104]: From $70 (depends on the area)
+                  - generic [ref=f7e107]:
+                    - generic [ref=f7e108]:
+                      - text: 30 min
+                      - generic [ref=f7e109]: 30 min
+                    - generic [ref=f7e110]:
+                      - generic [ref=f7e111]: 70 Canadian dollars
+                      - generic [ref=f7e113]: $70
+                    - generic [ref=f7e114]: Yonge & Steeles
+                  - generic [ref=f7e117]:
+                    - heading "Service Description" [level=2] [ref=f7e118]
+                    - paragraph [ref=f7e119]: Come to know how soft skin can be achieved at Maryam Beauty Clinic, which is conveniently located on Yonge & Steeles and serves clients from Toronto, Markham, Vaughan, Richmond Hill, North York and Thornhill. Our clinic has specialized in removing hair for women using a sophisticated technology called Sharplight DPC (Dynamic Pulse Control) laser that will provide you with the required results. To give you the best outcome possible, our team of experts is committed to offer you with a comfortable safe environment. We are here to help whether it’s about getting rid of unwanted hair or boosting your natural skin glow through various services we offer just for you that make your self-confidence increase and leave you looking beautiful. Forget about the old methods of eliminating hair and welcome Sharplight DPC technology that accurately targets hair follicles thus giving a lasting solution to unwanted hairs. We have treatments for all types of skins as well as colored hairs where we always engage experienced therapist who will tailor make one for you. We at Maryam Beauty Clinic believe beauty should be easily accessible. This is why our beauty salon is placed in such a way that it can easily be reached from many areas around Toronto. Make advance booking today and see the difference on yourself. Join several other clients who have used us thereby improving their looks and confidence levels. Begin your journey towards flawless skin by visiting Maryam Beauty Clinic today.
+                  - region [ref=f7e125]:
+                    - generic "Women's Laser Hair Removal Full Body at Yonge & Steeles" [ref=f7e128]:
+                      - generic [ref=f7e131]:
+                        - img "Women's Laser Hair Removal Full Body at Yonge & Steeles" [ref=f7e132]
+                        - img "Women's Laser Hair Removal Full Body at Yonge & Steeles" [ref=f7e133]
+                  - generic [ref=f7e136]:
+                    - heading "Contact Details" [level=2] [ref=f7e137]
+                    - list [ref=f7e138]:
+                      - listitem [ref=f7e139]:
+                        - paragraph [ref=f7e140]: Yonge & Steeles
+                        - paragraph [ref=f7e141]: "180 Steeles Avenue West #27, Thornhill, ON, Canada"
+                  - separator [ref=f7e143]
+            - link "See results of the treatment" [ref=f7e145] [cursor=pointer]:
+              - /url: https://www.instagram.com/maryambeauty_clinic/
+            - iframe [ref=f7e150]
+    - contentinfo [ref=f7e151]:
+      - generic [ref=f7e157]:
+        - generic:
+          - generic:
+            - list "Social Bar" [ref=f7e159]:
+              - listitem [ref=f7e160]:
+                - link "Facebook" [ref=f7e161] [cursor=pointer]:
+                  - /url: https://www.facebook.com/profile.php?id=61553659672708
+                  - img "Facebook" [ref=f7e162]
+              - listitem [ref=f7e163]:
+                - link "Instagram" [ref=f7e164] [cursor=pointer]:
+                  - /url: https://www.instagram.com/maryambeauty_clinic/
+                  - img "Instagram" [ref=f7e165]
+            - paragraph [ref=f7e166]:
+              - generic [ref=f7e167]: © 2023 Powered and secured by Maryam Beauty Clinic
+  - region "bottom of page"

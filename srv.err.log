@@ -1,0 +1,30 @@
+Error: MISSING_MESSAGE: Sections.title (en)
+    at m (C:\Users\My Pc\maryam-beauty-clinic\.next\server\chunks\ssr\src_app_[locale]_page_tsx_00h-a9t._.js:1:2306) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'Sections.title (en)'
+}
+Error: MISSING_MESSAGE: Sections.subtitle (en)
+    at m (C:\Users\My Pc\maryam-beauty-clinic\.next\server\chunks\ssr\src_app_[locale]_page_tsx_00h-a9t._.js:1:2428) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'Sections.subtitle (en)'
+}
+Error: MISSING_MESSAGE: Sections.stat1 (en)
+    at m (C:\Users\My Pc\maryam-beauty-clinic\.next\server\chunks\ssr\src_app_[locale]_page_tsx_00h-a9t._.js:1:3139) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'Sections.stat1 (en)'
+}
+Error: MISSING_MESSAGE: Sections.stat2 (en)
+    at m (C:\Users\My Pc\maryam-beauty-clinic\.next\server\chunks\ssr\src_app_[locale]_page_tsx_00h-a9t._.js:1:3150) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'Sections.stat2 (en)'
+}
+Error: MISSING_MESSAGE: Sections.stat3 (en)
+    at m (C:\Users\My Pc\maryam-beauty-clinic\.next\server\chunks\ssr\src_app_[locale]_page_tsx_00h-a9t._.js:1:3161) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'Sections.stat3 (en)'
+}
+Error: MISSING_MESSAGE: Admin.signInHint (en)
+    at f (C:\Users\My Pc\maryam-beauty-clinic\.next\server\chunks\ssr\[root-of-the-server]__02fsf17._.js:1:4684) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'Admin.signInHint (en)'
+}

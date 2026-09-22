@@ -1,4 +1,4 @@
-﻿# Maryam Beauty Clinic - Project Specification
+# Maryam Beauty Clinic - Project Specification
 
 Frozen requirements for a complete, production-quality beauty-salon website with online booking,
 modeled on the best salon/booking sites (Fresha, Booksy). Changes and decisions are logged in
@@ -26,16 +26,35 @@ PROGRESS.md. After any context compaction, re-read this file and PROGRESS.md fir
 - SEO basics: titles, meta descriptions, Open Graph, sitemap.
 
 ## 3. Booking (the core - do this very carefully)
-- Flow: choose service(s) -> choose staff (or "any") -> choose date -> choose time slot ->
-  enter name/phone/email -> confirmation.
-- Available slots computed from working hours, service duration, staff schedule, breaks, and days off.
-- SERVER-SIDE prevention of double booking (race-safe: transaction or unique constraint).
-- Cancel/reschedule via a secure link; confirmation page and email/SMS stubs (mock provider, easy to swap).
+- SCOPE CHANGE 2026-09-22: the public flow is now a manual REQUEST-AND-APPROVE flow, not
+  real-time slot booking. Public visitors request an appointment; the salon approves it.
+- Public flow: choose service -> choose staff (or "any") -> choose a PREFERRED date and a
+  PREFERRED time (a plain date picker + time picker; available slots are NOT computed for
+  the public) -> enter name/phone/email + optional note -> submit.
+- On submit: a Booking is created with status PENDING. NO availability check runs at this
+  step (the request is just recorded). Show a confirmation screen:
+  "Request received, we will confirm shortly." Rate-limit the endpoint.
+- The admin is notified immediately through the notification interface (email/SMS, mocked).
+- The customer keeps a secure cancel link and can cancel a PENDING or CONFIRMED request.
+  (Public rescheduling was removed together with the slot engine; cancel remains.)
+- Times are still stored in UTC and shown in the salon timezone using the DST-correct
+  datetime utilities.
+- Conflict handling moved to admin confirm time: when the salon confirms a request, the
+  server re-checks for a conflicting CONFIRMED booking for the same staff using the
+  existing overlap-safe atomic guard (so two admins confirming overlapping requests can
+  never double-book). The admin may adjust the time before confirming; on a conflict the
+  UI warns and lets them pick another time.
+- On confirm the customer is notified (email/SMS via the same interface); on decline the
+  customer is notified, optionally with a reason.
 - Clear loading, empty, and error states everywhere.
 
 ## 4. Admin dashboard (protected)
-- Secure login. Calendar view of bookings; manage services, staff, working hours, days off, customers.
-- Approve/cancel bookings; basic stats (bookings per day, popular services).
+- Secure login. A "Requests" view lists PENDING bookings first, then CONFIRMED ones, each
+  showing service, staff, requested date/time and customer contact info, with distinct
+  visual status for PENDING vs CONFIRMED.
+- Confirm or decline each request (conflict guard + optional time adjust on confirm).
+- Manage services, staff, working hours, days off, customers. Basic stats (bookings per
+  day, popular services).
 
 ## 5. Quality bar
 - Accessible HTML (labels, focus, keyboard, contrast); validated forms on client AND server.
