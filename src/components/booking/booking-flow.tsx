@@ -233,7 +233,7 @@ export function BookingFlow({
     return (
       <div className="mx-auto max-w-2xl text-center">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
-          <span aria-hidden="true" className="text-3xl text-green-600 dark:text-green-400">Ã¢Å“â€œ</span>
+          <span aria-hidden="true" className="text-3xl text-green-600 dark:text-green-400">✓</span>
         </div>
         <h1 className="mt-6 font-serif text-3xl font-bold text-stone-900 dark:text-stone-50">
           {t("successTitle")}
@@ -353,7 +353,7 @@ export function BookingFlow({
                 className="flex w-full items-center gap-4 rounded-2xl border border-stone-200 bg-white p-5 text-left shadow-sm transition-all hover:border-brand-400 hover:shadow-md dark:border-stone-800 dark:bg-[#211b16]"
               >
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-100 font-semibold text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
-                  â˜…
+                  ★
                 </span>
                 <span>
                   <span className="block font-medium text-stone-900 dark:text-stone-50">{t("anyStaff")}</span>
@@ -529,7 +529,7 @@ export function BookingFlow({
               {dayKey && slot && (
                 <SummaryRow
                   label={t("date")}
-                  value={`${labelForDay(dayKey, tLocale)} Â· ${minutesToLabel(slot.startMinutes, tLocale)}`}
+                  value={`${labelForDay(dayKey, tLocale)} · ${minutesToLabel(slot.startMinutes, tLocale)}`}
                 />
               )}
               <div className="flex justify-between gap-4 border-t border-stone-200 pt-2 dark:border-stone-800">
@@ -555,7 +555,7 @@ export function BookingFlow({
               disabled={submitting}
               className="text-sm font-medium text-stone-600 hover:text-brand-600 dark:text-stone-400"
             >
-              â† {t("back")}
+              ← {t("back")}
             </button>
           </div>
         </form>
@@ -571,7 +571,7 @@ function BackButton({ onClick, label }: { onClick: () => void; label: string }) 
       onClick={onClick}
       className="mt-6 text-sm font-medium text-stone-600 hover:text-brand-600 dark:text-stone-400"
     >
-      â† {label}
+      ← {label}
     </button>
   );
 }

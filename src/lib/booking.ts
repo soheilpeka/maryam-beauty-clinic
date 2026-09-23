@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Booking request-and-approve logic.
  *
  * SCOPE (2026-09-22): the public site no longer computes available slots. A customer
@@ -247,8 +247,12 @@ export async function declineBookingRequest(
   if (!current) throw new BookingNotFoundError();
   if (current.status === "CANCELLED") return current;
 
+  // The [declined] marker is always added, even with no reason: it is how the admin requests
+  // list tells salon-declined requests apart from ones the customer cancelled themselves
+  // (see DECLINED_NOTE_MARKER in the requests route).
   const reason = input.reason?.trim();
-  const note = reason ? (current.note ? `${current.note}\n[declined] ${reason}` : `[declined] ${reason}`) : current.note;
+  const tag = reason ? `[declined] ${reason}` : `[declined]`;
+  const note = current.note ? `${current.note}\n${tag}` : tag;
 
   await prisma.booking.update({
     where: { id: input.bookingId },

@@ -219,6 +219,7 @@ model AdminUser {
   role         String   @default("admin")
   createdAt    DateTime @default(now())
   sessions     AdminSession[]
+  auditLogs    AuditLog[]
 }
 
 /// Server-side session for the admin dashboard. The cookie carries the raw token; the DB
@@ -253,3 +254,28 @@ model AdminSession {
   @@index([adminId])
   @@index([expiresAt])
 }
+
+/// Tamper-evident record of admin actions (who/what/when/where). Written by every
+/// state-changing /api/admin route via src/lib/audit.ts; the dashboard never deletes rows.
+model AuditLog {
+  id        String     @id @default(cuid())
+  /// AdminUser id of the actor, null if the session was deleted after the fact
+  adminId   String?
+  admin     AdminUser? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  /// Short machine-readable action key, e.g. "booking.confirm"
+  action    String
+  /// Entity type the action targeted, e.g. "Booking"
+  targetType String?
+  /// Entity id the action targeted
+  targetId  String?
+  /// Human-readable detail; never secrets or tokens
+  detail    String?
+  /// Client IP of the request, best effort
+  ip        String?
+  createdAt DateTime   @default(now())
+
+  @@index([adminId])
+  @@index([targetType, targetId])
+  @@index([createdAt])
+}
+

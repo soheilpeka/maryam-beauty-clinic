@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
 import {
   createBookingRequest,
   confirmBookingRequest,
@@ -288,6 +288,16 @@ describe("decline / cancel", () => {
 
     expect(declined.status).toBe("CANCELLED");
     expect(declined.note).toContain("[declined] Fully booked that day");
+  });
+
+  it("marks a decline with no reason so it is not mistaken for a customer cancellation", async () => {
+    const created = await createBookingRequest(prisma, requestInput(START_A));
+
+    const declined = await declineBookingRequest(prisma, { bookingId: created.booking.id });
+
+    expect(declined.status).toBe("CANCELLED");
+    // The bare marker is what the admin requests list keys its DECLINED filter off of.
+    expect(declined.note).toContain("[declined]");
   });
 
   it("preserves an existing customer note when appending a decline reason", async () => {

@@ -40,7 +40,7 @@ export function LoginForm({ locale }: { locale: string }) {
         if (typeof window !== "undefined" && json.csrfToken) {
           window.sessionStorage.setItem("admin-csrf", json.csrfToken);
         }
-        router.push(`/${locale}/admin`);
+        router.push(`/admin/requests`);
         router.refresh();
         return;
       }

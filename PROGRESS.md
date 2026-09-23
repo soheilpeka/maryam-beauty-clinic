@@ -64,7 +64,7 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
 
 ## Phase 4 - Admin dashboard
 - [x] Secure login (hashed passwords, safe errors, CSRF, rate limiting)
-- [ ] Requests view: PENDING first then CONFIRMED; confirm/decline with conflict guard
+- [x] Requests view: PENDING first; confirm/decline with conflict guard (2026-09-23)
 - [ ] CRUD: services, staff, working hours, days off, customers
 - [ ] Stats: bookings per day, popular services
 
@@ -75,6 +75,55 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
 - [ ] README: how to run, what was tested, what is mocked (email/SMS/payments)
 
 ## Notes
+- 2026-09-23: FIXED admin sign-in 404. After a successful POST /api/admin/login the form
+      redirected to /admin, but no /[locale]/admin dashboard page exists yet (only
+      /admin/login and /admin/requests), so every sign-in landed on a 404. The redirect now
+      goes to /admin/requests, the admin landing page that does exist. The same 404 was on
+      the requests page's "Dashboard" link; it is now an honest "Back to site" link to the
+      home page (new backToSite key in EN/FR). Verified with a browser sign-in: /en/admin/login
+      -> POST -> /en/admin/requests renders the list (200). tsc clean, vitest 77/77, build ok.
+- 2026-09-23: PHASE 4 PART 2 - admin Requests view built and verified (tsc clean, vitest
+      77/77 over 6 files, `next build` passes).
+      ADDED: AuditLog model + src/lib/audit.ts (append-only, never throws); GET
+      /api/admin/requests (PENDING-first sort, status filter ALL/PENDING/CONFIRMED/
+      DECLINED/CANCELLED); POST /api/admin/requests/[id]/confirm and .../decline (both go
+      through authorizeAdminMutation = session + CSRF, both write an audit entry, both
+      notify the customer); /[locale]/admin/requests page (server-side session gate that
+      redirects to sign-in) + src/components/admin/requests-view.tsx (status filter,
+      native <dialog> confirm/decline modals - so focus, Escape and backdrop come for free -
+      loading skeleton, per-filter empty state, error + retry, session-expired state);
+      49 new Admin i18n keys in EN and FR.
+      DECLINED vs CANCELLED: decline still stores status CANCELLED (unchanged data model);
+      the requests list derives a `declined` flag from the "[declined]" note marker
+      (DECLINED_NOTE_MARKER in the route) so the two are separate filter buckets without a
+      new enum value.
+      BUGS FOUND AND FIXED while building:
+      (1) declineBookingRequest only added the "[declined]" marker when a reason was given,
+      so a reason-less decline was indistinguishable from a customer cancellation. The marker
+      is now always added; lib test added.
+      (2) The CANCELLED filter used NOT (note LIKE '%[declined]%'), which is NOT TRUE for a
+      NULL note in SQLite, so a cancelled request with no note disappeared from its own
+      filter. Fixed with OR note IS NULL; route-layer regression test added.
+      (3) The admin login redirect had regressed back to /en/en/admin (the locale-relative
+      fix from 2026-09-22 was not in the code), so admins could not reach the dashboard at
+      all. Now router.push('/admin') again.
+      (4) Prisma 7's generated client was stale after `prisma db push` (auditLog delegate
+      missing); `npx prisma generate` had to be run explicitly.
+      TEST INFRA: route modules import "server-only", which throws outside a react-server
+      condition; vitest.config.ts now aliases it to node_modules/server-only/empty.js.
+      New src/tests/admin-requests-route.test.ts (17 tests): confirm success (+notification
+      +audit), confirm with time adjust, confirm conflict 409 (request left PENDING, no
+      notification), conflict resolved by moving the time, duplicate-confirm race is
+      idempotent (one notification, two audit rows), 404 unknown id, 400 bad time, decline
+      with/without reason, decline idempotent, unauthenticated 401, missing-CSRF 403, GET
+      PENDING-first ordering, DECLINED-vs-CANCELLED filter split, and dev.db isolation.
+      PLAYWRIGHT SMOKE TEST (dev server, port 3010): signed in, confirmed a request (Oct 6
+      09:00 local stored as 13:00 UTC - DST-correct), triggered the "Time conflict" warning
+      by overlapping a confirmed booking, resolved it by moving to 10:30, declined with a
+      reason (note preserved + "[declined] reason" appended), checked the Declined and
+      Cancelled filters, and verified the full French render (accents, "120,00 $" fr-CA
+      currency, French date format). Escape closes the modal. The three demo-DB mutations
+      were reverted afterward so dev.db is as found.
 - 2026-09-22: SCOPE CHANGE - booking is now request-and-approve instead of real-time slot booking.
   PROJECT_SPEC.md sections 3 and 4 were rewritten to match (see the change log there). Public
   availability computation was removed entirely; the overlap-safe guard now runs once, at admin

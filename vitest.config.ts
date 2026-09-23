@@ -5,7 +5,13 @@ import { resolve } from "node:path";
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: { "@": resolve(__dirname, "./src") },
+    alias: {
+      "@": resolve(__dirname, "./src"),
+      // Route modules import "server-only" to keep them out of client bundles. There is no
+      // bundle split in tests, so resolve it to the no-op shim Next substitutes under its
+      // react-server condition at build time.
+      "server-only": resolve(__dirname, "./node_modules/server-only/empty.js"),
+    },
   },
   test: {
     environment: "node",
