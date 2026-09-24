@@ -1,0 +1,155 @@
+- generic [active] [ref=f5e1]:
+  - link "Skip to content" [ref=f5e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f5e3]:
+    - generic [ref=f5e4]:
+      - link "Maryam Beauty Clinic home" [ref=f5e5] [cursor=pointer]:
+        - /url: /en
+        - generic [ref=f5e6]: Maryam
+        - generic [ref=f5e7]: Beauty Clinic
+      - generic [ref=f5e8]:
+        - button "Switch language" [ref=f5e9]: EN
+        - link "Book Appointment" [ref=f5e13] [cursor=pointer]:
+          - /url: /en/booking
+        - button "Open menu" [ref=f5e14]
+  - main [ref=f5e17]:
+    - generic [ref=f5e18]:
+      - generic [ref=f5e19]:
+        - generic [ref=f5e20]:
+          - heading "Customers" [level=1] [ref=f5e21]
+          - paragraph [ref=f5e22]: Everyone who has requested an appointment.
+        - generic [ref=f5e23]:
+          - generic [ref=f5e24]: Signed in as Demo Admin
+          - button "Sign out" [ref=f5e25]
+      - navigation "Admin navigation" [ref=f5e26]:
+        - link "Dashboard" [ref=f5e27] [cursor=pointer]:
+          - /url: /en/admin
+        - link "Requests" [ref=f5e28] [cursor=pointer]:
+          - /url: /en/admin/requests
+        - link "Services" [ref=f5e29] [cursor=pointer]:
+          - /url: /en/admin/services
+        - link "Staff" [ref=f5e30] [cursor=pointer]:
+          - /url: /en/admin/staff
+        - link "Customers" [ref=f5e31] [cursor=pointer]:
+          - /url: /en/admin/customers
+      - generic "Loading customers..." [ref=f5e32]
+  - contentinfo [ref=f5e42]:
+    - generic [ref=f5e43]:
+      - generic [ref=f5e44]:
+        - generic [ref=f5e45]:
+          - link "Maryam Beauty Clinic" [ref=f5e46] [cursor=pointer]:
+            - /url: /en
+            - generic [ref=f5e47]: Maryam
+            - generic [ref=f5e48]: Beauty Clinic
+          - paragraph [ref=f5e49]: Personalized aesthetic treatments at Yonge & Steeles, serving Thornhill, North York and the Greater Toronto Area.
+          - generic [ref=f5e50]:
+            - link "Facebook" [ref=f5e51] [cursor=pointer]:
+              - /url: https://www.facebook.com/profile.php?id=61551878311257
+              - generic [ref=f5e52]: F
+            - link "Instagram" [ref=f5e53] [cursor=pointer]:
+              - /url: https://www.instagram.com/maryambeauty_clinic/
+              - generic [ref=f5e54]: I
+        - generic [ref=f5e55]:
+          - paragraph [ref=f5e56]: Treatments
+          - generic [ref=f5e57]:
+            - generic [ref=f5e58]:
+              - paragraph [ref=f5e59]: Laser
+              - list [ref=f5e60]:
+                - listitem [ref=f5e61]:
+                  - link "Women's Laser Hair removal" [ref=f5e62] [cursor=pointer]:
+                    - /url: /en/service-page/womens-laser-hair-removal
+                - listitem [ref=f5e63]:
+                  - link "Men's Laser Hair Removal" [ref=f5e64] [cursor=pointer]:
+                    - /url: /en/service-page/mens-laser-hair-removal
+                - listitem [ref=f5e65]:
+                  - link "Acne Treatment" [ref=f5e66] [cursor=pointer]:
+                    - /url: /en/service-page/acne-treatment
+                - listitem [ref=f5e67]:
+                  - link "Photo Facial Treatment" [ref=f5e68] [cursor=pointer]:
+                    - /url: /en/service-page/photo-facial-treatment
+                - listitem [ref=f5e69]:
+                  - link "Spot Treatment" [ref=f5e70] [cursor=pointer]:
+                    - /url: /en/service-page/spot-treatment
+                - listitem [ref=f5e71]:
+                  - link "Carbon Laser (Hollywood peeling)" [ref=f5e72] [cursor=pointer]:
+                    - /url: /en/service-page/carbon-laser
+            - generic [ref=f5e73]:
+              - paragraph [ref=f5e74]: Microneedling
+              - list [ref=f5e75]:
+                - listitem [ref=f5e76]:
+                  - link "Microneedling" [ref=f5e77] [cursor=pointer]:
+                    - /url: /en/service-page/microneedling
+            - generic [ref=f5e78]:
+              - paragraph [ref=f5e79]: Facial
+              - list [ref=f5e80]:
+                - listitem [ref=f5e81]:
+                  - link "Mini Facial" [ref=f5e82] [cursor=pointer]:
+                    - /url: /en/service-page/mini-facial
+                - listitem [ref=f5e83]:
+                  - link "Facial Classic" [ref=f5e84] [cursor=pointer]:
+                    - /url: /en/service-page/facial-classic
+                - listitem [ref=f5e85]:
+                  - link "Facial VIP" [ref=f5e86] [cursor=pointer]:
+                    - /url: /en/service-page/facial-vip
+                - listitem [ref=f5e87]:
+                  - link "Carboxy Therapy" [ref=f5e88] [cursor=pointer]:
+                    - /url: /en/service-page/carboxy-therapy
+                - listitem [ref=f5e89]:
+                  - link "Chemical Peeling" [ref=f5e90] [cursor=pointer]:
+                    - /url: /en/service-page/chemical-peeling
+                - listitem [ref=f5e91]:
+                  - link "High Frequency Facial" [ref=f5e92] [cursor=pointer]:
+                    - /url: /en/service-page/high-frequency-facial
+            - generic [ref=f5e93]:
+              - paragraph [ref=f5e94]: Hair
+              - list [ref=f5e95]:
+                - listitem [ref=f5e96]:
+                  - link "Hair growth Treatment" [ref=f5e97] [cursor=pointer]:
+                    - /url: /en/service-page/hair-growth-treatment
+            - generic [ref=f5e98]:
+              - paragraph [ref=f5e99]: Eyebrow & Lash
+              - list [ref=f5e100]:
+                - listitem [ref=f5e101]:
+                  - link "Shaping Eyebrow" [ref=f5e102] [cursor=pointer]:
+                    - /url: /en/service-page/shaping-eyebrow
+                - listitem [ref=f5e103]:
+                  - link "Brow Laminate & Lift" [ref=f5e104] [cursor=pointer]:
+                    - /url: /en/service-page/brow-laminate-lift
+                - listitem [ref=f5e105]:
+                  - link "Microblading" [ref=f5e106] [cursor=pointer]:
+                    - /url: /en/service-page/microblading
+                - listitem [ref=f5e107]:
+                  - link "Eyelash Extensions" [ref=f5e108] [cursor=pointer]:
+                    - /url: /en/service-page/eyelash-extensions
+                - listitem [ref=f5e109]:
+                  - link "Lash Lift & Laminate" [ref=f5e110] [cursor=pointer]:
+                    - /url: /en/service-page/lash-lift-laminate
+                - listitem [ref=f5e111]:
+                  - link "Tattoo removal" [ref=f5e112] [cursor=pointer]:
+                    - /url: /en/service-page/tattoo-removal
+        - generic [ref=f5e113]:
+          - paragraph [ref=f5e114]: Contact
+          - generic [ref=f5e115]:
+            - generic [ref=f5e116]:
+              - paragraph [ref=f5e117]: Yonge & Steeles
+              - paragraph [ref=f5e118]: "180 Steeles Avenue West #27, Thornhill, ON, Canada"
+            - generic [ref=f5e119]:
+              - link "647-615-8051" [ref=f5e120] [cursor=pointer]:
+                - /url: tel:+16476158051
+              - link "maryamvares@gmail.com" [ref=f5e121] [cursor=pointer]:
+                - /url: mailto:maryamvares@gmail.com
+          - paragraph [ref=f5e122]: Opening hours
+          - list [ref=f5e123]:
+            - listitem [ref=f5e124]:
+              - generic [ref=f5e125]: Mon - Fri
+              - generic [ref=f5e126]: 10am - 5pm
+            - listitem [ref=f5e127]:
+              - generic [ref=f5e128]: Saturday
+              - generic [ref=f5e129]: 11am - 4pm
+            - listitem [ref=f5e130]:
+              - generic [ref=f5e131]: Sunday
+              - generic [ref=f5e132]: Closed
+      - generic [ref=f5e133]:
+        - paragraph [ref=f5e134]: © 2026 Maryam Beauty Clinic. All rights reserved.
+        - paragraph [ref=f5e135]: "Demo build: booking is fully functional; payments, email and SMS are mocked."
+  - button "Open Next.js Dev Tools" [ref=f5e141] [cursor=pointer]

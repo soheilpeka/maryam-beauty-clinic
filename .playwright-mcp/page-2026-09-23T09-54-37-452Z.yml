@@ -1,0 +1,542 @@
+- generic [ref=f4e1]:
+  - link "Skip to content" [ref=f4e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f4e3]:
+    - generic [ref=f4e4]:
+      - link "Maryam Beauty Clinic home" [ref=f4e5] [cursor=pointer]:
+        - /url: /en
+        - generic [ref=f4e6]: Maryam
+        - generic [ref=f4e7]: Beauty Clinic
+      - generic [ref=f4e8]:
+        - button "Switch language" [ref=f4e9]: EN
+        - link "Book Appointment" [ref=f4e13] [cursor=pointer]:
+          - /url: /en/booking
+        - button "Open menu" [ref=f4e14]
+  - main [ref=f4e17]:
+    - generic [ref=f4e18]:
+      - generic [ref=f4e19]:
+        - generic [ref=f4e20]:
+          - heading "Specialists" [level=1] [ref=f4e21]
+          - paragraph [ref=f4e22]: Profiles, services, working hours and days off.
+        - generic [ref=f4e23]:
+          - generic [ref=f4e24]: Signed in as Demo Admin
+          - button "Sign out" [ref=f4e25]
+      - navigation "Admin navigation" [ref=f4e26]:
+        - link "Dashboard" [ref=f4e27] [cursor=pointer]:
+          - /url: /en/admin
+        - link "Requests" [ref=f4e28] [cursor=pointer]:
+          - /url: /en/admin/requests
+        - link "Services" [ref=f4e29] [cursor=pointer]:
+          - /url: /en/admin/services
+        - link "Staff" [ref=f4e30] [cursor=pointer]:
+          - /url: /en/admin/staff
+        - link "Customers" [ref=f4e31] [cursor=pointer]:
+          - /url: /en/admin/customers
+      - generic [ref=f4e142]:
+        - button "Add specialist" [ref=f4e144]
+        - list [ref=f4e145]:
+          - listitem [ref=f4e146]:
+            - generic [ref=f4e147]:
+              - generic [ref=f4e148]:
+                - generic [ref=f4e149]:
+                  - heading "Amelie R." [level=3] [ref=f4e150]
+                  - generic [ref=f4e151]: Active
+                  - generic [ref=f4e152]: Lash Specialist
+                - paragraph [ref=f4e153]: Precision lash artist specializing in natural, long-lasting sets.
+                - generic [ref=f4e154]:
+                  - generic [ref=f4e155]: Brow Lamination & Shaping
+                  - generic [ref=f4e156]: Classic Lash Extensions
+                  - generic [ref=f4e157]: Lash Lift & Tint
+                - generic [ref=f4e158]:
+                  - generic [ref=f4e159]:
+                    - term [ref=f4e160]: "Tuesday:"
+                    - definition [ref=f4e161]: 10:00–18:00 (break 13:00-13:30)
+                  - generic [ref=f4e162]:
+                    - term [ref=f4e163]: "Wednesday:"
+                    - definition [ref=f4e164]: 10:00–18:00 (break 13:00-13:30)
+                  - generic [ref=f4e165]:
+                    - term [ref=f4e166]: "Friday:"
+                    - definition [ref=f4e167]: 10:00–18:00 (break 13:00-13:30)
+                  - generic [ref=f4e168]:
+                    - term [ref=f4e169]: "Saturday:"
+                    - definition [ref=f4e170]: 09:00–17:00 (break 13:00-13:30)
+                - generic [ref=f4e171]:
+                  - generic [ref=f4e172]: "Days off:"
+                  - generic [ref=f4e173]:
+                    - text: Fri, Sep 25
+                    - button "Remove this day off" [ref=f4e174]: ×
+                - paragraph [ref=f4e175]: 0 bookings
+              - generic [ref=f4e176]:
+                - button "Edit" [ref=f4e177]
+                - button "Working hours" [ref=f4e178]
+                - button "Add day off" [ref=f4e179]
+                - button "Delete" [ref=f4e180]
+          - listitem [ref=f4e181]:
+            - generic [ref=f4e182]:
+              - generic [ref=f4e183]:
+                - generic [ref=f4e184]:
+                  - heading "Maryam K." [level=3] [ref=f4e185]
+                  - generic [ref=f4e186]: Active
+                  - generic [ref=f4e187]: Founder & Master Aesthetician
+                - paragraph [ref=f4e188]: Over a decade of experience in advanced skincare and brow artistry.
+                - generic [ref=f4e189]:
+                  - generic [ref=f4e190]: Signature Glow Facial
+                  - generic [ref=f4e191]: Hydrating Facial
+                  - generic [ref=f4e192]: Brow Lamination & Shaping
+                  - generic [ref=f4e193]: Chemical Peel
+                - generic [ref=f4e194]:
+                  - generic [ref=f4e195]:
+                    - term [ref=f4e196]: "Tuesday:"
+                    - definition [ref=f4e197]: 09:00–17:00 (break 12:00-12:30)
+                  - generic [ref=f4e198]:
+                    - term [ref=f4e199]: "Wednesday:"
+                    - definition [ref=f4e200]: 09:00–17:00 (break 12:00-12:30)
+                  - generic [ref=f4e201]:
+                    - term [ref=f4e202]: "Thursday:"
+                    - definition [ref=f4e203]: 09:00–17:00 (break 12:00-12:30)
+                  - generic [ref=f4e204]:
+                    - term [ref=f4e205]: "Friday:"
+                    - definition [ref=f4e206]: 09:00–17:00 (break 12:00-12:30)
+                  - generic [ref=f4e207]:
+                    - term [ref=f4e208]: "Saturday:"
+                    - definition [ref=f4e209]: 09:00–16:00 (break 12:00-12:30)
+                - paragraph [ref=f4e210]: 9 bookings
+              - generic [ref=f4e211]:
+                - button "Edit" [ref=f4e212]
+                - button "Working hours" [ref=f4e213]
+                - button "Add day off" [ref=f4e214]
+                - button "Delete" [ref=f4e215]
+          - listitem [ref=f4e216]:
+            - generic [ref=f4e217]:
+              - generic [ref=f4e218]:
+                - generic [ref=f4e219]:
+                  - heading "Nadia B." [level=3] [ref=f4e220]
+                  - generic [ref=f4e221]: Active
+                  - generic [ref=f4e222]: Skin Therapist
+                - paragraph [ref=f4e223]: Certified in chemical peels and results-driven facial treatments.
+                - generic [ref=f4e224]:
+                  - generic [ref=f4e225]: Signature Glow Facial
+                  - generic [ref=f4e226]: Hydrating Facial
+                  - generic [ref=f4e227]: Relaxation Massage
+                  - generic [ref=f4e228]: Chemical Peel
+                - generic [ref=f4e229]:
+                  - generic [ref=f4e230]:
+                    - term [ref=f4e231]: "Sunday:"
+                    - definition [ref=f4e232]: 11:00–16:00 (break 13:00-13:30)
+                  - generic [ref=f4e233]:
+                    - term [ref=f4e234]: "Wednesday:"
+                    - definition [ref=f4e235]: 11:00–19:00 (break 14:00-14:30)
+                  - generic [ref=f4e236]:
+                    - term [ref=f4e237]: "Thursday:"
+                    - definition [ref=f4e238]: 11:00–19:00 (break 14:00-14:30)
+                  - generic [ref=f4e239]:
+                    - term [ref=f4e240]: "Friday:"
+                    - definition [ref=f4e241]: 11:00–19:00 (break 14:00-14:30)
+                  - generic [ref=f4e242]:
+                    - term [ref=f4e243]: "Saturday:"
+                    - definition [ref=f4e244]: 10:00–18:00 (break 14:00-14:30)
+                - paragraph [ref=f4e245]: 0 bookings
+              - generic [ref=f4e246]:
+                - button "Edit" [ref=f4e247]
+                - button "Working hours" [ref=f4e248]
+                - button "Add day off" [ref=f4e249]
+                - button "Delete" [ref=f4e250]
+          - listitem [ref=f4e251]:
+            - generic [ref=f4e252]:
+              - generic [ref=f4e253]:
+                - generic [ref=f4e254]:
+                  - heading "Sofia D." [level=3] [ref=f4e255]
+                  - generic [ref=f4e256]: Active
+                  - generic [ref=f4e257]: Massage Therapist
+                - paragraph [ref=f4e258]: Licensed therapist focused on deep-tissue and relaxation techniques.
+                - generic [ref=f4e259]:
+                  - generic [ref=f4e260]: Deep Tissue Massage
+                  - generic [ref=f4e261]: Relaxation Massage
+                - generic [ref=f4e262]:
+                  - generic [ref=f4e263]:
+                    - term [ref=f4e264]: "Monday:"
+                    - definition [ref=f4e265]: 09:00–17:00 (break 12:00-12:30)
+                  - generic [ref=f4e266]:
+                    - term [ref=f4e267]: "Tuesday:"
+                    - definition [ref=f4e268]: 09:00–17:00 (break 12:00-12:30)
+                  - generic [ref=f4e269]:
+                    - term [ref=f4e270]: "Thursday:"
+                    - definition [ref=f4e271]: 09:00–17:00 (break 12:00-12:30)
+                  - generic [ref=f4e272]:
+                    - term [ref=f4e273]: "Friday:"
+                    - definition [ref=f4e274]: 09:00–17:00 (break 12:00-12:30)
+                - paragraph [ref=f4e275]: 0 bookings
+              - generic [ref=f4e276]:
+                - button "Edit" [ref=f4e277]
+                - button "Working hours" [ref=f4e278]
+                - button "Add day off" [ref=f4e279]
+                - button "Delete" [ref=f4e280]
+          - listitem [ref=f4e281]:
+            - generic [ref=f4e282]:
+              - generic [ref=f4e283]:
+                - generic [ref=f4e284]:
+                  - heading "Specialist 1" [level=3] [ref=f4e285]
+                  - generic [ref=f4e286]: Active
+                  - generic [ref=f4e287]: Aesthetician
+                - generic [ref=f4e288]:
+                  - generic [ref=f4e289]: Women's Laser Hair removal
+                  - generic [ref=f4e290]: Men's Laser Hair Removal
+                  - generic [ref=f4e291]: Acne Treatment
+                  - generic [ref=f4e292]: Photo Facial Treatment
+                  - generic [ref=f4e293]: Spot Treatment
+                  - generic [ref=f4e294]: Carbon Laser (Hollywood peeling)
+                  - generic [ref=f4e295]: Face Vascular Lesion Treatment
+                  - generic [ref=f4e296]: Hair growth Treatment
+                  - generic [ref=f4e297]: Microneedling
+                  - generic [ref=f4e298]: Mini Facial
+                  - generic [ref=f4e299]: Facial Classic
+                  - generic [ref=f4e300]: Facial VIP
+                  - generic [ref=f4e301]: Carboxy Therapy
+                  - generic [ref=f4e302]: Chemical Peeling
+                  - generic [ref=f4e303]: High Frequency Facial
+                  - generic [ref=f4e304]: Eye Treatment
+                  - generic [ref=f4e305]: Facial Contouring
+                  - generic [ref=f4e306]: Body Contouring
+                  - generic [ref=f4e307]: Shaping Eyebrow
+                  - generic [ref=f4e308]: Brow Laminate & Lift
+                  - generic [ref=f4e309]: Microblading
+                  - generic [ref=f4e310]: Eyelash Extensions
+                  - generic [ref=f4e311]: Lash Lift & Laminate
+                  - generic [ref=f4e312]: Tattoo removal
+                - generic [ref=f4e313]:
+                  - generic [ref=f4e314]:
+                    - term [ref=f4e315]: "Monday:"
+                    - definition [ref=f4e316]: 10:00–17:00 (break 12:30-13:00)
+                  - generic [ref=f4e317]:
+                    - term [ref=f4e318]: "Tuesday:"
+                    - definition [ref=f4e319]: 10:00–17:00 (break 12:30-13:00)
+                  - generic [ref=f4e320]:
+                    - term [ref=f4e321]: "Wednesday:"
+                    - definition [ref=f4e322]: 10:00–17:00 (break 12:30-13:00)
+                  - generic [ref=f4e323]:
+                    - term [ref=f4e324]: "Thursday:"
+                    - definition [ref=f4e325]: 10:00–17:00 (break 12:30-13:00)
+                  - generic [ref=f4e326]:
+                    - term [ref=f4e327]: "Friday:"
+                    - definition [ref=f4e328]: 10:00–17:00 (break 12:30-13:00)
+                - paragraph [ref=f4e329]: 1 bookings
+              - generic [ref=f4e330]:
+                - button "Edit" [ref=f4e331]
+                - button "Working hours" [ref=f4e332]
+                - button "Add day off" [ref=f4e333]
+                - button "Delete" [ref=f4e334]
+          - listitem [ref=f4e335]:
+            - generic [ref=f4e336]:
+              - generic [ref=f4e337]:
+                - generic [ref=f4e338]:
+                  - heading "Specialist 2" [level=3] [ref=f4e339]
+                  - generic [ref=f4e340]: Active
+                  - generic [ref=f4e341]: Aesthetician
+                - generic [ref=f4e342]:
+                  - generic [ref=f4e343]: Women's Laser Hair removal
+                  - generic [ref=f4e344]: Men's Laser Hair Removal
+                  - generic [ref=f4e345]: Acne Treatment
+                  - generic [ref=f4e346]: Photo Facial Treatment
+                  - generic [ref=f4e347]: Spot Treatment
+                  - generic [ref=f4e348]: Carbon Laser (Hollywood peeling)
+                  - generic [ref=f4e349]: Face Vascular Lesion Treatment
+                  - generic [ref=f4e350]: Hair growth Treatment
+                  - generic [ref=f4e351]: Microneedling
+                  - generic [ref=f4e352]: Mini Facial
+                  - generic [ref=f4e353]: Facial Classic
+                  - generic [ref=f4e354]: Facial VIP
+                  - generic [ref=f4e355]: Carboxy Therapy
+                  - generic [ref=f4e356]: Chemical Peeling
+                  - generic [ref=f4e357]: High Frequency Facial
+                  - generic [ref=f4e358]: Eye Treatment
+                  - generic [ref=f4e359]: Facial Contouring
+                  - generic [ref=f4e360]: Body Contouring
+                  - generic [ref=f4e361]: Shaping Eyebrow
+                  - generic [ref=f4e362]: Brow Laminate & Lift
+                  - generic [ref=f4e363]: Microblading
+                  - generic [ref=f4e364]: Eyelash Extensions
+                  - generic [ref=f4e365]: Lash Lift & Laminate
+                  - generic [ref=f4e366]: Tattoo removal
+                - generic [ref=f4e367]:
+                  - generic [ref=f4e368]:
+                    - term [ref=f4e369]: "Tuesday:"
+                    - definition [ref=f4e370]: 10:00–17:00 (break 12:30-13:00)
+                  - generic [ref=f4e371]:
+                    - term [ref=f4e372]: "Wednesday:"
+                    - definition [ref=f4e373]: 10:00–17:00 (break 12:30-13:00)
+                  - generic [ref=f4e374]:
+                    - term [ref=f4e375]: "Thursday:"
+                    - definition [ref=f4e376]: 10:00–17:00 (break 12:30-13:00)
+                  - generic [ref=f4e377]:
+                    - term [ref=f4e378]: "Friday:"
+                    - definition [ref=f4e379]: 10:00–17:00 (break 12:30-13:00)
+                  - generic [ref=f4e380]:
+                    - term [ref=f4e381]: "Saturday:"
+                    - definition [ref=f4e382]: 11:00–16:00 (break 12:30-13:00)
+                - paragraph [ref=f4e383]: 1 bookings
+              - generic [ref=f4e384]:
+                - button "Edit" [ref=f4e385]
+                - button "Working hours" [ref=f4e386]
+                - button "Add day off" [ref=f4e387]
+                - button "Delete" [ref=f4e388]
+          - listitem [ref=f4e389]:
+            - generic [ref=f4e390]:
+              - generic [ref=f4e391]:
+                - generic [ref=f4e392]:
+                  - heading "Specialist 3" [level=3] [ref=f4e393]
+                  - generic [ref=f4e394]: Active
+                  - generic [ref=f4e395]: Aesthetician
+                - generic [ref=f4e396]:
+                  - generic [ref=f4e397]: Women's Laser Hair removal
+                  - generic [ref=f4e398]: Men's Laser Hair Removal
+                  - generic [ref=f4e399]: Acne Treatment
+                  - generic [ref=f4e400]: Photo Facial Treatment
+                  - generic [ref=f4e401]: Spot Treatment
+                  - generic [ref=f4e402]: Carbon Laser (Hollywood peeling)
+                  - generic [ref=f4e403]: Face Vascular Lesion Treatment
+                  - generic [ref=f4e404]: Hair growth Treatment
+                  - generic [ref=f4e405]: Microneedling
+                  - generic [ref=f4e406]: Mini Facial
+                  - generic [ref=f4e407]: Facial Classic
+                  - generic [ref=f4e408]: Facial VIP
+                  - generic [ref=f4e409]: Carboxy Therapy
+                  - generic [ref=f4e410]: Chemical Peeling
+                  - generic [ref=f4e411]: High Frequency Facial
+                  - generic [ref=f4e412]: Eye Treatment
+                  - generic [ref=f4e413]: Facial Contouring
+                  - generic [ref=f4e414]: Body Contouring
+                  - generic [ref=f4e415]: Shaping Eyebrow
+                  - generic [ref=f4e416]: Brow Laminate & Lift
+                  - generic [ref=f4e417]: Microblading
+                  - generic [ref=f4e418]: Eyelash Extensions
+                  - generic [ref=f4e419]: Lash Lift & Laminate
+                  - generic [ref=f4e420]: Tattoo removal
+                - generic [ref=f4e421]:
+                  - generic [ref=f4e422]:
+                    - term [ref=f4e423]: "Wednesday:"
+                    - definition [ref=f4e424]: 10:00–17:00 (break 12:30-13:00)
+                  - generic [ref=f4e425]:
+                    - term [ref=f4e426]: "Thursday:"
+                    - definition [ref=f4e427]: 10:00–17:00 (break 12:30-13:00)
+                  - generic [ref=f4e428]:
+                    - term [ref=f4e429]: "Friday:"
+                    - definition [ref=f4e430]: 10:00–17:00 (break 12:30-13:00)
+                  - generic [ref=f4e431]:
+                    - term [ref=f4e432]: "Saturday:"
+                    - definition [ref=f4e433]: 11:00–16:00 (break 12:30-13:00)
+                - paragraph [ref=f4e434]: 1 bookings
+              - generic [ref=f4e435]:
+                - button "Edit" [ref=f4e436]
+                - button "Working hours" [ref=f4e437]
+                - button "Add day off" [ref=f4e438]
+                - button "Delete" [ref=f4e439]
+        - dialog [ref=f4e440]:
+          - heading "Working hours" [level=2] [ref=f4e441]
+          - paragraph [ref=f4e442]: Admin.scheduleHint
+          - generic [ref=f4e443]:
+            - group "Sunday" [ref=f4e444]:
+              - button "+ Add hours" [active] [ref=f4e447]
+            - group "Monday" [ref=f4e448]:
+              - button "+ Add hours" [ref=f4e451]
+            - group "Tuesday" [ref=f4e452]:
+              - generic [ref=f4e454]:
+                - generic [ref=f4e455]:
+                  - generic [ref=f4e456]:
+                    - generic [ref=f4e457]: Start
+                    - textbox "Start" [ref=f4e458]: 10:00
+                  - generic [ref=f4e459]:
+                    - generic [ref=f4e460]: End
+                    - textbox "End" [ref=f4e461]: 18:00
+                  - generic [ref=f4e462]:
+                    - generic [ref=f4e463]: Break start
+                    - textbox "Break start" [ref=f4e464]: 13:00
+                  - generic [ref=f4e465]:
+                    - generic [ref=f4e466]: Break end
+                    - textbox "Break end" [ref=f4e467]: 13:30
+                  - button "Remove these hours" [ref=f4e468]: ×
+                - button "+ Add hours" [ref=f4e469]
+            - group "Wednesday" [ref=f4e470]:
+              - generic [ref=f4e472]:
+                - generic [ref=f4e473]:
+                  - generic [ref=f4e474]:
+                    - generic [ref=f4e475]: Start
+                    - textbox "Start" [ref=f4e476]: 10:00
+                  - generic [ref=f4e477]:
+                    - generic [ref=f4e478]: End
+                    - textbox "End" [ref=f4e479]: 18:00
+                  - generic [ref=f4e480]:
+                    - generic [ref=f4e481]: Break start
+                    - textbox "Break start" [ref=f4e482]: 13:00
+                  - generic [ref=f4e483]:
+                    - generic [ref=f4e484]: Break end
+                    - textbox "Break end" [ref=f4e485]: 13:30
+                  - button "Remove these hours" [ref=f4e486]: ×
+                - button "+ Add hours" [ref=f4e487]
+            - group "Thursday" [ref=f4e488]:
+              - button "+ Add hours" [ref=f4e491]
+            - group "Friday" [ref=f4e492]:
+              - generic [ref=f4e494]:
+                - generic [ref=f4e495]:
+                  - generic [ref=f4e496]:
+                    - generic [ref=f4e497]: Start
+                    - textbox "Start" [ref=f4e498]: 10:00
+                  - generic [ref=f4e499]:
+                    - generic [ref=f4e500]: End
+                    - textbox "End" [ref=f4e501]: 18:00
+                  - generic [ref=f4e502]:
+                    - generic [ref=f4e503]: Break start
+                    - textbox "Break start" [ref=f4e504]: 13:00
+                  - generic [ref=f4e505]:
+                    - generic [ref=f4e506]: Break end
+                    - textbox "Break end" [ref=f4e507]: 13:30
+                  - button "Remove these hours" [ref=f4e508]: ×
+                - button "+ Add hours" [ref=f4e509]
+            - group "Saturday" [ref=f4e510]:
+              - generic [ref=f4e512]:
+                - generic [ref=f4e513]:
+                  - generic [ref=f4e514]:
+                    - generic [ref=f4e515]: Start
+                    - textbox "Start" [ref=f4e516]: 09:00
+                  - generic [ref=f4e517]:
+                    - generic [ref=f4e518]: End
+                    - textbox "End" [ref=f4e519]: 17:00
+                  - generic [ref=f4e520]:
+                    - generic [ref=f4e521]: Break start
+                    - textbox "Break start" [ref=f4e522]: 13:00
+                  - generic [ref=f4e523]:
+                    - generic [ref=f4e524]: Break end
+                    - textbox "Break end" [ref=f4e525]: 13:30
+                  - button "Remove these hours" [ref=f4e526]: ×
+                - button "+ Add hours" [ref=f4e527]
+            - generic [ref=f4e528]:
+              - button "Cancel" [ref=f4e529]
+              - button "Save" [ref=f4e530]
+  - contentinfo [ref=f4e39]:
+    - generic [ref=f4e40]:
+      - generic [ref=f4e41]:
+        - generic [ref=f4e42]:
+          - link "Maryam Beauty Clinic" [ref=f4e43] [cursor=pointer]:
+            - /url: /en
+            - generic [ref=f4e44]: Maryam
+            - generic [ref=f4e45]: Beauty Clinic
+          - paragraph [ref=f4e46]: Personalized aesthetic treatments at Yonge & Steeles, serving Thornhill, North York and the Greater Toronto Area.
+          - generic [ref=f4e47]:
+            - link "Facebook" [ref=f4e48] [cursor=pointer]:
+              - /url: https://www.facebook.com/profile.php?id=61551878311257
+              - generic [ref=f4e49]: F
+            - link "Instagram" [ref=f4e50] [cursor=pointer]:
+              - /url: https://www.instagram.com/maryambeauty_clinic/
+              - generic [ref=f4e51]: I
+        - generic [ref=f4e52]:
+          - paragraph [ref=f4e53]: Treatments
+          - generic [ref=f4e54]:
+            - generic [ref=f4e55]:
+              - paragraph [ref=f4e56]: Laser
+              - list [ref=f4e57]:
+                - listitem [ref=f4e58]:
+                  - link "Women's Laser Hair removal" [ref=f4e59] [cursor=pointer]:
+                    - /url: /en/service-page/womens-laser-hair-removal
+                - listitem [ref=f4e60]:
+                  - link "Men's Laser Hair Removal" [ref=f4e61] [cursor=pointer]:
+                    - /url: /en/service-page/mens-laser-hair-removal
+                - listitem [ref=f4e62]:
+                  - link "Acne Treatment" [ref=f4e63] [cursor=pointer]:
+                    - /url: /en/service-page/acne-treatment
+                - listitem [ref=f4e64]:
+                  - link "Photo Facial Treatment" [ref=f4e65] [cursor=pointer]:
+                    - /url: /en/service-page/photo-facial-treatment
+                - listitem [ref=f4e66]:
+                  - link "Spot Treatment" [ref=f4e67] [cursor=pointer]:
+                    - /url: /en/service-page/spot-treatment
+                - listitem [ref=f4e68]:
+                  - link "Carbon Laser (Hollywood peeling)" [ref=f4e69] [cursor=pointer]:
+                    - /url: /en/service-page/carbon-laser
+            - generic [ref=f4e70]:
+              - paragraph [ref=f4e71]: Microneedling
+              - list [ref=f4e72]:
+                - listitem [ref=f4e73]:
+                  - link "Microneedling" [ref=f4e74] [cursor=pointer]:
+                    - /url: /en/service-page/microneedling
+            - generic [ref=f4e75]:
+              - paragraph [ref=f4e76]: Facial
+              - list [ref=f4e77]:
+                - listitem [ref=f4e78]:
+                  - link "Mini Facial" [ref=f4e79] [cursor=pointer]:
+                    - /url: /en/service-page/mini-facial
+                - listitem [ref=f4e80]:
+                  - link "Facial Classic" [ref=f4e81] [cursor=pointer]:
+                    - /url: /en/service-page/facial-classic
+                - listitem [ref=f4e82]:
+                  - link "Facial VIP" [ref=f4e83] [cursor=pointer]:
+                    - /url: /en/service-page/facial-vip
+                - listitem [ref=f4e84]:
+                  - link "Carboxy Therapy" [ref=f4e85] [cursor=pointer]:
+                    - /url: /en/service-page/carboxy-therapy
+                - listitem [ref=f4e86]:
+                  - link "Chemical Peeling" [ref=f4e87] [cursor=pointer]:
+                    - /url: /en/service-page/chemical-peeling
+                - listitem [ref=f4e88]:
+                  - link "High Frequency Facial" [ref=f4e89] [cursor=pointer]:
+                    - /url: /en/service-page/high-frequency-facial
+            - generic [ref=f4e90]:
+              - paragraph [ref=f4e91]: Hair
+              - list [ref=f4e92]:
+                - listitem [ref=f4e93]:
+                  - link "Hair growth Treatment" [ref=f4e94] [cursor=pointer]:
+                    - /url: /en/service-page/hair-growth-treatment
+            - generic [ref=f4e95]:
+              - paragraph [ref=f4e96]: Eyebrow & Lash
+              - list [ref=f4e97]:
+                - listitem [ref=f4e98]:
+                  - link "Shaping Eyebrow" [ref=f4e99] [cursor=pointer]:
+                    - /url: /en/service-page/shaping-eyebrow
+                - listitem [ref=f4e100]:
+                  - link "Brow Laminate & Lift" [ref=f4e101] [cursor=pointer]:
+                    - /url: /en/service-page/brow-laminate-lift
+                - listitem [ref=f4e102]:
+                  - link "Microblading" [ref=f4e103] [cursor=pointer]:
+                    - /url: /en/service-page/microblading
+                - listitem [ref=f4e104]:
+                  - link "Eyelash Extensions" [ref=f4e105] [cursor=pointer]:
+                    - /url: /en/service-page/eyelash-extensions
+                - listitem [ref=f4e106]:
+                  - link "Lash Lift & Laminate" [ref=f4e107] [cursor=pointer]:
+                    - /url: /en/service-page/lash-lift-laminate
+                - listitem [ref=f4e108]:
+                  - link "Tattoo removal" [ref=f4e109] [cursor=pointer]:
+                    - /url: /en/service-page/tattoo-removal
+        - generic [ref=f4e110]:
+          - paragraph [ref=f4e111]: Contact
+          - generic [ref=f4e112]:
+            - generic [ref=f4e113]:
+              - paragraph [ref=f4e114]: Yonge & Steeles
+              - paragraph [ref=f4e115]: "180 Steeles Avenue West #27, Thornhill, ON, Canada"
+            - generic [ref=f4e116]:
+              - link "647-615-8051" [ref=f4e117] [cursor=pointer]:
+                - /url: tel:+16476158051
+              - link "maryamvares@gmail.com" [ref=f4e118] [cursor=pointer]:
+                - /url: mailto:maryamvares@gmail.com
+          - paragraph [ref=f4e119]: Opening hours
+          - list [ref=f4e120]:
+            - listitem [ref=f4e121]:
+              - generic [ref=f4e122]: Mon - Fri
+              - generic [ref=f4e123]: 10am - 5pm
+            - listitem [ref=f4e124]:
+              - generic [ref=f4e125]: Saturday
+              - generic [ref=f4e126]: 11am - 4pm
+            - listitem [ref=f4e127]:
+              - generic [ref=f4e128]: Sunday
+              - generic [ref=f4e129]: Closed
+      - generic [ref=f4e130]:
+        - paragraph [ref=f4e131]: © 2026 Maryam Beauty Clinic. All rights reserved.
+        - paragraph [ref=f4e132]: "Demo build: booking is fully functional; payments, email and SMS are mocked."
+  - generic [ref=f4e137] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f4e138]
+    - generic [ref=f4e531]:
+      - button "Open issues overlay" [ref=f4e532]:
+        - generic [ref=f4e533]:
+          - generic [aria-hidden] [ref=f4e534]: "0"
+          - generic [ref=f4e535]: "1"
+        - generic [ref=f4e536]: Issue
+      - button "Collapse issues badge" [ref=f4e537]
+  - alert [ref=f4e540]

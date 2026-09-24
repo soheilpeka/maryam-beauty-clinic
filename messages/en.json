@@ -278,21 +278,55 @@
     "statusCompleted": "Completed"
   },
   "Validation": {
-    "name": "Please enter your full name.",
-    "nameMin": "Name must be at least 2 characters.",
+    "form": "Please correct the highlighted fields.",
+    "required": "This field is required.",
+    "name": {
+      "min": "Name must be at least 2 characters.",
+      "max": "Name must be at most 80 characters."
+    },
     "email": {
       "invalid": "Please enter a valid email address."
     },
-    "phone": "Please enter a valid phone number.",
-    "note": "Note must be less than 500 characters.",
-    "service": "Please choose a service.",
-    "staff": "Please choose a specialist.",
-    "date": "Please choose a date.",
+    "phone": {
+      "invalid": "Please enter a valid phone number."
+    },
+    "note": {
+      "max": "Notes must be at most 500 characters."
+    },
+    "service": {
+      "required": "Please choose a service."
+    },
+    "staff": {
+      "required": "Please choose a specialist."
+    },
+    "date": {
+      "invalid": "Please choose a valid date."
+    },
     "password": {
       "min": "Password must be at least 8 characters."
     },
-    "form": "Please correct the highlighted fields.",
-    "required": "This field is required."
+    "price": {
+      "invalid": "Enter a price of 0 or more."
+    },
+    "duration": {
+      "invalid": "Duration must be between 5 and 480 minutes."
+    },
+    "buffer": {
+      "invalid": "Buffer must be between 0 and 240 minutes."
+    },
+    "category": {
+      "max": "Category must be at most 40 characters."
+    },
+    "role": {
+      "max": "Role must be at most 60 characters."
+    },
+    "time": {
+      "order": "The end time must be after the start time.",
+      "invalid": "Enter a valid time."
+    },
+    "url": {
+      "invalid": "Please enter a valid URL."
+    }
   },
   "Admin": {
     "title": "Maryam Beauty Clinic Admin",
@@ -395,7 +429,96 @@
     "confirmedNotice": "Request confirmed. The customer has been notified.",
     "alreadyConfirmedNotice": "This request was already confirmed, so nothing changed.",
     "declinedNotice": "Request declined. The customer has been notified.",
-    "backToSite": "Back to site"
+    "backToSite": "Back to site",
+    "navLabel": "Admin navigation",
+    "signingOut": "Signing out...",
+    "dashboardTitle": "Dashboard",
+    "dashboardHint": "An overview of today and the week ahead.",
+    "servicesTitle": "Services",
+    "servicesHint": "Prices, durations and what is bookable online.",
+    "staffTitle": "Specialists",
+    "staffHint": "Profiles, services, working hours and days off.",
+    "customersTitle": "Customers",
+    "customersHint": "Everyone who has requested an appointment.",
+    "loadingStats": "Loading statistics...",
+    "loadingServices": "Loading services...",
+    "loadingStaff": "Loading specialists...",
+    "loadingCustomers": "Loading customers...",
+    "addService": "Add service",
+    "editService": "Edit service",
+    "addStaff": "Add specialist",
+    "editStaff": "Edit specialist",
+    "emptyServices": "No services yet. Add the first one.",
+    "emptyStaff": "No specialists yet. Add the first one.",
+    "emptyCustomers": "No customers yet.",
+    "emptyCustomersSearch": "No customers match your search.",
+    "noBookingsYet": "No appointments yet.",
+    "customerWord": "customer",
+    "customersWord": "customers",
+    "searchCustomers": "Search by name, email or phone",
+    "search": "Search",
+    "searchFor": "matching \"{q}\"",
+    "history": "History",
+    "close": "Close",
+    "bookingHistory": "Booking history",
+    "lastVisit": "last visit",
+    "bookingsWord": "bookings",
+    "priceCad": "Price (CAD)",
+    "activeService": "This service is bookable online",
+    "activeStaff": "This specialist is bookable online",
+    "saving": "Saving...",
+    "deleting": "Deleting...",
+    "deleteServiceTitle": "Delete this service?",
+    "deleteServiceHint": "{name} will be removed from the booking page. This cannot be undone.",
+    "deleteStaffTitle": "Delete this specialist?",
+    "deleteStaffHint": "{name} will be removed from the booking page. This cannot be undone.",
+    "addDayOffTitle": "Add a day off",
+    "addDayOffHint": "{name} will be unavailable on the selected day.",
+    "addDayOff": "Add day off",
+    "removeDayOff": "Remove this day off",
+    "scheduleTitle": "Working hours",
+    "scheduleHint": "Set {name}'s weekly availability. Times are in the salon timezone.",
+    "addWindow": "Add hours",
+    "removeWindow": "Remove these hours",
+    "start": "Start",
+    "end": "End",
+    "breakLabel": "break",
+    "breakStart": "Break start",
+    "breakEnd": "Break end",
+    "bio": "Bio",
+    "avatarUrl": "Photo URL",
+    "servicesPerformed": "Services performed",
+    "noServicesAssigned": "No services assigned - this specialist cannot be selected online.",
+    "noSchedule": "No working hours set.",
+    "daySun": "Sunday",
+    "dayMon": "Monday",
+    "dayTue": "Tuesday",
+    "dayWed": "Wednesday",
+    "dayThu": "Thursday",
+    "dayFri": "Friday",
+    "daySat": "Saturday",
+    "confirmedToday": "Confirmed today",
+    "confirmedTodayHint": "appointments scheduled today",
+    "noBookingsToday": "Nothing scheduled today.",
+    "confirmedThisWeek": "This week",
+    "revenueSuffix": "booked",
+    "revenueAllTime": "Revenue (all time)",
+    "revenueAllTimeHint": "confirmed and completed appointments",
+    "popularServices": "Popular services",
+    "noPopular": "No appointments yet.",
+    "chartTitle": "Next 14 days",
+    "chartHint": "Confirmed appointments per day, with pending requests in amber.",
+    "chartAriaLabel": "Bookings per day for the next two weeks",
+    "confirmedWord": "Confirmed",
+    "pendingWord": "Pending",
+    "pendingHint": "waiting for a decision",
+    "noPending": "All requests handled.",
+    "staffLoadTitle": "Specialist load this week",
+    "noStaffLoad": "No appointments this week.",
+    "statusCompleted": "Completed",
+    "statusNoShow": "No-show",
+    "requests": "Requests",
+    "description": "Description"
   },
   "NotFound": {
     "title": "Page not found",

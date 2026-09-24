@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getSession } from "@/lib/sessions";
 import { env } from "@/lib/env";
 import { RequestsView } from "@/components/admin/requests-view";
+import { AdminPageShell } from "@/components/admin/admin-page-shell";
 
 export const dynamic = "force-dynamic";
 
@@ -45,22 +46,14 @@ export default async function AdminRequestsPage({
   const t = await getTranslations({ locale, namespace: "Admin" });
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-serif text-2xl font-semibold text-stone-900 dark:text-stone-50 sm:text-3xl">
-            {t("requestsTitle")}
-          </h1>
-          <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">{t("requestsHint")}</p>
-        </div>
-        <a
-          href={`/${locale}`}
-          className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
-        >
-          {t("backToSite")}
-        </a>
-      </div>
-      <RequestsView locale={locale} adminName={session.name} adminEmail={session.email} />
-    </div>
+    <AdminPageShell
+      locale={locale}
+      title={t("requestsTitle")}
+      hint={t("requestsHint")}
+      adminName={session.name}
+      adminEmail={session.email}
+    >
+      <RequestsView locale={locale} />
+    </AdminPageShell>
   );
 }

@@ -81,8 +81,6 @@ type DialogState = ConfirmState | DeclineState | null;
 
 interface RequestsViewProps {
   locale: string;
-  adminName: string | null;
-  adminEmail: string;
 }
 
 /** The CSRF token lives in sessionStorage after sign-in; fall back to the session route. */
@@ -115,7 +113,7 @@ function timeValueToMinutes(value: string): number | null {
   return h * 60 + m;
 }
 
-export function RequestsView({ locale, adminName, adminEmail }: RequestsViewProps) {
+export function RequestsView({ locale }: RequestsViewProps) {
   const t = useTranslations("Admin");
   const tValidation = useTranslations("Validation");
 
@@ -127,7 +125,6 @@ export function RequestsView({ locale, adminName, adminEmail }: RequestsViewProp
   const [sessionExpired, setSessionExpired] = useState(false);
   const [dialog, setDialog] = useState<DialogState>(null);
   const [notice, setNotice] = useState<string | null>(null);
-  const [signingOut, setSigningOut] = useState(false);
 
   const load = useCallback(
     async (filter: StatusFilter) => {
@@ -159,22 +156,6 @@ export function RequestsView({ locale, adminName, adminEmail }: RequestsViewProp
     void load(status);
   }, [status, load]);
 
-  const onSignOut = useCallback(async () => {
-    setSigningOut(true);
-    const token = await getCsrfToken();
-    try {
-      await fetch("/api/admin/logout", {
-        method: "POST",
-        headers: token ? { "x-admin-csrf": token } : {},
-      });
-    } catch {
-      // Ignore: we navigate away regardless.
-    }
-    if (typeof window !== "undefined") {
-      window.sessionStorage.removeItem("admin-csrf");
-      window.location.href = `/${locale}/admin/login`;
-    }
-  }, [locale]);
 
   function openConfirm(booking: RequestItem) {
     setNotice(null);
@@ -362,19 +343,6 @@ export function RequestsView({ locale, adminName, adminEmail }: RequestsViewProp
               </button>
             );
           })}
-        </div>
-        <div className="flex items-center gap-3 text-sm text-stone-600 dark:text-stone-400">
-          <span className="hidden sm:inline">
-            {t("signedInAs")} {adminName ?? adminEmail}
-          </span>
-          <button
-            type="button"
-            onClick={onSignOut}
-            disabled={signingOut}
-            className="rounded-lg border border-stone-300 px-3 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
-          >
-            {signingOut ? t("signingIn") : t("signOut")}
-          </button>
         </div>
       </div>
 

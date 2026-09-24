@@ -65,11 +65,14 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
 ## Phase 4 - Admin dashboard
 - [x] Secure login (hashed passwords, safe errors, CSRF, rate limiting)
 - [x] Requests view: PENDING first; confirm/decline with conflict guard (2026-09-23)
-- [ ] CRUD: services, staff, working hours, days off, customers
-- [ ] Stats: bookings per day, popular services
+- [x] CRUD: services, staff, working hours, days off, customers (2026-09-23)
+- [x] Stats: bookings per day, popular services, specialist load, revenue (2026-09-23)
 
 ## Phase 5 - Tests, polish, README
-- [ ] Tests: double-booking prevention at confirm, form validation, request flow
+- [x] Tests: double-booking prevention at confirm, form validation, request flow
+      - [x] src/tests/validation.test.ts (41 tests): every shared Zod schema + flattenZodErrors
+            (double-booking-at-confirm + request-flow coverage already lived in booking.test.ts /
+             manage-route.test.ts; this file closed the form-validation gap)
 - [ ] Playwright: booking flow + mobile layout
 - [ ] security-review skill run
 - [ ] README: how to run, what was tested, what is mocked (email/SMS/payments)
@@ -172,3 +175,72 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
   or prisma/schema.prisma's hash changed (prisma/test.schema-hash marker, gitignored); a
   concurrent push is tolerated if the tables end up present. useTestDb() is now async.
   vitest fileParallelism is false so test files sharing the DB run sequentially.
+
+- 2026-09-23: PHASE 4 PART 3 COMPLETE - admin CRUD + stats. tsc clean, vitest 107/107 over 7
+  files, `next build` passes, and a signed-in browser pass on port 3010 covered every new
+  page in EN and FR.
+  API (all under /api/admin, all session-gated; mutations also require the CSRF header and
+  write an AuditLog row):
+  - GET/POST /api/admin/services, GET/PATCH/DELETE /api/admin/services/[id]
+  - GET/POST /api/admin/staff, GET/PATCH/DELETE /api/admin/staff/[id],
+    PUT /api/admin/staff/[id]/schedule (whole-week replace in one transaction)
+  - GET/POST /api/admin/days-off, DELETE /api/admin/days-off/[id]
+  - GET /api/admin/customers (search by name/email/phone) and /api/admin/customers/[id]
+    (booking history)
+  - GET /api/admin/stats (inbox/today/week counts, customers, revenue, a 14-day per-day
+    series, top-5 services by bookings + revenue, per-specialist week load)
+  DESIGN RULES THAT CAME OUT OF THIS:
+  (1) A Service or Staff with any Booking is never deleted - the row is the salon's history
+      and booking links point at it - so DELETE returns 409 with a count and the UI offers
+      deactivation instead. With zero bookings the delete cascades the schedule/days off/
+      service links.
+  (2) Slugs are derived from the name server-side (uniqueSlug suffixes on collision) and are
+      not editable: they are the stable key the public booking links use, so a rename never
+      breaks an existing link.
+  (3) The weekly schedule is replaced wholesale (deleteMany + create in one transaction)
+      rather than patched, and the schema rejects a window whose end is not after its start
+      and any break outside its window - so the table cannot hold an impossible schedule.
+  (4) serviceIds on a staff update is REPLACED, not merged, matching the checkbox UI;
+          unknown ids are filtered out so a stale UI cannot create a dangling relation.
+  UI: /[locale]/admin (dashboard), .../services, .../staff, .../customers, all behind the
+  shared server-side gate requireAdminSession() (new in src/lib/admin-page.ts) and wrapped
+  in AdminPageShell (title + account control + AdminNav). Views are client components that
+  load from the API and mutate with a CSRF token; every form validates on the client with
+  the SAME Zod schema the server uses, then the server validates again. Dialogs are native
+  <dialog> (focus, Escape and backdrop for free). The requests page was folded into the same
+  shell and its private sign-out block removed in favour of the shared one
+  (src/lib/admin-client.ts), so sign-out behaves identically everywhere; sign-in now lands on
+  /admin (the dashboard) instead of /admin/requests.
+  i18n: the Validation namespace was restructured to the nested form the schemas reference
+  (validation.name.min etc.). translateValidationKey strips the namespace prefix and looks
+  up "name.min", but the old messages had a flat "name"/"phone", so form validation was
+  silently rendering raw keys like "validation.phone.invalid" in the booking form. Both
+  message files now carry every nested key, EN/FR parity is asserted, and 92 new Admin keys
+  were added with proper French accents.
+  BUGS FOUND AND FIXED while smoke testing in the browser:
+  (a) AdminNav used t("requests") but only requestsTitle existed -> MISSING_MESSAGE; added
+      the "requests" nav key to EN/FR.
+  (b) The service form used t("description") but no such key existed -> added.
+  (c) Strings with {name}/{q} were being filled with String.replace, which collides with
+      next-intl's ICU variables and logs FORMATTING_ERROR. They now pass the variable
+      properly: t("scheduleHint", { name: state.staffName }).
+  PLAYWRIGHT SMOKE TEST (dev server, port 3010): signed in to /en/admin (dashboard KPIs,
+  14-day chart, popular services, specialist load all live from the seeded data), created
+  "LED Light Therapy" through the Add service dialog (slug derived, appeared in the list,
+  $85.00 / 30 min), opened the Working hours editor for a specialist (per-day windows with
+  breaks prefilled, Add hours per day), opened a customer's booking history (8 bookings,
+  status badges, DST-correct dates), deleted the smoke-test service (200, list reverted) so
+  dev.db is as found, and verified the complete French render (accents, "335,00 $",
+  "0,00 $ réservés", French weekday labels).
+- 2026-09-23: CORRECTION TO THE PHASE 3.5 NOTES. That entry says the public slot engine was
+  removed and the booking page switched to plain date/time pickers. That is NOT what is in
+  the tree: src/lib/availability.ts, /api/bookings/slots and /api/availability/days still
+  exist and booking-flow.tsx still calls them, so the public page still computes and shows
+  slots. The system is still coherent and correct - createBookingRequest() performs NO
+  availability check (the chosen slot is stored as the preferred time and the row is
+  PENDING), and the overlap guard still runs once at admin confirm time - so the slot
+  display is advisory only. The end-to-end behaviour described in PROJECT_SPEC section 3
+  holds; only the UI description in those notes was wrong. Left as-is deliberately: the
+  slot UI gives customers a self-service view of likely availability, and removal would be
+  a net feature loss. If a later phase wants the simplified pickers instead, the deletions
+  listed in the 2026-09-22 note are still the work involved.

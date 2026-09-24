@@ -278,21 +278,55 @@
     "statusCompleted": "Terminé"
   },
   "Validation": {
-    "name": "Veuillez saisir votre nom complet.",
-    "nameMin": "Le nom doit comporter au moins 2 caractères.",
+    "form": "Veuillez corriger les champs en surbrillance.",
+    "required": "Ce champ est obligatoire.",
+    "name": {
+      "min": "Le nom doit comporter au moins 2 caractères.",
+      "max": "Le nom doit comporter au plus 80 caractères."
+    },
     "email": {
       "invalid": "Veuillez saisir une adresse courriel valide."
     },
-    "phone": "Veuillez saisir un numéro de téléphone valide.",
-    "note": "La note doit comporter moins de 500 caractères.",
-    "service": "Veuillez choisir un service.",
-    "staff": "Veuillez choisir un spécialiste.",
-    "date": "Veuillez choisir une date.",
+    "phone": {
+      "invalid": "Veuillez saisir un numéro de téléphone valide."
+    },
+    "note": {
+      "max": "Les notes doivent comporter au plus 500 caractères."
+    },
+    "service": {
+      "required": "Veuillez choisir un service."
+    },
+    "staff": {
+      "required": "Veuillez choisir une spécialiste."
+    },
+    "date": {
+      "invalid": "Veuillez choisir une date valide."
+    },
     "password": {
       "min": "Le mot de passe doit comporter au moins 8 caractères."
     },
-    "form": "Veuillez corriger les champs surlignés.",
-    "required": "Ce champ est obligatoire."
+    "price": {
+      "invalid": "Saisissez un prix de 0 ou plus."
+    },
+    "duration": {
+      "invalid": "La durée doit être comprise entre 5 et 480 minutes."
+    },
+    "buffer": {
+      "invalid": "La marge doit être comprise entre 0 et 240 minutes."
+    },
+    "category": {
+      "max": "La catégorie doit comporter au plus 40 caractères."
+    },
+    "role": {
+      "max": "Le poste doit comporter au plus 60 caractères."
+    },
+    "time": {
+      "order": "L'heure de fin doit être après l'heure de début.",
+      "invalid": "Saisissez une heure valide."
+    },
+    "url": {
+      "invalid": "Veuillez saisir une URL valide."
+    }
   },
   "Admin": {
     "title": "Maryam Beauty Clinic Admin",
@@ -395,7 +429,96 @@
     "confirmedNotice": "Demande confirmée. La cliente a été informée.",
     "alreadyConfirmedNotice": "Cette demande était déjà confirmée, rien n'a changé.",
     "declinedNotice": "Demande refusée. La cliente a été informée.",
-    "backToSite": "Retour au site"
+    "backToSite": "Retour au site",
+    "navLabel": "Navigation d'administration",
+    "signingOut": "Déconnexion...",
+    "dashboardTitle": "Tableau de bord",
+    "dashboardHint": "Aperçu de la journée et de la semaine à venir.",
+    "servicesTitle": "Services",
+    "servicesHint": "Prix, durées et services réservables en ligne.",
+    "staffTitle": "Spécialistes",
+    "staffHint": "Profils, services, heures de travail et congés.",
+    "customersTitle": "Clientes",
+    "customersHint": "Toutes les personnes ayant demandé un rendez-vous.",
+    "loadingStats": "Chargement des statistiques...",
+    "loadingServices": "Chargement des services...",
+    "loadingStaff": "Chargement des spécialistes...",
+    "loadingCustomers": "Chargement des clientes...",
+    "addService": "Ajouter un service",
+    "editService": "Modifier le service",
+    "addStaff": "Ajouter une spécialiste",
+    "editStaff": "Modifier la spécialiste",
+    "emptyServices": "Aucun service pour l'instant. Ajoutez le premier.",
+    "emptyStaff": "Aucune spécialiste pour l'instant. Ajoutez la première.",
+    "emptyCustomers": "Aucune cliente pour l'instant.",
+    "emptyCustomersSearch": "Aucune cliente ne correspond à votre recherche.",
+    "noBookingsYet": "Aucun rendez-vous pour l'instant.",
+    "customerWord": "cliente",
+    "customersWord": "clientes",
+    "searchCustomers": "Rechercher par nom, courriel ou téléphone",
+    "search": "Rechercher",
+    "searchFor": "correspondant à {q}",
+    "history": "Historique",
+    "close": "Fermer",
+    "bookingHistory": "Historique des rendez-vous",
+    "lastVisit": "dernière visite",
+    "bookingsWord": "rendez-vous",
+    "priceCad": "Prix (CAD)",
+    "activeService": "Ce service est réservable en ligne",
+    "activeStaff": "Cette spécialiste est réservable en ligne",
+    "saving": "Enregistrement...",
+    "deleting": "Suppression...",
+    "deleteServiceTitle": "Supprimer ce service ?",
+    "deleteServiceHint": "{name} sera retiré de la page de réservation. Cette action est irréversible.",
+    "deleteStaffTitle": "Supprimer cette spécialiste ?",
+    "deleteStaffHint": "{name} sera retiré de la page de réservation. Cette action est irréversible.",
+    "addDayOffTitle": "Ajouter un congé",
+    "addDayOffHint": "{name} sera indisponible le jour sélectionné.",
+    "addDayOff": "Ajouter un congé",
+    "removeDayOff": "Retirer ce congé",
+    "scheduleTitle": "Heures de travail",
+    "scheduleHint": "Définissez la disponibilité hebdomadaire de {name}. Les heures sont dans le fuseau horaire du salon.",
+    "addWindow": "Ajouter des heures",
+    "removeWindow": "Retirer ces heures",
+    "start": "Début",
+    "end": "Fin",
+    "breakLabel": "pause",
+    "breakStart": "Début de la pause",
+    "breakEnd": "Fin de la pause",
+    "bio": "Biographie",
+    "avatarUrl": "URL de la photo",
+    "servicesPerformed": "Services offerts",
+    "noServicesAssigned": "Aucun service assigné — cette spécialiste n'est pas sélectionnable en ligne.",
+    "noSchedule": "Aucune heure de travail définie.",
+    "daySun": "Dimanche",
+    "dayMon": "Lundi",
+    "dayTue": "Mardi",
+    "dayWed": "Mercredi",
+    "dayThu": "Jeudi",
+    "dayFri": "Vendredi",
+    "daySat": "Samedi",
+    "confirmedToday": "Confirmés aujourd'hui",
+    "confirmedTodayHint": "rendez-vous prévus aujourd'hui",
+    "noBookingsToday": "Rien de prévu aujourd'hui.",
+    "confirmedThisWeek": "Cette semaine",
+    "revenueSuffix": "réservés",
+    "revenueAllTime": "Revenus (total)",
+    "revenueAllTimeHint": "rendez-vous confirmés et terminés",
+    "popularServices": "Services populaires",
+    "noPopular": "Aucun rendez-vous pour l'instant.",
+    "chartTitle": "14 prochains jours",
+    "chartHint": "Rendez-vous confirmés par jour, avec les demandes en attente en ambre.",
+    "chartAriaLabel": "Rendez-vous par jour pour les deux prochaines semaines",
+    "confirmedWord": "Confirmés",
+    "pendingWord": "En attente",
+    "pendingHint": "en attente de décision",
+    "noPending": "Toutes les demandes ont été traitées.",
+    "staffLoadTitle": "Charge des spécialistes cette semaine",
+    "noStaffLoad": "Aucun rendez-vous cette semaine.",
+    "statusCompleted": "Terminé",
+    "statusNoShow": "Absent",
+    "requests": "Demandes",
+    "description": "Description"
   },
   "NotFound": {
     "title": "Page introuvable",

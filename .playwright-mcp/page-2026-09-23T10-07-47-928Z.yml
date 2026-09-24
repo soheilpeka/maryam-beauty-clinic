@@ -1,0 +1,741 @@
+- generic [ref=f7e1]:
+  - link "Skip to content" [ref=f7e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f7e3]:
+    - generic [ref=f7e4]:
+      - link "Maryam Beauty Clinic home" [ref=f7e5] [cursor=pointer]:
+        - /url: /en
+        - generic [ref=f7e6]: Maryam
+        - generic [ref=f7e7]: Beauty Clinic
+      - generic [ref=f7e8]:
+        - button "Switch language" [ref=f7e9]: EN
+        - link "Book Appointment" [ref=f7e13] [cursor=pointer]:
+          - /url: /en/booking
+        - button "Open menu" [ref=f7e14]
+  - main [ref=f7e17]:
+    - generic [ref=f7e18]:
+      - generic [ref=f7e19]:
+        - generic [ref=f7e20]:
+          - heading "Services" [level=1] [ref=f7e21]
+          - paragraph [ref=f7e22]: Prices, durations and what is bookable online.
+        - generic [ref=f7e23]:
+          - generic [ref=f7e24]: Signed in as Demo Admin
+          - button "Sign out" [ref=f7e25]
+      - navigation "Admin navigation" [ref=f7e26]:
+        - link "Dashboard" [ref=f7e27] [cursor=pointer]:
+          - /url: /en/admin
+        - link "Requests" [ref=f7e28] [cursor=pointer]:
+          - /url: /en/admin/requests
+        - link "Services" [ref=f7e29] [cursor=pointer]:
+          - /url: /en/admin/services
+        - link "Staff" [ref=f7e30] [cursor=pointer]:
+          - /url: /en/admin/staff
+        - link "Customers" [ref=f7e31] [cursor=pointer]:
+          - /url: /en/admin/customers
+      - generic [ref=f7e145]:
+        - button "Add service" [ref=f7e147]
+        - list [ref=f7e148]:
+          - listitem [ref=f7e149]:
+            - generic [ref=f7e150]:
+              - generic [ref=f7e151]:
+                - generic [ref=f7e152]:
+                  - heading "Signature Glow Facial" [level=3] [ref=f7e153]
+                  - generic [ref=f7e154]: Active
+                  - generic [ref=f7e155]: Facials
+                - paragraph [ref=f7e156]:
+                  - generic [ref=f7e157]: "Price:"
+                  - text: $120.00|
+                  - generic [ref=f7e158]: "Duration (min):"
+                  - text: 1 h|
+                  - generic [ref=f7e159]: "Buffer (min):"
+                  - text: 10 min
+                - paragraph [ref=f7e160]: A customized deep-cleanse facial with exfoliation, mask and massage for radiant skin.
+                - paragraph [ref=f7e161]: 7 bookings
+              - generic [ref=f7e162]:
+                - button "Edit" [ref=f7e163]
+                - button "Delete" [ref=f7e164]
+          - listitem [ref=f7e165]:
+            - generic [ref=f7e166]:
+              - generic [ref=f7e167]:
+                - generic [ref=f7e168]:
+                  - heading "Women's Laser Hair removal" [level=3] [ref=f7e169]
+                  - generic [ref=f7e170]: Active
+                  - generic [ref=f7e171]: Laser
+                - paragraph [ref=f7e172]:
+                  - generic [ref=f7e173]: "Price:"
+                  - text: $70.00|
+                  - generic [ref=f7e174]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e175]: Long-term hair reduction for women with Sharplight DPC laser technology, tailored to your skin and comfort.
+                - paragraph [ref=f7e176]: 1 bookings
+              - generic [ref=f7e177]:
+                - button "Edit" [ref=f7e178]
+                - button "Delete" [ref=f7e179]
+          - listitem [ref=f7e180]:
+            - generic [ref=f7e181]:
+              - generic [ref=f7e182]:
+                - generic [ref=f7e183]:
+                  - heading "Hydrating Facial" [level=3] [ref=f7e184]
+                  - generic [ref=f7e185]: Active
+                  - generic [ref=f7e186]: Facials
+                - paragraph [ref=f7e187]:
+                  - generic [ref=f7e188]: "Price:"
+                  - text: $95.00|
+                  - generic [ref=f7e189]: "Duration (min):"
+                  - text: 45 min|
+                  - generic [ref=f7e190]: "Buffer (min):"
+                  - text: 10 min
+                - paragraph [ref=f7e191]: Intensive moisture treatment for dry or dehydrated skin.
+                - paragraph [ref=f7e192]: 2 bookings
+              - generic [ref=f7e193]:
+                - button "Edit" [ref=f7e194]
+                - button "Delete" [ref=f7e195]
+          - listitem [ref=f7e196]:
+            - generic [ref=f7e197]:
+              - generic [ref=f7e198]:
+                - generic [ref=f7e199]:
+                  - heading "Men's Laser Hair Removal" [level=3] [ref=f7e200]
+                  - generic [ref=f7e201]: Active
+                  - generic [ref=f7e202]: Laser
+                - paragraph [ref=f7e203]:
+                  - generic [ref=f7e204]: "Price:"
+                  - text: $70.00|
+                  - generic [ref=f7e205]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e206]: Long-term hair reduction for men with Sharplight DPC laser, tailored to your skin type and comfort.
+                - paragraph [ref=f7e207]: 2 bookings
+              - generic [ref=f7e208]:
+                - button "Edit" [ref=f7e209]
+                - button "Delete" [ref=f7e210]
+          - listitem [ref=f7e211]:
+            - generic [ref=f7e212]:
+              - generic [ref=f7e213]:
+                - generic [ref=f7e214]:
+                  - heading "Acne Treatment" [level=3] [ref=f7e215]
+                  - generic [ref=f7e216]: Active
+                  - generic [ref=f7e217]: Laser
+                - paragraph [ref=f7e218]:
+                  - generic [ref=f7e219]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e220]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e221]: Targeted laser and light therapy to clear active breakouts and calm acne-prone skin.
+                - paragraph [ref=f7e222]: 0 bookings
+              - generic [ref=f7e223]:
+                - button "Edit" [ref=f7e224]
+                - button "Delete" [ref=f7e225]
+          - listitem [ref=f7e226]:
+            - generic [ref=f7e227]:
+              - generic [ref=f7e228]:
+                - generic [ref=f7e229]:
+                  - heading "Brow Lamination & Shaping" [level=3] [ref=f7e230]
+                  - generic [ref=f7e231]: Active
+                  - generic [ref=f7e232]: Brows & Lashes
+                - paragraph [ref=f7e233]:
+                  - generic [ref=f7e234]: "Price:"
+                  - text: $75.00|
+                  - generic [ref=f7e235]: "Duration (min):"
+                  - text: 45 min|
+                  - generic [ref=f7e236]: "Buffer (min):"
+                  - text: 5 min
+                - paragraph [ref=f7e237]: Smooth, fuller-looking brows with a tailored shape.
+                - paragraph [ref=f7e238]: 0 bookings
+              - generic [ref=f7e239]:
+                - button "Edit" [ref=f7e240]
+                - button "Delete" [ref=f7e241]
+          - listitem [ref=f7e242]:
+            - generic [ref=f7e243]:
+              - generic [ref=f7e244]:
+                - generic [ref=f7e245]:
+                  - heading "Classic Lash Extensions" [level=3] [ref=f7e246]
+                  - generic [ref=f7e247]: Active
+                  - generic [ref=f7e248]: Brows & Lashes
+                - paragraph [ref=f7e249]:
+                  - generic [ref=f7e250]: "Price:"
+                  - text: $110.00|
+                  - generic [ref=f7e251]: "Duration (min):"
+                  - text: 1 h 30 min|
+                  - generic [ref=f7e252]: "Buffer (min):"
+                  - text: 15 min
+                - paragraph [ref=f7e253]: Natural-looking one-to-one lash application.
+                - paragraph [ref=f7e254]: 0 bookings
+              - generic [ref=f7e255]:
+                - button "Edit" [ref=f7e256]
+                - button "Delete" [ref=f7e257]
+          - listitem [ref=f7e258]:
+            - generic [ref=f7e259]:
+              - generic [ref=f7e260]:
+                - generic [ref=f7e261]:
+                  - heading "Photo Facial Treatment" [level=3] [ref=f7e262]
+                  - generic [ref=f7e263]: Active
+                  - generic [ref=f7e264]: Laser
+                - paragraph [ref=f7e265]:
+                  - generic [ref=f7e266]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e267]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e268]: Intense pulsed light treatment for face, neck and decolletage to even tone and boost radiance.
+                - paragraph [ref=f7e269]: 0 bookings
+              - generic [ref=f7e270]:
+                - button "Edit" [ref=f7e271]
+                - button "Delete" [ref=f7e272]
+          - listitem [ref=f7e273]:
+            - generic [ref=f7e274]:
+              - generic [ref=f7e275]:
+                - generic [ref=f7e276]:
+                  - heading "Lash Lift & Tint" [level=3] [ref=f7e277]
+                  - generic [ref=f7e278]: Active
+                  - generic [ref=f7e279]: Brows & Lashes
+                - paragraph [ref=f7e280]:
+                  - generic [ref=f7e281]: "Price:"
+                  - text: $70.00|
+                  - generic [ref=f7e282]: "Duration (min):"
+                  - text: 45 min|
+                  - generic [ref=f7e283]: "Buffer (min):"
+                  - text: 5 min
+                - paragraph [ref=f7e284]: Curled, defined lashes that last for weeks.
+                - paragraph [ref=f7e285]: 0 bookings
+              - generic [ref=f7e286]:
+                - button "Edit" [ref=f7e287]
+                - button "Delete" [ref=f7e288]
+          - listitem [ref=f7e289]:
+            - generic [ref=f7e290]:
+              - generic [ref=f7e291]:
+                - generic [ref=f7e292]:
+                  - heading "Spot Treatment" [level=3] [ref=f7e293]
+                  - generic [ref=f7e294]: Active
+                  - generic [ref=f7e295]: Laser
+                - paragraph [ref=f7e296]:
+                  - generic [ref=f7e297]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e298]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e299]: Precise laser treatment for individual spots, sun damage and pigmentation.
+                - paragraph [ref=f7e300]: 0 bookings
+              - generic [ref=f7e301]:
+                - button "Edit" [ref=f7e302]
+                - button "Delete" [ref=f7e303]
+          - listitem [ref=f7e304]:
+            - generic [ref=f7e305]:
+              - generic [ref=f7e306]:
+                - generic [ref=f7e307]:
+                  - heading "Carbon Laser (Hollywood peeling)" [level=3] [ref=f7e308]
+                  - generic [ref=f7e309]: Active
+                  - generic [ref=f7e310]: Laser
+                - paragraph [ref=f7e311]:
+                  - generic [ref=f7e312]: "Price:"
+                  - text: $200.00|
+                  - generic [ref=f7e313]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e314]: The 'Hollywood peel' - a carbon-assisted laser facial for instantly brighter, smoother skin.
+                - paragraph [ref=f7e315]: 0 bookings
+              - generic [ref=f7e316]:
+                - button "Edit" [ref=f7e317]
+                - button "Delete" [ref=f7e318]
+          - listitem [ref=f7e319]:
+            - generic [ref=f7e320]:
+              - generic [ref=f7e321]:
+                - generic [ref=f7e322]:
+                  - heading "Deep Tissue Massage" [level=3] [ref=f7e323]
+                  - generic [ref=f7e324]: Active
+                  - generic [ref=f7e325]: Massage
+                - paragraph [ref=f7e326]:
+                  - generic [ref=f7e327]: "Price:"
+                  - text: $130.00|
+                  - generic [ref=f7e328]: "Duration (min):"
+                  - text: 1 h 15 min|
+                  - generic [ref=f7e329]: "Buffer (min):"
+                  - text: 15 min
+                - paragraph [ref=f7e330]: Therapeutic massage targeting tension and tight muscles.
+                - paragraph [ref=f7e331]: 0 bookings
+              - generic [ref=f7e332]:
+                - button "Edit" [ref=f7e333]
+                - button "Delete" [ref=f7e334]
+          - listitem [ref=f7e335]:
+            - generic [ref=f7e336]:
+              - generic [ref=f7e337]:
+                - generic [ref=f7e338]:
+                  - heading "Face Vascular Lesion Treatment" [level=3] [ref=f7e339]
+                  - generic [ref=f7e340]: Active
+                  - generic [ref=f7e341]: Laser
+                - paragraph [ref=f7e342]:
+                  - generic [ref=f7e343]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e344]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e345]: Laser treatment for facial vascular lesions, spider veins and redness.
+                - paragraph [ref=f7e346]: 0 bookings
+              - generic [ref=f7e347]:
+                - button "Edit" [ref=f7e348]
+                - button "Delete" [ref=f7e349]
+          - listitem [ref=f7e350]:
+            - generic [ref=f7e351]:
+              - generic [ref=f7e352]:
+                - generic [ref=f7e353]:
+                  - heading "Relaxation Massage" [level=3] [ref=f7e354]
+                  - generic [ref=f7e355]: Active
+                  - generic [ref=f7e356]: Massage
+                - paragraph [ref=f7e357]:
+                  - generic [ref=f7e358]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e359]: "Duration (min):"
+                  - text: 1 h|
+                  - generic [ref=f7e360]: "Buffer (min):"
+                  - text: 10 min
+                - paragraph [ref=f7e361]: A calming full-body Swedish-style massage.
+                - paragraph [ref=f7e362]: 0 bookings
+              - generic [ref=f7e363]:
+                - button "Edit" [ref=f7e364]
+                - button "Delete" [ref=f7e365]
+          - listitem [ref=f7e366]:
+            - generic [ref=f7e367]:
+              - generic [ref=f7e368]:
+                - generic [ref=f7e369]:
+                  - heading "Chemical Peel" [level=3] [ref=f7e370]
+                  - generic [ref=f7e371]: Active
+                  - generic [ref=f7e372]: Treatments
+                - paragraph [ref=f7e373]:
+                  - generic [ref=f7e374]: "Price:"
+                  - text: $140.00|
+                  - generic [ref=f7e375]: "Duration (min):"
+                  - text: 1 h|
+                  - generic [ref=f7e376]: "Buffer (min):"
+                  - text: 15 min
+                - paragraph [ref=f7e377]: Professional exfoliating peel to refresh skin texture and tone.
+                - paragraph [ref=f7e378]: 0 bookings
+              - generic [ref=f7e379]:
+                - button "Edit" [ref=f7e380]
+                - button "Delete" [ref=f7e381]
+          - listitem [ref=f7e382]:
+            - generic [ref=f7e383]:
+              - generic [ref=f7e384]:
+                - generic [ref=f7e385]:
+                  - heading "Hair growth Treatment" [level=3] [ref=f7e386]
+                  - generic [ref=f7e387]: Active
+                  - generic [ref=f7e388]: Hair
+                - paragraph [ref=f7e389]:
+                  - generic [ref=f7e390]: "Price:"
+                  - text: $200.00|
+                  - generic [ref=f7e391]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e392]: Mesotherapy for hair - a non-surgical treatment delivering vitamins and nutrients to the scalp to support healthy hair growth.
+                - paragraph [ref=f7e393]: 0 bookings
+              - generic [ref=f7e394]:
+                - button "Edit" [ref=f7e395]
+                - button "Delete" [ref=f7e396]
+          - listitem [ref=f7e397]:
+            - generic [ref=f7e398]:
+              - generic [ref=f7e399]:
+                - generic [ref=f7e400]:
+                  - heading "Microneedling" [level=3] [ref=f7e401]
+                  - generic [ref=f7e402]: Active
+                  - generic [ref=f7e403]: Microneedling
+                - paragraph [ref=f7e404]:
+                  - generic [ref=f7e405]: "Price:"
+                  - text: $200.00|
+                  - generic [ref=f7e406]: "Duration (min):"
+                  - text: 1 h 30 min
+                - paragraph [ref=f7e407]: Phi Microneedling to refine texture, soften fine lines and restore a smooth, luminous complexion.
+                - paragraph [ref=f7e408]: 0 bookings
+              - generic [ref=f7e409]:
+                - button "Edit" [ref=f7e410]
+                - button "Delete" [ref=f7e411]
+          - listitem [ref=f7e412]:
+            - generic [ref=f7e413]:
+              - generic [ref=f7e414]:
+                - generic [ref=f7e415]:
+                  - heading "Mini Facial" [level=3] [ref=f7e416]
+                  - generic [ref=f7e417]: Active
+                  - generic [ref=f7e418]: Facial
+                - paragraph [ref=f7e419]:
+                  - generic [ref=f7e420]: "Price:"
+                  - text: $70.00|
+                  - generic [ref=f7e421]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e422]: A quick, refreshing facial to cleanse, exfoliate and hydrate.
+                - paragraph [ref=f7e423]: 0 bookings
+              - generic [ref=f7e424]:
+                - button "Edit" [ref=f7e425]
+                - button "Delete" [ref=f7e426]
+          - listitem [ref=f7e427]:
+            - generic [ref=f7e428]:
+              - generic [ref=f7e429]:
+                - generic [ref=f7e430]:
+                  - heading "Facial Classic" [level=3] [ref=f7e431]
+                  - generic [ref=f7e432]: Active
+                  - generic [ref=f7e433]: Facial
+                - paragraph [ref=f7e434]:
+                  - generic [ref=f7e435]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e436]: "Duration (min):"
+                  - text: 1 h
+                - paragraph [ref=f7e437]: "Our signature facial: skin analysis, cleanse, exfoliation and deep moisturizing for every skin type."
+                - paragraph [ref=f7e438]: 0 bookings
+              - generic [ref=f7e439]:
+                - button "Edit" [ref=f7e440]
+                - button "Delete" [ref=f7e441]
+          - listitem [ref=f7e442]:
+            - generic [ref=f7e443]:
+              - generic [ref=f7e444]:
+                - generic [ref=f7e445]:
+                  - heading "Facial VIP" [level=3] [ref=f7e446]
+                  - generic [ref=f7e447]: Active
+                  - generic [ref=f7e448]: Facial
+                - paragraph [ref=f7e449]:
+                  - generic [ref=f7e450]: "Price:"
+                  - text: $200.00|
+                  - generic [ref=f7e451]: "Duration (min):"
+                  - text: 1 h 30 min
+                - paragraph [ref=f7e452]: "Our most indulgent facial: extended analysis, advanced techniques and premium skincare."
+                - paragraph [ref=f7e453]: 0 bookings
+              - generic [ref=f7e454]:
+                - button "Edit" [ref=f7e455]
+                - button "Delete" [ref=f7e456]
+          - listitem [ref=f7e457]:
+            - generic [ref=f7e458]:
+              - generic [ref=f7e459]:
+                - generic [ref=f7e460]:
+                  - heading "Carboxy Therapy" [level=3] [ref=f7e461]
+                  - generic [ref=f7e462]: Active
+                  - generic [ref=f7e463]: Facial
+                - paragraph [ref=f7e464]:
+                  - generic [ref=f7e465]: "Price:"
+                  - text: $200.00|
+                  - generic [ref=f7e466]: "Duration (min):"
+                  - text: 1 h 30 min
+                - paragraph [ref=f7e467]: Carbon dioxide therapy to improve skin elasticity, dark circles and texture.
+                - paragraph [ref=f7e468]: 0 bookings
+              - generic [ref=f7e469]:
+                - button "Edit" [ref=f7e470]
+                - button "Delete" [ref=f7e471]
+          - listitem [ref=f7e472]:
+            - generic [ref=f7e473]:
+              - generic [ref=f7e474]:
+                - generic [ref=f7e475]:
+                  - heading "Chemical Peeling" [level=3] [ref=f7e476]
+                  - generic [ref=f7e477]: Active
+                  - generic [ref=f7e478]: Facial
+                - paragraph [ref=f7e479]:
+                  - generic [ref=f7e480]: "Price:"
+                  - text: $200.00|
+                  - generic [ref=f7e481]: "Duration (min):"
+                  - text: 1 h
+                - paragraph [ref=f7e482]: A chemical peel to renew the skin surface, even tone and soften imperfections.
+                - paragraph [ref=f7e483]: 0 bookings
+              - generic [ref=f7e484]:
+                - button "Edit" [ref=f7e485]
+                - button "Delete" [ref=f7e486]
+          - listitem [ref=f7e487]:
+            - generic [ref=f7e488]:
+              - generic [ref=f7e489]:
+                - generic [ref=f7e490]:
+                  - heading "High Frequency Facial" [level=3] [ref=f7e491]
+                  - generic [ref=f7e492]: Active
+                  - generic [ref=f7e493]: Facial
+                - paragraph [ref=f7e494]:
+                  - generic [ref=f7e495]: "Price:"
+                  - text: $150.00|
+                  - generic [ref=f7e496]: "Duration (min):"
+                  - text: 1 h
+                - paragraph [ref=f7e497]: High-frequency current facial to treat acne, fine lines and promote circulation.
+                - paragraph [ref=f7e498]: 0 bookings
+              - generic [ref=f7e499]:
+                - button "Edit" [ref=f7e500]
+                - button "Delete" [ref=f7e501]
+          - listitem [ref=f7e502]:
+            - generic [ref=f7e503]:
+              - generic [ref=f7e504]:
+                - generic [ref=f7e505]:
+                  - heading "Eye Treatment" [level=3] [ref=f7e506]
+                  - generic [ref=f7e507]: Active
+                  - generic [ref=f7e508]: Facial
+                - paragraph [ref=f7e509]:
+                  - generic [ref=f7e510]: "Price:"
+                  - text: $80.00|
+                  - generic [ref=f7e511]: "Duration (min):"
+                  - text: 45 min
+                - paragraph [ref=f7e512]: Targeted eye treatment for darkness, puffiness and wrinkles.
+                - paragraph [ref=f7e513]: 0 bookings
+              - generic [ref=f7e514]:
+                - button "Edit" [ref=f7e515]
+                - button "Delete" [ref=f7e516]
+          - listitem [ref=f7e517]:
+            - generic [ref=f7e518]:
+              - generic [ref=f7e519]:
+                - generic [ref=f7e520]:
+                  - heading "Facial Contouring" [level=3] [ref=f7e521]
+                  - generic [ref=f7e522]: Active
+                  - generic [ref=f7e523]: Facial
+                - paragraph [ref=f7e524]:
+                  - generic [ref=f7e525]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e526]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e527]: Non-invasive facial contouring to sculpt, lift and define your natural features.
+                - paragraph [ref=f7e528]: 0 bookings
+              - generic [ref=f7e529]:
+                - button "Edit" [ref=f7e530]
+                - button "Delete" [ref=f7e531]
+          - listitem [ref=f7e532]:
+            - generic [ref=f7e533]:
+              - generic [ref=f7e534]:
+                - generic [ref=f7e535]:
+                  - heading "Body Contouring" [level=3] [ref=f7e536]
+                  - generic [ref=f7e537]: Active
+                  - generic [ref=f7e538]: Facial
+                - paragraph [ref=f7e539]:
+                  - generic [ref=f7e540]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e541]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e542]: Advanced RF body contouring technology to sculpt, tighten and define with natural results.
+                - paragraph [ref=f7e543]: 0 bookings
+              - generic [ref=f7e544]:
+                - button "Edit" [ref=f7e545]
+                - button "Delete" [ref=f7e546]
+          - listitem [ref=f7e547]:
+            - generic [ref=f7e548]:
+              - generic [ref=f7e549]:
+                - generic [ref=f7e550]:
+                  - heading "Shaping Eyebrow" [level=3] [ref=f7e551]
+                  - generic [ref=f7e552]: Active
+                  - generic [ref=f7e553]: Eyebrow & Lash
+                - paragraph [ref=f7e554]:
+                  - generic [ref=f7e555]: "Price:"
+                  - text: $50.00|
+                  - generic [ref=f7e556]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e557]: Professional eyebrow shaping to frame your face.
+                - paragraph [ref=f7e558]: 0 bookings
+              - generic [ref=f7e559]:
+                - button "Edit" [ref=f7e560]
+                - button "Delete" [ref=f7e561]
+          - listitem [ref=f7e562]:
+            - generic [ref=f7e563]:
+              - generic [ref=f7e564]:
+                - generic [ref=f7e565]:
+                  - heading "Brow Laminate & Lift" [level=3] [ref=f7e566]
+                  - generic [ref=f7e567]: Active
+                  - generic [ref=f7e568]: Eyebrow & Lash
+                - paragraph [ref=f7e569]:
+                  - generic [ref=f7e570]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e571]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e572]: Brow lamination and lift for fuller, perfectly groomed brows that last.
+                - paragraph [ref=f7e573]: 0 bookings
+              - generic [ref=f7e574]:
+                - button "Edit" [ref=f7e575]
+                - button "Delete" [ref=f7e576]
+          - listitem [ref=f7e577]:
+            - generic [ref=f7e578]:
+              - generic [ref=f7e579]:
+                - generic [ref=f7e580]:
+                  - heading "Microblading" [level=3] [ref=f7e581]
+                  - generic [ref=f7e582]: Active
+                  - generic [ref=f7e583]: Eyebrow & Lash
+                - paragraph [ref=f7e584]:
+                  - generic [ref=f7e585]: "Price:"
+                  - text: $550.00|
+                  - generic [ref=f7e586]: "Duration (min):"
+                  - text: 2 h
+                - paragraph [ref=f7e587]: Phi Microblading - semi-permanent eyebrow tattooing that creates full, natural-looking brows for up to two years.
+                - paragraph [ref=f7e588]: 0 bookings
+              - generic [ref=f7e589]:
+                - button "Edit" [ref=f7e590]
+                - button "Delete" [ref=f7e591]
+          - listitem [ref=f7e592]:
+            - generic [ref=f7e593]:
+              - generic [ref=f7e594]:
+                - generic [ref=f7e595]:
+                  - heading "Eyelash Extensions" [level=3] [ref=f7e596]
+                  - generic [ref=f7e597]: Active
+                  - generic [ref=f7e598]: Eyebrow & Lash
+                - paragraph [ref=f7e599]:
+                  - generic [ref=f7e600]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e601]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e602]: Professional eyelash extensions for length, volume and a natural finish.
+                - paragraph [ref=f7e603]: 0 bookings
+              - generic [ref=f7e604]:
+                - button "Edit" [ref=f7e605]
+                - button "Delete" [ref=f7e606]
+          - listitem [ref=f7e607]:
+            - generic [ref=f7e608]:
+              - generic [ref=f7e609]:
+                - generic [ref=f7e610]:
+                  - heading "Lash Lift & Laminate" [level=3] [ref=f7e611]
+                  - generic [ref=f7e612]: Active
+                  - generic [ref=f7e613]: Eyebrow & Lash
+                - paragraph [ref=f7e614]:
+                  - generic [ref=f7e615]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e616]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e617]: Lash lift and lamination for curled, defined, low-maintenance lashes.
+                - paragraph [ref=f7e618]: 0 bookings
+              - generic [ref=f7e619]:
+                - button "Edit" [ref=f7e620]
+                - button "Delete" [ref=f7e621]
+          - listitem [ref=f7e622]:
+            - generic [ref=f7e623]:
+              - generic [ref=f7e624]:
+                - generic [ref=f7e625]:
+                  - heading "Tattoo removal" [level=3] [ref=f7e626]
+                  - generic [ref=f7e627]: Active
+                  - generic [ref=f7e628]: Eyebrow & Lash
+                - paragraph [ref=f7e629]:
+                  - generic [ref=f7e630]: "Price:"
+                  - text: $100.00|
+                  - generic [ref=f7e631]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e632]: Laser tattoo removal using Q-switched and picosecond technology for safe, gradual fading.
+                - paragraph [ref=f7e633]: 0 bookings
+              - generic [ref=f7e634]:
+                - button "Edit" [ref=f7e635]
+                - button "Delete" [ref=f7e636]
+          - listitem [ref=f7e637]:
+            - generic [ref=f7e638]:
+              - generic [ref=f7e639]:
+                - generic [ref=f7e640]:
+                  - heading "LED Light Therapy" [level=3] [ref=f7e641]
+                  - generic [ref=f7e642]: Active
+                  - generic [ref=f7e643]: Facials
+                - paragraph [ref=f7e644]:
+                  - generic [ref=f7e645]: "Price:"
+                  - text: $85.00|
+                  - generic [ref=f7e646]: "Duration (min):"
+                  - text: 30 min
+                - paragraph [ref=f7e647]: Calming LED treatment (smoke test)
+                - paragraph [ref=f7e648]: 0 bookings
+              - generic [ref=f7e649]:
+                - button "Edit" [ref=f7e650]
+                - button "Delete" [ref=f7e651]
+        - dialog [ref=f7e653]:
+          - heading "Delete this service?" [level=2] [ref=f7e654]
+          - paragraph [ref=f7e655]: LED Light Therapy will be removed from the booking page. This cannot be undone.
+          - generic [ref=f7e656]:
+            - button "Cancel" [active] [ref=f7e657]
+            - button "Delete" [ref=f7e658]
+  - contentinfo [ref=f7e42]:
+    - generic [ref=f7e43]:
+      - generic [ref=f7e44]:
+        - generic [ref=f7e45]:
+          - link "Maryam Beauty Clinic" [ref=f7e46] [cursor=pointer]:
+            - /url: /en
+            - generic [ref=f7e47]: Maryam
+            - generic [ref=f7e48]: Beauty Clinic
+          - paragraph [ref=f7e49]: Personalized aesthetic treatments at Yonge & Steeles, serving Thornhill, North York and the Greater Toronto Area.
+          - generic [ref=f7e50]:
+            - link "Facebook" [ref=f7e51] [cursor=pointer]:
+              - /url: https://www.facebook.com/profile.php?id=61551878311257
+              - generic [ref=f7e52]: F
+            - link "Instagram" [ref=f7e53] [cursor=pointer]:
+              - /url: https://www.instagram.com/maryambeauty_clinic/
+              - generic [ref=f7e54]: I
+        - generic [ref=f7e55]:
+          - paragraph [ref=f7e56]: Treatments
+          - generic [ref=f7e57]:
+            - generic [ref=f7e58]:
+              - paragraph [ref=f7e59]: Laser
+              - list [ref=f7e60]:
+                - listitem [ref=f7e61]:
+                  - link "Women's Laser Hair removal" [ref=f7e62] [cursor=pointer]:
+                    - /url: /en/service-page/womens-laser-hair-removal
+                - listitem [ref=f7e63]:
+                  - link "Men's Laser Hair Removal" [ref=f7e64] [cursor=pointer]:
+                    - /url: /en/service-page/mens-laser-hair-removal
+                - listitem [ref=f7e65]:
+                  - link "Acne Treatment" [ref=f7e66] [cursor=pointer]:
+                    - /url: /en/service-page/acne-treatment
+                - listitem [ref=f7e67]:
+                  - link "Photo Facial Treatment" [ref=f7e68] [cursor=pointer]:
+                    - /url: /en/service-page/photo-facial-treatment
+                - listitem [ref=f7e69]:
+                  - link "Spot Treatment" [ref=f7e70] [cursor=pointer]:
+                    - /url: /en/service-page/spot-treatment
+                - listitem [ref=f7e71]:
+                  - link "Carbon Laser (Hollywood peeling)" [ref=f7e72] [cursor=pointer]:
+                    - /url: /en/service-page/carbon-laser
+            - generic [ref=f7e73]:
+              - paragraph [ref=f7e74]: Microneedling
+              - list [ref=f7e75]:
+                - listitem [ref=f7e76]:
+                  - link "Microneedling" [ref=f7e77] [cursor=pointer]:
+                    - /url: /en/service-page/microneedling
+            - generic [ref=f7e78]:
+              - paragraph [ref=f7e79]: Facial
+              - list [ref=f7e80]:
+                - listitem [ref=f7e81]:
+                  - link "Mini Facial" [ref=f7e82] [cursor=pointer]:
+                    - /url: /en/service-page/mini-facial
+                - listitem [ref=f7e83]:
+                  - link "Facial Classic" [ref=f7e84] [cursor=pointer]:
+                    - /url: /en/service-page/facial-classic
+                - listitem [ref=f7e85]:
+                  - link "Facial VIP" [ref=f7e86] [cursor=pointer]:
+                    - /url: /en/service-page/facial-vip
+                - listitem [ref=f7e87]:
+                  - link "Carboxy Therapy" [ref=f7e88] [cursor=pointer]:
+                    - /url: /en/service-page/carboxy-therapy
+                - listitem [ref=f7e89]:
+                  - link "Chemical Peeling" [ref=f7e90] [cursor=pointer]:
+                    - /url: /en/service-page/chemical-peeling
+                - listitem [ref=f7e91]:
+                  - link "High Frequency Facial" [ref=f7e92] [cursor=pointer]:
+                    - /url: /en/service-page/high-frequency-facial
+            - generic [ref=f7e93]:
+              - paragraph [ref=f7e94]: Hair
+              - list [ref=f7e95]:
+                - listitem [ref=f7e96]:
+                  - link "Hair growth Treatment" [ref=f7e97] [cursor=pointer]:
+                    - /url: /en/service-page/hair-growth-treatment
+            - generic [ref=f7e98]:
+              - paragraph [ref=f7e99]: Eyebrow & Lash
+              - list [ref=f7e100]:
+                - listitem [ref=f7e101]:
+                  - link "Shaping Eyebrow" [ref=f7e102] [cursor=pointer]:
+                    - /url: /en/service-page/shaping-eyebrow
+                - listitem [ref=f7e103]:
+                  - link "Brow Laminate & Lift" [ref=f7e104] [cursor=pointer]:
+                    - /url: /en/service-page/brow-laminate-lift
+                - listitem [ref=f7e105]:
+                  - link "Microblading" [ref=f7e106] [cursor=pointer]:
+                    - /url: /en/service-page/microblading
+                - listitem [ref=f7e107]:
+                  - link "Eyelash Extensions" [ref=f7e108] [cursor=pointer]:
+                    - /url: /en/service-page/eyelash-extensions
+                - listitem [ref=f7e109]:
+                  - link "Lash Lift & Laminate" [ref=f7e110] [cursor=pointer]:
+                    - /url: /en/service-page/lash-lift-laminate
+                - listitem [ref=f7e111]:
+                  - link "Tattoo removal" [ref=f7e112] [cursor=pointer]:
+                    - /url: /en/service-page/tattoo-removal
+        - generic [ref=f7e113]:
+          - paragraph [ref=f7e114]: Contact
+          - generic [ref=f7e115]:
+            - generic [ref=f7e116]:
+              - paragraph [ref=f7e117]: Yonge & Steeles
+              - paragraph [ref=f7e118]: "180 Steeles Avenue West #27, Thornhill, ON, Canada"
+            - generic [ref=f7e119]:
+              - link "647-615-8051" [ref=f7e120] [cursor=pointer]:
+                - /url: tel:+16476158051
+              - link "maryamvares@gmail.com" [ref=f7e121] [cursor=pointer]:
+                - /url: mailto:maryamvares@gmail.com
+          - paragraph [ref=f7e122]: Opening hours
+          - list [ref=f7e123]:
+            - listitem [ref=f7e124]:
+              - generic [ref=f7e125]: Mon - Fri
+              - generic [ref=f7e126]: 10am - 5pm
+            - listitem [ref=f7e127]:
+              - generic [ref=f7e128]: Saturday
+              - generic [ref=f7e129]: 11am - 4pm
+            - listitem [ref=f7e130]:
+              - generic [ref=f7e131]: Sunday
+              - generic [ref=f7e132]: Closed
+      - generic [ref=f7e133]:
+        - paragraph [ref=f7e134]: © 2026 Maryam Beauty Clinic. All rights reserved.
+        - paragraph [ref=f7e135]: "Demo build: booking is fully functional; payments, email and SMS are mocked."
+  - button "Open Next.js Dev Tools" [ref=f7e141] [cursor=pointer]
+  - alert [ref=f7e652]

@@ -1,0 +1,261 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Maryam Beauty Clinic home" [ref=e5] [cursor=pointer]:
+        - /url: /en
+        - generic [ref=e6]: Maryam
+        - generic [ref=e7]: Beauty Clinic
+      - generic [ref=e8]:
+        - button "Switch language" [ref=e9]: EN
+        - link "Book Appointment" [ref=e13] [cursor=pointer]:
+          - /url: /en/booking
+        - button "Open menu" [ref=e14]
+  - main [ref=e17]:
+    - generic [ref=e135]:
+      - generic [ref=e136]:
+        - generic [ref=e137]:
+          - heading "Dashboard" [level=1] [ref=e138]
+          - paragraph [ref=e139]: An overview of today and the week ahead.
+        - generic [ref=e140]:
+          - generic [ref=e141]: Signed in as Demo Admin
+          - button "Sign out" [ref=e142]
+      - navigation "Admin navigation" [ref=e143]:
+        - link "Dashboard" [ref=e144] [cursor=pointer]:
+          - /url: /en/admin
+        - link "Admin.requests" [ref=e145] [cursor=pointer]:
+          - /url: /en/admin/requests
+        - link "Services" [ref=e146] [cursor=pointer]:
+          - /url: /en/admin/services
+        - link "Staff" [ref=e147] [cursor=pointer]:
+          - /url: /en/admin/staff
+        - link "Customers" [ref=e148] [cursor=pointer]:
+          - /url: /en/admin/customers
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - link [ref=e151] [cursor=pointer]:
+            - /url: /en/admin/requests
+            - generic [ref=e152]:
+              - paragraph [ref=e153]: Pending
+              - paragraph [ref=e154]: "4"
+              - paragraph [ref=e155]: waiting for a decision
+          - generic [ref=e156]:
+            - paragraph [ref=e157]: Confirmed today
+            - paragraph [ref=e158]: "0"
+            - paragraph [ref=e159]: Nothing scheduled today.
+          - generic [ref=e160]:
+            - paragraph [ref=e161]: This week
+            - paragraph [ref=e162]: "0"
+            - paragraph [ref=e163]: $0.00 booked
+          - generic [ref=e164]:
+            - paragraph [ref=e165]: Customers
+            - paragraph [ref=e166]: "4"
+            - paragraph [ref=e167]: Everyone who has requested an appointment.
+          - generic [ref=e168]:
+            - paragraph [ref=e169]: Revenue (all time)
+            - paragraph [ref=e170]: $335.00
+            - paragraph [ref=e171]: confirmed and completed appointments
+          - generic [ref=e172]:
+            - paragraph [ref=e173]: Popular services
+            - paragraph [ref=e174]: Signature Glow Facial
+            - paragraph [ref=e175]: 2 bookings
+        - region [ref=e176]:
+          - heading "Next 14 days" [level=2] [ref=e177]
+          - paragraph [ref=e178]: Confirmed appointments per day, with pending requests in amber.
+          - img "Bookings per day for the next two weeks" [ref=e179]:
+            - 'listitem "Wed 23: 0 Confirmed / 0 Pending" [ref=e180]':
+              - generic [ref=e182]: "Wed 23: 0 Confirmed, 0 Pending"
+              - generic [ref=e183]: Wed 23
+            - 'listitem "Thu 24: 0 Confirmed / 0 Pending" [ref=e184]':
+              - generic [ref=e186]: "Thu 24: 0 Confirmed, 0 Pending"
+              - generic [ref=e187]: Thu 24
+            - 'listitem "Fri 25: 0 Confirmed / 0 Pending" [ref=e188]':
+              - generic [ref=e190]: "Fri 25: 0 Confirmed, 0 Pending"
+              - generic [ref=e191]: Fri 25
+            - 'listitem "Sat 26: 0 Confirmed / 2 Pending" [ref=e192]':
+              - generic [ref=e195]: "Sat 26: 0 Confirmed, 2 Pending"
+              - generic [ref=e196]: Sat 26
+            - 'listitem "Sun 27: 0 Confirmed / 0 Pending" [ref=e197]':
+              - generic [ref=e199]: "Sun 27: 0 Confirmed, 0 Pending"
+              - generic [ref=e200]: Sun 27
+            - 'listitem "Mon 28: 0 Confirmed / 0 Pending" [ref=e201]':
+              - generic [ref=e203]: "Mon 28: 0 Confirmed, 0 Pending"
+              - generic [ref=e204]: Mon 28
+            - 'listitem "Tue 29: 0 Confirmed / 1 Pending" [ref=e205]':
+              - generic [ref=e208]: "Tue 29: 0 Confirmed, 1 Pending"
+              - generic [ref=e209]: Tue 29
+            - 'listitem "Wed 30: 0 Confirmed / 0 Pending" [ref=e210]':
+              - generic [ref=e212]: "Wed 30: 0 Confirmed, 0 Pending"
+              - generic [ref=e213]: Wed 30
+            - 'listitem "Thu 1: 2 Confirmed / 0 Pending" [ref=e214]':
+              - generic [ref=e216]: "Thu 1: 2 Confirmed, 0 Pending"
+              - generic [ref=e217]: Thu 1
+            - 'listitem "Fri 2: 0 Confirmed / 0 Pending" [ref=e218]':
+              - generic [ref=e220]: "Fri 2: 0 Confirmed, 0 Pending"
+              - generic [ref=e221]: Fri 2
+            - 'listitem "Sat 3: 0 Confirmed / 0 Pending" [ref=e222]':
+              - generic [ref=e224]: "Sat 3: 0 Confirmed, 0 Pending"
+              - generic [ref=e225]: Sat 3
+            - 'listitem "Sun 4: 0 Confirmed / 0 Pending" [ref=e226]':
+              - generic [ref=e228]: "Sun 4: 0 Confirmed, 0 Pending"
+              - generic [ref=e229]: Sun 4
+            - 'listitem "Mon 5: 0 Confirmed / 0 Pending" [ref=e230]':
+              - generic [ref=e232]: "Mon 5: 0 Confirmed, 0 Pending"
+              - generic [ref=e233]: Mon 5
+            - 'listitem "Tue 6: 0 Confirmed / 1 Pending" [ref=e234]':
+              - generic [ref=e237]: "Tue 6: 0 Confirmed, 1 Pending"
+              - generic [ref=e238]: Tue 6
+          - generic [ref=e239]:
+            - generic [ref=e240]: Confirmed
+            - generic [ref=e242]: Pending
+        - generic [ref=e244]:
+          - region [ref=e245]:
+            - heading "Popular services" [level=2] [ref=e246]
+            - list [ref=e247]:
+              - listitem [ref=e248]:
+                - generic [ref=e249]:
+                  - generic [ref=e250]: "1."
+                  - generic [ref=e251]: Signature Glow Facial
+                - generic [ref=e252]:
+                  - generic [ref=e253]: "2"
+                  - generic [ref=e254]: $240.00
+              - listitem [ref=e255]:
+                - generic [ref=e256]:
+                  - generic [ref=e257]: "2."
+                  - generic [ref=e258]: Hydrating Facial
+                - generic [ref=e259]:
+                  - generic [ref=e260]: "1"
+                  - generic [ref=e261]: $95.00
+          - region [ref=e262]:
+            - heading "Specialist load this week" [level=2] [ref=e263]
+            - paragraph [ref=e264]: No appointments this week.
+  - contentinfo [ref=e31]:
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - link "Maryam Beauty Clinic" [ref=e35] [cursor=pointer]:
+            - /url: /en
+            - generic [ref=e36]: Maryam
+            - generic [ref=e37]: Beauty Clinic
+          - paragraph [ref=e38]: Personalized aesthetic treatments at Yonge & Steeles, serving Thornhill, North York and the Greater Toronto Area.
+          - generic [ref=e39]:
+            - link "Facebook" [ref=e40] [cursor=pointer]:
+              - /url: https://www.facebook.com/profile.php?id=61551878311257
+              - generic [ref=e41]: F
+            - link "Instagram" [ref=e42] [cursor=pointer]:
+              - /url: https://www.instagram.com/maryambeauty_clinic/
+              - generic [ref=e43]: I
+        - generic [ref=e44]:
+          - paragraph [ref=e45]: Treatments
+          - generic [ref=e46]:
+            - generic [ref=e47]:
+              - paragraph [ref=e48]: Laser
+              - list [ref=e49]:
+                - listitem [ref=e50]:
+                  - link "Women's Laser Hair removal" [ref=e51] [cursor=pointer]:
+                    - /url: /en/service-page/womens-laser-hair-removal
+                - listitem [ref=e52]:
+                  - link "Men's Laser Hair Removal" [ref=e53] [cursor=pointer]:
+                    - /url: /en/service-page/mens-laser-hair-removal
+                - listitem [ref=e54]:
+                  - link "Acne Treatment" [ref=e55] [cursor=pointer]:
+                    - /url: /en/service-page/acne-treatment
+                - listitem [ref=e56]:
+                  - link "Photo Facial Treatment" [ref=e57] [cursor=pointer]:
+                    - /url: /en/service-page/photo-facial-treatment
+                - listitem [ref=e58]:
+                  - link "Spot Treatment" [ref=e59] [cursor=pointer]:
+                    - /url: /en/service-page/spot-treatment
+                - listitem [ref=e60]:
+                  - link "Carbon Laser (Hollywood peeling)" [ref=e61] [cursor=pointer]:
+                    - /url: /en/service-page/carbon-laser
+            - generic [ref=e62]:
+              - paragraph [ref=e63]: Microneedling
+              - list [ref=e64]:
+                - listitem [ref=e65]:
+                  - link "Microneedling" [ref=e66] [cursor=pointer]:
+                    - /url: /en/service-page/microneedling
+            - generic [ref=e67]:
+              - paragraph [ref=e68]: Facial
+              - list [ref=e69]:
+                - listitem [ref=e70]:
+                  - link "Mini Facial" [ref=e71] [cursor=pointer]:
+                    - /url: /en/service-page/mini-facial
+                - listitem [ref=e72]:
+                  - link "Facial Classic" [ref=e73] [cursor=pointer]:
+                    - /url: /en/service-page/facial-classic
+                - listitem [ref=e74]:
+                  - link "Facial VIP" [ref=e75] [cursor=pointer]:
+                    - /url: /en/service-page/facial-vip
+                - listitem [ref=e76]:
+                  - link "Carboxy Therapy" [ref=e77] [cursor=pointer]:
+                    - /url: /en/service-page/carboxy-therapy
+                - listitem [ref=e78]:
+                  - link "Chemical Peeling" [ref=e79] [cursor=pointer]:
+                    - /url: /en/service-page/chemical-peeling
+                - listitem [ref=e80]:
+                  - link "High Frequency Facial" [ref=e81] [cursor=pointer]:
+                    - /url: /en/service-page/high-frequency-facial
+            - generic [ref=e82]:
+              - paragraph [ref=e83]: Hair
+              - list [ref=e84]:
+                - listitem [ref=e85]:
+                  - link "Hair growth Treatment" [ref=e86] [cursor=pointer]:
+                    - /url: /en/service-page/hair-growth-treatment
+            - generic [ref=e87]:
+              - paragraph [ref=e88]: Eyebrow & Lash
+              - list [ref=e89]:
+                - listitem [ref=e90]:
+                  - link "Shaping Eyebrow" [ref=e91] [cursor=pointer]:
+                    - /url: /en/service-page/shaping-eyebrow
+                - listitem [ref=e92]:
+                  - link "Brow Laminate & Lift" [ref=e93] [cursor=pointer]:
+                    - /url: /en/service-page/brow-laminate-lift
+                - listitem [ref=e94]:
+                  - link "Microblading" [ref=e95] [cursor=pointer]:
+                    - /url: /en/service-page/microblading
+                - listitem [ref=e96]:
+                  - link "Eyelash Extensions" [ref=e97] [cursor=pointer]:
+                    - /url: /en/service-page/eyelash-extensions
+                - listitem [ref=e98]:
+                  - link "Lash Lift & Laminate" [ref=e99] [cursor=pointer]:
+                    - /url: /en/service-page/lash-lift-laminate
+                - listitem [ref=e100]:
+                  - link "Tattoo removal" [ref=e101] [cursor=pointer]:
+                    - /url: /en/service-page/tattoo-removal
+        - generic [ref=e102]:
+          - paragraph [ref=e103]: Contact
+          - generic [ref=e104]:
+            - generic [ref=e105]:
+              - paragraph [ref=e106]: Yonge & Steeles
+              - paragraph [ref=e107]: "180 Steeles Avenue West #27, Thornhill, ON, Canada"
+            - generic [ref=e108]:
+              - link "647-615-8051" [ref=e109] [cursor=pointer]:
+                - /url: tel:+16476158051
+              - link "maryamvares@gmail.com" [ref=e110] [cursor=pointer]:
+                - /url: mailto:maryamvares@gmail.com
+          - paragraph [ref=e111]: Opening hours
+          - list [ref=e112]:
+            - listitem [ref=e113]:
+              - generic [ref=e114]: Mon - Fri
+              - generic [ref=e115]: 10am - 5pm
+            - listitem [ref=e116]:
+              - generic [ref=e117]: Saturday
+              - generic [ref=e118]: 11am - 4pm
+            - listitem [ref=e119]:
+              - generic [ref=e120]: Sunday
+              - generic [ref=e121]: Closed
+      - generic [ref=e122]:
+        - paragraph [ref=e123]: © 2026 Maryam Beauty Clinic. All rights reserved.
+        - paragraph [ref=e124]: "Demo build: booking is fully functional; payments, email and SMS are mocked."
+  - generic [ref=e129] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e130]
+    - generic [ref=e265]:
+      - button "Open issues overlay" [ref=e266]:
+        - generic [ref=e267]:
+          - generic [aria-hidden] [ref=e268]: "0"
+          - generic [ref=e269]: "1"
+        - generic [ref=e270]: Issue
+      - button "Collapse issues badge" [ref=e271]
+  - alert [ref=e134]: Dashboard
