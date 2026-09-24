@@ -1,4 +1,4 @@
-# Maryam Beauty Clinic - Progress
+﻿# Maryam Beauty Clinic - Progress
 
 Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
 
@@ -73,11 +73,49 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
       - [x] src/tests/validation.test.ts (41 tests): every shared Zod schema + flattenZodErrors
             (double-booking-at-confirm + request-flow coverage already lived in booking.test.ts /
              manage-route.test.ts; this file closed the form-validation gap)
-- [ ] Playwright: booking flow + mobile layout
+- [~] Playwright: booking flow + mobile layout
+      - [x] STEP 1 (2026-09-24): e2e INFRASTRUCTURE + smoke test. playwright.config.ts
+            now boots `next dev` on a dedicated port (3020) with DATABASE_URL pointed at a
+            throwaway prisma/e2e.db, and e2e/global-setup.ts rebuilds that DB from scratch
+            before every run (rm -> prisma db push -> npm run prisma:seed ->
+            prisma:bootstrap-admin, ~3.8s). reuseExistingServer:false so the setup owns the
+            only server and the rm cannot hit a live connection. Playwright starts the web
+            server BEFORE globalSetup; that is safe because the readiness probe (/en home)
+            renders from the static content modules and touches no table. e2e/smoke.spec.ts
+            is the only test: loads the homepage in both locales and asserts the locale
+            actually rendered (EN h1 + "Book Appointment" / FR h1 + "Prendre rendez-vous")
+            with zero pageerrors. Verified 4/4 (desktop+mobile x en+fr).
+            ENVIRONMENT BLOCKER: cdn.playwright.dev returns 403 "service is not available
+            in your location", so the bundled browsers CANNOT be downloaded here. Both
+            projects use channel:"chrome" against the system-installed Google Chrome; the
+            mobile project is a 390x844 touch+isMobile Chrome viewport instead of
+            devices["iPhone 15"] (that would need the undownloadable WebKit build). If a
+            later environment can reach the CDN, swap the channel for the real devices.
+            ISOLATION VERIFIED: after the run, dev.db was byte-untouched (services=32,
+            bookings=15 - the seeded demo data, exactly as found) while e2e.db held the
+            fresh provision (services=24, bookings=0, admins=1).
+      - [ ] STEP 2 (next): the booking-request flow + admin confirm/decline e2e suites,
+            plus the mobile-layout assertions. Do NOT add them to smoke.spec.ts - new files.
 - [ ] security-review skill run
 - [ ] README: how to run, what was tested, what is mocked (email/SMS/payments)
 
 ## Notes
+- 2026-09-24: PHASE 5 STEP 1 - PLAYWRIGHT e2e INFRASTRUCTURE. tsc clean (e2e files
+  checked explicitly; tsconfig.json excludes ./e2e so the main `tsc --noEmit` does not
+  cover them - run tsc on the files directly or via playwright), vitest 148/148 over 8
+  files, `next build` passes, `npx playwright test` 4/4 (desktop+mobile x en+fr).
+  FILES: playwright.config.ts (port 3020, DATABASE_URL -> prisma/e2e.db, globalSetup,
+  channel:"chrome", reuseExistingServer:false), e2e/global-setup.ts (fresh e2e.db every
+  run: rm + prisma db push + seed + bootstrap-admin, then a libsql count as a sanity
+  check), e2e/smoke.spec.ts (the ONE smoke test, homepage in both locales).
+  PITFALLS HIT AND FIXED: (1) Playwright starts webServer BEFORE globalSetup (verified in
+  playwright's createGlobalSetupTasks), so the readiness probe must be a DB-free route and
+  the seed must be idempotent - it is (upserts). (2) No root "/" route exists
+  (localePrefix "always", no redirect page), so the probe points at /en. (3) The @libsql
+  client API is .execute(), NOT .query(); an inline node -e sanity query used .query and
+  threw at runtime after the seed had already succeeded. (4) That same inline node -e
+  probe had unescaped backslashes in the file URL on Windows, which libsql happily turned
+  into a 0-byte stray file at the repo root; removed, and the probe now runs in-process.
 - 2026-09-23: FIXED admin sign-in 404. After a successful POST /api/admin/login the form
       redirected to /admin, but no /[locale]/admin dashboard page exists yet (only
       /admin/login and /admin/requests), so every sign-in landed on a 404. The redirect now
@@ -231,7 +269,7 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
   breaks prefilled, Add hours per day), opened a customer's booking history (8 bookings,
   status badges, DST-correct dates), deleted the smoke-test service (200, list reverted) so
   dev.db is as found, and verified the complete French render (accents, "335,00 $",
-  "0,00 $ réservés", French weekday labels).
+  "0,00 $ rÃ©servÃ©s", French weekday labels).
 - 2026-09-23: CORRECTION TO THE PHASE 3.5 NOTES. That entry says the public slot engine was
   removed and the booking page switched to plain date/time pickers. That is NOT what is in
   the tree: src/lib/availability.ts, /api/bookings/slots and /api/availability/days still
@@ -244,3 +282,5 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
   slot UI gives customers a self-service view of likely availability, and removal would be
   a net feature loss. If a later phase wants the simplified pickers instead, the deletions
   listed in the 2026-09-22 note are still the work involved.
+
+
