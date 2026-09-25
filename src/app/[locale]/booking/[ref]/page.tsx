@@ -50,8 +50,6 @@ export default async function ManageBookingPage({
           priceTotal: booking.priceTotal,
           serviceName: booking.service.name,
           staffName: booking.staff.name,
-          serviceSlug: booking.service.slug,
-          staffSlug: booking.staff.slug,
           durationMin: booking.service.duration,
           customerName: booking.customer.name,
           customerEmail: booking.customer.email,
@@ -62,4 +60,3 @@ export default async function ManageBookingPage({
     </div>
   );
 }
-

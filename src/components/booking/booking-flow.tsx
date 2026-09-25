@@ -1,11 +1,16 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import { formatPrice, formatDuration } from "@/lib/datetime";
 import { customerSchema, flattenZodErrors } from "@/lib/validation";
-import { minutesToLabel, labelForDay, dayKeyForDate, translateValidationKey } from "@/lib/booking-ui";
+import {
+  minutesToLabel,
+  labelForDay,
+  dayKeyForDate,
+  translateValidationKey,
+} from "@/lib/booking-ui";
 import { FormField } from "@/components/booking/form-field";
 
 export interface ServiceOption {
@@ -26,10 +31,7 @@ export interface StaffOption {
   bio: string | null;
   serviceIds: string[];
 }
-export interface Slot {
-  startMinutes: number;
-  staffId?: string;
-}
+
 interface BookingResult {
   ref: string;
   whenLabel: string;
@@ -43,6 +45,16 @@ interface BookingResult {
 type Step = "service" | "staff" | "date" | "details" | "done";
 const STEP_ORDER: Step[] = ["service", "staff", "date", "details"];
 
+/** "HH:mm" from an <input type="time"> -> minutes from midnight, or null when invalid. */
+function timeToMinutes(hhmm: string): number | null {
+  const parts = /^(\d{2}):(\d{2})$/.exec(hhmm);
+  if (!parts) return null;
+  const h = Number(parts[1]);
+  const m = Number(parts[2]);
+  if (h > 23 || m > 59) return null;
+  return h * 60 + m;
+}
+
 export function BookingFlow({
   services,
   staff,
@@ -50,7 +62,6 @@ export function BookingFlow({
   initialStaffSlug,
   locale,
   bookingWindowDays,
-  slotIntervalMin,
 }: {
   services: ServiceOption[];
   staff: StaffOption[];
@@ -58,8 +69,6 @@ export function BookingFlow({
   initialStaffSlug?: string;
   locale: string;
   bookingWindowDays: number;
-  leadTimeMin: number;
-  slotIntervalMin: number;
 }) {
   const t = useTranslations("Booking");
   const tValidation = useTranslations("Validation");
@@ -80,16 +89,14 @@ export function BookingFlow({
   const [step, setStep] = useState<Step>(initialService ? (initialStaff ? "date" : "staff") : "service");
   const [serviceId, setServiceId] = useState<string | null>(initialService?.id ?? null);
   const [staffId, setStaffId] = useState<string | null>(initialStaff);
+  // Preferred date (YYYY-MM-DD) and time (HH:mm): the customer asks, the salon decides.
   const [dayKey, setDayKey] = useState<string>("");
-  const [slot, setSlot] = useState<Slot | null>(null);
-  const [slots, setSlots] = useState<Slot[]>([]);
-  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [time, setTime] = useState<string>("");
   const [form, setForm] = useState({ name: "", email: "", phone: "", note: "" });
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<BookingResult | null>(null);
-  const [availableDays, setAvailableDays] = useState<string[]>([]);
 
   const service = useMemo(() => services.find((s) => s.id === serviceId) ?? null, [services, serviceId]);
   const staffMember = useMemo(
@@ -98,77 +105,38 @@ export function BookingFlow({
   );
   const stepNumber = Math.min(STEP_ORDER.indexOf(step) + 1, STEP_ORDER.length);
 
-  const staffSlugForFetch = useCallback(
-    () => {
-      if (staffId === "any" || !staffId) return "any";
-      return staff.find((s) => s.id === staffId)?.slug ?? "any";
-    },
-    [staff, staffId],
-  );
+  const minDate = useMemo(() => dayKeyForDate(new Date()), []);
+  const maxDate = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + bookingWindowDays);
+    return dayKeyForDate(d);
+  }, [bookingWindowDays]);
 
-  const loadSlots = useCallback(
-    async (key: string) => {
-      if (!serviceId || !staffId || !service) return;
-      setLoadingSlots(true);
-      setError(null);
-      try {
-        const params = new URLSearchParams({
-          service: service.slug,
-          staff: staffSlugForFetch(),
-          date: key,
-        });
-        const res = await fetch(`/api/bookings/slots?${params.toString()}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "INTERNAL");
-        setSlots(data.slots ?? []);
-      } catch {
-        setSlots([]);
-        setError(t("errorGeneric"));
-      } finally {
-        setLoadingSlots(false);
-      }
-    },
-    [serviceId, staffId, service, staffSlugForFetch, t],
-  );
-
-  useEffect(() => {
-    if (step === "date" && dayKey) loadSlots(dayKey);
-  }, [step, dayKey, loadSlots]);
-
-  // Days that have any working schedule for the selected service/staff.
-  useEffect(() => {
-    if (!serviceId || step === "done") return;
-    const controller = new AbortController();
-    const params = new URLSearchParams({
-      service: service!.slug,
-      staff: staffSlugForFetch(),
-      days: String(bookingWindowDays),
-    });
-    fetch(`/api/availability/days?${params.toString()}`, { signal: controller.signal })
-      .then((r) => (r.ok ? r.json() : { days: [] }))
-      .then((d) => setAvailableDays(d.days ?? []))
-      .catch(() => { /* keep previous */ });
-    return () => controller.abort();
-  }, [serviceId, staffId, service, staffSlugForFetch, bookingWindowDays, step]);
+  const startMinutes = timeToMinutes(time);
 
   function handleServiceSelect(id: string) {
     setServiceId(id);
     setStaffId(null);
     setDayKey("");
-    setSlot(null);
+    setTime("");
     setStep("staff");
   }
   function handleStaffSelect(id: string) {
     setStaffId(id);
     setDayKey("");
-    setSlot(null);
+    setTime("");
     setStep("date");
   }
-  function handleSlotSelect(s: Slot) {
-    setSlot(s);
-    setError(null);
-    setStep("details");
+
+  /** Advance from the preferred-date step to the details step. */
+  function goToDetails() {
+    const errs: Record<string, string> = {};
+    if (!dayKey) errs.date = t("errorDateRequired");
+    if (startMinutes === null) errs.time = t("errorTimeRequired");
+    setFieldErrors(errs);
+    if (Object.keys(errs).length === 0) setStep("details");
   }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -184,7 +152,7 @@ export function BookingFlow({
       return;
     }
 
-    if (!service || !staffId || !dayKey || !slot) {
+    if (!service || !staffId || !dayKey || startMinutes === null) {
       setError(t("errorGeneric"));
       return;
     }
@@ -196,19 +164,18 @@ export function BookingFlow({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           serviceId: service.id,
-          // Resolve "any" to the concrete staff the slot belongs to.
-          staffId: staffId === "any" && slot.staffId ? slot.staffId : staffId,
+          // "any" is resolved to a qualified specialist server-side at confirm time.
+          staffId,
           dayKey,
-          startMinutes: slot.startMinutes,
+          startMinutes,
           customer: parsed.data,
         }),
       });
       const data = await res.json();
       if (!res.ok) {
-        if (data.error === "SLOT_UNAVAILABLE" || data.error === "CONFLICT") {
-          setError(t("errorConflict"));
+        if (data.error === "PAST_TIME") {
+          setError(t("errorPast"));
           setStep("date");
-          await loadSlots(dayKey);
         } else if (data.fieldErrors) {
           const translated: Record<string, string> = {};
           for (const [k, v] of Object.entries(data.fieldErrors as Record<string, string>)) {
@@ -233,7 +200,16 @@ export function BookingFlow({
     return (
       <div className="mx-auto max-w-2xl text-center">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
-          <span aria-hidden="true" className="text-3xl text-green-600 dark:text-green-400">✓</span>
+          <svg
+            aria-hidden="true"
+            className="h-8 w-8 text-green-600 dark:text-green-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
         </div>
         <h1 className="mt-6 font-serif text-3xl font-bold text-stone-900 dark:text-stone-50">
           {t("successTitle")}
@@ -353,7 +329,7 @@ export function BookingFlow({
                 className="flex w-full items-center gap-4 rounded-2xl border border-stone-200 bg-white p-5 text-left shadow-sm transition-all hover:border-brand-400 hover:shadow-md dark:border-stone-800 dark:bg-[#211b16]"
               >
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-100 font-semibold text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
-                  ★
+                  &starf;
                 </span>
                 <span>
                   <span className="block font-medium text-stone-900 dark:text-stone-50">{t("anyStaff")}</span>
@@ -387,7 +363,7 @@ export function BookingFlow({
               ))}
           </ul>
           {staff.filter((m) => m.serviceIds.includes(service.id)).length === 0 && (
-            <p className="mt-6 text-sm text-stone-500 dark:text-stone-400">{t("errorClosed")}</p>
+            <p className="mt-6 text-sm text-stone-500 dark:text-stone-400">{t("errorNoStaff")}</p>
           )}
           <BackButton onClick={() => setStep("service")} label={t("back")} />
         </section>
@@ -398,67 +374,73 @@ export function BookingFlow({
           <h2 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50">
             {t("chooseDate")}
           </h2>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {Array.from({ length: Math.min(bookingWindowDays, 21) }).map((_, i) => {
-              const d = new Date();
-              d.setDate(d.getDate() + i);
-              const key = dayKeyForDate(d);
-              const hasAvailability = availableDays.includes(key);
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => {
-                    setDayKey(key);
-                    setSlot(null);
-                  }}
-                  aria-pressed={dayKey === key}
-                  aria-label={labelForDay(key, tLocale)}
-                  className={`rounded-xl border px-3 py-2 text-sm transition-colors ${
-                    dayKey === key
-                      ? "border-brand-600 bg-brand-600 text-white"
-                      : hasAvailability
-                        ? "border-stone-200 bg-white text-stone-900 hover:border-brand-400 dark:border-stone-800 dark:bg-[#211b16] dark:text-stone-50"
-                        : "border-stone-200 bg-stone-50 text-stone-400 dark:border-stone-800 dark:bg-stone-900/50 dark:text-stone-600"
-                  }`}
-                >
-                  {d.toLocaleDateString(tLocale === "fr" ? "fr-CA" : "en-CA", {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "short",
-                  })}
-                </button>
-              );
-            })}
-          </div>
-
-          {dayKey && (
-            <div className="mt-8">
-              <h3 className="text-sm font-semibold text-stone-700 dark:text-stone-300">{t("selectTime")}</h3>
-              {loadingSlots ? (
-                <p className="mt-4 text-sm text-stone-500 dark:text-stone-400" role="status">
-                  {t("loadingSlots")}
+          <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">{t("dateHint")}</p>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="preferred-date"
+                className="block text-sm font-medium text-stone-700 dark:text-stone-300"
+              >
+                {t("selectDate")}
+              </label>
+              <input
+                id="preferred-date"
+                type="date"
+                value={dayKey}
+                min={minDate}
+                max={maxDate}
+                required
+                onChange={(e) => {
+                  setDayKey(e.target.value);
+                  setFieldErrors((fe) => ({ ...fe, date: "" }));
+                }}
+                aria-invalid={!!fieldErrors.date}
+                aria-describedby={fieldErrors.date ? "preferred-date-error" : undefined}
+                className="mt-1 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 focus:border-brand-500 focus:outline-none dark:border-stone-700 dark:bg-[#211b16] dark:text-stone-50"
+              />
+              {fieldErrors.date && (
+                <p id="preferred-date-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  {fieldErrors.date}
                 </p>
-              ) : slots.length === 0 ? (
-                <p className="mt-4 text-sm text-stone-500 dark:text-stone-400">{t("noSlots")}</p>
-              ) : (
-                <ul className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
-                  {slots.map((s) => (
-                    <li key={s.startMinutes}>
-                      <button
-                        type="button"
-                        onClick={() => handleSlotSelect(s)}
-                        className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-900 transition-colors hover:border-brand-400 hover:bg-brand-50 dark:border-stone-800 dark:bg-[#211b16] dark:text-stone-50 dark:hover:bg-stone-800"
-                      >
-                        {minutesToLabel(s.startMinutes, tLocale)}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
               )}
             </div>
-          )}
-          <BackButton onClick={() => setStep(staffId ? "staff" : "service")} label={t("back")} />
+            <div>
+              <label
+                htmlFor="preferred-time"
+                className="block text-sm font-medium text-stone-700 dark:text-stone-300"
+              >
+                {t("selectTime")}
+              </label>
+              <input
+                id="preferred-time"
+                type="time"
+                value={time}
+                required
+                onChange={(e) => {
+                  setTime(e.target.value);
+                  setFieldErrors((fe) => ({ ...fe, time: "" }));
+                }}
+                aria-invalid={!!fieldErrors.time}
+                aria-describedby={fieldErrors.time ? "preferred-time-error" : undefined}
+                className="mt-1 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 focus:border-brand-500 focus:outline-none dark:border-stone-700 dark:bg-[#211b16] dark:text-stone-50"
+              />
+              {fieldErrors.time && (
+                <p id="preferred-time-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  {fieldErrors.time}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="mt-8 flex items-center gap-4">
+            <button
+              type="button"
+              onClick={goToDetails}
+              className="rounded-full bg-brand-600 px-8 py-3 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105 hover:bg-brand-700"
+            >
+              {t("continue")}
+            </button>
+            <BackButton onClick={() => setStep(staffId ? "staff" : "service")} label={t("back")} />
+          </div>
         </section>
       )}
 
@@ -526,10 +508,10 @@ export function BookingFlow({
                 label={t("specialist")}
                 value={staffId === "any" ? t("anyStaff") : (staffMember?.name ?? "")}
               />
-              {dayKey && slot && (
+              {dayKey && startMinutes !== null && (
                 <SummaryRow
                   label={t("date")}
-                  value={`${labelForDay(dayKey, tLocale)} · ${minutesToLabel(slot.startMinutes, tLocale)}`}
+                  value={`${labelForDay(dayKey, tLocale)} ${minutesToLabel(startMinutes, tLocale)}`}
                 />
               )}
               <div className="flex justify-between gap-4 border-t border-stone-200 pt-2 dark:border-stone-800">
@@ -555,7 +537,7 @@ export function BookingFlow({
               disabled={submitting}
               className="text-sm font-medium text-stone-600 hover:text-brand-600 dark:text-stone-400"
             >
-              ← {t("back")}
+              &larr; {t("back")}
             </button>
           </div>
         </form>
@@ -569,9 +551,9 @@ function BackButton({ onClick, label }: { onClick: () => void; label: string }) 
     <button
       type="button"
       onClick={onClick}
-      className="mt-6 text-sm font-medium text-stone-600 hover:text-brand-600 dark:text-stone-400"
+      className="text-sm font-medium text-stone-600 hover:text-brand-600 dark:text-stone-400"
     >
-      ← {label}
+      &larr; {label}
     </button>
   );
 }

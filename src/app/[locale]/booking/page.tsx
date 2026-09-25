@@ -49,8 +49,6 @@ export default async function BookingPage({
         initialStaffSlug={staffSlug}
         locale={locale}
         bookingWindowDays={setting?.bookingWindowDays ?? 60}
-        leadTimeMin={setting?.leadTimeMin ?? 60}
-        slotIntervalMin={setting?.slotIntervalMin ?? 30}
       />
     </div>
   );

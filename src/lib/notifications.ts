@@ -79,7 +79,7 @@ export function bookingConfirmationEmail(data: BookingNotificationData): Notific
       `When: ${when} - ${end}`,
       `Price: ${formatPrice(data.priceCents, "en")} CAD`,
       ``,
-      `View, reschedule, or cancel your appointment:`,
+      `View or cancel your appointment:`,
       `${data.manageUrl}`,
       ``,
       `Reference: ${data.ref}`,
