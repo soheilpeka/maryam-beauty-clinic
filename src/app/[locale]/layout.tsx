@@ -19,8 +19,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Meta" });
-  const base = process.env.NEXT_PUBLIC_BASE_URL ?? "https://maryam-beauty-clinic-soheil12.vercel.app";
-
+ const base =
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  "https://maryam-beauty-clinic-soheil12.vercel.app";
   return {
     title: t("title"),
     description: t("description"),
