@@ -1,4 +1,4 @@
-﻿# Maryam Beauty Clinic - Progress
+# Maryam Beauty Clinic - Progress
 
 Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
 
@@ -73,7 +73,7 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
       - [x] src/tests/validation.test.ts (41 tests): every shared Zod schema + flattenZodErrors
             (double-booking-at-confirm + request-flow coverage already lived in booking.test.ts /
              manage-route.test.ts; this file closed the form-validation gap)
-- [~] Playwright: booking flow + mobile layout
+- [x] Playwright: booking flow + mobile layout
       - [x] STEP 1 (2026-09-24): e2e INFRASTRUCTURE + smoke test. playwright.config.ts
             now boots `next dev` on a dedicated port (3020) with DATABASE_URL pointed at a
             throwaway prisma/e2e.db, and e2e/global-setup.ts rebuilds that DB from scratch
@@ -94,12 +94,75 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
             ISOLATION VERIFIED: after the run, dev.db was byte-untouched (services=32,
             bookings=15 - the seeded demo data, exactly as found) while e2e.db held the
             fresh provision (services=24, bookings=0, admins=1).
-      - [ ] STEP 2 (next): the booking-request flow + admin confirm/decline e2e suites,
-            plus the mobile-layout assertions. Do NOT add them to smoke.spec.ts - new files.
+      - [x] STEP 2 (2026-09-26): the three new spec files + the bugs they uncovered.
+            `npx playwright test` = 26 passed / 2 skipped (the two mobile-only tests skip
+            on desktop), 0 failed, run twice in a row to confirm it is stable, not flaky.
+            tsc clean (app + e2e checked separately; tsconfig.json excludes ./e2e), vitest
+            142/142, next build passes. FILES: e2e/booking.spec.ts (submit and assert the
+            real confirmation summary, client-side validation, server PAST_TIME rejection,
+            query-string prefill), e2e/admin.spec.ts (confirm incl. status filter buckets,
+            decline with a reason, unauth gate + 401 API), e2e/mobile.spec.ts (no
+            horizontal overflow on home/booking/contact, drawer nav + scroll lock, booking
+            flow usable at mobile width). FIVE ISSUES FIXED - details in the 2026-09-26
+            note: a confirmation screen rendering the wrong record, an unclickable mobile
+            drawer, parallel admin sign-ins evicting each other, an alert locator matching
+            the Next route announcer, and a dev-server cold-compile flake.
 - [ ] security-review skill run
 - [ ] README: how to run, what was tested, what is mocked (email/SMS/payments)
 
 ## Notes
+- 2026-09-26: PHASE 5 STEP 2 - booking / admin / mobile e2e suites; five real bugs fixed.
+      `npx playwright test` now covers 4 spec files: 26 passed / 2 skipped / 0 failed (the
+      drawer + mobile-booking-flow tests are mobile-project only), verified twice in a row
+      so the suite is known-stable rather than flaky. tsc clean (app, plus the e2e files
+      separately because tsconfig.json excludes ./e2e), vitest 142/142 over 7 files, next
+      build passes. ISOLATION re-verified: prisma/dev.db untouched (278528 bytes, same
+      mtime) while prisma/e2e.db held the throwaway provision.
+      (1) CONFIRMATION SCREEN RENDERED THE WRONG RECORD (real customer-facing bug). POST
+          /api/bookings answers { booking: {...}, manageUrl }, but booking-flow.tsx did
+          setResult(data as BookingResult) and stored the whole envelope, so every field
+          the confirmation screen reads - ref, service, staff, whenLabel, priceTotal,
+          durationMin, manageUrl - was undefined. A customer who had just submitted a
+          request saw an empty confirmation with no manage/cancel link. booking-flow.tsx
+          now unwraps data.booking and takes manageUrl from the top level.
+          e2e/booking.spec.ts asserts the real summary (service, the specialist that "any"
+          resolved to, time, duration, price) plus a signed /en/booking/<ref>?t=... link.
+      (2) THE MOBILE DRAWER WAS UNCLICKABLE. The drawer was fixed inset-0 but nested
+          INSIDE the <header>, which only gains backdrop-blur-md while the drawer is open
+          - and backdrop-filter becomes the containing block for any fixed descendant. The
+          drawer was therefore clamped to the header 64px box instead of covering the
+          viewport, and its links sat under the sticky bar and page content, so every
+          click was intercepted. It is now a viewport-level sibling of the header (a
+          fragment return) at z-[60], with top-16 keeping the bar and its close button
+          visible. No layout ancestor applies filter/transform, so fixed is viewport-based.
+      (3) PARALLEL ADMIN SIGN-IN BROKE BOTH ADMIN TESTS. src/lib/sessions.ts
+          createSession() keeps ONE live session per account (deleteMany on adminId, then
+          insert). The desktop and mobile projects run admin.spec.ts in parallel and both
+          signed in as the single bootstrapped admin, so the second sign-in deleted the
+          first session - the next mutation from the first project then 401-ed as
+          session-expired - and the deleteMany+create pair racing on one adminId could
+          fail a login POST outright, leaving a test stranded on the login page. Fixed
+          WITHOUT weakening the real single-session rule: e2e/admin-credentials.ts gives
+          each project its own account (mobile is a +mobile plus-addressed alias of the
+          demo admin, same demo password), e2e/global-setup.ts bootstraps both, and
+          admin.spec.ts is test.describe.configure({ mode: "serial" }) so its own tests
+          never overlap.
+      (4) A TEST BUG, NOT AN APP BUG. The PAST_TIME assertion used getByRole("alert"),
+          which also matches the empty #__next-route-announcer__ Next appends at body
+          level, so it resolved to two elements and failed strict mode. Scoped the locator
+          to <main>; the server was already returning PAST_TIME and the flow was already
+          rendering the inline alert correctly.
+      (5) A COLD-COMPILE FLAKE. next dev compiles a route lazily on its first request, and
+          that first compile once returned a truncated payload that the browser surfaced
+          as a Runtime SyntaxError: Unexpected end of JSON input overlay on whichever test
+          was first through /en/booking. e2e/global-setup.ts now warms every route the
+          suite uses before any test runs; the response status is irrelevant because a
+          route that answers 401/404/405 has still been imported and compiled. Two clean
+          runs since.
+      ALSO: the POST /api/bookings rate limit now reads env.bookingRateLimitPerMinute
+          (default 5) and playwright.config.ts sets BOOKING_RATE_LIMIT_PER_MINUTE=60 so
+          the many parallel localhost submissions are not throttled; src/lib/prisma.ts
+          forwards a DATABASE_AUTH_TOKEN when one is present.
 - 2026-09-24: PHASE 5 STEP 1 - PLAYWRIGHT e2e INFRASTRUCTURE. tsc clean (e2e files
   checked explicitly; tsconfig.json excludes ./e2e so the main `tsc --noEmit` does not
   cover them - run tsc on the files directly or via playwright), vitest 148/148 over 8

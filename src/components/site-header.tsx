@@ -56,6 +56,7 @@ export function SiteHeader() {
   };
 
   return (
+    <>
     <header
       className={`sticky top-0 z-50 w-full border-b transition-colors duration-300 ${
         scrolled || mobileOpen
@@ -216,9 +217,18 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 top-16 z-40 overflow-y-auto bg-background lg:hidden">
+    </header>
+
+    {/*
+      Mobile drawer, rendered OUTSIDE the <header> as a viewport-level overlay. The header
+      gains backdrop-filter while the drawer is open, and backdrop-filter becomes the
+      containing block for any fixed descendant, so a drawer nested inside the header was
+      clamped to the header 64px box instead of covering the viewport - its links then sat
+      under the sticky bar and page content and were unclickable. top-16 keeps the bar and
+      its close button visible; z-[60] lifts the drawer above the header and page content.
+    */}
+    {mobileOpen && (
+      <div className="fixed inset-0 top-16 z-[60] overflow-y-auto bg-background lg:hidden">
           <nav className="mx-auto max-w-7xl px-4 pb-24 pt-4 sm:px-6" aria-label="Mobile">
             <MobileSection title={t("treatments")}>
               {SERVICE_CATEGORIES.map((cat) => (
@@ -264,7 +274,7 @@ export function SiteHeader() {
           </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }
 

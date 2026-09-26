@@ -59,6 +59,9 @@ export default defineConfig({
       DATABASE_URL: E2E_DATABASE_URL,
       NEXT_PUBLIC_BASE_URL: baseURL,
       NOTIFICATION_PROVIDER: "mock",
+      // The suite submits several booking requests from one localhost IP in parallel;
+      // the production default of 5/min would throttle it.
+      BOOKING_RATE_LIMIT_PER_MINUTE: "60",
     },
   },
 });

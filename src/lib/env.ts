@@ -45,4 +45,13 @@ export const env = {
     if (!v) throw new Error("ADMIN_INITIAL_PASSWORD is not set (needed to create the first admin)");
     return v;
   },
+  /**
+   * Per-IP limit on booking submissions per 60s. The default is a tight anti-abuse budget;
+   * the parallel e2e suite raises it via BOOKING_RATE_LIMIT_PER_MINUTE so its many
+   * submissions from one localhost IP are not throttled.
+   */
+  get bookingRateLimitPerMinute(): number {
+    const parsed = Number(process.env.BOOKING_RATE_LIMIT_PER_MINUTE);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 5;
+  },
 } as const;

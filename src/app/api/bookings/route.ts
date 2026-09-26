@@ -13,8 +13,9 @@ import { formatLongDate, formatTime, toLocalMinutes } from "@/lib/datetime";
 
 export const dynamic = "force-dynamic";
 
-// Tight limit on request submission to protect against abuse and double-submits.
-const RATE_LIMIT = { limit: 5, windowMs: 60_000 };
+// Tight limit on request submission to protect against abuse and double-submits. The
+// per-minute budget is overridable via env (see env.bookingRateLimitPerMinute).
+const RATE_LIMIT = { limit: env.bookingRateLimitPerMinute, windowMs: 60_000 };
 
 export async function POST(request: NextRequest) {
   const ip = clientIpFromHeaders(request.headers);

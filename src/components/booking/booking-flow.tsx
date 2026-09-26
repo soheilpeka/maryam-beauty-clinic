@@ -187,7 +187,24 @@ export function BookingFlow({
         }
         return;
       }
-      setResult(data as BookingResult);
+      // The API returns the booking nested under `booking`; the manage link is top level.
+      const confirmed = data.booking as {
+        ref: string;
+        service: string;
+        staff: string;
+        whenLabel: string;
+        priceTotal: number;
+        durationMin: number;
+      };
+      setResult({
+        ref: confirmed.ref,
+        service: confirmed.service,
+        staff: confirmed.staff,
+        whenLabel: confirmed.whenLabel,
+        priceTotal: confirmed.priceTotal,
+        durationMin: confirmed.durationMin,
+        manageUrl: (data.manageUrl as string) ?? "",
+      });
       setStep("done");
     } catch {
       setError(t("errorGeneric"));
