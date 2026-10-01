@@ -1,5 +1,12 @@
 # Maryam Beauty Clinic - Progress
 
+## 2026-10-01 — Staging database setup preparation
+
+- Added explicit libSQL client dependency and generated the empty initial SQL schema from the current Prisma schema. The SQL contains structure only, with no owner/customer data.
+- Added separate `.env.staging` commands to initialize a NEW empty remote database, seed provisional content once, and bootstrap the chosen administrator. A preload guard rejects missing remote credentials before seed/admin scripts can fall back to the local `.env` database; initialization refuses databases with existing tables.
+- Seed and administrator bootstrap now pass the remote database auth token to the libSQL adapter. `.env.staging` is ignored by Git.
+- TypeScript compilation passed. No local database was reset or seeded, no remote database was connected, and no Hostinger deployment was performed. Real email, payment and media storage integration remain separate launch requirements.
+
 ## 2026-10-01 — Website-wide visual consistency pass (verified)
 
 - Re-read instructions/spec/history, inspected the dirty tree and live preview on 3020. Preserving all valid work and owner data.

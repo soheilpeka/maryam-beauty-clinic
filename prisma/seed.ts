@@ -23,7 +23,10 @@ import { TESTIMONIALS } from "@/lib/content/testimonials";
 import { DEMO_PRODUCTS } from "@/lib/content/products";
 
 const prisma = new PrismaClient({
-  adapter: new PrismaLibSql({ url: env.databaseUrl }),
+  adapter: new PrismaLibSql({
+    url: env.databaseUrl,
+    authToken: process.env.DATABASE_AUTH_TOKEN,
+  }),
 });
 
 // Minutes-from-midnight helpers (salon local time)

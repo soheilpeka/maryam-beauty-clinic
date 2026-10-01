@@ -15,6 +15,9 @@
     "prisma:push": "prisma db push",
     "prisma:seed": "node --import tsx --require ./tsx-sandbox-shim.cjs prisma/seed.ts",
     "prisma:bootstrap-admin": "node --import tsx --require ./tsx-sandbox-shim.cjs prisma/bootstrap-admin.ts",
+    "prisma:init-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/init-staging.ts",
+    "prisma:seed-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/seed.ts",
+    "prisma:bootstrap-admin-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/bootstrap-admin.ts",
     "prisma:studio": "prisma studio",
     "postinstall": "prisma generate"
   },
@@ -24,6 +27,7 @@
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",
+    "@libsql/client": "^0.17.4",
     "@prisma/adapter-libsql": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "bcryptjs": "^3.0.3",
