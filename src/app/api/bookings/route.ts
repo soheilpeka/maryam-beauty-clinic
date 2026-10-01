@@ -92,7 +92,8 @@ export async function POST(request: NextRequest) {
     });
 
     const token = await signBookingToken({ sub: result.booking.id, cust: result.customer.id });
-    const manageUrl = `${env.baseUrl}/${locale}/booking/${result.booking.ref}?t=${token}`;
+    const managePath = `/${locale}/booking/${result.booking.ref}?t=${token}`;
+    const manageUrl = `${env.baseUrl.replace(/\/$/, "")}${managePath}`;
     const whenLabel = `${formatLongDate(result.booking.startUtc, locale)} ${formatTime(result.booking.startUtc, locale)}`;
 
     await sendRequestReceipt({ customerName: result.customer.name, customerEmail: result.customer.email, ref: result.booking.ref, manageUrl, locale }).catch(() => console.error("request receipt delivery failed"));
@@ -126,6 +127,7 @@ export async function POST(request: NextRequest) {
         status: result.booking.status,
       },
       manageUrl,
+      managePath,
     });
   } catch (e) {
     if (e instanceof BookingStateError) {

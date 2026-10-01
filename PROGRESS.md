@@ -1,5 +1,10 @@
 # Maryam Beauty Clinic - Progress
 
+## 2026-10-01 — Booking manage link origin fix
+
+- Fixed confirmation-page Manage navigation to use the API's relative managePath on the current site, with a same-origin fallback for older API responses. Email links still use the configured absolute base URL. Updated the ignored local base URL from port 3020 to the active port 3050.
+- The reported booking opened successfully on the active server with its existing signed token. Production build and TypeScript validation passed. No bookings were created/cancelled and no automated test suite was run.
+
 ## 2026-10-01 — Service frames, collection and colorful reviews
 
 - Extended the restrained white photo mats to service catalog/detail photos and gallery cards/lightbox. Gallery captions now sit below photos without covering them.

@@ -204,7 +204,13 @@ export function BookingFlow({
         whenLabel: confirmed.whenLabel,
         priceTotal: confirmed.priceTotal,
         durationMin: confirmed.durationMin,
-        manageUrl: (data.manageUrl as string) ?? "",
+        // Keep on-site navigation on the current origin, even if the email base URL is stale.
+        manageUrl: typeof data.managePath === "string"
+          ? data.managePath
+          : (() => {
+              const url = new URL(data.manageUrl as string, window.location.origin);
+              return `${url.pathname}${url.search}`;
+            })(),
       });
       setStep("done");
     } catch {
