@@ -4,6 +4,9 @@ import createNextIntlPlugin from "next-intl/plugin";
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  async redirects() {
+    return [{ source: "/", destination: "/en", permanent: false }];
+  },
   images: {
     remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
   },

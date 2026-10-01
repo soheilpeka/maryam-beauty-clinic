@@ -1,5 +1,10 @@
 # Maryam Beauty Clinic - Progress
 
+## 2026-10-01 — Bare-domain homepage redirect
+
+- Added an exact-root temporary redirect from `/` to the existing default-language homepage `/en`. EN/FR page paths and the admin proxy are unchanged.
+- Production Webpack build passed with TypeScript validation and 83 generated pages; the built routes manifest contains the `/` to `/en` redirect with status 307. Direct requests from this environment to the Hostinger preview timed out, so live hosting behavior requires deployment confirmation.
+
 ## 2026-10-01 — Hostinger build compatibility
 
 - Investigated the supplied Hostinger log: native SWC requires GLIBC_2.29 unavailable on the host, followed by a TypeScript config import failure while falling back to WASM.
