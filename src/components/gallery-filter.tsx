@@ -1,24 +1,30 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useLocale } from "next-intl";
 import { GALLERY, GALLERY_TAGS } from "@/lib/content/gallery";
+
+export interface GalleryFilterItem { slug: string; image: string; caption: string; tag: string; title: string; alt?: string; span?: boolean }
 
 /**
  * Filterable results gallery. The filter tabs mirror the reference design's pattern while
  * keeping every gallery item reachable.
  */
-export function GalleryFilter() {
-  const [tag, setTag] = useState<(typeof GALLERY_TAGS)[number]>("All");
+export function GalleryFilter({ items = GALLERY as GalleryFilterItem[] }: { items?: GalleryFilterItem[] }) {
+  const [tag, setTag] = useState<string>("All");
+  const fr = useLocale() === "fr";
+  const tags = ["All", ...new Set(items.map(item => item.tag))];
+  const label = (value: string) => fr ? ({ All: "Tous", Hair: "Coiffure", Treatment: "Soins" } as Record<string, string>)[value] ?? value : value;
 
   const visible = useMemo(
-    () => (tag === "All" ? GALLERY : GALLERY.filter((g) => g.tag === tag)),
-    [tag],
+    () => (tag === "All" ? items : items.filter((g) => g.tag === tag)),
+    [items, tag],
   );
 
   return (
     <div>
       <div className="flex flex-wrap gap-2">
-        {GALLERY_TAGS.map((t) => (
+        {tags.map((t) => (
           <button
             key={t}
             type="button"
@@ -30,7 +36,7 @@ export function GalleryFilter() {
             }`}
             aria-pressed={tag === t}
           >
-            {t}
+            {label(t)}
           </button>
         ))}
       </div>
@@ -47,14 +53,14 @@ export function GalleryFilter() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={g.image}
-                alt={g.caption}
+                alt={g.alt ?? g.caption}
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
               />
             </div>
             <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5">
               <span className="text-xs font-semibold uppercase tracking-widest text-white/80">
-                {g.tag}
+                {label(g.tag)}
               </span>
               <p className="mt-1 font-serif text-base text-white">{g.title}</p>
               <p className="mt-1 text-xs text-white/70">{g.caption}</p>
@@ -62,6 +68,7 @@ export function GalleryFilter() {
           </figure>
         ))}
       </div>
+      {!visible.length && <p role="status" className="mt-8 text-muted-foreground">{fr ? "Aucune image dans cette catégorie pour le moment." : "No images in this category yet."}</p>}
     </div>
   );
 }

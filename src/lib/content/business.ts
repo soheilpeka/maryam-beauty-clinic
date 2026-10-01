@@ -1,40 +1,51 @@
 /**
- * Business information - VERBATIM from the live site.
- * These are the real contact details; do not alter them.
+ * Central provisional business identity.
+ *
+ * Address and phone come from the owner-provided official site/Maps sources. The email and
+ * current hours below are owner-supplied public details, kept in one place so every view and
+ * structured-content consumer stays in sync.
  */
+export const HOURS = [
+  { en: "Tuesday", fr: "Mardi", open: "10:00–16:00" },
+  { en: "Wednesday", fr: "Mercredi", open: "10:00–18:00" },
+  { en: "Thursday–Friday", fr: "Jeudi–vendredi", open: "10:00–21:00" },
+  { en: "Saturday", fr: "Samedi", open: "10:00–16:00" },
+  { en: "Sunday–Monday", fr: "Dimanche–lundi", open: "Closed" },
+] as const;
+
+export function localizedHours(locale: "en" | "fr") {
+  return HOURS.map((row) => ({ days: locale === "fr" ? row.fr : row.en, open: locale === "fr" && row.open === "Closed" ? "Fermé" : row.open }));
+}
+
 export const BUSINESS = {
-  name: "Maryam Beauty Clinic",
-  /** Hero tagline on the live site. */
-  heroTagline: "Experience the Best of Beauty Treatments",
-  neighborhood: "Yonge & Steeles",
-  address: "180 Steeles Avenue West #27, Thornhill, ON, Canada",
-  email: "maryamvares@gmail.com",
-  phone: "647-615-8051",
-  /** Phone formatted for tel: links. */
-  phoneHref: "tel:+16476158051",
-  smsHref: "sms:+16476158051",
+  name: "Maryam C Beauté",
+  legalName: "Maryam C Beauté",
+  heroTagline: "Hair, skin and beauty care in Brossard",
+  neighborhood: "Brossard",
+  address: "621 Av. Stravinski, Brossard, QC J4X 1Y7",
+  streetAddress: "621 Av. Stravinski",
+  city: "Brossard",
+  region: "QC",
+  postalCode: "J4X 1Y7",
+  country: "CA",
+  email: "Maryam_champir@yahoo.com",
+  phone: "(450) 466-3120",
+  phoneHref: "tel:+14504663120",
   timezone: "America/Toronto",
   currency: "CAD",
-  /** Service areas listed across the live site's pages. */
-  serviceAreas: [
-    "Toronto",
-    "Markham",
-    "Vaughan",
-    "Richmond Hill",
-    "North York",
-    "Thornhill",
-  ],
-  hours: [
-    { days: "Mon - Fri", open: "10am - 5pm" },
-    { days: "Saturday", open: "11am - 4pm" },
-    { days: "Sunday", open: "Closed" },
-  ],
+  serviceAreas: ["Brossard", "Montréal South Shore"],
+  hours: localizedHours("en") as Array<{ days: string; open: string }>,
+  hoursStatus: "owner-supplied" as const,
+  officialSite: "https://maryamcbeaute.ca/",
   social: [
-    { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61551878311257" },
-    { label: "Instagram", href: "https://www.instagram.com/maryambeauty_clinic/" },
+    { label: "Instagram", href: "https://www.instagram.com/maryamchampiri/" },
   ],
-  /** Google Maps directions query for the Get Directions link. */
-  mapsHref: "https://www.google.com/maps/search/?api=1&query=Maryam+Beauty+Clinic+180+Steeles+Avenue+West+Thornhill",
+  instagramHref: "https://www.instagram.com/maryamchampiri/",
+  facebookHref: null as string | null,
+  whatsappHref:
+    "https://api.whatsapp.com/send/?phone=14388792513&text=Hi%2C+send+us+a+message+or+your+question%21&type=phone_number&app_absent=0",
+  mapsHref: "https://maps.app.goo.gl/xjk753CJMQSqXuJeA",
+  googleMapsReviewsHref: "https://maps.app.goo.gl/xjk753CJMQSqXuJeA",
 } as const;
 
 export type BusinessInfo = typeof BUSINESS;

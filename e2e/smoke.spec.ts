@@ -14,12 +14,12 @@ import { test, expect } from "@playwright/test";
 // Anchors that exist only in the given locale's messages, so a wrong-locale render fails.
 const EXPECTED = {
   en: {
-    title: "Experience the Best of Beauty Treatments",
-    book: "Book Appointment",
+    title: "Beauty shines from within.",
+    book: "Book now",
   },
   fr: {
-    title: "Vivez le meilleur des traitements de beaut\u00e9",
-    book: "Prendre rendez-vous",
+    title: "La beauté vient de l'intérieur.",
+    book: "Réserver",
   },
 } as const;
 

@@ -14,3 +14,22 @@ prisma/*.db-journal
 coverage
 *.tsbuildinfo
 prisma/test.schema-hash
+
+# Local browser captures, source photo originals, and visual review output
+/.playwright-mcp/
+/artifacts/
+/pics/
+/*.png
+/.freebuff/
+/srv.log
+/srv.err.log
+/audit*.cjs
+/check-db.cjs
+/ctx[0-9]*.cjs
+/dump*.cjs
+/fix*.cjs
+/html-ctx*.cjs
+/parity.cjs
+/peek.cjs
+/scan.cjs
+/show-ctx.cjs

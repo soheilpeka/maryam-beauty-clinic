@@ -1,6 +1,171 @@
 # Maryam Beauty Clinic - Progress
 
+## 2026-10-01 — Website-wide visual consistency pass (verified)
+
+- Re-read instructions/spec/history, inspected the dirty tree and live preview on 3020. Preserving all valid work and owner data.
+- Inventoried every route family in VISUAL_REVIEW.md before implementation. Browser inspection confirms old rounded/generic layouts remain in cart, booking, service details and admin login despite prior green functional tests.
+- Extending the approved homepage through reusable editorial page/empty-state components, dedicated booking/store compositions and a practical branded admin sidebar. Browser screenshots and representative populated states are required before marking this pass verified.
+- Implemented shared editorial heading/empty-state components and tokens, image-led empty cart/checkout, open checkout fieldsets, ruled booking choices/summary, stone service heroes, unboxed catalog/gallery, branded order/404/error states, split admin login and a responsive admin sidebar across all nine management screens. Kept the approved homepage composition.
+- Corrected missing manage-booking status/detail translations, exposed salon-declined status separately, replaced browser confirm with a keyboard-operable native cancellation dialog, added an accessible admin error alert, and excluded demo products from public detail/related-product queries. Removed technical customer copy without implying live email/payment delivery.
+- Final visual inspection found a mobile dashboard chart overflowing even though the earlier innerWidth check passed; confined the chart to a keyboard-accessible scroll region and strengthened browser assertions against the configured viewport width. Cart quotes now reset while refreshing so stale availability cannot leave checkout enabled after a quote error.
+- Added isolated screenshot/workflow coverage for bilingual populated cart/checkout, API errors, native validation, pending/confirmed/declined/customer-cancelled requests, team schedules, customer history, expanded orders, navigation/keyboard focus, sold-out presentation and loading states. No owner database records were mutated.
+- Retained dark mode with neutral editorial tokens, corrected dark primary-button contrast, and verified reduced-motion layouts. Repaired both dashboard implicit grid sizing/positioned chart labels and French staff action wrapping; strict configured-viewport assertions now pass across all admin route families.
+- Final verification: TypeScript 0 errors; Vitest 159 passed / 0 failed across 9 files; production build passed (Next.js 16.3.6, 83 generated pages); Playwright `--workers=1` 46 passed / 2 skipped / 0 failed, 48 total. The two skips are mobile-only scenarios excluded on desktop. This supersedes the intermediate failed/partial runs and previous counts.
+- Saved 58 selected desktop/mobile screenshots under `artifacts/visual-review-2026-10-01/`; VISUAL_REVIEW.md records the route/state checklist, responsive decisions and integration limits. The owner preview is restored using the normal development configuration rather than any isolated E2E database.
+- Final read-only preview check: 42 public EN/FR route/viewport combinations at 320/390/1280px returned HTTP 200, with no horizontal overflow or browser runtime errors. Rechecked dark sign-in button contrast and recaptured its final desktop/mobile images. A six-panel overview accompanies the 58 selected screenshots.
+
+## 2026-10-01 — Current-state continuation
+
+- Preserved the existing dirty tree, new CMS/store files and owner media; no commit, deployment, database reset or destructive cleanup.
+- Rechecked EN/FR public pages on desktop and mobile; the About MP4 loads with a 38.08-second duration and 1920-pixel video width. All 16 service routes are checked in the browser suite.
+- Fixed the invisible cart control on the black header, localized admin team service labels and public CAD formatting, aligned remaining admin card colors with shared editorial tokens, and added an accessible bilingual booking FAQ without inventing policies.
+- Contact validation now associates each error with its field. Booking request, approval, decline and cancellation await notification delivery attempts; Resend calls have a bounded timeout and the default admin destination remains Maryam_champir@yahoo.com.
+- Preserved booking name/price/duration snapshots, CMS-authoritative active content, package relationships, URL-only media handling and guarded store pricing/inventory/order flows from the previous continuation.
+- Browser verification before the security patch: 36 passed, 2 mobile-only skips on desktop, 0 failed. Added native-dialog preview/Escape and real About-video playback coverage for the final run.
+- Updated Next.js 16.3.5 → 16.3.6 for GHSA-vcvr-r3jv-pc5j; no `next/og` ImageResponse usage exists in this app. Four high transitive Prisma/mysql2/deepmerge-ts advisories remain; automatic remediation requires a breaking downgrade and was not applied.
+- E2E now uses a unique `prisma/e2e-<run>.db` without deleting any existing database, preventing the locked old e2e.db from blocking verification. Application dev.db is never used by browser mutation tests.
+- Added private store metadata (noindex/nofollow), corrected the order-route robots path, and verified admin team create/localized publication/deactivation as well as service/package/gallery mutations and product checkout/order administration. Service detail pages now display approved durations or honest consultation-only labels.
+- Final verification (after the public staff policy and narrow-mobile fixes): TypeScript passed with zero errors; Vitest 159 passed / 0 failed across 9 files; production build passed (Next.js 16.3.6, 83 generated pages); Playwright `--workers=1` 40 passed / 2 skipped / 0 failed. The two skips are mobile-only tests excluded on desktop. Counts supersede older historical progress claims. Owner preview runs on http://localhost:3020/en and /fr with the preserved development database.
+- Final read-only owner-data crawl found narrow 320px overflow in editorial grid headings and French booking cards. Fixed responsive minmax tracks, long-word wrapping and stacked mobile price labels, with a bilingual 320px browser regression test. Rechecked 33 public page/viewport combinations at 320/390/1280px with no overflow or non-200 responses.
+- Read-only inspection found four obsolete demo staff identities still active in dev.db. A shared public staff policy excludes only those exact unchanged profiles from public pages and booking selection (including the server API), while retaining records and historical bookings in admin. Owner replacements remain eligible. Numbered sample profiles are clearly disclosed as provisional. Added focused regression tests; no database rows were changed.
+
+
+## 2026-09-30 - Maryam C Beauté completion pass
+
+- [x] Corrected owner-supplied Brossard contact details, email and opening hours (Tue 10–16,
+      Wed 10–18, Thu–Fri 10–21, Sat 10–16; Sun–Mon closed) across public contact/footer/service views.
+- [x] Added bilingual `/en/about` and `/fr/about` pages with the owner-provided `about.mp4` copied
+      to `public/media/about.mp4`; the original file in `pics/` remains untouched.
+- [x] Replaced the provisional menu with 15 bilingual services and consultation-only pricing/duration
+      labels; added Wellness category parity and preserved the booking test service slug.
+- [x] Kept the public store free of seeded demo products; admin-published products still flow through
+      the existing server-authoritative cart/order path. Added an empty-state-aware Playwright flow.
+- [x] Removed Fresha redirects and kept internal request-and-approve booking as the public contract.
+      Stripe test mode is now the default payment boundary; hosted Checkout/PaymentIntent and webhook
+      reconciliation remain explicitly unconfigured until the owner supplies credentials and approves
+      the payment flow. Mock payments remain isolated to local/e2e configuration.
+- [x] Verification: `npm run typecheck`, `npm test -- --run` (150/150), `npm run build` (81 generated
+      pages), and `npx playwright test --workers=1` (30 passed, 2 skipped).
+
+## 2026-09-27 - Maryam C Beauté identity and public-content audit
+
+- [x] Audited the current dirty tree, project specification, Next 16 App Router metadata/image/sitemap/accessibility guidance, public routes, booking/admin/store boundaries and security hotspots before editing.
+- [x] Verified the official business source and owner-provided Google Maps listing: Maryam C Beauté, 621 Av. Stravinski, Brossard, QC J4X 1Y7, (450) 466-3120, info@maryamcbeaute.ca; retained a centralized hours-pending state because published hours conflict.
+- [x] Centralized the corrected identity, social links, maps/reviews link and future Fresha configuration; Fresha remains a placeholder until the owner provides the official URL.
+- [x] Removed legacy Thornhill/old-clinic identity from public metadata, navigation, footer, notifications, seed comments and public content; replaced old blog/packages/gift-card content with owner-approval placeholders and removed those pages from the sitemap.
+- [x] Replaced the static service catalog with an official-source-derived provisional menu whose prices/durations are intentionally not claimed; marked gallery/store assets as temporary examples.
+- [x] Added a small set of short, attributable Google Maps review excerpts and a direct listing link; no unverifiable reviews are published.
+- [x] Verification after edits: `npm run typecheck` clean, `npm test` 150/150, `npm run build` passes 69 pages. `npm audit --omit=dev` still reports 4 high advisories through Prisma's transitive `deepmerge-ts`/`mysql2`; upgrading would force a breaking Prisma downgrade, so it remains an explicit dependency handoff item.
+
 Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
+
+## Store extension (2026-09-27)
+
+### Store Phase 1 - Repository/store audit + architecture plan
+- [x] Read PROJECT_SPEC.md, PROGRESS.md, AGENTS.md, current Next 16 App Router guides,
+      Prisma schema, git status/diff, public layout/navigation/design tokens, booking and
+      admin architecture, sessions/CSRF/audit/rate limiting, validation/i18n, and all tests.
+- [x] Preserved the substantial uncommitted store draft already in the tree: Product/Order
+      schema, demo seed catalog, public product/order APIs, catalog/product/cart UI, cart
+      persistence, payment abstraction, and admin product/order API routes.
+- [x] Audit findings: the draft is not wired into CartProvider/navigation/i18n; checkout,
+      confirmation, admin product/order UI, tests and sitemap integration are absent; the
+      build fails at /en/store/cart because no CartProvider is mounted; failed payments
+      reserve inventory indefinitely; product copy contains unsupported claims; there is
+      no idempotency, reservation expiry/release, refund state, SKU/featured/gallery data,
+      or production guard for the mock gateway.
+- [x] Architecture decision: integer CAD cents; server-authoritative pricing/shipping;
+      short-lived atomic inventory reservations with an expiry and exactly-once release;
+      successful payment commits reserved stock; payment failure/expiry releases it;
+      cancellation/refund restocks committed stock once; immutable OrderItem snapshots;
+      unique checkout idempotency key; signed public order links; mock gateway disabled in
+      production unless explicitly opted in; admin mutations retain session + CSRF + Zod +
+      AuditLog controls. Product content supports EN/FR and an ordered image gallery.
+- [x] Phase verification: `npm run typecheck` clean; existing Vitest 142/142 passed. Current
+      pre-implementation `npm run build` correctly exposed the missing CartProvider and
+      failed only while prerendering /en/store/cart. No existing tests regressed.
+- [x] Risks/TODOs: real product data, product photography, shipping rules, notifications,
+      and a real production payment gateway remain external business integrations.
+
+### Store Phase 2 - Schema/domain model + validation + core services
+- [x] Product/order/payment/reservation schema and migration-safe seed updates
+- [x] Zod schemas, cart/shipping math, payment provider boundary, inventory state machine
+- [x] Unit/integration coverage for pricing, snapshots, concurrency, failure and release
+- [x] Added bilingual product content, unique SKU, featured state, ordered ProductImage
+      gallery, PaymentAttempt metadata, checkout idempotency, reservation/commit/restore
+      timestamps and meaningful PAYMENT_FAILED/EXPIRED/REFUNDED states. Demo medical and
+      clinic-equivalence claims were removed.
+- [x] Inventory state machine implemented in src/lib/order.ts: one transaction atomically
+      decrements all lines and writes immutable snapshots; gateway approval commits; decline
+      or error restores immediately; stale PENDING reservations expire opportunistically;
+      cancellation/refund restores committed inventory once; invalid status transitions
+      are rejected. Mock payments throw in production unless explicitly opted in.
+- [x] Phase verification: `npm run typecheck` clean; store tests 8/8; full Vitest 150/150.
+      Concurrency test proves only one buyer can purchase the final unit. Remaining risk:
+      a real gateway must implement authorization/capture/webhooks before live checkout.
+
+### Store Phase 3 - Storefront + product pages
+- [x] Premium landing/catalog, search/filter/sort, featured/category sections, product gallery
+- [x] Responsive/dark/accessibility states and navigation integration
+- [x] Store now sits inside the shared header/layout with a persistent cart provider and
+      desktop/mobile cart access. Catalog is server-rendered, bilingual, searchable by
+      content/SKU, category-filterable and sortable; product cards expose sale/sold-out/
+      low-stock states. Product pages include an accessible gallery, quantity controls,
+      buy-now, localized content and related products. Images use next/image with explicit
+      sizing and safe unoptimized handling only for validated HTTPS admin URLs.
+- [x] Phase verification: `npm run typecheck` clean and `npm run build` passes all 119
+      generated pages; the previous missing-CartProvider build failure is resolved.
+- [x] Remaining polish is intentionally tracked in Phase 7: JSON-LD, sitemap products,
+      final breakpoint/keyboard checks and live visual QA.
+
+### Store Phase 4 - Cart + checkout
+- [x] Persistent cart, server reconciliation, checkout validation and idempotent submission
+- [x] Confirmation and secure order-status pages
+- [x] Added POST /api/store/cart/quote: every cart view re-reads active product price,
+      stock and current shipping settings. The client cart remains a display cache only;
+      checkout sends slug/quantity/idempotency key and the server re-prices/reserves again.
+- [x] Added bilingual guest checkout with accessible labels, disabled duplicate submit,
+      safe generic errors, mock-payment disclosure and a signed-token order status page.
+- [x] Phase verification: `npm run typecheck` clean and `npm run build` passes with 125
+      generated pages. Store route tests remain green; browser/E2E checkout coverage is
+      still pending in Phase 9.
+
+### Store Phase 5 - Orders + inventory + payment state machine
+- [x] Reservation expiry/release, paid/cancelled/refunded transitions, payment metadata
+
+### Store Phase 6 - Admin products/orders/inventory
+- [x] Product CRUD and inventory visibility in existing AdminPageShell/AdminNav
+- [x] Order list/detail/search/filter/status management with audit logs
+- [x] Added bilingual /admin/products and /admin/orders pages reusing the existing session,
+      CSRF, Zod, AdminPageShell/AdminNav and AuditLog-backed APIs. Product forms cover SKU,
+      bilingual names/descriptions, price/sale price, image, stock, active and featured;
+      orders show customer/items/totals and only allow valid lifecycle transitions.
+- [x] Phase verification: `npm run typecheck` clean and `npm run build` passes. Admin API
+      audit/authorization coverage still needs store-specific route tests in Phase 9.
+
+### Store Phase 7 - i18n + SEO + accessibility + performance polish
+- [x] EN/FR parity, metadata/JSON-LD/breadcrumbs/sitemap, image and bundle optimization
+- [x] EN/FR key parity checked recursively; product and breadcrumb JSON-LD is escaped and
+      intentionally contains no ratings/reviews; active product URLs and image metadata are
+      included in sitemap.xml; next/image sizing and validated HTTPS handling are in place.
+
+### Store Phase 8 - Security review
+- [x] Run installed security-review skill and fix legitimate findings
+- [x] Reviewed 39 hotspot candidates. Fixed guest/admin error-detail leakage and kept generic
+      responses at trust boundaries. Remaining candidates are controlled JSON-LD with `<`
+      escaped, Prisma/regex/test-fixture false positives, and an existing controlled booking
+      conflict message. Checkout has rate limiting, idempotency, server-side pricing, signed
+      order links, admin session+CSRF+audit protection, and production mock-payment blocking.
+
+### Store Phase 9 - Unit/integration/E2E + complete regression suite
+- [x] Store unit/integration tests, customer/admin Playwright flows, full legacy regression
+- [x] Store tests cover totals, strict validation, server pricing/snapshots, idempotency,
+      final-unit concurrency, decline release, expiry exactly-once release and lifecycle
+      transitions. Playwright covers desktop/mobile customer checkout/order status and admin
+      product CRUD/order inspection. Existing booking/admin/mobile/smoke suites remain green.
+
+### Store Phase 10 - Final cleanup + documentation
+- [x] README, final PROGRESS.md, exact verification matrix and production handoff
 
 ## Phase 0 - Setup and planning
 - [x] Choose stack: Next.js + TypeScript + Tailwind + Prisma (SQLite) + next-intl + zod + vitest
@@ -345,5 +510,35 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
   slot UI gives customers a self-service view of likely availability, and removal would be
   a net feature loss. If a later phase wants the simplified pickers instead, the deletions
   listed in the 2026-09-22 note are still the work involved.
+
+- 2026-09-27: MARYAM C BEAUTÉ IDENTITY AUDIT + SITE CONTINUATION. Replaced the inherited
+  Thornhill/legacy content surface with the verified Brossard identity and a bilingual,
+  editorial homepage. Verified contact data is centralized in `src/lib/content/business.ts`;
+  conflicting hours, Facebook and Fresha values remain explicitly owner-confirmation items.
+  The public booking flow remains request-and-approve and the store remains a clearly labelled
+  demo until final products, prices, policies and copy are supplied. Temporary example images
+  are isolated under `public/example-pics`; old blog/packages/gift routes are now noindex
+  placeholders rather than legacy content. Added verified Google review excerpts with a direct
+  Maps link, corrected the RF image/product placeholder paths, and aligned smoke tests with the
+  preview navigation. Verification: `npm run typecheck` passed; Vitest 150/150 passed; production
+  build generated 69 routes; Playwright 30 passed and 2 skipped. `npm audit --omit=dev` still
+  reports four high transitive Prisma/deepmerge-ts findings; automatic remediation would require
+  a breaking Prisma downgrade and was not applied.
+
+- 2026-09-27: ADMIN CONTENT MANAGEMENT EXPANSION. Added bilingual service/staff fields, ordered
+  image galleries, service booking snapshots, a provider-neutral MediaAsset model, first-class
+  Package/PackageService/PackageImage models, product sale-price support, and non-destructive
+  admin APIs for packages and gallery media. Added protected bilingual admin pages for Packages
+  and Gallery with validation, CSRF, audit logging, active/deactivate controls and empty/error
+  states. Public gallery now reads active database content; old gallery columns remain nullable
+  during migration so existing demo rows are preserved. Verification after schema push:
+  typecheck passed, Vitest 150/150 passed, production build passed with 73 routes. The security
+  hotspot scan returned 41 candidates, all requiring manual review and largely covering existing
+  test/seed regex/ORM patterns; no new confirmed injection sink was introduced.
+  Follow-up completed: product admin forms now expose sale price and display order; package and
+  gallery admin forms support edit/reorder/localized copy; the public service catalog prefers
+  active database services with the static catalogue retained as a safe fallback. Final
+  verification: typecheck passed, Vitest 150/150 passed, Playwright 30 passed and 2 skipped,
+  production build passed with 73 routes.
 
 

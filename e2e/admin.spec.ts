@@ -22,7 +22,7 @@
 import { test, expect, type Page, type TestInfo } from "@playwright/test";
 import { adminForProject, type AdminCredentials } from "./admin-credentials";
 
-const SERVICE_NAME = "Women's Laser Hair removal";
+const SERVICE_NAME = "Hair Colouring, Highlights & Balayage";
 
 /** A unique tag per test so its request is findable in the list and never collides. */
 function uniqueCustomer(prefix: string): { name: string; email: string; phone: string } {
@@ -92,6 +92,7 @@ test.describe("admin request triage", () => {
 
     // A customer submits a request through the public site...
     await submitRequest(page, customer, time);
+    const manageUrl = await page.getByRole("link", { name: "Manage your booking" }).getAttribute("href");
     // ...and the salon picks it up.
     await signIn(page, creds);
     await page.goto("/en/admin/requests");
@@ -105,6 +106,8 @@ test.describe("admin request triage", () => {
     await card.getByRole("button", { name: "Confirm" }).click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await expect(page.locator("#confirm-time")).toHaveValue(time);
+    await page.screenshot({ path: testInfo.outputPath("admin-confirm-dialog.png") });
+    await page.locator("#confirm-duration").fill("30");
     await page.getByRole("button", { name: "Confirm appointment" }).click();
 
     await expect(page.getByRole("status")).toHaveText(/Request confirmed/);
@@ -118,6 +121,9 @@ test.describe("admin request triage", () => {
     await expect(card).toBeVisible();
     await page.getByRole("group", { name: "Filter by status" }).getByRole("button", { name: "Pending" }).click();
     await expect(card).toBeHidden();
+    await page.goto(manageUrl!);
+    await expect(page.getByText("Confirmed", { exact: true })).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath("customer-confirmed.png"), fullPage: true });
   });
 
   test("declines a pending request with a reason", async ({ page }, testInfo) => {
@@ -125,6 +131,7 @@ test.describe("admin request triage", () => {
     const customer = uniqueCustomer("Decline");
 
     await submitRequest(page, customer, "14:30");
+    const manageUrl = await page.getByRole("link", { name: "Manage your booking" }).getAttribute("href");
     await signIn(page, creds);
     await page.goto("/en/admin/requests");
 
@@ -134,6 +141,7 @@ test.describe("admin request triage", () => {
     await card.getByRole("button", { name: "Decline" }).click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.locator("#decline-reason").fill("Fully booked at that time");
+    await page.screenshot({ path: testInfo.outputPath("admin-decline-dialog.png") });
     await page.getByRole("button", { name: "Decline request" }).click();
 
     await expect(page.getByRole("status")).toHaveText(/Request declined/);
@@ -143,6 +151,9 @@ test.describe("admin request triage", () => {
     // The Declined bucket keeps salon-declined requests apart from customer cancellations.
     await page.getByRole("group", { name: "Filter by status" }).getByRole("button", { name: "Declined" }).click();
     await expect(card).toBeVisible();
+    await page.goto(manageUrl!);
+    await expect(page.getByRole("heading", { name: "Request declined", exact: true })).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath("customer-declined.png"), fullPage: true });
   });
 
   test("bounces unsigned-in visitors to the sign-in page", async ({ page }) => {

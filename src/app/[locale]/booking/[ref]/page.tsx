@@ -40,17 +40,18 @@ export default async function ManageBookingPage({
   if (!booking || booking.id !== payload.sub || booking.customerId !== payload.cust) notFound();
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
+    <div className="editorial-page editorial-container booking-management">
       <ManageBooking
         booking={{
           ref: booking.ref,
           status: booking.status,
+          declined: booking.note?.includes("[declined]") ?? false,
           startUtc: booking.startUtc.toISOString(),
           endUtc: booking.endUtc.toISOString(),
           priceTotal: booking.priceTotal,
-          serviceName: booking.service.name,
+          serviceName: (locale === "fr" ? booking.serviceNameFrSnapshot : booking.serviceNameSnapshot) ?? booking.serviceNameSnapshot ?? booking.service.name,
           staffName: booking.staff.name,
-          durationMin: booking.service.duration,
+          durationMin: booking.durationMinSnapshot ?? booking.service.duration,
           customerName: booking.customer.name,
           customerEmail: booking.customer.email,
         }}

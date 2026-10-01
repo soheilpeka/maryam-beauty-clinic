@@ -1,9 +1,9 @@
 /**
- * Seed data for Maryam Beauty Clinic.
+ * Provisional demo seed data for Maryam C Beauté.
  *
- * Service catalog, business info, gallery images and testimonials are the REAL data
- * audited from the live site (see CONTENT_AUDIT.md) and are imported from
- * src/lib/content/* so the public site and the booking engine share one source of truth.
+ * Service names, identity, example gallery and verified review excerpts are imported from
+ * src/lib/content/* so the public site and booking engine share one source of truth. Prices,
+ * durations, staff and schedules remain demo placeholders until the owner approves them.
  *
  * Staff records exist so the booking engine can compute slots; the live site does not
  * publish a staff page, so the public site does not present invented staff profiles.
@@ -20,6 +20,7 @@ import { SERVICES } from "@/lib/content/services";
 import { BUSINESS } from "@/lib/content/business";
 import { GALLERY } from "@/lib/content/gallery";
 import { TESTIMONIALS } from "@/lib/content/testimonials";
+import { DEMO_PRODUCTS } from "@/lib/content/products";
 
 const prisma = new PrismaClient({
   adapter: new PrismaLibSql({ url: env.databaseUrl }),
@@ -30,9 +31,9 @@ const h = (hour: number, min = 0) => hour * 60 + min;
 const MON = 1, TUE = 2, WED = 3, THU = 4, FRI = 5, SAT = 6, SUN = 0;
 
 async function main() {
-  console.info("Seeding Maryam Beauty Clinic catalog (real data)...");
+  console.info("Seeding Maryam C Beauté demo catalog...");
 
-  // ---------------- Business settings (real contact details) ----------------
+  // ---------------- Business settings (verified contact details) ----------------
   await prisma.businessSetting.upsert({
     where: { id: "default" },
     update: {},
@@ -44,41 +45,55 @@ async function main() {
       phone: BUSINESS.phone,
       email: BUSINESS.email,
       address: BUSINESS.address,
-      city: "Thornhill, ON",
-      // Salon local hours: Mon-Fri 10-5, Sat 11-4, Sun closed.
+      city: "Brossard, QC",
+      // Owner-supplied hours are rendered from src/lib/content/business.ts.
       leadTimeMin: 60,
       bookingWindowDays: 60,
       slotIntervalMin: 30,
     },
   });
 
-  // ---------------- Services (24, real catalog) ----------------
+  // ---------------- Services (provisional catalog; prices/durations are placeholders) ----------------
   const serviceRecords = [];
   for (const s of SERVICES) {
     serviceRecords.push(
       await prisma.service.upsert({
         where: { slug: s.slug },
-        update: {
-          name: s.name,
-          category: s.category,
-          price: s.price,
-          duration: s.duration,
-          description: s.summary,
-          order: s.order,
-        },
+        update: {},
         create: {
           slug: s.slug,
           name: s.name,
+          nameFr: s.nameFr ?? s.name,
           category: s.category,
           price: s.price,
           duration: s.duration,
           description: s.summary,
+          descriptionFr: s.summaryFr ?? s.summary,
           order: s.order,
         },
       }),
     );
   }
   const bySlug = Object.fromEntries(serviceRecords.map((s) => [s.slug, s]));
+
+  await prisma.package.upsert({
+    where: { slug: "demo-skin-reset" },
+    update: {},
+    create: {
+      slug: "demo-skin-reset",
+      active: false,
+      name: "Skin Reset (Demo)",
+      nameFr: "Réinitialisation peau (démo)",
+      description: "Demo package placeholder; replace with owner-approved services and pricing.",
+      descriptionFr: "Forfait de démonstration; à remplacer par les services et prix approuvés.",
+      price: 0,
+      sessions: 1,
+      validityDays: 30,
+      badge: "Demo",
+      order: 1,
+      services: { create: [{ serviceId: bySlug["rf-microneedling"]?.id ?? serviceRecords[0].id }] },
+    },
+  });
 
   // ---------------- Staff (support the booking engine) ----------------
   const staffDefs = [
@@ -109,7 +124,7 @@ async function main() {
     }
   }
 
-  // ---------------- Working hours: real salon hours (Mon-Fri 10-5, Sat 11-4) ----------------
+  // ---------------- Demo working hours (not published; owner confirmation required) ----------------
   const weekday = { start: h(10), end: h(17), breaks: [[h(12, 30), h(13)]] as Array<[number, number]> };
   const saturday = { start: h(11), end: h(16), breaks: [[h(12, 30), h(13)]] as Array<[number, number]> };
   const scheduleDefs: Array<{ staff: string; day: number }> = [];
@@ -147,28 +162,31 @@ async function main() {
     }
   }
 
-  // ---------------- Gallery (real clinic images) ----------------
+  // ---------------- Gallery (temporary example images) ----------------
   for (const [i, g] of GALLERY.entries()) {
     await prisma.galleryItem.upsert({
       where: { id: `gallery-${g.slug}` },
       update: {},
       create: {
         id: `gallery-${g.slug}`,
-        title: g.title,
         imageUrl: g.image,
-        altText: g.caption,
+        altEn: g.caption,
+        altFr: g.caption,
+        captionEn: g.title,
+        captionFr: g.title,
+        category: g.tag,
         order: i + 1,
       },
     });
   }
 
-  // ---------------- Testimonials (real reviews published by the business) ----------------
-  const reviewSrc = "site";
+  // ---------------- Testimonials (short excerpts verified on Google Maps) ----------------
+  const reviewSrc = "google-maps";
   for (const [i, t] of TESTIMONIALS.entries()) {
     for (const locale of ["en", "fr"] as const) {
       await prisma.review.upsert({
         where: { id: `review-${i + 1}-${locale}` },
-        update: {},
+        update: { author: `${t.author}, ${t.location}`, rating: t.rating, text: t.quote, source: reviewSrc },
         create: {
           id: `review-${i + 1}-${locale}`,
           author: `${t.author}, ${t.location}`,
@@ -182,8 +200,65 @@ async function main() {
     }
   }
 
+  // ---------------- Store catalog (demo placeholders) ----------------
+  // DEMO products for the e-commerce extension. Clearly sample data: names, prices and
+  // stock are placeholders to be replaced with the salon's real retail range.
+  await prisma.storeSetting.upsert({
+    where: { id: "default" },
+    update: {},
+    create: {
+      id: "default",
+      shippingFeeCents: 1500,
+      freeShippingThresholdCents: 15000,
+      enabled: true,
+      reservationMinutes: 15,
+    },
+  });
+
+  for (const p of DEMO_PRODUCTS) {
+    await prisma.product.upsert({
+      where: { slug: p.slug },
+      update: {
+        sku: p.sku,
+        name: p.name,
+        nameFr: p.nameFr,
+        category: p.category,
+        price: p.price,
+        compareAtPrice: p.compareAtPrice ?? null,
+        description: p.description,
+        descriptionFr: p.descriptionFr,
+        imageUrl: p.image,
+        stock: p.stock,
+        featured: p.featured ?? false,
+        demo: true,
+        images: {
+          deleteMany: {},
+          create: [{ url: p.image, altEn: p.name, altFr: p.nameFr, order: 0 }],
+        },
+      },
+      create: {
+        slug: p.slug,
+        sku: p.sku,
+        name: p.name,
+        nameFr: p.nameFr,
+        category: p.category,
+        price: p.price,
+        compareAtPrice: p.compareAtPrice ?? null,
+        description: p.description,
+        descriptionFr: p.descriptionFr,
+        imageUrl: p.image,
+        stock: p.stock,
+        featured: p.featured ?? false,
+        demo: true,
+        images: {
+          create: [{ url: p.image, altEn: p.name, altFr: p.nameFr, order: 0 }],
+        },
+      },
+    });
+  }
+
   console.info(
-    `Seeded: ${serviceRecords.length} services, ${staffRecords.length} staff, ${GALLERY.length} gallery items, ${TESTIMONIALS.length} testimonials.`,
+    `Seeded: ${serviceRecords.length} services, ${staffRecords.length} staff, ${GALLERY.length} gallery items, ${TESTIMONIALS.length} testimonials, ${DEMO_PRODUCTS.length} store products.`,
   );
 }
 

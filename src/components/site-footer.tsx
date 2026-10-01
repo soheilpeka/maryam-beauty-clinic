@@ -1,9 +1,9 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { BUSINESS } from "@/lib/content/business";
-import { SERVICES, SERVICE_CATEGORIES } from "@/lib/content/services";
-import { BLOG_CATEGORIES } from "@/lib/content/blog";
+import { BUSINESS, localizedHours } from "@/lib/content/business";
+import { SERVICES, SERVICE_CATEGORIES, localizeService } from "@/lib/content/services";
 import type { Locale } from "@/i18n/routing";
+import { publicServices } from "@/lib/public-content";
 
 /**
  * Editorial footer: brand statement, complete treatment index by category, quick links,
@@ -14,20 +14,20 @@ export async function SiteFooter() {
   const t = await getTranslations("Footer");
   const tNav = await getTranslations("Nav");
   const tServices = await getTranslations("Services");
+  const locale = (await getLocale()) === "fr" ? "fr" : "en";
+  const services = await publicServices(locale);
 
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-card">
+    <footer className="editorial-footer border-t border-border bg-card">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-12">
           {/* Brand */}
           <div className="lg:col-span-4">
             <Link href="/" className="inline-flex flex-col">
-              <span className="font-serif text-xl tracking-tight">Maryam</span>
-              <span className="font-serif text-xl tracking-tight text-brand">
-                Beauty Clinic
-              </span>
+              <span className="font-serif text-xl tracking-tight">Maryam C</span>
+              <span className="font-serif text-xl tracking-tight text-brand">Beauté</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               {t("tagline")}
@@ -60,9 +60,11 @@ export async function SiteFooter() {
                     {tServices(`categories.${cat}` as never)}
                   </p>
                   <ul className="space-y-1.5">
-                    {SERVICES.filter((s) => s.category === cat)
+                    {services.filter((s) => s.category === cat)
                       .slice(0, 6)
-                      .map((s) => (
+                      .map((source) => {
+                        const s = localizeService(source, locale);
+                        return (
                         <li key={s.slug}>
                           <Link
                             href={`/service-page/${s.slug}`}
@@ -71,7 +73,8 @@ export async function SiteFooter() {
                             {s.name}
                           </Link>
                         </li>
-                      ))}
+                        );
+                      })}
                   </ul>
                 </div>
               ))}
@@ -108,7 +111,7 @@ export async function SiteFooter() {
               {t("hours")}
             </p>
             <ul className="space-y-1.5 text-xs text-muted-foreground">
-              {BUSINESS.hours.map((row) => (
+              {localizedHours(locale).map((row) => (
                 <li key={row.days} className="flex justify-between gap-4">
                   <span>{row.days}</span>
                   <span className="text-foreground/80">{row.open}</span>
@@ -127,5 +130,4 @@ export async function SiteFooter() {
   );
 }
 
-export { BLOG_CATEGORIES };
 export type { Locale };

@@ -23,9 +23,38 @@ export const env = {
     }
     return v;
   },
-  get notificationProvider(): "mock" | "console" {
+  get notificationProvider(): "mock" | "console" | "resend" {
     const v = process.env.NOTIFICATION_PROVIDER;
+    if (v === "resend") return "resend";
     return v === "console" ? "console" : "mock";
+  },
+  get notificationAdminEmail(): string {
+    return process.env.ADMIN_NOTIFICATION_EMAIL?.trim() || "Maryam_champir@yahoo.com";
+  },
+  get resendApiKey(): string {
+    return process.env.RESEND_API_KEY?.trim() || "";
+  },
+  get notificationFromEmail(): string {
+    return process.env.NOTIFICATION_FROM_EMAIL?.trim() || "";
+  },
+  /** Payment gateway selector. Stripe test mode is the safe default; mock is test-only. */
+  get paymentProvider(): "stripe" | "mock" {
+    return process.env.PAYMENT_PROVIDER === "mock" ? "mock" : "stripe";
+  },
+  get stripeSecretKey(): string {
+    return process.env.STRIPE_SECRET_KEY?.trim() || "";
+  },
+  get stripeWebhookSecret(): string {
+    return process.env.STRIPE_WEBHOOK_SECRET?.trim() || "";
+  },
+  /**
+   * Per-IP limit on store checkouts per 60s. The e2e suite raises it via
+   * STORE_RATE_LIMIT_PER_MINUTE so parallel checkouts from one localhost IP are not
+   * throttled, exactly like the booking limiter.
+   */
+  get storeRateLimitPerMinute(): number {
+    const parsed = Number(process.env.STORE_RATE_LIMIT_PER_MINUTE);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 5;
   },
   /** Name of the admin session cookie. */
   get sessionCookieName(): string {

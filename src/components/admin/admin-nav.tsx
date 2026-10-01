@@ -14,6 +14,10 @@ const SECTIONS = [
   { key: "services", suffix: "/services" },
   { key: "staff", suffix: "/staff" },
   { key: "customers", suffix: "/customers" },
+  { key: "products", suffix: "/products" },
+  { key: "packages", suffix: "/packages" },
+  { key: "gallery", suffix: "/gallery" },
+  { key: "orders", suffix: "/orders" },
 ] as const;
 
 export function AdminNav({ locale }: { locale: string }) {
@@ -23,7 +27,7 @@ export function AdminNav({ locale }: { locale: string }) {
   return (
     <nav
       aria-label={t("navLabel")}
-      className="mb-8 flex flex-wrap gap-1.5 rounded-2xl border border-stone-200 bg-white p-1.5 shadow-sm dark:border-stone-800 dark:bg-[#1a1512]"
+      className="admin-navigation"
     >
       {SECTIONS.map((section) => {
         const href = `/${locale}/admin${section.suffix}`;
@@ -34,12 +38,7 @@ export function AdminNav({ locale }: { locale: string }) {
             key={section.key}
             href={href}
             aria-current={active ? "page" : undefined}
-            className={
-              "rounded-lg px-3.5 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 " +
-              (active
-                ? "bg-brand-600 text-white"
-                : "text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800")
-            }
+            className="transition-colors"
           >
             {t(section.key)}
           </Link>

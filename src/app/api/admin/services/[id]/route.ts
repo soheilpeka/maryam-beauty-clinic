@@ -46,14 +46,19 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
       where: { id },
       data: {
         ...(data.name !== undefined ? { name: data.name } : {}),
+        ...(data.nameFr !== undefined ? { nameFr: data.nameFr.trim() || data.name } : {}),
         ...(data.description !== undefined ? { description: data.description.trim() || null } : {}),
+        ...(data.descriptionFr !== undefined ? { descriptionFr: data.descriptionFr.trim() || null } : {}),
         ...(data.price !== undefined ? { price: data.price } : {}),
         ...(data.duration !== undefined ? { duration: data.duration } : {}),
         ...(data.bufferMin !== undefined ? { bufferMin: data.bufferMin } : {}),
         ...(data.category !== undefined ? { category: data.category.trim() || "General" } : {}),
+        ...(data.imageUrl !== undefined ? { imageUrl: data.imageUrl.trim() || null } : {}),
         ...(data.active !== undefined ? { active: data.active } : {}),
+        ...(data.order !== undefined ? { order: data.order } : {}),
+        ...(data.images !== undefined ? { images: { deleteMany: {}, create: data.images.map((image, order) => ({ ...image, order })) } } : {}),
       },
-      include: { _count: { select: { bookings: true } } },
+      include: { _count: { select: { bookings: true } }, images: { orderBy: { order: "asc" } } },
     });
 
     await writeAuditLog({
@@ -93,7 +98,7 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
   if (!existing) {
     return NextResponse.json({ error: "NOT_FOUND", message: "Service not found." }, { status: 404 });
   }
-  if (existing._count.bookings > 0) {
+  if (existing._count.bookings > 0 || await prisma.packageService.count({ where: { serviceId: id } }) > 0) {
     return NextResponse.json(
       {
         error: "CONFLICT",

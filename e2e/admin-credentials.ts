@@ -54,3 +54,11 @@ export function adminForProject(projectName: string | undefined): AdminCredentia
   }
   return { email, password };
 }
+
+export function storeAdminForProject(projectName: string | undefined): AdminCredentials {
+  const email = ENV.ADMIN_INITIAL_EMAIL ?? process.env.ADMIN_INITIAL_EMAIL;
+  const password = ENV.ADMIN_INITIAL_PASSWORD ?? process.env.ADMIN_INITIAL_PASSWORD;
+  if (!email || !password) throw new Error("ADMIN_INITIAL_EMAIL / ADMIN_INITIAL_PASSWORD must be set in .env.");
+  const alias = projectName === "mobile" ? "+store-mobile@" : "+store@";
+  return { email: email.replace("@", alias), password };
+}

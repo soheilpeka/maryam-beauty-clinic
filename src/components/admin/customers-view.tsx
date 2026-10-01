@@ -51,7 +51,7 @@ const BADGE_CLASSES: Record<string, string> = {
   CONFIRMED:
     "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
   CANCELLED:
-    "border-stone-300 bg-stone-100 text-stone-700 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300",
+    "border-border bg-stone-100 text-foreground dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300",
   COMPLETED:
     "border-sky-300 bg-sky-50 text-sky-800 dark:border-sky-800 dark:bg-sky-950/40 dark:text-sky-300",
   NO_SHOW:
@@ -117,7 +117,7 @@ export function CustomersView({ locale }: { locale: string }) {
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className="animate-pulse rounded-2xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-[#1a1512]"
+            className="animate-pulse rounded-2xl border border-border bg-card p-5 dark:border-stone-800 dark:bg-card"
           >
             <div className="h-4 w-1/3 rounded bg-stone-200 dark:bg-stone-800" />
             <div className="mt-3 h-3 w-2/3 rounded bg-stone-200 dark:bg-stone-800" />
@@ -156,11 +156,11 @@ export function CustomersView({ locale }: { locale: string }) {
           maxLength={100}
           placeholder={t("searchCustomers")}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full max-w-sm rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none dark:border-stone-700 dark:bg-[#211b16]"
+          className="w-full max-w-sm rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-stone-700 dark:bg-background"
         />
         <button
           type="submit"
-          className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
         >
           {t("search")}
         </button>
@@ -172,8 +172,8 @@ export function CustomersView({ locale }: { locale: string }) {
       </p>
 
       {customers && customers.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-stone-300 bg-white p-10 text-center dark:border-stone-700 dark:bg-[#1a1512]">
-          <p className="text-sm text-stone-600 dark:text-stone-400">
+        <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center dark:border-stone-700 dark:bg-card">
+          <p className="text-sm text-muted-foreground dark:text-stone-400">
             {submittedQuery ? t("emptyCustomersSearch") : t("emptyCustomers")}
           </p>
         </div>
@@ -182,24 +182,24 @@ export function CustomersView({ locale }: { locale: string }) {
           {customers?.map((customer) => (
             <li
               key={customer.id}
-              className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm dark:border-stone-800 dark:bg-[#1a1512]"
+              className="rounded-2xl border border-border bg-card p-5 shadow-sm dark:border-stone-800 dark:bg-card"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <h3 className="font-serif text-lg font-semibold text-stone-900 dark:text-stone-50">
+                  <h3 className="font-serif text-lg font-semibold text-foreground dark:text-stone-50">
                     {customer.name}
                   </h3>
-                  <p className="mt-1 text-sm text-stone-700 dark:text-stone-300">
+                  <p className="mt-1 text-sm text-foreground dark:text-stone-300">
                     <a
                       href={`mailto:${customer.email}`}
-                      className="text-brand-600 hover:underline dark:text-brand-400"
+                      className="text-brand hover:underline dark:text-brand"
                     >
                       {customer.email}
                     </a>
-                    <span className="mx-2 text-stone-300 dark:text-stone-700">|</span>
+                    <span className="mx-2 text-stone-300 dark:text-foreground">|</span>
                     <a
                       href={`tel:${customer.phone.replace(/[^+\d]/g, "")}`}
-                      className="text-brand-600 hover:underline dark:text-brand-400"
+                      className="text-brand hover:underline dark:text-brand"
                     >
                       {customer.phone}
                     </a>
@@ -213,7 +213,7 @@ export function CustomersView({ locale }: { locale: string }) {
                 <button
                   type="button"
                   onClick={() => void openDetail(customer.id)}
-                  className="rounded-lg border border-stone-300 px-3.5 py-2 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+                  className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-stone-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
                 >
                   {t("history")}
                 </button>
@@ -252,17 +252,17 @@ function CustomerDetailDialog({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="customer-detail-title"
-      className="w-full max-w-lg rounded-2xl border border-stone-200 bg-white p-6 text-stone-900 shadow-xl dark:border-stone-800 dark:bg-[#1a1512] dark:text-stone-50"
+      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-stone-800 dark:bg-card dark:text-stone-50"
     >
       <h2 id="customer-detail-title" className="font-serif text-xl font-semibold">
         {customer.name}
       </h2>
-      <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
-        <a href={`mailto:${customer.email}`} className="text-brand-600 hover:underline dark:text-brand-400">
+      <p className="mt-1 text-sm text-muted-foreground dark:text-stone-400">
+        <a href={`mailto:${customer.email}`} className="text-brand hover:underline dark:text-brand">
           {customer.email}
         </a>
-        <span className="mx-2 text-stone-300 dark:text-stone-700">|</span>
-        <a href={`tel:${customer.phone.replace(/[^+\d]/g, "")}`} className="text-brand-600 hover:underline dark:text-brand-400">
+        <span className="mx-2 text-stone-300 dark:text-foreground">|</span>
+        <a href={`tel:${customer.phone.replace(/[^+\d]/g, "")}`} className="text-brand hover:underline dark:text-brand">
           {customer.phone}
         </a>
       </p>
@@ -271,7 +271,7 @@ function CustomerDetailDialog({
         {t("bookingHistory")} ({customer.bookings.length})
       </h3>
       {customer.bookings.length === 0 ? (
-        <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">{t("noBookings")}</p>
+        <p className="mt-2 text-sm text-muted-foreground dark:text-stone-400">{t("noBookings")}</p>
       ) : (
         <ul className="mt-3 max-h-80 space-y-3 overflow-auto">
           {customer.bookings.map((b) => {
@@ -280,7 +280,7 @@ function CustomerDetailDialog({
             return (
               <li
                 key={b.id}
-                className="rounded-xl border border-stone-200 p-3 text-sm dark:border-stone-800"
+                className="rounded-xl border border-border p-3 text-sm dark:border-stone-800"
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <span
@@ -291,17 +291,17 @@ function CustomerDetailDialog({
                   >
                     {t(`status${b.status === "NO_SHOW" ? "NoShow" : statusWordKey(b.status)}`)}
                   </span>
-                  <span className="font-medium text-stone-900 dark:text-stone-100">{b.service.name}</span>
+                  <span className="font-medium text-foreground dark:text-stone-100">{b.service.name}</span>
                   <span className="text-stone-500 dark:text-stone-400">{b.staff.name}</span>
                 </div>
-                <p className="mt-1 text-stone-700 dark:text-stone-300">
+                <p className="mt-1 text-foreground dark:text-stone-300">
                   {formatLongDate(start, locale)} {formatTime(start, locale)}&ndash;{formatTime(end, locale)}
                 </p>
                 <p className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">
                   {formatPrice(b.priceTotal, locale)} - {b.ref}
                 </p>
                 {b.note && (
-                  <p className="mt-1 whitespace-pre-wrap text-xs text-stone-600 dark:text-stone-400">
+                  <p className="mt-1 whitespace-pre-wrap text-xs text-muted-foreground dark:text-stone-400">
                     {b.note}
                   </p>
                 )}
@@ -315,7 +315,7 @@ function CustomerDetailDialog({
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg border border-stone-300 px-3.5 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-100 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+          className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
         >
           {t("close")}
         </button>

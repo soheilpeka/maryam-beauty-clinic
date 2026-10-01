@@ -96,6 +96,8 @@ export async function GET(request: NextRequest) {
       startMinutes: toLocalMinutes(b.startUtc),
       endMinutes: toLocalMinutes(b.endUtc),
       priceTotal: b.priceTotal,
+      serviceNameSnapshot: b.serviceNameSnapshot,
+      durationMinSnapshot: b.durationMinSnapshot,
       note: b.note,
       createdAt: b.createdAt.toISOString(),
       service: b.service,

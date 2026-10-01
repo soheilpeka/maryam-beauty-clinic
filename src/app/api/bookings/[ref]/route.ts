@@ -79,13 +79,13 @@ export async function DELETE(
     include: { customer: true },
   });
 
-  void notificationProvider
+  await notificationProvider
     .sendEmail(
       bookingCancelledEmail({
         customerName: updated.customer.name,
         customerEmail: updated.customer.email,
         ref: updated.ref,
-        locale: request.cookies.get("locale")?.value === "fr" ? "fr" : "en",
+        locale: updated.locale,
       }),
     )
     .catch((e) => console.error("notification failed", e));

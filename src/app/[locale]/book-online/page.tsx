@@ -2,6 +2,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ServiceCatalog } from "@/components/service-catalog";
 import type { Locale } from "@/i18n/routing";
 import type { Metadata } from "next";
+import { prisma } from "@/lib/prisma";
+import { SERVICES, localizeService, type Service } from "@/lib/content/services";
+import { formatPrice } from "@/lib/content/format";
+import { publicServices } from "@/lib/public-content";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -13,7 +19,7 @@ export async function generateMetadata({
   return {
     title: t("servicesTitle"),
     description: t("servicesDescription"),
-    alternates: { canonical: `/${locale}/book-online` },
+    alternates: { canonical: `/${locale}/book-online`, languages: { en: "/en/book-online", fr: "/fr/book-online" } },
   };
 }
 
@@ -26,9 +32,10 @@ export default async function BookOnlinePage({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Sections" });
   const tServices = await getTranslations({ locale, namespace: "Services" });
+  const services = await publicServices(locale === "fr" ? "fr" : "en");
 
   return (
-    <div className="bg-background">
+    <div className="editorial-page catalog-editorial">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <div className="max-w-2xl">
           <p className="eyebrow">{tServices("all")}</p>
@@ -41,7 +48,7 @@ export default async function BookOnlinePage({
         </div>
 
         <div className="mt-14">
-          <ServiceCatalog locale={locale as Locale} />
+          <ServiceCatalog locale={locale as Locale} services={services} />
         </div>
       </div>
     </div>

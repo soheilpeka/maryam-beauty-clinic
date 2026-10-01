@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { formatLongDate, formatTime, formatPrice, formatDuration } from "@/lib/datetime";
 
@@ -8,6 +8,7 @@ interface ManageBookingProps {
   booking: {
     ref: string;
     status: string;
+    declined?: boolean;
     startUtc: string;
     endUtc: string;
     priceTotal: number;
@@ -32,11 +33,12 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
   const [status, setStatus] = useState(booking.status);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const confirmation = useRef<HTMLDialogElement>(null);
   const start = new Date(booking.startUtc);
   const end = new Date(booking.endUtc);
 
   async function cancel() {
-    if (!window.confirm(t("confirmCancel"))) return;
+    confirmation.current?.close();
     setBusy(true);
     setError(null);
     try {
@@ -58,8 +60,13 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
 
   return (
     <div>
+      <dialog ref={confirmation} aria-labelledby="cancel-request-title" className="w-[min(32rem,calc(100%_-_2rem))] border border-border bg-background p-8 text-foreground">
+        <h2 id="cancel-request-title" className="font-serif text-3xl">{t("cancel")}</h2>
+        <p className="my-6 leading-7 text-muted-foreground">{t("confirmCancel")}</p>
+        <div className="flex flex-wrap gap-5"><button type="button" onClick={() => confirmation.current?.close()} className="editorial-action">{tLocale === "fr" ? "Conserver la demande" : "Keep request"}</button><button type="button" onClick={() => void cancel()} className="editorial-action text-destructive">{t("cancel")}</button></div>
+      </dialog>
       <div className="mb-8 flex items-center justify-between gap-4">
-        <h1 className="font-serif text-3xl font-bold text-stone-900 dark:text-stone-50">
+        <h1 className="display-heading">
           {t("title")}
         </h1>
         <span
@@ -71,7 +78,7 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
                 : "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
           }`}
         >
-          {t(`status.${status}` as never)}
+          {booking.declined && cancelled ? (tLocale === "fr" ? "Demande refusée" : "Request declined") : t(({ PENDING: "statusPending", CONFIRMED: "statusConfirmed", CANCELLED: "statusCancelled", COMPLETED: "statusCompleted" } as const)[status as "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED"])}
         </span>
       </div>
 
@@ -85,33 +92,30 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
       )}
 
       {cancelled ? (
-        <div className="rounded-2xl border border-stone-200 bg-white p-8 text-center shadow-sm dark:border-stone-800 dark:bg-[#211b16]">
+        <div className="rounded-2xl border border-stone-200 bg-white p-8 text-center shadow-sm dark:border-stone-800 dark:bg-card">
           <h2 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50">
-            {t("canceledTitle")}
+            {booking.declined ? (tLocale === "fr" ? "Demande refusée" : "Request declined") : t("canceledTitle")}
           </h2>
-          <p className="mt-3 text-sm text-stone-600 dark:text-stone-400">{t("canceledBody")}</p>
+          <p className="mt-3 text-sm text-stone-600 dark:text-stone-400">{booking.declined ? (tLocale === "fr" ? "Contactez le studio pour discuter d’une autre date." : "Contact the studio to discuss another date.") : t("canceledBody")}</p>
         </div>
       ) : (
-        <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-[#211b16]">
+        <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-card">
           <dl className="space-y-3 text-sm">
             <Row label={t("bookingRef")} value={booking.ref} />
             <Row label={t("service")} value={booking.serviceName} />
             <Row label={t("specialist")} value={booking.staffName} />
             <Row
               label={t("when")}
-              value={`${formatLongDate(start, tLocale)} | ${formatTime(start, tLocale)} - ${formatTime(
-                end,
-                tLocale,
-              )}`}
+              value={`${formatLongDate(start, tLocale)} | ${formatTime(start, tLocale)}${booking.durationMin > 0 ? ` - ${formatTime(end, tLocale)}` : ""}`}
             />
-            <Row label={t("duration")} value={formatDuration(booking.durationMin, tLocale)} />
-            <Row label={t("total")} value={`${formatPrice(booking.priceTotal, tLocale)} CAD`} />
+            <Row label={t("duration")} value={booking.durationMin > 0 ? formatDuration(booking.durationMin, tLocale) : t("detailsPending")} />
+            <Row label={t("total")} value={booking.priceTotal > 0 ? `${formatPrice(booking.priceTotal, tLocale)} CAD` : t("detailsPending")} />
           </dl>
 
           <div className="mt-6 flex flex-wrap gap-3">
             <button
               type="button"
-              onClick={cancel}
+              onClick={() => confirmation.current?.showModal()}
               disabled={busy}
               className="rounded-full border border-red-300 px-6 py-3 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 disabled:opacity-60 dark:border-red-900 dark:text-red-300 dark:hover:bg-red-950/40"
             >

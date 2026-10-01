@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
   const staff = await prisma.staff.findMany({
     include: STAFF_WITH_COUNT,
-    orderBy: [{ name: "asc" }],
+    orderBy: [{ order: "asc" }, { name: "asc" }],
   });
 
   return NextResponse.json({ ok: true, staff: staff.map(shapeStaff) });
@@ -74,6 +74,7 @@ export async function POST(request: NextRequest) {
         .findMany({ where: { id: { in: data.serviceIds } }, select: { id: true } })
         .then((rows) => rows.map((r) => r.id))
     : [];
+  const last = await prisma.staff.findFirst({ orderBy: { order: "desc" }, select: { order: true } });
 
   try {
     const created = await prisma.staff.create({
@@ -82,8 +83,10 @@ export async function POST(request: NextRequest) {
         name: data.name,
         role: data.role?.trim() || "Specialist",
         bio: data.bio?.trim() || null,
+        bioFr: data.bioFr?.trim() || null,
         avatarUrl: data.avatarUrl?.trim() || null,
         active: data.active ?? true,
+        order: data.order ?? (last?.order ?? 0) + 1,
         services: serviceIds.length
           ? { createMany: { data: serviceIds.map((serviceId) => ({ serviceId })) } }
           : undefined,

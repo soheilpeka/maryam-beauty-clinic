@@ -164,6 +164,7 @@ export function BookingFlow({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           serviceId: service.id,
+          locale,
           // "any" is resolved to a qualified specialist server-side at confirm time.
           staffId,
           dayKey,
@@ -215,11 +216,11 @@ export function BookingFlow({
 
   if (step === "done" && result) {
     return (
-      <div className="mx-auto max-w-2xl text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+      <div className="mx-auto max-w-2xl rounded-[2rem] border border-border bg-card p-7 text-center sm:p-12">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-brand-soft">
           <svg
             aria-hidden="true"
-            className="h-8 w-8 text-green-600 dark:text-green-400"
+            className="h-8 w-8 text-brand"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}
@@ -228,28 +229,28 @@ export function BookingFlow({
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
         </div>
-        <h1 className="mt-6 font-serif text-3xl font-bold text-stone-900 dark:text-stone-50">
+        <h1 className="display-heading mt-6 text-4xl sm:text-5xl">
           {t("successTitle")}
         </h1>
-        <p className="mt-4 text-stone-600 dark:text-stone-400">
+        <p className="mx-auto mt-4 max-w-lg leading-relaxed text-muted-foreground">
           {t("successBody", { email: form.email })}
         </p>
-        <div className="mt-8 rounded-2xl border border-stone-200 bg-white p-6 text-left shadow-sm dark:border-stone-800 dark:bg-[#211b16]">
+        <div className="mt-8 rounded-2xl border border-border bg-background p-6 text-left">
           <dl className="space-y-3 text-sm">
             <SummaryRow label={t("service")} value={result.service} />
             <SummaryRow label={t("specialist")} value={result.staff} />
             <SummaryRow label={t("date")} value={result.whenLabel} />
-            <SummaryRow label={t("duration")} value={formatDuration(result.durationMin, tLocale)} />
-            <div className="flex justify-between gap-4 border-t border-stone-200 pt-3 dark:border-stone-800">
-              <dt className="text-stone-500 dark:text-stone-400">{t("total")}</dt>
-              <dd className="font-semibold text-brand-600 dark:text-brand-400">
-                {formatPrice(result.priceTotal, tLocale)}
+            <SummaryRow label={t("duration")} value={result.durationMin > 0 ? formatDuration(result.durationMin, tLocale) : t("detailsPending")} />
+            <div className="flex justify-between gap-4 border-t border-border pt-3">
+              <dt className="text-muted-foreground">{t("total")}</dt>
+              <dd className="font-semibold text-brand">
+                {result.priceTotal > 0 ? formatPrice(result.priceTotal, tLocale) : t("detailsPending")}
               </dd>
             </div>
           </dl>
           <a
             href={result.manageUrl}
-            className="mt-6 block rounded-full bg-brand-600 px-6 py-3 text-center text-sm font-semibold text-white"
+            className="mt-6 block rounded-full bg-primary px-6 py-3 text-center text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02]"
           >
             {t("manageLink")}
           </a>
@@ -257,7 +258,7 @@ export function BookingFlow({
         <button
           type="button"
           onClick={() => router.push("/booking")}
-          className="mt-6 text-sm font-medium text-stone-600 hover:text-brand-600 dark:text-stone-400"
+          className="mt-6 text-sm font-medium text-muted-foreground hover:text-brand"
         >
           {t("bookAnother")}
         </button>
@@ -266,25 +267,23 @@ export function BookingFlow({
   }
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="font-serif text-3xl font-bold text-stone-900 dark:text-stone-50">{t("title")}</h1>
-        <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
-          {t("step", { current: stepNumber, total: STEP_ORDER.length })}
-        </p>
-        <ol className="mt-4 flex items-center gap-2" aria-label="Progress">
+    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
+      <div className="booking-workspace min-w-0 rounded-[2rem] border border-border bg-card p-6 sm:p-10">
+      <div className="mb-10">
+        <p className="eyebrow">{t("step", { current: stepNumber, total: STEP_ORDER.length })}</p>
+        <ol className="mt-6 flex items-center gap-2" aria-label={t("step", { current: stepNumber, total: STEP_ORDER.length })}>
           {STEP_ORDER.map((s, i) => (
             <li key={s} className="flex-1">
               <div
                 className={`h-1.5 rounded-full transition-colors ${
                   stepNumber > i + 1
-                    ? "bg-brand-600"
+                    ? "bg-primary"
                     : stepNumber === i + 1
-                      ? "bg-brand-400"
-                      : "bg-stone-200 dark:bg-stone-800"
+                      ? "bg-brand"
+                      : "bg-border"
                 }`}
               />
-              <span className="mt-1 hidden text-xs text-stone-500 sm:block dark:text-stone-400">
+              <span className="mt-2 hidden text-xs text-muted-foreground sm:block">
                 {t(`steps.${s}`)}
               </span>
             </li>
@@ -295,7 +294,7 @@ export function BookingFlow({
       {error && (
         <div
           role="alert"
-          className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300"
+          className="mb-6 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
         >
           {error}
         </div>
@@ -303,28 +302,28 @@ export function BookingFlow({
 
       {step === "service" && (
         <section aria-label={t("chooseService")}>
-          <h2 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50">
+          <h3 className="font-serif text-2xl text-foreground">
             {t("chooseService")}
-          </h2>
+          </h3>
           <ul className="mt-6 grid gap-4">
             {services.map((s) => (
-              <li key={s.id}>
+              <li key={s.id} className="min-w-0">
                 <button
                   type="button"
                   onClick={() => handleServiceSelect(s.id)}
-                  className="flex w-full items-center justify-between gap-4 rounded-2xl border border-stone-200 bg-white p-5 text-left shadow-sm transition-all hover:border-brand-400 hover:shadow-md dark:border-stone-800 dark:bg-[#211b16]"
+                  className="group flex w-full flex-col items-start justify-between gap-5 rounded-2xl border border-border bg-background p-5 text-left transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-lg hover:shadow-black/5 sm:flex-row sm:items-center"
                 >
                   <span className="min-w-0">
-                    <span className="block font-medium text-stone-900 dark:text-stone-50">{s.name}</span>
+                    <span className="block font-serif text-xl text-foreground group-hover:text-brand">{s.name}</span>
                     {s.description && (
-                      <span className="mt-1 block text-sm text-stone-600 dark:text-stone-400">{s.description}</span>
+                      <span className="mt-2 block text-sm leading-relaxed text-muted-foreground">{s.description}</span>
                     )}
-                    <span className="mt-2 block text-xs text-stone-500 dark:text-stone-400">
-                      {formatDuration(s.duration, tLocale)}
+                    <span className="mt-3 block text-xs uppercase tracking-wider text-muted-foreground">
+                      {s.duration > 0 ? formatDuration(s.duration, tLocale) : t("detailsPending")}
                     </span>
                   </span>
-                  <span className="shrink-0 font-semibold text-brand-600 dark:text-brand-400">
-                    {formatPrice(s.price, tLocale)}
+                  <span className="shrink-0 text-right text-xs font-semibold text-brand">
+                    {s.price > 0 ? formatPrice(s.price, tLocale) : t("detailsPending")}
                   </span>
                 </button>
               </li>
@@ -335,22 +334,22 @@ export function BookingFlow({
 
       {step === "staff" && service && (
         <section aria-label={t("chooseStaff")}>
-          <h2 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50">
+          <h3 className="font-serif text-2xl text-foreground">
             {t("chooseStaff")}
-          </h2>
+          </h3>
           <ul className="mt-6 grid gap-4">
             <li>
               <button
                 type="button"
                 onClick={() => handleStaffSelect("any")}
-                className="flex w-full items-center gap-4 rounded-2xl border border-stone-200 bg-white p-5 text-left shadow-sm transition-all hover:border-brand-400 hover:shadow-md dark:border-stone-800 dark:bg-[#211b16]"
+                className="flex w-full items-center gap-4 rounded-2xl border border-border bg-background p-5 text-left transition-all hover:border-brand hover:shadow-lg hover:shadow-black/5"
               >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-100 font-semibold text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-soft font-semibold text-brand">
                   &starf;
                 </span>
                 <span>
-                  <span className="block font-medium text-stone-900 dark:text-stone-50">{t("anyStaff")}</span>
-                  <span className="mt-1 block text-sm text-stone-600 dark:text-stone-400">{t("anyStaffHint")}</span>
+                  <span className="block font-medium text-foreground">{t("anyStaff")}</span>
+                  <span className="mt-1 block text-sm text-muted-foreground">{t("anyStaffHint")}</span>
                 </span>
               </button>
             </li>
@@ -361,18 +360,18 @@ export function BookingFlow({
                   <button
                     type="button"
                     onClick={() => handleStaffSelect(m.id)}
-                    className="flex w-full items-center gap-4 rounded-2xl border border-stone-200 bg-white p-5 text-left shadow-sm transition-all hover:border-brand-400 hover:shadow-md dark:border-stone-800 dark:bg-[#211b16]"
+                    className="flex w-full items-center gap-4 rounded-2xl border border-border bg-background p-5 text-left transition-all hover:border-brand hover:shadow-lg hover:shadow-black/5"
                   >
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-200 to-brand-400 font-semibold text-white">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary font-semibold text-primary-foreground">
                       {m.name.charAt(0)}
                     </span>
                     <span className="min-w-0">
-                      <span className="block font-medium text-stone-900 dark:text-stone-50">{m.name}</span>
-                      <span className="block text-xs uppercase tracking-wide text-brand-600 dark:text-brand-400">
+                      <span className="block font-medium text-foreground">{m.name}</span>
+                      <span className="block text-xs uppercase tracking-wide text-brand">
                         {m.role}
                       </span>
                       {m.bio && (
-                        <span className="mt-1 block text-sm text-stone-600 dark:text-stone-400">{m.bio}</span>
+                        <span className="mt-1 block text-sm text-muted-foreground">{m.bio}</span>
                       )}
                     </span>
                   </button>
@@ -380,7 +379,7 @@ export function BookingFlow({
               ))}
           </ul>
           {staff.filter((m) => m.serviceIds.includes(service.id)).length === 0 && (
-            <p className="mt-6 text-sm text-stone-500 dark:text-stone-400">{t("errorNoStaff")}</p>
+            <p className="mt-6 text-sm text-muted-foreground">{t("errorNoStaff")}</p>
           )}
           <BackButton onClick={() => setStep("service")} label={t("back")} />
         </section>
@@ -388,15 +387,15 @@ export function BookingFlow({
 
       {step === "date" && service && (
         <section aria-label={t("chooseDate")}>
-          <h2 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50">
+          <h3 className="font-serif text-2xl text-foreground">
             {t("chooseDate")}
-          </h2>
-          <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">{t("dateHint")}</p>
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t("dateHint")}</p>
           <div className="mt-6 grid gap-5 sm:grid-cols-2">
             <div>
               <label
                 htmlFor="preferred-date"
-                className="block text-sm font-medium text-stone-700 dark:text-stone-300"
+                className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground"
               >
                 {t("selectDate")}
               </label>
@@ -413,10 +412,10 @@ export function BookingFlow({
                 }}
                 aria-invalid={!!fieldErrors.date}
                 aria-describedby={fieldErrors.date ? "preferred-date-error" : undefined}
-                className="mt-1 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 focus:border-brand-500 focus:outline-none dark:border-stone-700 dark:bg-[#211b16] dark:text-stone-50"
+                className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground focus:border-brand focus:outline-none"
               />
               {fieldErrors.date && (
-                <p id="preferred-date-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                <p id="preferred-date-error" className="mt-2 text-sm text-destructive" role="alert">
                   {fieldErrors.date}
                 </p>
               )}
@@ -424,7 +423,7 @@ export function BookingFlow({
             <div>
               <label
                 htmlFor="preferred-time"
-                className="block text-sm font-medium text-stone-700 dark:text-stone-300"
+                className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground"
               >
                 {t("selectTime")}
               </label>
@@ -439,10 +438,10 @@ export function BookingFlow({
                 }}
                 aria-invalid={!!fieldErrors.time}
                 aria-describedby={fieldErrors.time ? "preferred-time-error" : undefined}
-                className="mt-1 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 focus:border-brand-500 focus:outline-none dark:border-stone-700 dark:bg-[#211b16] dark:text-stone-50"
+                className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground focus:border-brand focus:outline-none"
               />
               {fieldErrors.time && (
-                <p id="preferred-time-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                <p id="preferred-time-error" className="mt-2 text-sm text-destructive" role="alert">
                   {fieldErrors.time}
                 </p>
               )}
@@ -452,7 +451,7 @@ export function BookingFlow({
             <button
               type="button"
               onClick={goToDetails}
-              className="rounded-full bg-brand-600 px-8 py-3 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105 hover:bg-brand-700"
+              className="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02]"
             >
               {t("continue")}
             </button>
@@ -463,9 +462,9 @@ export function BookingFlow({
 
       {step === "details" && service && (
         <form onSubmit={handleSubmit} className="max-w-xl" noValidate>
-          <h2 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50">
+          <h3 className="font-serif text-2xl text-foreground">
             {t("chooseDetails")}
-          </h2>
+          </h3>
           <div className="mt-6 space-y-5">
             <FormField
               id="name"
@@ -497,7 +496,7 @@ export function BookingFlow({
               required
             />
             <div>
-              <label htmlFor="note" className="block text-sm font-medium text-stone-700 dark:text-stone-300">
+              <label htmlFor="note" className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 {t("noteLabel")}
               </label>
               <textarea
@@ -507,18 +506,18 @@ export function BookingFlow({
                 value={form.note}
                 onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))}
                 placeholder={t("notePlaceholder")}
-                className="mt-1 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-brand-500 focus:outline-none dark:border-stone-700 dark:bg-[#211b16] dark:text-stone-50"
+                className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-brand focus:outline-none"
               />
               {fieldErrors.note && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                <p className="mt-2 text-sm text-destructive" role="alert">
                   {fieldErrors.note}
                 </p>
               )}
             </div>
           </div>
 
-          <div className="mt-8 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm dark:border-stone-800 dark:bg-[#211b16]">
-            <h3 className="text-sm font-semibold text-stone-900 dark:text-stone-50">{t("summary")}</h3>
+          <div className="mt-8 rounded-2xl border border-border bg-background p-5">
+            <h3 className="text-sm font-semibold text-foreground">{t("summary")}</h3>
             <dl className="mt-3 space-y-2 text-sm">
               <SummaryRow label={t("service")} value={service.name} />
               <SummaryRow
@@ -531,10 +530,10 @@ export function BookingFlow({
                   value={`${labelForDay(dayKey, tLocale)} ${minutesToLabel(startMinutes, tLocale)}`}
                 />
               )}
-              <div className="flex justify-between gap-4 border-t border-stone-200 pt-2 dark:border-stone-800">
-                <dt className="text-stone-500 dark:text-stone-400">{t("total")}</dt>
-                <dd className="font-semibold text-brand-600 dark:text-brand-400">
-                  {formatPrice(service.price, tLocale)}
+              <div className="flex justify-between gap-4 border-t border-border pt-2">
+                <dt className="text-muted-foreground">{t("total")}</dt>
+                <dd className="font-semibold text-brand">
+                  {service.price > 0 ? formatPrice(service.price, tLocale) : t("detailsPending")}
                 </dd>
               </div>
             </dl>
@@ -544,7 +543,7 @@ export function BookingFlow({
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-full bg-brand-600 px-8 py-3 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105 hover:bg-brand-700 disabled:opacity-60"
+              className="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-60"
             >
               {submitting ? t("confirming") : t("confirm")}
             </button>
@@ -552,13 +551,28 @@ export function BookingFlow({
               type="button"
               onClick={() => setStep("date")}
               disabled={submitting}
-              className="text-sm font-medium text-stone-600 hover:text-brand-600 dark:text-stone-400"
+              className="text-sm font-medium text-muted-foreground hover:text-brand"
             >
               &larr; {t("back")}
             </button>
           </div>
         </form>
       )}
+      </div>
+
+      <aside className="booking-summary rounded-[2rem] bg-primary p-6 text-primary-foreground lg:sticky lg:top-24" aria-live="polite">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-foreground/60">{t("summary")}</p>
+        <p className="mt-3 font-serif text-2xl">{service?.name ?? t("chooseService")}</p>
+        <dl className="mt-6 space-y-3 text-sm">
+          <SummaryRow label={t("specialist")} value={staffId === "any" ? t("anyStaff") : (staffMember?.name ?? "—")} inverted />
+          <SummaryRow label={t("date")} value={dayKey && startMinutes !== null ? `${labelForDay(dayKey, tLocale)} · ${minutesToLabel(startMinutes, tLocale)}` : "—"} inverted />
+          <SummaryRow label={t("total")} value={service ? (service.price > 0 ? formatPrice(service.price, tLocale) : t("detailsPending")) : "—"} inverted />
+        </dl>
+        <div className="mt-8 border-t border-primary-foreground/20 pt-6">
+          <p className="text-xs uppercase tracking-[0.18em] text-primary-foreground/60">{t("steps.date")}</p>
+          <p className="mt-2 text-sm leading-relaxed text-primary-foreground/80">{t("dateHint")}</p>
+        </div>
+      </aside>
     </div>
   );
 }
@@ -568,17 +582,17 @@ function BackButton({ onClick, label }: { onClick: () => void; label: string }) 
     <button
       type="button"
       onClick={onClick}
-      className="text-sm font-medium text-stone-600 hover:text-brand-600 dark:text-stone-400"
+      className="text-sm font-medium text-muted-foreground hover:text-brand"
     >
       &larr; {label}
     </button>
   );
 }
-function SummaryRow({ label, value }: { label: string; value: string }) {
+function SummaryRow({ label, value, inverted = false }: { label: string; value: string; inverted?: boolean }) {
   return (
     <div className="flex justify-between gap-4">
-      <dt className="text-stone-500 dark:text-stone-400">{label}</dt>
-      <dd className="text-right font-medium text-stone-900 dark:text-stone-50">{value}</dd>
+      <dt className={inverted ? "text-primary-foreground/60" : "text-muted-foreground"}>{label}</dt>
+      <dd className={inverted ? "text-right font-medium text-primary-foreground" : "text-right font-medium text-foreground"}>{value}</dd>
     </div>
   );
 }

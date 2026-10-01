@@ -74,8 +74,10 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
         ...(data.name !== undefined ? { name: data.name } : {}),
         ...(data.role !== undefined ? { role: data.role.trim() || "Specialist" } : {}),
         ...(data.bio !== undefined ? { bio: data.bio.trim() || null } : {}),
+        ...(data.bioFr !== undefined ? { bioFr: data.bioFr.trim() || null } : {}),
         ...(data.avatarUrl !== undefined ? { avatarUrl: data.avatarUrl.trim() || null } : {}),
         ...(data.active !== undefined ? { active: data.active } : {}),
+        ...(data.order !== undefined ? { order: data.order } : {}),
         ...(serviceIds
           ? { services: { deleteMany: {}, createMany: { data: serviceIds.map((s) => ({ serviceId: s })) } } }
           : {}),

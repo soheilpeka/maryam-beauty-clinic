@@ -4,15 +4,15 @@ import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { SERVICES, SERVICE_CATEGORIES, categoryLabel } from "@/lib/content/services";
-import type { ServiceCategory } from "@/lib/content/services";
-import { formatPrice, formatDuration } from "@/lib/content/format";
+import type { Service, ServiceCategory } from "@/lib/content/services";
+import { formatPrice } from "@/lib/content/format";
 import type { Locale } from "@/i18n/routing";
 
 /**
- * Complete service catalog with category filtering. Every one of the 24 services is
- * listed - nothing is hidden behind a "popular" filter.
+ * Complete service catalog with search and category filtering. Public data is supplied by
+ * the database so an admin save is reflected here without a source edit.
  */
-export function ServiceCatalog({ locale }: { locale: Locale }) {
+export function ServiceCatalog({ locale, services = SERVICES }: { locale: Locale; services?: Service[] }) {
   const t = useTranslations("Services");
   const tNav = useTranslations("Nav");
   const [active, setActive] = useState<ServiceCategory | "All">("All");
@@ -20,7 +20,7 @@ export function ServiceCatalog({ locale }: { locale: Locale }) {
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return SERVICES.filter((s) => {
+    return services.filter((s) => {
       const catOk = active === "All" || s.category === active;
       const qOk =
         q === "" ||
@@ -29,7 +29,7 @@ export function ServiceCatalog({ locale }: { locale: Locale }) {
         s.category.toLowerCase().includes(q);
       return catOk && qOk;
     });
-  }, [active, query]);
+  }, [active, query, services]);
 
   const tabs: (ServiceCategory | "All")[] = ["All", ...SERVICE_CATEGORIES];
 
@@ -83,18 +83,24 @@ export function ServiceCatalog({ locale }: { locale: Locale }) {
 
       {/* Results */}
       <p className="mt-8 text-sm text-muted-foreground" aria-live="polite">
-        {visible.length} {visible.length === 1 ? t("all").replace("All Services", "service") : t("all").replace("All Services", "services")}
+        {t("resultsCount", { count: visible.length })}
       </p>
 
       {visible.length === 0 ? (
         <div className="py-20 text-center">
-          <p className="font-serif text-xl">{t("all")}</p>
-          <p className="mt-2 text-sm text-muted-foreground">{tNav("search")}</p>
+          <p className="font-serif text-2xl">{t("noResults")}</p>
+          <button
+            type="button"
+            onClick={() => { setActive("All"); setQuery(""); }}
+            className="mt-5 rounded-full border border-border px-5 py-2.5 text-sm transition-colors hover:border-brand hover:text-brand"
+          >
+            {t("all")}
+          </button>
         </div>
       ) : (
-        <div className="mt-6 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        <div className="service-editorial-grid mt-6 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((s) => (
-            <div key={s.slug} className="flex flex-col bg-background p-7">
+            <div key={s.slug} className="flex flex-col border-b border-border pb-8">
               <div className="mb-5 aspect-[4/3] overflow-hidden rounded-xl bg-muted">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -111,12 +117,14 @@ export function ServiceCatalog({ locale }: { locale: Locale }) {
               <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
                 {s.summary}
               </p>
-              <div className="mt-5 flex items-baseline justify-between border-t border-border pt-4">
+              <div className="mt-5 grid grid-cols-2 gap-4 border-t border-border pt-4">
                 <div>
-                  <p className="text-sm font-medium text-foreground">{s.priceLabel}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatDuration(s.duration, locale)}
-                  </p>
+                  <p className="text-[0.65rem] uppercase tracking-widest text-muted-foreground">{t("price")}</p>
+                  <p className="mt-1 text-sm font-medium text-foreground">{s.price > 0 ? s.priceLabel : t("consultationPrice")}</p>
+                </div>
+                <div>
+                  <p className="text-[0.65rem] uppercase tracking-widest text-muted-foreground">{t("duration")}</p>
+                  <p className="mt-1 text-sm font-medium text-foreground">{s.duration > 0 ? `${s.duration} ${t("min")}` : t("consultationDuration")}</p>
                 </div>
               </div>
               <div className="mt-5 flex gap-2">

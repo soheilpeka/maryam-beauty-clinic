@@ -1,549 +1,84 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/routing";
-import { SERVICES, featuredServices, categoryLabel } from "@/lib/content/services";
-import { PACKAGES } from "@/lib/content/packages";
-import { GALLERY, GALLERY_INTRO, GALLERY_TAGS } from "@/lib/content/gallery";
-import { TESTIMONIALS } from "@/lib/content/testimonials";
-import { BLOG_POSTS, AUTHOR } from "@/lib/content/blog";
-import { BUSINESS } from "@/lib/content/business";
-import type { Locale } from "@/i18n/routing";
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/routing";
+import { BOOKING_URL } from "@/lib/site-config";
+import { BUSINESS, localizedHours } from "@/lib/content/business";
+import { publicServices } from "@/lib/public-content";
+import { prisma } from "@/lib/prisma";
+import { categoryLabel, SERVICE_CATEGORIES } from "@/lib/content/services";
+import { TESTIMONIALS } from "@/lib/content/testimonials";
+import { PUBLIC_STAFF_WHERE } from "@/lib/public-staff";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
+export const dynamic = "force-dynamic";
+
+const copy = {
+  en: {
+    title: "Maryam C Beauté | Modern beauty, considered",
+    description: "A considered beauty salon for hair, skin and confidence in Brossard, Québec.",
+    kicker: "Maryam C Beauté", hero: "Beauty shines from within.", book: "Book now",
+    signature: "The signature work", signatureTitle: "Results that feel like you.", signatureBody: "Every look and treatment is shaped around your features, your lifestyle and the way you want to feel when you leave the studio.", explore: "Explore our services",
+    aboutKicker: "About Maryam C Beauté", aboutTitle: "A calm studio. Considered care.", aboutBody: "Maryam C Beauté brings hair, makeup and aesthetic services together in a warm, personal setting in Brossard. Final service details are being prepared with the owner.",
+    serviceKicker: "Featured treatment", serviceTitle: "RF Microneedling", serviceBody: "A considered skin-renewal treatment combining radiofrequency energy with precision microneedling. It supports smoother texture, refined pores and a visibly rested glow.", serviceLink: "Discover the treatment", allServices: "View all services",
+    collectionKicker: "The collection", collectionTitle: "Looks made for you.", collectionBody: "Example looks for the new season. Your final client gallery can be added without changing the design.",
+    teamKicker: "The team", teamTitle: "Here to make you shine.", teamBody: "Thoughtful artists, attentive care and a shared belief that beauty should feel personal.", reviewsKicker: "Verified Google reviews", reviewsTitle: "Kind words from Brossard.", reviewsLink: "Read all reviews",
+    storeKicker: "The Maryam C edit", storeTitle: "Bring the studio home.", storeBody: "Discover our considered selection of professional hair and skin essentials.", storeLink: "Visit the store", contactKicker: "Come as you are", contactTitle: "Ready for your next chapter?", nav: ["Home", "About", "Services", "Contact us"],
+  },
+  fr: {
+    title: "Maryam C Beauté | La beauté, avec intention",
+    description: "Un salon raffiné pour les cheveux, la peau et la confiance à Brossard, Québec.",
+    kicker: "Maryam C Beauté", hero: "La beauté vient de l'intérieur.", book: "Réserver",
+    signature: "Notre signature", signatureTitle: "Des résultats qui vous ressemblent.", signatureBody: "Chaque look et chaque soin sont pensés autour de vos traits, de votre quotidien et de la façon dont vous souhaitez vous sentir en sortant du studio.", explore: "Découvrir nos services",
+    aboutKicker: "À propos de Maryam C Beauté", aboutTitle: "Un studio apaisant. Un soin pensé pour vous.", aboutBody: "Maryam C Beauté réunit coiffure, maquillage et soins esthétiques dans un cadre chaleureux et personnel à Brossard. Les détails finaux sont en préparation avec la propriétaire.",
+    serviceKicker: "Soin vedette", serviceTitle: "Microneedling RF", serviceBody: "Un soin de renouvellement qui combine la radiofréquence et le microneedling de précision pour une texture plus lisse et un teint reposé.", serviceLink: "Découvrir le soin", allServices: "Voir tous les services",
+    collectionKicker: "La collection", collectionTitle: "Des looks qui vous ressemblent.", collectionBody: "Des inspirations pour la nouvelle saison. Votre galerie finale pourra être ajoutée sans modifier le design.",
+    teamKicker: "L'équipe", teamTitle: "Pour révéler votre éclat.", teamBody: "Des artistes attentifs, une approche personnalisée et une même vision de la beauté.", reviewsKicker: "Avis Google vérifiés", reviewsTitle: "Les mots de notre clientèle.", reviewsLink: "Lire tous les avis",
+    storeKicker: "La sélection Maryam C", storeTitle: "Le studio, chez vous.", storeBody: "Découvrez notre sélection de soins professionnels pour les cheveux et la peau.", storeLink: "Visiter la boutique", contactKicker: "Venez comme vous êtes", contactTitle: "Prête pour la suite?", nav: ["Accueil", "À propos", "Services", "Contact"],
+  },
+} as const;
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "Meta" });
-  return {
-    title: t("homeTitle"),
-    description: t("description"),
-    alternates: { canonical: `/${locale}` },
-  };
+  const t = copy[locale === "fr" ? "fr" : "en"];
+  return { title: t.title, description: t.description, alternates: { canonical: `/${locale}` } };
 }
 
-export default async function HomePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: "Sections" });
-  const tHero = await getTranslations({ locale, namespace: "Hero" });
-  const tNav = await getTranslations({ locale, namespace: "Nav" });
-  const tServices = await getTranslations({ locale, namespace: "Services" });
-  const tPackages = await getTranslations({ locale, namespace: "Packages" });
-  const tBlog = await getTranslations({ locale, namespace: "Blog" });
+  const t = copy[locale === "fr" ? "fr" : "en"];
 
-  const featured = featuredServices();
-  const popular = SERVICES.filter((s) =>
-    ["womens-laser-hair-removal", "hair-growth-treatment", "microneedling", "facial-classic", "microblading"].includes(
-      s.slug,
-    ),
-  );
-
+  const loc = locale === "fr" ? "fr" : "en";
+  const services = await publicServices(loc);
+  const featured = services.find(service => service.slug === "rf-microneedling");
+  const questions = loc === "fr" ? [
+    ["Ma demande est-elle un rendez-vous confirmé?", "Non. Votre demande reste en attente jusqu’à ce que le salon l’approuve. La date et l’heure sont vos préférences, pas une disponibilité garantie."],
+    ["Comment annuler ma demande?", "Utilisez le lien sécurisé affiché après l’envoi de votre demande. Il permet d’annuler une demande en attente ou un rendez-vous confirmé."],
+    ["Où trouver les prix et les durées?", "Les détails approuvés apparaissent sur les pages des services. Lorsqu’ils ne sont pas encore publiés, le salon les confirme pendant la consultation."],
+  ] : [
+    ["Is my request a confirmed appointment?", "No. Your request stays pending until the salon approves it. The date and time are your preferences, not guaranteed availability."],
+    ["How can I cancel my request?", "Use the secure link displayed after submitting your request. You can cancel a pending request or a confirmed appointment there."],
+    ["Where can I find prices and durations?", "Approved details appear on service pages. Where details have not yet been published, the salon confirms them during consultation."],
+  ];
+  const [team, gallery, productCount] = await Promise.all([
+    prisma.staff.findMany({ where: PUBLIC_STAFF_WHERE, orderBy: { order: "asc" } }),
+    prisma.galleryItem.findMany({ where: { active: true }, orderBy: { order: "asc" }, take: 3 }),
+    prisma.product.count({ where: { active: true, demo: false } }),
+  ]);
   return (
-    <div className="flex flex-col">
-      {/* ---------------- Hero ---------------- */}
-      <section id="top" className="relative overflow-hidden bg-background">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-28">
-          <div>
-            <p className="eyebrow">{t("philosophyEyebrow").replace("Our philosophy", "Premium aesthetic clinic")}</p>
-            <h1 className="display-heading mt-5 text-5xl sm:text-6xl lg:text-7xl">
-              {t("title")}
-            </h1>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
-              {t("subtitle")}
-            </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Link
-                href="/booking"
-                className="inline-flex items-center justify-center rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.03]"
-              >
-                {tNav("book")}
-              </Link>
-              <Link
-                href="/book-online"
-                className="inline-flex items-center justify-center rounded-full border border-border px-7 py-3.5 text-sm font-medium text-foreground transition-colors hover:border-brand hover:text-brand"
-              >
-                {t("ctaSecondary")}
-              </Link>
-            </div>
-            <dl className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-border pt-8">
-              {[tHero("stat1"), tHero("stat2"), tHero("stat3")].map((stat) => (
-                <div key={stat}>
-                  <dd className="text-xs leading-relaxed text-muted-foreground">{stat}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-
-          {/* Hero image with overlapping accent frame */}
-          <div className="relative">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/hero-clinic.png"
-                alt="A calm woman with luminous, healthy skin"
-                className="h-full w-full object-cover"
-                loading="eager"
-              />
-            </div>
-            <div
-              className="absolute -bottom-5 -left-5 -z-10 hidden h-full w-full rounded-2xl border border-border sm:block"
-              aria-hidden="true"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Philosophy ---------------- */}
-      <section id="about" className="scroll-mt-24 border-t border-border bg-card py-20 lg:py-28">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
-          <div className="order-2 lg:order-1">
-            <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/gallery-facial.png"
-                alt="Serene treatment moment at Maryam Beauty Clinic"
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
-            </div>
-          </div>
-          <div className="order-1 lg:order-2">
-            <p className="eyebrow">{t("philosophyEyebrow")}</p>
-            <h2 className="display-heading mt-4 text-4xl sm:text-5xl">{t("philosophyTitle")}</h2>
-            <div className="mt-6 space-y-4 text-base leading-relaxed text-muted-foreground">
-              <p>{t("philosophyBody1")}</p>
-              <p>{t("philosophyBody2")}</p>
-            </div>
-            <Link
-              href="/service-page/womens-laser-hair-removal"
-              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-70"
-            >
-              {tServices("explore")}
-              <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Featured treatments ---------------- */}
-      <section id="treatments" className="scroll-mt-24 bg-background py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-            <div className="max-w-2xl">
-              <p className="eyebrow">{t("treatmentsEyebrow")}</p>
-              <h2 className="display-heading mt-4 text-4xl sm:text-5xl">
-                {t("treatmentsTitle")}
-              </h2>
-              <p className="mt-4 text-base text-muted-foreground">{t("treatmentsSubtitle")}</p>
-            </div>
-            <Link
-              href="/book-online"
-              className="inline-flex shrink-0 items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-70"
-            >
-              {tServices("viewAll")}
-              <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </div>
-
-          <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((s) => (
-              <Link
-                key={s.slug}
-                href={`/service-page/${s.slug}`}
-                className="group flex flex-col bg-background p-7 transition-colors hover:bg-card"
-              >
-                <div className="mb-5 aspect-[4/3] overflow-hidden rounded-xl bg-muted">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={s.image}
-                    alt={s.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-brand">
-                  {categoryLabel(s.category, locale as Locale)}
-                </p>
-                <h3 className="mt-2 font-serif text-xl">{s.name}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
-                  {s.summary}
-                </p>
-                <div className="mt-5 flex items-baseline justify-between border-t border-border pt-4">
-                  <span className="text-sm font-medium text-foreground">{s.priceLabel}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {Math.floor(s.duration / 60) > 0
-                      ? `${Math.floor(s.duration / 60)} ${tServices("hr")}`
-                      : ""}{" "}
-                    {s.duration % 60 > 0 ? `${s.duration % 60} ${tServices("min")}` : ""}
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Featured treatment (editorial) ---------------- */}
-      <section className="border-t border-border bg-primary py-20 text-primary-foreground lg:py-28">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/gallery-laser.png"
-              alt="Laser hair removal treatment"
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/60">
-              {t("featuredEyebrow")}
-            </p>
-            <h2 className="display-heading mt-4 text-4xl text-primary-foreground sm:text-5xl">
-              {SERVICES[0].name}
-            </h2>
-            <p className="mt-4 font-serif text-xl italic text-primary-foreground/80">
-              {SERVICES[0].detail?.tagline}
-            </p>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-primary-foreground/70">
-              {SERVICES[0].summary}
-            </p>
-            <ul className="mt-8 space-y-3">
-              {SERVICES[0].detail?.highlights.map((hl) => (
-                <li key={hl} className="flex items-start gap-3 text-sm text-primary-foreground/80">
-                  <span className="mt-1.5 h-1 w-4 shrink-0 rounded-full bg-gold" aria-hidden="true" />
-                  {hl}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/service-page/womens-laser-hair-removal"
-              className="mt-9 inline-flex items-center justify-center rounded-full bg-primary-foreground px-7 py-3.5 text-sm font-medium text-primary transition-transform duration-200 hover:scale-[1.03]"
-            >
-              {tServices("explore")} {SERVICES[0].name}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Popular services with prices ---------------- */}
-      <section id="pricing" className="scroll-mt-24 bg-background py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <p className="eyebrow">{t("treatmentsEyebrow")}</p>
-            <h2 className="display-heading mt-4 text-4xl sm:text-5xl">
-              {tServices("all")}
-            </h2>
-            <p className="mt-4 text-base text-muted-foreground">{t("treatmentsSubtitle")}</p>
-          </div>
-          <div className="mt-12 divide-y divide-border border-y border-border">
-            {popular.map((s) => (
-              <Link
-                key={s.slug}
-                href={`/service-page/${s.slug}`}
-                className="group grid grid-cols-1 items-center gap-3 py-6 sm:grid-cols-[1fr_auto] sm:gap-6"
-              >
-                <div>
-                  <h3 className="font-serif text-lg transition-colors group-hover:text-brand sm:text-xl">
-                    {s.name}
-                  </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{s.summary}</p>
-                </div>
-                <div className="flex items-center gap-6">
-                  <div className="text-right">
-                    <p className="text-sm font-medium text-foreground">{s.priceLabel}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {Math.floor(s.duration / 60) > 0
-                        ? `${Math.floor(s.duration / 60)} ${tServices("hr")}`
-                        : ""}{" "}
-                      {s.duration % 60 > 0 ? `${s.duration % 60} ${tServices("min")}` : ""}
-                    </p>
-                  </div>
-                  <span className="hidden text-brand transition-transform group-hover:translate-x-1 sm:inline" aria-hidden="true">
-                    &rarr;
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="mt-10 text-center">
-            <Link
-              href="/book-online"
-              className="inline-flex items-center justify-center rounded-full border border-border px-7 py-3.5 text-sm font-medium text-foreground transition-colors hover:border-brand hover:text-brand"
-            >
-              {tServices("viewAll")}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Skin ---------------- */}
-      <section className="border-t border-border bg-card py-20 lg:py-28">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
-          <div>
-            <p className="eyebrow">{t("skinEyebrow")}</p>
-            <h2 className="display-heading mt-4 text-4xl sm:text-5xl">{t("skinTitle")}</h2>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
-              {t("skinBody")}
-            </p>
-            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {SERVICES.filter((s) => s.category === "Facial")
-                .slice(0, 6)
-                .map((s) => (
-                  <li key={s.slug}>
-                    <Link
-                      href={`/service-page/${s.slug}`}
-                      className="text-sm text-foreground transition-colors hover:text-brand"
-                    >
-                      {s.name}
-                    </Link>
-                  </li>
-                ))}
-            </ul>
-            <Link
-              href="/book-online"
-              className="mt-9 inline-flex items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-70"
-            >
-              {tServices("explore")} {t("skinEyebrow")}
-              <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </div>
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/gallery-microneedling.png"
-              alt="Radiant, healthy skin"
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Results gallery preview ---------------- */}
-      <section id="results" className="scroll-mt-24 bg-background py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <p className="eyebrow">{t("resultsEyebrow")}</p>
-            <h2 className="display-heading mt-4 text-4xl sm:text-5xl">{t("resultsTitle")}</h2>
-            <p className="mt-4 text-base text-muted-foreground">{t("galleryIntro")}</p>
-          </div>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {GALLERY.slice(0, 4).map((g) => (
-              <figure
-                key={g.slug}
-                className="group relative overflow-hidden rounded-2xl bg-muted"
-              >
-                <div className="aspect-square">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={g.image}
-                    alt={g.caption}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-                <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                  <span className="text-xs font-semibold uppercase tracking-widest text-white/80">
-                    {g.tag}
-                  </span>
-                  <p className="mt-1 text-sm font-medium text-white">{g.title}</p>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-          <div className="mt-10 text-center">
-            <Link
-              href="/gallery"
-              className="inline-flex items-center justify-center rounded-full border border-border px-7 py-3.5 text-sm font-medium text-foreground transition-colors hover:border-brand hover:text-brand"
-            >
-              {t("galleryTitle")}
-            </Link>
-          </div>
-          <p className="sr-only">{GALLERY_TAGS.join(", ")}</p>
-        </div>
-      </section>
-
-      {/* ---------------- Testimonials ---------------- */}
-      <section id="testimonials" className="scroll-mt-24 border-t border-border bg-card py-20 lg:py-28">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <p className="eyebrow text-center">{t("testimonialsEyebrow")}</p>
-          <h2 className="display-heading mt-4 text-center text-4xl sm:text-5xl">
-            {t("testimonialsTitle")}
-          </h2>
-          <div className="mt-12 space-y-12">
-            {TESTIMONIALS.map((tm) => (
-              <figure key={tm.author} className="text-center">
-                <blockquote>
-                  <p className="font-serif text-xl italic leading-relaxed sm:text-2xl">
-                    &ldquo;{tm.quote}&rdquo;
-                  </p>
-                </blockquote>
-                <figcaption className="mt-5 text-sm font-medium text-brand">
-                  {tm.author}
-                  <span className="font-normal text-muted-foreground">, {tm.location}</span>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Offers / packages ---------------- */}
-      <section id="offers" className="scroll-mt-24 bg-background py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <p className="eyebrow">{t("offersEyebrow")}</p>
-            <h2 className="display-heading mt-4 text-4xl sm:text-5xl">{t("offersTitle")}</h2>
-            <p className="mt-4 text-base text-muted-foreground">{t("offersBody")}</p>
-          </div>
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
-            {PACKAGES.map((p) => (
-              <div
-                key={p.slug}
-                className="relative flex flex-col rounded-2xl border border-border bg-card p-8"
-              >
-                {p.badge && (
-                  <span className="absolute -top-3 left-8 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-brand-foreground">
-                    {tPackages("bestValue")}
-                  </span>
-                )}
-                <h3 className="font-serif text-2xl">{p.name}</h3>
-                <p className="mt-4 text-3xl font-light">{p.priceLabel}</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {p.cadence} &middot; {tPackages("validFor")} {p.validity.replace("Valid for ", "")}
-                </p>
-                <ul className="mt-6 flex-1 space-y-2.5">
-                  {p.features.map((f) => (
-                    <li key={f} className="flex items-start gap-3 text-sm text-muted-foreground">
-                      <span className="mt-1.5 h-1 w-4 shrink-0 rounded-full bg-gold" aria-hidden="true" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/booking"
-                  className="mt-8 inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.03]"
-                >
-                  {tPackages("bookPackage")}
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Clinic ---------------- */}
-      <section id="clinic" className="border-t border-border bg-card py-20 lg:py-28">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
-          <div>
-            <p className="eyebrow">{t("clinicEyebrow")}</p>
-            <h2 className="display-heading mt-4 text-4xl sm:text-5xl">{t("clinicTitle")}</h2>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
-              {t("clinicBody")}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-2">
-              {BUSINESS.serviceAreas.map((a) => (
-                <span
-                  key={a}
-                  className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-                >
-                  {a}
-                </span>
-              ))}
-            </div>
-            <Link
-              href="/contact"
-              className="mt-9 inline-flex items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-70"
-            >
-              {t("ctaSecondary")}
-              <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/gallery-1.png"
-              alt="Interior of Maryam Beauty Clinic"
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Journal preview ---------------- */}
-      <section className="bg-background py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-            <div>
-              <p className="eyebrow">{tBlog("eyebrow")}</p>
-              <h2 className="display-heading mt-4 text-4xl sm:text-5xl">{tBlog("title")}</h2>
-            </div>
-            <Link
-              href="/blog"
-              className="inline-flex shrink-0 items-center gap-2 text-sm font-medium text-brand transition-opacity hover:opacity-70"
-            >
-              {tBlog("allPosts")}
-              <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </div>
-          <div className="mt-12 grid gap-8 sm:grid-cols-3">
-            {BLOG_POSTS.slice(0, 3).map((post) => (
-              <Link key={post.slug} href={`/post/${post.slug}`} className="group">
-                <p className="text-xs font-semibold uppercase tracking-widest text-brand">
-                  {post.category}
-                </p>
-                <h3 className="mt-3 font-serif text-lg transition-colors group-hover:text-brand sm:text-xl">
-                  {post.title}
-                </h3>
-                <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                  {post.excerpt}
-                </p>
-                <p className="mt-4 text-xs text-muted-foreground">
-                  {tBlog("by")} {AUTHOR} &middot; {post.date} &middot;{" "}
-                  {post.readTime}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- CTA ---------------- */}
-      <section id="booking" className="scroll-mt-24 border-t border-border bg-primary py-20 text-primary-foreground lg:py-28">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/60">
-            {t("ctaEyebrow")}
-          </p>
-          <h2 className="display-heading mt-4 text-4xl text-primary-foreground sm:text-5xl">
-            {t("ctaTitle")}
-          </h2>
-          <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-primary-foreground/70">
-            {t("ctaBody")}
-          </p>
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              href="/booking"
-              className="inline-flex items-center justify-center rounded-full bg-primary-foreground px-7 py-3.5 text-sm font-medium text-primary transition-transform duration-200 hover:scale-[1.03]"
-            >
-              {t("ctaButton")}
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-full border border-primary-foreground/30 px-7 py-3.5 text-sm font-medium text-primary-foreground transition-colors hover:border-primary-foreground"
-            >
-              {t("ctaSecondary")}
-            </Link>
-          </div>
-        </div>
-      </section>
+    <div className="preview-page">
+      <section id="top" className="preview-hero preview-hero-reference"><div className="preview-hero-overlay"><p className="preview-kicker">{t.kicker}</p><h1>{t.hero}</h1></div><Link href={BOOKING_URL} className="preview-hero-book-top">{t.book} <span>↗</span></Link><div className="preview-model-strip"><div className="preview-model-full"><img src="/preview/hero-trends-2026.png" alt={loc === "fr" ? "Inspirations coiffure éditoriales 2026–2027" : "Editorial hair inspirations for 2026–2027"} /></div></div></section>
+      <section id="about" className="preview-work"><div className="preview-work-image"><img src="/example-pics/hair-look-1.png" alt={loc === "fr" ? "Exemple de coiffure éditoriale" : "Editorial hairstyle example"} /></div><div><p className="preview-kicker">{t.signature}</p><h2>{t.signatureTitle}</h2><p>{t.signatureBody}</p><a className="preview-text-link" href="#services">{t.explore}&nbsp; ↗</a></div></section>
+      <section className="preview-parallax"><div><p className="preview-kicker">{t.aboutKicker}</p><h2>{t.aboutTitle}</h2><p className="preview-parallax-copy">{t.aboutBody}</p><Link href="/about" className="preview-text-link">{loc === "fr" ? "Découvrir le salon" : "Discover the salon"} ↗</Link></div></section>
+      {featured && <section id="services" className="preview-service"><div className="preview-service-copy"><p className="preview-kicker">{t.serviceKicker}</p><h2>{featured.name}</h2><p>{featured.summary}</p><div className="flex flex-wrap gap-5"><Link className="preview-text-link" href={`/service-page/${featured.slug}`}>{t.serviceLink}&nbsp; ↗</Link><Link className="preview-text-link" href="/book-online">{t.allServices}&nbsp; ↗</Link></div></div><div className="preview-service-image"><img className="preview-device-only" src={featured.image} alt={featured.name} /></div></section>}
+      <section className="home-catalog"><div className="home-section-heading"><p className="preview-kicker">{loc === "fr" ? "Le menu complet" : "The complete menu"}</p><h2>{loc === "fr" ? "Votre beauté. Votre façon." : "Your beauty. Your way."}</h2><Link href="/book-online" className="preview-text-link">{t.allServices} ↗</Link></div><div className="home-category-grid">{SERVICE_CATEGORIES.map((category) => <section key={category}><h3>{categoryLabel(category, loc)}</h3><ul>{services.filter(s => s.category === category).map(s => <li key={s.slug}><Link href={`/service-page/${s.slug}`}>{s.name}<span aria-hidden="true">↗</span></Link></li>)}</ul></section>)}</div></section>
+      <section className="preview-real"><div className="preview-gallery-grid">{gallery.map(item => <img key={item.id} src={item.imageUrl} alt={(loc === "fr" ? item.altFr : item.altEn) ?? ""} loading="lazy" />)}</div><div><p className="preview-kicker">{t.collectionKicker}</p><h2>{t.collectionTitle}</h2><p>{t.collectionBody}</p><Link href="/gallery" className="preview-text-link">{loc === "fr" ? "Voir la galerie" : "View the gallery"} ↗</Link></div></section>
+      <section className="preview-team"><div><p className="preview-kicker">{t.teamKicker}</p><h2>{t.teamTitle}</h2><p>{t.teamBody}</p></div><img src="/preview/studio.jpeg" alt="Maryam C Beauté studio" /></section>
+      <section className="preview-reviews" aria-labelledby="verified-reviews-title"><div className="preview-reviews-heading"><p className="preview-kicker">{t.reviewsKicker}</p><h2 id="verified-reviews-title">{t.reviewsTitle}</h2><a className="preview-text-link" href={BUSINESS.googleMapsReviewsHref} target="_blank" rel="noreferrer">{t.reviewsLink}&nbsp; ↗</a></div><div className="preview-review-grid">{TESTIMONIALS.map((review) => <figure key={review.author}><div aria-label={loc === "fr" ? "5 étoiles sur 5" : "5 out of 5 stars"}>★★★★★</div><blockquote>“{review.quote}”</blockquote><figcaption>{review.author}<span>Google Maps</span></figcaption></figure>)}</div></section>
+      {team.some(member => member.avatarUrl) && <section className="home-team-grid" aria-label={t.teamKicker}>{team.filter(member => member.avatarUrl).map(member => <article key={member.id}><img src={member.avatarUrl!} alt={member.name} loading="lazy" /><h3>{member.name}</h3><p>{(loc === "fr" ? member.bioFr : member.bio) ?? ""}</p></article>)}</section>}
+      <section className="preview-store"><p className="preview-kicker">{t.storeKicker}</p><h2>{t.storeTitle}</h2><p>{productCount ? t.storeBody : loc === "fr" ? "Notre collection est en préparation. Les produits seront présentés ici dès leur publication par le salon." : "Our collection is being prepared. Products will appear here when published by the salon."}</p><Link className="preview-text-link" href="/store">{t.storeLink}&nbsp; ↗</Link></section>
+      <section className="home-catalog" aria-labelledby="home-faq"><p className="preview-kicker">{loc === "fr" ? "Avant votre visite" : "Before your visit"}</p><h2 id="home-faq" className="display-heading mb-10 text-4xl sm:text-5xl">{loc === "fr" ? "Quelques réponses." : "A few answers."}</h2>{questions.map(([question, answer]) => <details key={question} className="border-t border-border py-5"><summary className="cursor-pointer text-lg font-medium">{question}</summary><p className="mt-4 max-w-3xl text-sm leading-7 text-muted-foreground">{answer}</p></details>)}</section>
+      <section id="contact" className="preview-contact"><p className="preview-kicker">{t.contactKicker}</p><h2>{t.contactTitle}</h2><Link className="preview-button" href={BOOKING_URL}>{t.book} <span>↗</span></Link></section>
+      <section className="home-visit"><div><p className="preview-kicker">Brossard · Québec</p><h2>{loc === "fr" ? "À bientôt au salon." : "See you at the salon."}</h2><address>{BUSINESS.address}<a href={BUSINESS.phoneHref}>{BUSINESS.phone}</a><a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a></address><a href={BUSINESS.mapsHref} target="_blank" rel="noreferrer" className="preview-text-link">{loc === "fr" ? "Obtenir l’itinéraire" : "Get directions"} ↗</a><Link href="/contact" className="preview-text-link">{loc === "fr" ? "Nous contacter" : "Contact us"} ↗</Link></div><div><h3>{loc === "fr" ? "Heures d’ouverture" : "Opening hours"}</h3><ul>{localizedHours(loc).map(row => <li key={row.days}><span>{row.days}</span><span>{row.open}</span></li>)}</ul></div></section>
     </div>
   );
 }

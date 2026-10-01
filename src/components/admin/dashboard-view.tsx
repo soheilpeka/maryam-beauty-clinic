@@ -82,7 +82,7 @@ export function DashboardView({ locale }: { locale: string }) {
         {[0, 1, 2, 3, 4, 5].map((i) => (
           <div
             key={i}
-            className="animate-pulse rounded-2xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-[#1a1512]"
+            className="animate-pulse rounded-2xl border border-border bg-card p-5 dark:border-stone-800 dark:bg-card"
           >
             <div className="h-3 w-1/2 rounded bg-stone-200 dark:bg-stone-800" />
             <div className="mt-3 h-6 w-1/3 rounded bg-stone-200 dark:bg-stone-800" />
@@ -114,7 +114,7 @@ export function DashboardView({ locale }: { locale: string }) {
 
   return (
     <div className="space-y-8">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <KpiCard label={t("statusPending")} value={String(counts.pending)} to={`/${locale}/admin/requests`}>
           {counts.pending > 0 ? t("pendingHint") : t("noPending")}
         </KpiCard>
@@ -142,16 +142,17 @@ export function DashboardView({ locale }: { locale: string }) {
 
       <section
         aria-labelledby="chart-title"
-        className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-[#1a1512]"
+        className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-stone-800 dark:bg-card"
       >
-        <h2 id="chart-title" className="font-serif text-lg font-semibold text-stone-900 dark:text-stone-50">
+        <h2 id="chart-title" className="font-serif text-lg font-semibold text-foreground dark:text-stone-50">
           {t("chartTitle")}
         </h2>
-        <p className="mt-0.5 text-sm text-stone-600 dark:text-stone-400">{t("chartHint")}</p>
+        <p className="mt-0.5 text-sm text-muted-foreground dark:text-stone-400">{t("chartHint")}</p>
         {maxDay <= 1 && stats.days.every((d) => d.confirmed === 0 && d.pending === 0) ? (
-          <p className="mt-6 text-sm text-stone-600 dark:text-stone-400">{t("noBookings")}</p>
+          <p className="mt-6 text-sm text-muted-foreground dark:text-stone-400">{t("noBookings")}</p>
         ) : (
-          <ul className="mt-6 flex h-40 items-end gap-1.5 sm:gap-2" role="img" aria-label={t("chartAriaLabel")}>
+          <div className="relative overflow-x-auto" tabIndex={0} role="region" aria-labelledby="chart-title">
+          <ul className="mt-6 flex h-40 min-w-[28rem] items-end gap-1.5 sm:gap-2" role="img" aria-label={t("chartAriaLabel")}>
             {stats.days.map((d) => {
               const total = d.confirmed + d.pending;
               const heightPct = Math.max((total / maxDay) * 100, total > 0 ? 6 : 2);
@@ -164,7 +165,7 @@ export function DashboardView({ locale }: { locale: string }) {
                   )}`}
                 >
                   <span
-                    className="flex w-full flex-col justify-end rounded-t-md bg-brand-600/90"
+                    className="flex w-full flex-col justify-end rounded-t-md bg-primary/90"
                     style={{ height: `${heightPct}%` }}
                   >
                     {d.pending > 0 && (
@@ -182,10 +183,11 @@ export function DashboardView({ locale }: { locale: string }) {
               );
             })}
           </ul>
+          </div>
         )}
         <div className="mt-3 flex gap-4 text-xs text-stone-500 dark:text-stone-400">
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-brand-600" /> {t("confirmedWord")}
+            <span className="h-2.5 w-2.5 rounded-sm bg-primary" /> {t("confirmedWord")}
           </span>
           <span className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-sm bg-amber-400" /> {t("pendingWord")}
@@ -193,26 +195,26 @@ export function DashboardView({ locale }: { locale: string }) {
         </div>
       </section>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <section
           aria-labelledby="popular-title"
-          className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-[#1a1512]"
+          className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-stone-800 dark:bg-card"
         >
-          <h2 id="popular-title" className="font-serif text-lg font-semibold text-stone-900 dark:text-stone-50">
+          <h2 id="popular-title" className="font-serif text-lg font-semibold text-foreground dark:text-stone-50">
             {t("popularServices")}
           </h2>
           {stats.popularServices.length === 0 ? (
-            <p className="mt-3 text-sm text-stone-600 dark:text-stone-400">{t("noPopular")}</p>
+            <p className="mt-3 text-sm text-muted-foreground dark:text-stone-400">{t("noPopular")}</p>
           ) : (
             <ol className="mt-4 space-y-3">
               {stats.popularServices.map((s, i) => (
                 <li key={s.serviceId} className="flex items-center justify-between gap-3">
-                  <span className="flex min-w-0 items-center gap-2 text-sm text-stone-900 dark:text-stone-100">
+                  <span className="flex min-w-0 items-center gap-2 text-sm text-foreground dark:text-stone-100">
                     <span className="font-mono text-xs text-stone-400">{i + 1}.</span>
                     <span className="truncate">{s.name}</span>
                   </span>
                   <span className="flex shrink-0 items-baseline gap-2 text-sm">
-                    <span className="font-medium text-stone-900 dark:text-stone-100">{s.bookings}</span>
+                    <span className="font-medium text-foreground dark:text-stone-100">{s.bookings}</span>
                     <span className="text-stone-500 dark:text-stone-400">
                       {formatPrice(s.revenue, locale)}
                     </span>
@@ -225,18 +227,18 @@ export function DashboardView({ locale }: { locale: string }) {
 
         <section
           aria-labelledby="staffload-title"
-          className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-[#1a1512]"
+          className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-stone-800 dark:bg-card"
         >
-          <h2 id="staffload-title" className="font-serif text-lg font-semibold text-stone-900 dark:text-stone-50">
+          <h2 id="staffload-title" className="font-serif text-lg font-semibold text-foreground dark:text-stone-50">
             {t("staffLoadTitle")}
           </h2>
           {stats.staffLoad.length === 0 ? (
-            <p className="mt-3 text-sm text-stone-600 dark:text-stone-400">{t("noStaffLoad")}</p>
+            <p className="mt-3 text-sm text-muted-foreground dark:text-stone-400">{t("noStaffLoad")}</p>
           ) : (
             <ul className="mt-4 space-y-3">
               {stats.staffLoad.map((s) => (
                 <li key={s.staffId} className="flex items-center gap-3">
-                  <span className="w-28 shrink-0 truncate text-sm text-stone-900 dark:text-stone-100">
+                  <span className="w-28 shrink-0 truncate text-sm text-foreground dark:text-stone-100">
                     {s.name}
                   </span>
                   <span
@@ -245,11 +247,11 @@ export function DashboardView({ locale }: { locale: string }) {
                     aria-label={`${s.name}: ${s.bookings} ${t("bookingsWord")}`}
                   >
                     <span
-                      className="block h-full rounded-full bg-brand-600"
+                      className="block h-full rounded-full bg-primary"
                       style={{ width: `${(s.bookings / maxLoad) * 100}%` }}
                     />
                   </span>
-                  <span className="w-6 shrink-0 text-right text-sm font-medium text-stone-900 dark:text-stone-100">
+                  <span className="w-6 shrink-0 text-right text-sm font-medium text-foreground dark:text-stone-100">
                     {s.bookings}
                   </span>
                 </li>
@@ -274,11 +276,11 @@ function KpiCard({
   to?: string;
 }) {
   const inner = (
-    <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition-colors hover:border-stone-300 dark:border-stone-800 dark:bg-[#1a1512] dark:hover:border-stone-700">
+    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-border dark:border-stone-800 dark:bg-card dark:hover:border-stone-700">
       <p className="text-xs font-medium uppercase tracking-wide text-stone-500 dark:text-stone-400">{label}</p>
-      <p className="mt-2 font-serif text-2xl font-semibold text-stone-900 dark:text-stone-50">{value}</p>
+      <p className="mt-2 font-serif text-2xl font-semibold text-foreground dark:text-stone-50">{value}</p>
       {children && (
-        <p className="mt-1 text-xs text-stone-600 dark:text-stone-400">{children}</p>
+        <p className="mt-1 text-xs text-muted-foreground dark:text-stone-400">{children}</p>
       )}
     </div>
   );

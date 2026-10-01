@@ -21,20 +21,20 @@ export function AdminPageShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div className="admin-shell mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="admin-page-heading">
         <div>
-          <h1 className="font-serif text-2xl font-semibold text-stone-900 dark:text-stone-50 sm:text-3xl">
+          <p className="eyebrow mb-4">Maryam C Beauté · {locale === "fr" ? "Espace de gestion" : "Studio management"}</p>
+          <h1 className="display-heading text-4xl sm:text-5xl">
             {title}
           </h1>
           {hint && (
-            <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">{hint}</p>
+            <p className="mt-1 text-sm text-muted-foreground dark:text-stone-400">{hint}</p>
           )}
         </div>
         <AdminAccount locale={locale} name={adminName} email={adminEmail} />
       </div>
-      <AdminNav locale={locale} />
-      {children}
+      <div className="admin-workspace"><AdminNav locale={locale} /><div className="admin-content">{children}</div></div>
     </div>
   );
 }

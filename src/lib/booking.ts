@@ -52,6 +52,7 @@ export interface CreateRequestInput {
 }
 
 export interface ConfirmRequestInput {
+  durationMin?: number;
   bookingId: string;
   /** The staff who will perform the service (defaults to the booking's staff) */
   staffId?: string;
@@ -155,6 +156,11 @@ export async function createBookingRequest(
         endUtc,
         status: "PENDING",
         priceTotal: service.price,
+        serviceNameSnapshot: service.name,
+        serviceNameFrSnapshot: service.nameFr ?? service.name,
+        locale: input.locale === "fr" ? "fr" : "en",
+        serviceSlugSnapshot: service.slug,
+        durationMinSnapshot: service.duration,
         note: data.customer.note || null,
       },
     });
@@ -192,10 +198,12 @@ export async function confirmBookingRequest(
   }
 
   const service = current.service;
+  const duration = input.durationMin ?? current.durationMinSnapshot ?? service.duration;
+  if (!Number.isInteger(duration) || duration < 5 || duration > 480) throw new BookingStateError("Set the appointment duration before confirming this consultation request");
   const staffId = input.staffId ?? current.staffId;
   const { year, month, day } = parseDayKey(input.dayKey);
   const startUtc = localToUtc(year, month, day, input.startMinutes);
-  const endUtc = localToUtc(year, month, day, input.startMinutes + service.duration);
+  const endUtc = localToUtc(year, month, day, input.startMinutes + duration + service.bufferMin);
   const now = input.now ?? new Date();
   if (startUtc.getTime() <= now.getTime()) {
     throw new BookingStateError("The requested time must be in the future");
@@ -206,7 +214,7 @@ export async function confirmBookingRequest(
   const updated = await prisma.$executeRaw`
     UPDATE "Booking"
     SET "status" = 'CONFIRMED', "staffId" = ${staffId},
-        "startUtc" = ${startUtc}, "endUtc" = ${endUtc}, "updatedAt" = ${new Date()}
+        "startUtc" = ${startUtc}, "endUtc" = ${endUtc}, "durationMinSnapshot" = ${duration}, "updatedAt" = ${new Date()}
     WHERE "id" = ${input.bookingId}
       AND "status" = 'PENDING'
       AND NOT EXISTS (

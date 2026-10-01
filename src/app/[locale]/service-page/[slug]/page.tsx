@@ -1,11 +1,16 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Link } from "@/i18n/routing";
-import { getServiceBySlug, SERVICES, categoryLabel } from "@/lib/content/services";
-import { BUSINESS } from "@/lib/content/business";
-import { formatDuration } from "@/lib/content/format";
+import { getServiceBySlug, SERVICES, categoryLabel, localizeService } from "@/lib/content/services";
+import { BUSINESS, localizedHours } from "@/lib/content/business";
 import type { Locale } from "@/i18n/routing";
 import type { Metadata } from "next";
+import { prisma } from "@/lib/prisma";
+import { formatPrice } from "@/lib/content/format";
+import type { Service as ContentService } from "@/lib/content/services";
+import { publicServices } from "@/lib/public-content";
+
+export const dynamic = "force-dynamic";
 
 /**
  * Service detail page. The five services that have long-form copy on the live site render
@@ -22,17 +27,14 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const service = getServiceBySlug(slug);
-  if (!service) return {};
+  const record = await prisma.service.findUnique({ where: { slug } });
+  if (!record?.active) return {};
+  const service = { name: locale === "fr" ? record.nameFr ?? record.name : record.name };
   const t = await getTranslations({ locale, namespace: "Meta" });
   return {
     title: t("serviceDetailTitle", { name: service.name }),
-    description: t("serviceDetailDescription", {
-      name: service.name,
-      price: service.priceLabel,
-      duration: formatDuration(service.duration, locale as Locale),
-    }),
-    alternates: { canonical: `/${locale}/service-page/${slug}` },
+    description: t("serviceDetailDescription", { name: service.name }),
+    alternates: { canonical: `/${locale}/service-page/${slug}`, languages: { en: `/en/service-page/${slug}`, fr: `/fr/service-page/${slug}` } },
   };
 }
 
@@ -43,35 +45,54 @@ export default async function ServiceDetailPage({
 }) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
-  const service = getServiceBySlug(slug);
+  const sourceFallback = getServiceBySlug(slug);
+  const loc = locale === "fr" ? "fr" : "en";
+  const fallback = sourceFallback ? localizeService(sourceFallback, loc) : undefined;
+  const record = await prisma.service.findUnique({ where: { slug }, include: { images: { orderBy: { order: "asc" } } } });
+  if (!record?.active) notFound();
+  const service: ContentService | undefined = record
+    ? {
+        ...(fallback ?? { slug, detail: undefined, order: record.order }),
+        detail: undefined,
+        slug: record.slug,
+        name: locale === "fr" ? (record.nameFr ?? record.name) : record.name,
+        category: (record.category === "Hair" || record.category === "Makeup" || record.category === "Aesthetic" || record.category === "Wellness" ? record.category : "Aesthetic") as ContentService["category"],
+        price: record.price,
+        duration: record.duration,
+        priceLabel: record.price > 0 ? formatPrice(record.price, loc) : locale === "fr" ? "Détails confirmés lors de la consultation" : "Details confirmed during consultation",
+        summary: locale === "fr" ? (record.descriptionFr ?? record.description ?? "") : (record.description ?? ""),
+        image: record.imageUrl ?? record.images[0]?.url ?? fallback?.image ?? "/example-pics/hair-look-1.png",
+        order: record.order,
+      }
+    : fallback;
   if (!service) notFound();
 
   const t = await getTranslations({ locale, namespace: "Services" });
   const tSections = await getTranslations({ locale, namespace: "Sections" });
-  const loc = locale as Locale;
+  const typedLocale = locale as Locale;
 
-  const related = SERVICES.filter(
+  const related = (await publicServices(loc)).filter(
     (s) => s.category === service.category && s.slug !== service.slug,
   ).slice(0, 3);
 
   return (
-    <article className="bg-background">
+    <article className="editorial-page service-editorial">
       {/* Hero */}
       <section className="border-b border-border">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <nav className="mb-8 flex items-center gap-2 text-xs text-muted-foreground" aria-label="Breadcrumb">
+          <nav className="mb-8 flex flex-wrap items-center gap-2 text-xs text-muted-foreground" aria-label={locale === "fr" ? "Fil d’Ariane" : "Breadcrumb"}>
             <Link href="/book-online" className="transition-colors hover:text-brand">
               {t("all")}
             </Link>
             <span aria-hidden="true">/</span>
-            <span>{categoryLabel(service.category, loc)}</span>
+            <span>{categoryLabel(service.category, typedLocale)}</span>
             <span aria-hidden="true">/</span>
             <span className="text-foreground">{service.name}</span>
           </nav>
 
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
-              <p className="eyebrow">{categoryLabel(service.category, loc)}</p>
+              <p className="eyebrow">{categoryLabel(service.category, typedLocale)}</p>
               <h1 className="display-heading mt-4 text-4xl sm:text-5xl lg:text-6xl">
                 {service.name}
               </h1>
@@ -88,12 +109,8 @@ export default async function ServiceDetailPage({
                   <p className="mt-1 font-serif text-2xl">{service.priceLabel}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-muted-foreground">
-                    {t("duration")}
-                  </p>
-                  <p className="mt-1 font-serif text-2xl">
-                    {formatDuration(service.duration, loc)}
-                  </p>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">{t("duration")}</p>
+                  <p className="mt-1 text-sm">{service.duration > 0 ? `${service.duration} ${t("min")}` : t("consultationDuration")}</p>
                 </div>
               </div>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -133,6 +150,7 @@ export default async function ServiceDetailPage({
               <h2 className="display-heading text-3xl sm:text-4xl">
                 {t("serviceDescription")}
               </h2>
+              {record.images.length > 0 && <div className="my-8 grid gap-4 sm:grid-cols-2">{record.images.map(image => <img key={image.id} src={image.url} alt={loc === "fr" ? image.altFr : image.altEn} loading="lazy" className="aspect-[4/3] w-full rounded-xl object-cover" />)}</div>}
               {service.detail ? (
                 <div className="mt-8 space-y-6 text-base leading-relaxed text-muted-foreground">
                   {service.detail.paragraphs.map((p, i) => (
@@ -214,9 +232,6 @@ export default async function ServiceDetailPage({
                     {t("price")}
                   </p>
                   <p className="mt-2 font-serif text-3xl">{service.priceLabel}</p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {formatDuration(service.duration, loc)}
-                  </p>
                   <Link
                     href={`/booking?service=${service.slug}`}
                     className="mt-6 flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.03]"
@@ -230,7 +245,7 @@ export default async function ServiceDetailPage({
                     {tSections("hoursLabel")}
                   </p>
                   <ul className="mt-4 space-y-2 text-sm">
-                    {BUSINESS.hours.map((row) => (
+                    {localizedHours(locale === "fr" ? "fr" : "en").map((row) => (
                       <li key={row.days} className="flex justify-between gap-4 text-muted-foreground">
                         <span>{row.days}</span>
                         <span className="text-foreground/80">{row.open}</span>
@@ -257,15 +272,12 @@ export default async function ServiceDetailPage({
                   className="group rounded-2xl border border-border bg-background p-6 transition-colors hover:border-brand"
                 >
                   <p className="text-xs font-semibold uppercase tracking-widest text-brand">
-                    {categoryLabel(s.category, loc)}
+                    {categoryLabel(s.category, typedLocale)}
                   </p>
                   <h3 className="mt-2 font-serif text-lg transition-colors group-hover:text-brand">
                     {s.name}
                   </h3>
                   <p className="mt-2 text-sm text-muted-foreground">{s.priceLabel}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {formatDuration(s.duration, loc)}
-                  </p>
                 </Link>
               ))}
             </div>

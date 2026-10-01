@@ -12,7 +12,19 @@ import {
   scheduleWindowSchema,
   serviceSchema,
   staffSchema,
+  safeImageUrl,
+  packageSchema,
 } from "@/lib/validation";
+
+describe("CMS image and package validation", () => {
+  it("allows configured public image paths and HTTPS image URLs only", () => {
+    for (const value of ["/example-pics/photo.jpg", "https://cdn.example.com/photo.webp"]) expect(safeImageUrl.safeParse(value).success).toBe(true);
+    for (const value of ["/../secret.jpg", "/media/%2e%2e/secret.jpg", "//example.com/x.jpg", "https://user:pass@example.com/x.jpg", "http://example.com/x.jpg", "javascript:alert(1)"]) expect(safeImageUrl.safeParse(value).success).toBe(false);
+  });
+  it("rejects duplicate package relationships", () => {
+    expect(packageSchema.safeParse({ name: "Example", nameFr: "Exemple", price: 0, sessions: 1, serviceIds: ["one", "one"] }).success).toBe(false);
+  });
+});
 
 /**
  * Unit tests for the shared Zod schemas. These are the same schemas the client validates

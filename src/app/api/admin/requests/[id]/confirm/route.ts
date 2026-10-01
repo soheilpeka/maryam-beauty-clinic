@@ -42,7 +42,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
       { status: 400 },
     );
   }
-  const { dayKey, startMinutes, staffId } = parsed.data;
+  const { dayKey, startMinutes, staffId, durationMin } = parsed.data;
 
   const before = await prisma.booking.findUnique({
     where: { id },
@@ -52,11 +52,12 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
     return NextResponse.json({ error: "NOT_FOUND", message: "Request not found." }, { status: 404 });
   }
 
-  const locale = request.cookies.get("locale")?.value === "fr" ? "fr" : "en";
+  const locale = before.locale === "fr" ? "fr" : "en";
 
   try {
     const { booking, alreadyConfirmed } = await confirmBookingRequest(prisma, {
       bookingId: id,
+      durationMin,
       staffId: staffId ?? before.staffId,
       dayKey,
       startMinutes,
@@ -72,12 +73,12 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
     if (!alreadyConfirmed) {
       const token = await signBookingToken({ sub: updated.id, cust: updated.customer.id });
       const manageUrl = `${env.baseUrl}/${locale}/booking/${updated.ref}?t=${token}`;
-      void sendBookingNotifications({
+      await sendBookingNotifications({
         ref: updated.ref,
         customerName: updated.customer.name,
         customerEmail: updated.customer.email,
         customerPhone: updated.customer.phone,
-        serviceName: updated.service.name,
+        serviceName: (before.locale === "fr" ? updated.serviceNameFrSnapshot : updated.serviceNameSnapshot) ?? updated.serviceNameSnapshot ?? updated.service.name,
         staffName: updated.staff.name,
         startUtc: updated.startUtc,
         endUtc: updated.endUtc,
@@ -139,7 +140,10 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
       return NextResponse.json({ error: "NOT_FOUND", message: "Request not found." }, { status: 404 });
     }
     if (e instanceof BookingStateError) {
-      return NextResponse.json({ error: "CONFLICT", message: e.message }, { status: 409 });
+      return NextResponse.json(
+        { error: "CONFLICT", message: "This request can no longer be confirmed in its current state." },
+        { status: 409 },
+      );
     }
     console.error("admin confirm error", e);
     return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });

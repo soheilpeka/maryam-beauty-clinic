@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {
   createBookingRequest,
@@ -7,11 +7,12 @@ import {
 import { bookingRequestSchema, flattenZodErrors } from "@/lib/validation";
 import { rateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
 import { signBookingToken } from "@/lib/tokens";
-import { notifyAdminNewRequest } from "@/lib/notifications";
+import { sendRequestReceipt, notifyAdminNewRequest } from "@/lib/notifications";
 import { env } from "@/lib/env";
 import { formatLongDate, formatTime, toLocalMinutes } from "@/lib/datetime";
 
 export const dynamic = "force-dynamic";
+import { PUBLIC_STAFF_WHERE, isPublicStaff } from "@/lib/public-staff";
 
 // Tight limit on request submission to protect against abuse and double-submits. The
 // per-minute budget is overridable via env (see env.bookingRateLimitPerMinute).
@@ -54,7 +55,7 @@ export async function POST(request: NextRequest) {
   let staffId = data.staffId;
   if (staffId === "any") {
     const first = await prisma.staff.findFirst({
-      where: { active: true, services: { some: { serviceId: service.id } } },
+      where: { ...PUBLIC_STAFF_WHERE, services: { some: { serviceId: service.id } } },
       orderBy: { name: "asc" },
     });
     if (!first) {
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
     staffId = first.id;
   }
   const staff = await prisma.staff.findUnique({ where: { id: staffId } });
-  if (!staff || !staff.active) {
+  if (!staff || !isPublicStaff(staff)) {
     return NextResponse.json({ error: "NOT_FOUND", message: "Specialist unavailable" }, { status: 404 });
   }
   const qualified = await prisma.staffService.findUnique({
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "NOT_FOUND", message: "Specialist unavailable" }, { status: 404 });
   }
 
-  const locale = request.cookies.get("locale")?.value === "fr" ? "fr" : "en";
+  const locale = data.locale ?? (request.cookies.get("NEXT_LOCALE")?.value === "fr" ? "fr" : "en");
 
   try {
     const result = await createBookingRequest(prisma, {
@@ -94,17 +95,18 @@ export async function POST(request: NextRequest) {
     const manageUrl = `${env.baseUrl}/${locale}/booking/${result.booking.ref}?t=${token}`;
     const whenLabel = `${formatLongDate(result.booking.startUtc, locale)} ${formatTime(result.booking.startUtc, locale)}`;
 
+    await sendRequestReceipt({ customerName: result.customer.name, customerEmail: result.customer.email, ref: result.booking.ref, manageUrl, locale }).catch(() => console.error("request receipt delivery failed"));
     // Alert the salon immediately; failures must not fail the request itself.
-    void notifyAdminNewRequest({
+    await notifyAdminNewRequest({
       ref: result.booking.ref,
       customerName: result.customer.name,
-      serviceName: service.name,
+      serviceName: result.booking.serviceNameSnapshot ?? service.name,
       staffName: staff.name,
       whenLabel,
       customerEmail: result.customer.email,
       customerPhone: result.customer.phone,
       note: result.booking.note,
-      adminEmail: env.adminInitialEmail,
+      adminEmail: env.notificationAdminEmail,
       adminUrl: `${env.baseUrl}/${locale}/admin/requests`,
       locale,
     }).catch((e) => console.error("admin notification failed", e));
@@ -113,12 +115,12 @@ export async function POST(request: NextRequest) {
       ok: true,
       booking: {
         ref: result.booking.ref,
-        service: service.name,
+        service: locale === "fr" ? service.nameFr ?? service.name : service.name,
         staff: staff.name,
         startUtc: result.booking.startUtc.toISOString(),
         endUtc: result.booking.endUtc.toISOString(),
         priceTotal: result.booking.priceTotal,
-        durationMin: service.duration,
+        durationMin: result.booking.durationMinSnapshot ?? service.duration,
         whenLabel,
         startMinutes: toLocalMinutes(result.booking.startUtc),
         status: result.booking.status,

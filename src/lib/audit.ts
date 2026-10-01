@@ -2,7 +2,7 @@
  * Audit logging for admin actions.
  *
  * Every state-changing /api/admin route writes one record so the salon has a
- * tamper-evident trail of who did what, when, and from where. Rows are append-only;
+ * application-level trail of who did what, when, and from where. Rows are append-only;
  * nothing in the dashboard deletes them (the only removal path is deleting the admin,
  * which nulls adminId but keeps the record).
  *

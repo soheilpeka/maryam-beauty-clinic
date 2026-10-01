@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   staffSchema,
   scheduleSchema,
@@ -51,6 +51,8 @@ type StaffFormState = {
   name: string;
   role: string;
   bio: string;
+  bioFr: string;
+  order: string;
   avatarUrl: string;
   active: boolean;
   serviceIds: string[];
@@ -100,6 +102,8 @@ function emptyStaffForm(): StaffFormState {
     name: "",
     role: "",
     bio: "",
+    bioFr: "",
+    order: "0",
     avatarUrl: "",
     active: true,
     serviceIds: [],
@@ -116,6 +120,8 @@ function staffFormFromExisting(staff: StaffView): StaffFormState {
     name: staff.name,
     role: staff.role,
     bio: staff.bio ?? "",
+    bioFr: staff.bioFr ?? "",
+    order: String(staff.order),
     avatarUrl: staff.avatarUrl ?? "",
     active: staff.active,
     serviceIds: [...staff.serviceIds],
@@ -143,6 +149,13 @@ export function StaffView({ locale }: { locale: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dialog, setDialog] = useState<DialogState>(null);
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [sort, setSort] = useState("order");
+  const [page, setPage] = useState(1);
+  const visible = (staff ?? []).filter(member => (filter === "all" || member.active === (filter === "active")) && `${member.name} ${member.role}`.toLowerCase().includes(query.toLowerCase())).sort((a, b) => sort === "name" ? a.name.localeCompare(b.name) : a.order - b.order);
+  const pages = Math.max(1, Math.ceil(visible.length / 12));
+  const currentPage = Math.min(page, pages);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -176,8 +189,10 @@ export function StaffView({ locale }: { locale: string }) {
     const payload = {
       name: state.name.trim(),
       role: state.role.trim() || undefined,
-      bio: state.bio.trim() || undefined,
-      avatarUrl: state.avatarUrl.trim() || undefined,
+      bio: state.bio.trim(),
+      bioFr: state.bioFr.trim(),
+      order: Number(state.order),
+      avatarUrl: state.avatarUrl.trim(),
       active: state.active,
       serviceIds: state.serviceIds,
     };
@@ -356,7 +371,7 @@ export function StaffView({ locale }: { locale: string }) {
         {[0, 1].map((i) => (
           <div
             key={i}
-            className="animate-pulse rounded-2xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-[#1a1512]"
+            className="animate-pulse rounded-2xl border border-border bg-card p-5 dark:border-stone-800 dark:bg-card"
           >
             <div className="h-4 w-1/4 rounded bg-stone-200 dark:bg-stone-800" />
             <div className="mt-3 h-3 w-2/3 rounded bg-stone-200 dark:bg-stone-800" />
@@ -384,23 +399,24 @@ export function StaffView({ locale }: { locale: string }) {
 
   return (
     <div>
+      <div className="mb-6 flex flex-wrap gap-3"><label className="flex-1 text-sm">{locale === "fr" ? "Rechercher" : "Search"}<input type="search" value={query} onChange={e => { setQuery(e.target.value); setPage(1); }} className="mt-1 w-full rounded-xl border border-border bg-card p-3" /></label><label className="text-sm">{locale === "fr" ? "Statut" : "Status"}<select value={filter} onChange={e => { setFilter(e.target.value); setPage(1); }} className="mt-1 block rounded-xl border border-border bg-card p-3"><option value="all">{locale === "fr" ? "Tous" : "All"}</option><option value="active">{locale === "fr" ? "Actifs" : "Active"}</option><option value="inactive">{locale === "fr" ? "Inactifs" : "Inactive"}</option></select></label><label className="text-sm">{locale === "fr" ? "Trier" : "Sort"}<select value={sort} onChange={e => setSort(e.target.value)} className="mt-1 block rounded-xl border border-border bg-card p-3"><option value="order">{t("displayOrder")}</option><option value="name">{t("name")}</option></select></label></div>
       <div className="mb-4 flex justify-end">
         <button
           type="button"
           onClick={() => setDialog(emptyStaffForm())}
-          className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
         >
           {t("addStaff")}
         </button>
       </div>
 
-      {staff && staff.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-stone-300 bg-white p-10 text-center dark:border-stone-700 dark:bg-[#1a1512]">
-          <p className="text-sm text-stone-600 dark:text-stone-400">{t("emptyStaff")}</p>
+      {visible.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center dark:border-stone-700 dark:bg-card">
+          <p className="text-sm text-muted-foreground dark:text-stone-400">{t("emptyStaff")}</p>
         </div>
       ) : (
         <ul className="space-y-3">
-          {staff?.map((member) => (
+          {visible.slice((currentPage - 1) * 12, currentPage * 12).map((member) => (
             <StaffCard
               key={member.id}
               member={member}
@@ -443,6 +459,7 @@ export function StaffView({ locale }: { locale: string }) {
         </ul>
       )}
 
+      {pages > 1 && <div className="my-6 flex justify-center gap-4"><button type="button" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>{locale === "fr" ? "Précédent" : "Previous"}</button><span>{currentPage} / {pages}</span><button type="button" disabled={currentPage === pages} onClick={() => setPage(currentPage + 1)}>{locale === "fr" ? "Suivant" : "Next"}</button></div>}
       {dialog && "serviceIds" in dialog && (
         <StaffFormDialog
           state={dialog}
@@ -494,14 +511,14 @@ function StaffCard({
   onDelete: () => void;
 }) {
   const t = useTranslations("Admin");
-  const serviceName = (id: string) => services.find((s) => s.id === id)?.name ?? "";
+  const serviceName = (id: string) => { const service = services.find(s => s.id === id); return (locale === "fr" ? service?.nameFr ?? service?.name : service?.name) ?? ""; };
 
   return (
-    <li className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm dark:border-stone-800 dark:bg-[#1a1512]">
+    <li className="rounded-2xl border border-border bg-card p-5 shadow-sm dark:border-stone-800 dark:bg-card">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0">
+        <div className="min-w-0 max-w-full flex-1 basis-80">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="font-serif text-lg font-semibold text-stone-900 dark:text-stone-50">
+            <h3 className="font-serif text-lg font-semibold text-foreground dark:text-stone-50">
               {member.name}
             </h3>
             <span
@@ -509,7 +526,7 @@ function StaffCard({
                 "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold " +
                 (member.active
                   ? "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
-                  : "border-stone-300 bg-stone-100 text-stone-600 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400")
+                  : "border-border bg-stone-100 text-muted-foreground dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400")
               }
             >
               {member.active ? t("active") : t("inactive")}
@@ -517,14 +534,14 @@ function StaffCard({
             <span className="text-sm text-stone-500 dark:text-stone-400">{member.role}</span>
           </div>
           {member.bio && (
-            <p className="mt-1 max-w-2xl text-sm text-stone-600 dark:text-stone-400">{member.bio}</p>
+            <p className="mt-1 max-w-2xl text-sm text-muted-foreground dark:text-stone-400">{locale === "fr" ? member.bioFr ?? member.bio : member.bio}</p>
           )}
           {member.serviceIds.length > 0 ? (
             <div className="mt-2 flex flex-wrap gap-1.5">
               {member.serviceIds.map((id) => (
                 <span
                   key={id}
-                  className="rounded-full border border-stone-200 bg-stone-50 px-2.5 py-0.5 text-xs text-stone-700 dark:border-stone-700 dark:bg-stone-800/60 dark:text-stone-300"
+                  className="rounded-full border border-border bg-background px-2.5 py-0.5 text-xs text-foreground dark:border-stone-700 dark:bg-stone-800/60 dark:text-stone-300"
                 >
                   {serviceName(id)}
                 </span>
@@ -538,10 +555,10 @@ function StaffCard({
             <dl className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 border-t border-stone-100 pt-3 text-sm sm:grid-cols-2 dark:border-stone-800">
               {member.schedule.map((w) => (
                 <div key={w.id}>
-                  <dt className="inline font-medium text-stone-600 dark:text-stone-400">
+                  <dt className="inline font-medium text-muted-foreground dark:text-stone-400">
                     {t(DAY_KEYS[w.dayOfWeek])}:{" "}
                   </dt>
-                  <dd className="inline text-stone-900 dark:text-stone-100">
+                  <dd className="inline text-foreground dark:text-stone-100">
                     {minutesToInputValue(w.startTime)}&ndash;{minutesToInputValue(w.endTime)}
                     {w.breaks.length > 0 &&
                       ` (${t("breakLabel")} ${minutesToInputValue(w.breaks[0].startTime)}-${minutesToInputValue(
@@ -565,7 +582,7 @@ function StaffCard({
               {member.daysOff.map((d) => (
                 <span
                   key={d.id}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-stone-50 px-2.5 py-0.5 text-xs text-stone-700 dark:border-stone-700 dark:bg-stone-800/60 dark:text-stone-300"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-0.5 text-xs text-foreground dark:border-stone-700 dark:bg-stone-800/60 dark:text-stone-300"
                 >
                   {dayOffLabel(d, locale, t)}
                   <button
@@ -584,7 +601,7 @@ function StaffCard({
             {member.bookingCount} {t("bookingsWord")}
           </p>
         </div>
-        <div className="flex shrink-0 flex-wrap gap-2">
+        <div className="flex max-w-full flex-wrap gap-2">
           <button type="button" onClick={onEdit} className={actionClass}>
             {t("edit")}
           </button>
@@ -621,9 +638,9 @@ function dayOffLabel(d: DayOffView, locale: string, t: (k: string) => string): s
 }
 
 const actionClass =
-  "rounded-lg border border-stone-300 px-3.5 py-2 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800";
+  "rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-stone-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800";
 const inputClass =
-  "mt-1 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none dark:border-stone-700 dark:bg-[#211b16]";
+  "mt-1 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-stone-700 dark:bg-background";
 function StaffFormDialog({
   state,
   services,
@@ -638,6 +655,7 @@ function StaffFormDialog({
   onSubmit: (s: StaffFormState) => void;
 }) {
   const t = useTranslations("Admin");
+  const locale = useLocale();
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -652,7 +670,7 @@ function StaffFormDialog({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="staff-form-title"
-      className="w-full max-w-lg rounded-2xl border border-stone-200 bg-white p-6 text-stone-900 shadow-xl dark:border-stone-800 dark:bg-[#1a1512] dark:text-stone-50"
+      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-stone-800 dark:bg-card dark:text-stone-50"
     >
       <h2 id="staff-form-title" className="font-serif text-xl font-semibold">
         {state.mode === "create" ? t("addStaff") : t("editStaff")}
@@ -671,7 +689,7 @@ function StaffFormDialog({
       >
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="staff-name" className="block text-sm font-medium text-stone-700 dark:text-stone-300">
+            <label htmlFor="staff-name" className="block text-sm font-medium text-foreground dark:text-stone-300">
               {t("name")}
             </label>
             <input
@@ -690,7 +708,7 @@ function StaffFormDialog({
             )}
           </div>
           <div>
-            <label htmlFor="staff-role" className="block text-sm font-medium text-stone-700 dark:text-stone-300">
+            <label htmlFor="staff-role" className="block text-sm font-medium text-foreground dark:text-stone-300">
               {t("role")}
             </label>
             <input
@@ -704,7 +722,7 @@ function StaffFormDialog({
           </div>
         </div>
         <div>
-          <label htmlFor="staff-bio" className="block text-sm font-medium text-stone-700 dark:text-stone-300">
+          <label htmlFor="staff-bio" className="block text-sm font-medium text-foreground dark:text-stone-300">
             {t("bio")}
           </label>
           <textarea
@@ -717,12 +735,12 @@ function StaffFormDialog({
           />
         </div>
         <div>
-          <label htmlFor="staff-avatar" className="block text-sm font-medium text-stone-700 dark:text-stone-300">
+          <label htmlFor="staff-avatar" className="block text-sm font-medium text-foreground dark:text-stone-300">
             {t("avatarUrl")}
           </label>
           <input
             id="staff-avatar"
-            type="url"
+            type="text"
             value={state.avatarUrl}
             onChange={(e) => onChange({ avatarUrl: e.target.value })}
             className={inputClass}
@@ -733,17 +751,20 @@ function StaffFormDialog({
             </p>
           )}
         </div>
+          <label className="block text-sm">{t("descriptionFr")}<textarea value={state.bioFr} onChange={e => onChange({ bioFr: e.target.value })} className={inputClass} rows={3} /></label>
+          <label className="mt-4 block text-sm">{t("displayOrder")}<input type="number" min="0" value={state.order} onChange={e => onChange({ order: e.target.value })} className={inputClass} /></label>
+          {state.avatarUrl && <img src={state.avatarUrl} alt={state.name} className="my-4 h-36 max-w-full rounded-xl object-contain" />}
         <fieldset>
-          <legend className="text-sm font-medium text-stone-700 dark:text-stone-300">
+          <legend className="text-sm font-medium text-foreground dark:text-stone-300">
             {t("servicesPerformed")}
           </legend>
-          <div className="mt-2 grid max-h-48 grid-cols-1 gap-1.5 overflow-auto rounded-lg border border-stone-200 p-3 sm:grid-cols-2 dark:border-stone-700">
+          <div className="mt-2 grid max-h-48 grid-cols-1 gap-1.5 overflow-auto rounded-lg border border-border p-3 sm:grid-cols-2 dark:border-stone-700">
             {services.map((service) => {
               const checked = state.serviceIds.includes(service.id);
               return (
                 <label
                   key={service.id}
-                  className="flex items-center gap-2 text-sm text-stone-700 dark:text-stone-300"
+                  className="flex items-center gap-2 text-sm text-foreground dark:text-stone-300"
                 >
                   <input
                     type="checkbox"
@@ -755,20 +776,20 @@ function StaffFormDialog({
                           : state.serviceIds.filter((id) => id !== service.id),
                       })
                     }
-                    className="h-4 w-4 rounded border-stone-300 text-brand-600 focus:ring-brand-500"
+                    className="h-4 w-4 rounded border-border text-brand focus:ring-brand-500"
                   />
-                  {service.name}
+                  {locale === "fr" ? service.nameFr ?? service.name : service.name}
                 </label>
               );
             })}
           </div>
         </fieldset>
-        <label className="flex items-center gap-2 text-sm font-medium text-stone-700 dark:text-stone-300">
+        <label className="flex items-center gap-2 text-sm font-medium text-foreground dark:text-stone-300">
           <input
             type="checkbox"
             checked={state.active}
             onChange={(e) => onChange({ active: e.target.checked })}
-            className="h-4 w-4 rounded border-stone-300 text-brand-600 focus:ring-brand-500"
+            className="h-4 w-4 rounded border-border text-brand focus:ring-brand-500"
           />
           {t("activeStaff")}
         </label>
@@ -777,14 +798,14 @@ function StaffFormDialog({
             type="button"
             onClick={onClose}
             disabled={state.submitting}
-            className="rounded-lg border border-stone-300 px-3.5 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
           >
             {t("cancel")}
           </button>
           <button
             type="submit"
             disabled={state.submitting}
-            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {state.submitting ? t("saving") : t("save")}
           </button>
@@ -825,12 +846,12 @@ function ScheduleDialog({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="schedule-title"
-      className="w-full max-w-2xl rounded-2xl border border-stone-200 bg-white p-6 text-stone-900 shadow-xl dark:border-stone-800 dark:bg-[#1a1512] dark:text-stone-50"
+      className="w-full max-w-2xl rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-stone-800 dark:bg-card dark:text-stone-50"
     >
       <h2 id="schedule-title" className="font-serif text-xl font-semibold">
         {t("scheduleTitle")}
       </h2>
-      <p className="mt-1.5 text-sm text-stone-600 dark:text-stone-400">
+      <p className="mt-1.5 text-sm text-muted-foreground dark:text-stone-400">
         {t("scheduleHint", { name: state.staffName })}
       </p>
       {state.error && (
@@ -920,7 +941,7 @@ function ScheduleDialog({
                       onClick={() =>
                         onChange({ windows: state.windows.filter((x) => x.id !== w.id) })
                       }
-                      className="rounded-lg border border-stone-300 px-2.5 py-2 text-sm text-stone-600 hover:bg-stone-100 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+                      className="rounded-lg border border-border px-2.5 py-2 text-sm text-muted-foreground hover:bg-stone-100 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
                       aria-label={t("removeWindow")}
                     >
                       &times;
@@ -944,7 +965,7 @@ function ScheduleDialog({
                     ],
                   })
                 }
-                className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+                className="text-sm font-medium text-brand hover:text-brand-700 dark:text-brand"
               >
                 + {t("addWindow")}
               </button>
@@ -956,14 +977,14 @@ function ScheduleDialog({
             type="button"
             onClick={onClose}
             disabled={state.submitting}
-            className="rounded-lg border border-stone-300 px-3.5 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
           >
             {t("cancel")}
           </button>
           <button
             type="submit"
             disabled={state.submitting}
-            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {state.submitting ? t("saving") : t("save")}
           </button>
@@ -998,12 +1019,12 @@ function DayOffDialog({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="dayoff-title"
-      className="w-full max-w-lg rounded-2xl border border-stone-200 bg-white p-6 text-stone-900 shadow-xl dark:border-stone-800 dark:bg-[#1a1512] dark:text-stone-50"
+      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-stone-800 dark:bg-card dark:text-stone-50"
     >
       <h2 id="dayoff-title" className="font-serif text-xl font-semibold">
         {t("addDayOffTitle")}
       </h2>
-      <p className="mt-1.5 text-sm text-stone-600 dark:text-stone-400">
+      <p className="mt-1.5 text-sm text-muted-foreground dark:text-stone-400">
         {t("addDayOffHint", { name: state.staffName })}
       </p>
       {state.errors.form && (
@@ -1019,7 +1040,7 @@ function DayOffDialog({
         }}
       >
         <div>
-          <label htmlFor="dayoff-date" className="block text-sm font-medium text-stone-700 dark:text-stone-300">
+          <label htmlFor="dayoff-date" className="block text-sm font-medium text-foreground dark:text-stone-300">
             {t("dateLabel")}
           </label>
           <input
@@ -1040,7 +1061,7 @@ function DayOffDialog({
           <div>
             <label
               htmlFor="dayoff-start"
-              className="block text-sm font-medium text-stone-700 dark:text-stone-300"
+              className="block text-sm font-medium text-foreground dark:text-stone-300"
             >
               {t("start")} <span className="font-normal text-stone-500">({t("optional")})</span>
             </label>
@@ -1055,7 +1076,7 @@ function DayOffDialog({
           <div>
             <label
               htmlFor="dayoff-end"
-              className="block text-sm font-medium text-stone-700 dark:text-stone-300"
+              className="block text-sm font-medium text-foreground dark:text-stone-300"
             >
               {t("end")} <span className="font-normal text-stone-500">({t("optional")})</span>
             </label>
@@ -1074,7 +1095,7 @@ function DayOffDialog({
           </p>
         )}
         <div>
-          <label htmlFor="dayoff-note" className="block text-sm font-medium text-stone-700 dark:text-stone-300">
+          <label htmlFor="dayoff-note" className="block text-sm font-medium text-foreground dark:text-stone-300">
             {t("note")} <span className="font-normal text-stone-500">({t("optional")})</span>
           </label>
           <input
@@ -1091,14 +1112,14 @@ function DayOffDialog({
             type="button"
             onClick={onClose}
             disabled={state.submitting}
-            className="rounded-lg border border-stone-300 px-3.5 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
           >
             {t("cancel")}
           </button>
           <button
             type="submit"
             disabled={state.submitting}
-            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {state.submitting ? t("saving") : t("save")}
           </button>
@@ -1132,12 +1153,12 @@ function DeleteStaffDialog({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="staff-delete-title"
-      className="w-full max-w-lg rounded-2xl border border-stone-200 bg-white p-6 text-stone-900 shadow-xl dark:border-stone-800 dark:bg-[#1a1512] dark:text-stone-50"
+      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-stone-800 dark:bg-card dark:text-stone-50"
     >
       <h2 id="staff-delete-title" className="font-serif text-xl font-semibold">
         {t("deleteStaffTitle")}
       </h2>
-      <p className="mt-1.5 text-sm text-stone-600 dark:text-stone-400">
+      <p className="mt-1.5 text-sm text-muted-foreground dark:text-stone-400">
         {t("deleteStaffHint", { name: state.staffName })}
       </p>
       {state.error && (
@@ -1153,7 +1174,7 @@ function DeleteStaffDialog({
           type="button"
           onClick={onClose}
           disabled={state.submitting}
-          className="rounded-lg border border-stone-300 px-3.5 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+          className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
         >
           {t("cancel")}
         </button>

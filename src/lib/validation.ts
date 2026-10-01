@@ -1,7 +1,10 @@
 import { z } from "zod";
+import { isSafeImageUrl, MEDIA_POLICY } from "@/lib/media";
 
 /** Phone: accept digits, spaces, +, -, parentheses; must contain 7+ digits. */
 const phoneRegex = /^[+]?[\d\s()-]{7,}$/;
+
+const imageUrlValue = z.string().trim().max(500, { message: "validation.url.max" }).refine(isSafeImageUrl, { message: "validation.url.invalid" });
 
 export const customerSchema = z.object({
   name: z
@@ -23,8 +26,16 @@ export const customerSchema = z.object({
 
 export type CustomerInput = z.infer<typeof customerSchema>;
 
+export const contactSchema = z.object({
+  name: z.string().trim().min(2, { message: "validation.name.min" }).max(80, { message: "validation.name.max" }),
+  email: z.string().trim().toLowerCase().email({ message: "validation.email.invalid" }),
+  message: z.string().trim().min(10, { message: "validation.message.min" }).max(2000, { message: "validation.message.max" }),
+  locale: z.enum(["en", "fr"]).default("en"),
+}).strict();
+
 /** Public request submission: a preferred date + preferred time, no computed slots. */
 export const bookingRequestSchema = z.object({
+  locale: z.enum(["en", "fr"]).optional(),
   serviceId: z.string().min(1, { message: "validation.service.required" }),
   staffId: z.string().min(1, { message: "validation.staff.required" }),
   dayKey: z
@@ -38,6 +49,7 @@ export type BookingRequestInput = z.infer<typeof bookingRequestSchema>;
 
 /** Admin-side time adjust when confirming a request. */
 export const confirmRequestSchema = z.object({
+  durationMin: z.number().int().min(5).max(480).optional(),
   dayKey: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "validation.date.invalid" }),
@@ -78,12 +90,14 @@ export const serviceSchema = z.object({
     .trim()
     .min(2, { message: "validation.name.min" })
     .max(80, { message: "validation.name.max" }),
+  nameFr: z.string().trim().min(2, { message: "validation.name.min" }).max(80, { message: "validation.name.max" }).optional(),
   description: z
     .string()
     .trim()
     .max(500, { message: "validation.note.max" })
     .optional()
     .or(z.literal("")),
+  descriptionFr: z.string().trim().max(1000, { message: "validation.description.max" }).optional().or(z.literal("")),
   price: z
     .number()
     .int()
@@ -92,8 +106,8 @@ export const serviceSchema = z.object({
   duration: z
     .number()
     .int()
-    .min(5, { message: "validation.duration.invalid" })
-    .max(480, { message: "validation.duration.invalid" }),
+    .refine((value) => value === 0 || value >= 5, { message: "validation.duration.invalid" })
+    .refine((value) => value <= 480, { message: "validation.duration.invalid" }),
   bufferMin: z
     .number()
     .int()
@@ -105,8 +119,15 @@ export const serviceSchema = z.object({
     .trim()
     .max(40, { message: "validation.category.max" })
     .optional(),
+  imageUrl: imageUrlValue.optional().or(z.literal("")),
+  images: z.array(z.object({
+    url: imageUrlValue.refine(Boolean, { message: "validation.url.invalid" }),
+    altEn: z.string().trim().min(1).max(160),
+    altFr: z.string().trim().min(1).max(160),
+  }).strict()).max(8).optional(),
   active: z.boolean().optional(),
-});
+  order: z.number().int().min(0).max(100_000).optional(),
+}).strict();
 export type ServiceInput = z.infer<typeof serviceSchema>;
 
 /** Admin: create/update staff. serviceIds replaces the set of services they can perform. */
@@ -123,15 +144,12 @@ export const staffSchema = z.object({
     .max(500, { message: "validation.note.max" })
     .optional()
     .or(z.literal("")),
-  avatarUrl: z
-    .string()
-    .trim()
-    .url({ message: "validation.url.invalid" })
-    .optional()
-    .or(z.literal("")),
+  bioFr: z.string().trim().max(1000, { message: "validation.description.max" }).optional().or(z.literal("")),
+  avatarUrl: imageUrlValue.optional().or(z.literal("")),
   active: z.boolean().optional(),
+  order: z.number().int().min(0).max(100_000).optional(),
   serviceIds: z.array(z.string().min(1)).max(64).optional(),
-});
+}).strict();
 export type StaffInput = z.infer<typeof staffSchema>;
 
 const minutesField = z.number().int().min(0).max(1439);
@@ -195,3 +213,198 @@ export const dayOffSchema = z
     }
   });
 export type DayOffInput = z.infer<typeof dayOffSchema>;
+
+/* ============================================================
+ * Store schemas (e-commerce extension). The public checkout and the admin product CRUD
+ * each validate with one of these before touching the DB, and flattenZodErrors turns
+ * failures into {field: messageKey} for i18n - same pattern as the booking schemas above.
+ * ============================================================ */
+
+/** Admin: create/update a product. Price is integer cents, stock is units on hand. */
+export const safeImageUrl = z
+  .string()
+  .trim()
+  .max(500, { message: "validation.url.max" })
+  .refine(isSafeImageUrl, { message: "validation.url.invalid" });
+
+export const productImageSchema = z.object({
+  url: safeImageUrl.refine(Boolean, { message: "validation.url.invalid" }),
+  altEn: z.string().trim().min(1, { message: "validation.imageAlt.required" }).max(160),
+  altFr: z.string().trim().min(1, { message: "validation.imageAlt.required" }).max(160),
+}).strict();
+
+const productObjectSchema = z.object({
+  sku: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .regex(/^[A-Z0-9][A-Z0-9._-]{1,39}$/, { message: "validation.sku.invalid" }),
+  name: z
+    .string()
+    .trim()
+    .min(2, { message: "validation.name.min" })
+    .max(80, { message: "validation.name.max" }),
+  nameFr: z
+    .string()
+    .trim()
+    .min(2, { message: "validation.name.min" })
+    .max(80, { message: "validation.name.max" }),
+  description: z
+    .string()
+    .trim()
+    .max(1000, { message: "validation.description.max" })
+    .optional()
+    .or(z.literal("")),
+  descriptionFr: z
+    .string()
+    .trim()
+    .max(1000, { message: "validation.description.max" })
+    .optional()
+    .or(z.literal("")),
+  price: z
+    .number()
+    .int()
+    .min(0, { message: "validation.price.invalid" })
+    .max(1_000_000, { message: "validation.price.invalid" }),
+  compareAtPrice: z
+    .number()
+    .int()
+    .min(0, { message: "validation.price.invalid" })
+    .max(1_000_000, { message: "validation.price.invalid" })
+    .optional(),
+  salePrice: z.number().int().min(0, { message: "validation.price.invalid" }).max(1_000_000, { message: "validation.price.invalid" }).nullable().optional(),
+  category: z
+    .string()
+    .trim()
+    .max(40, { message: "validation.category.max" })
+    .optional(),
+  imageUrl: safeImageUrl.optional().or(z.literal("")),
+  images: z.array(productImageSchema).max(8, { message: "validation.images.max" }).optional(),
+  stock: z
+    .number()
+    .int()
+    .min(0, { message: "validation.stock.invalid" })
+    .max(1_000_000, { message: "validation.stock.invalid" })
+    .optional(),
+  active: z.boolean().optional(),
+  featured: z.boolean().optional(),
+  order: z.number().int().min(0).max(100_000).optional(),
+}).strict();
+
+function validateCompareAt(
+  product: { price?: number; compareAtPrice?: number; salePrice?: number | null },
+  ctx: z.RefinementCtx,
+) {
+  if (
+    product.price !== undefined &&
+    product.compareAtPrice !== undefined &&
+    product.compareAtPrice <= product.price
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["compareAtPrice"],
+      message: "validation.compareAtPrice.invalid",
+    });
+  }
+  if (product.price !== undefined && product.salePrice != null && product.salePrice > 0 && product.salePrice >= product.price) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["salePrice"], message: "validation.salePrice.invalid" });
+  }
+}
+
+export const productSchema = productObjectSchema.superRefine(validateCompareAt);
+export const productPatchSchema = productObjectSchema.partial().superRefine(validateCompareAt);
+export type ProductInput = z.infer<typeof productSchema>;
+
+const localizedImageSchema = z.object({
+  url: safeImageUrl.refine(Boolean, { message: "validation.url.invalid" }),
+  altEn: z.string().trim().min(1, { message: "validation.imageAlt.required" }).max(160),
+  altFr: z.string().trim().min(1, { message: "validation.imageAlt.required" }).max(160),
+}).strict();
+
+export const packageSchema = z.object({
+  name: z.string().trim().min(2, { message: "validation.name.min" }).max(80),
+  nameFr: z.string().trim().min(2, { message: "validation.name.min" }).max(80),
+  description: z.string().trim().max(1000, { message: "validation.description.max" }).optional().or(z.literal("")),
+  descriptionFr: z.string().trim().max(1000, { message: "validation.description.max" }).optional().or(z.literal("")),
+  price: z.number().int().min(0, { message: "validation.price.invalid" }).max(1_000_000),
+  serviceIds: z.array(z.string().min(1)).min(1, { message: "validation.service.required" }).max(64).refine(ids => new Set(ids).size === ids.length, { message: "validation.service.required" }),
+  sessions: z.number().int().min(1).max(100),
+  validityDays: z.number().int().min(1).max(3650).nullable().optional(),
+  imageUrl: safeImageUrl.optional().or(z.literal("")),
+  images: z.array(localizedImageSchema).max(8, { message: "validation.images.max" }).optional(),
+  active: z.boolean().optional(),
+  order: z.number().int().min(0).max(100_000).optional(),
+  badge: z.string().trim().max(40).optional().or(z.literal("")),
+}).strict();
+export const packagePatchSchema = packageSchema.partial();
+export type PackageInput = z.infer<typeof packageSchema>;
+
+export const galleryItemSchema = z.object({
+  imageUrl: safeImageUrl.refine(Boolean, { message: "validation.url.invalid" }),
+  altEn: z.string().trim().min(1, { message: "validation.imageAlt.required" }).max(160),
+  altFr: z.string().trim().min(1, { message: "validation.imageAlt.required" }).max(160),
+  captionEn: z.string().trim().max(300).optional().or(z.literal("")),
+  captionFr: z.string().trim().max(300).optional().or(z.literal("")),
+  category: z.string().trim().min(1).max(40),
+  active: z.boolean().optional(),
+  order: z.number().int().min(0).max(100_000).optional(),
+  mimeType: z.enum(MEDIA_POLICY.mimeTypes).optional(),
+  sizeBytes: z.number().int().positive().max(MEDIA_POLICY.maxBytes, { message: "validation.imageSize.invalid" }).optional(),
+}).strict();
+export const galleryItemPatchSchema = galleryItemSchema.partial();
+export type GalleryItemInput = z.infer<typeof galleryItemSchema>;
+
+/** One line submitted at checkout. Only slug + quantity are trusted; price is re-read. */
+export const checkoutLineSchema = z.object({
+  slug: z.string().trim().min(1, { message: "validation.product.required" }),
+  quantity: z.number().int().min(1, { message: "validation.quantity.invalid" }).max(99, { message: "validation.quantity.invalid" }),
+}).strict();
+
+export const cartQuoteSchema = z.object({
+  locale: z.enum(["en", "fr"]),
+  lines: z.array(checkoutLineSchema).min(1, { message: "validation.cart.empty" }).max(100),
+}).strict();
+
+/** Public store checkout: contact + shipping + the cart lines. */
+export const checkoutSchema = z.object({
+  idempotencyKey: z.string().uuid({ message: "validation.checkout.invalid" }),
+  locale: z.enum(["en", "fr"]),
+  name: z
+    .string()
+    .trim()
+    .min(2, { message: "validation.name.min" })
+    .max(80, { message: "validation.name.max" }),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .email({ message: "validation.email.invalid" }),
+  phone: z
+    .string()
+    .trim()
+    .regex(phoneRegex, { message: "validation.phone.invalid" }),
+  address: z
+    .string()
+    .trim()
+    .min(5, { message: "validation.address.min" })
+    .max(200, { message: "validation.address.max" }),
+  city: z
+    .string()
+    .trim()
+    .min(2, { message: "validation.city.min" })
+    .max(80, { message: "validation.city.max" }),
+  province: z.string().trim().max(60, { message: "validation.province.max" }).optional(),
+  postalCode: z.string().trim().max(20, { message: "validation.postalCode.max" }).optional(),
+  country: z.string().trim().min(2).max(80).default("Canada"),
+  note: z.string().trim().max(500, { message: "validation.note.max" }).optional().or(z.literal("")),
+  lines: z.array(checkoutLineSchema).min(1, { message: "validation.cart.empty" }).max(100),
+}).strict();
+export type CheckoutInput = z.infer<typeof checkoutSchema>;
+
+/** Admin: advance an order's status. */
+export const orderStatusSchema = z.object({
+  status: z.enum(["PENDING", "PAID", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED", "REFUNDED"], {
+    message: "validation.orderStatus.invalid",
+  }),
+}).strict();
+export type OrderStatusInput = z.infer<typeof orderStatusSchema>;

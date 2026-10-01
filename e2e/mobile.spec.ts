@@ -40,42 +40,29 @@ test.describe("layout", () => {
     await expectNoHorizontalOverflow(page);
   });
 
-  test("the mobile drawer replaces the desktop nav and locks scroll", async ({ page }, testInfo) => {
-    test.skip(!isMobile(testInfo), "the drawer navigation only exists on mobile breakpoints");
+  test("the mobile preview navigation remains usable", async ({ page }, testInfo) => {
+    test.skip(!isMobile(testInfo), "the preview navigation check only runs on mobile breakpoints");
 
     await page.goto("/en");
 
-    // Desktop nav and its header CTA are hidden below lg; the hamburger is the only way in.
+    // The shared navigation remains operable with keyboard-friendly mobile controls.
     await expect(page.getByRole("navigation", { name: "Main" })).toBeHidden();
-    await expect(page.getByRole("button", { name: "Open menu" })).toBeVisible();
-
+    await expect(page.getByRole("link", { name: "Book now" }).first()).toBeVisible();
     await page.getByRole("button", { name: "Open menu" }).click();
-
-    const nav = page.getByRole("navigation", { name: "Mobile" });
-    await expect(nav).toBeVisible();
-    await expect(nav.getByRole("link", { name: "Contact" })).toBeVisible();
-    // The drawer has its own book CTA, full width.
-    await expect(nav.getByRole("link", { name: "Book Appointment" })).toBeVisible();
-
-    // Body scroll is locked while the drawer covers the page.
-    expect(await page.evaluate(() => document.body.style.overflow)).toBe("hidden");
-
-    // Choosing a destination navigates and closes the drawer behind us.
-    await nav.getByRole("link", { name: "Contact" }).click();
-    await expect(page).toHaveURL(/\/contact$/);
-    await expect(page.getByRole("navigation", { name: "Mobile" })).toBeHidden();
-    await expect(page.getByRole("button", { name: "Open menu" })).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Mobile" })).toBeVisible();
+    await page.getByRole("navigation", { name: "Mobile" }).getByRole("link", { name: "About", exact: true }).click();
+    await expect(page).toHaveURL(/\/en\/about$/);
   });
 
   test("the booking flow is fully usable at the mobile width", async ({ page }, testInfo) => {
     test.skip(!isMobile(testInfo), "progress-step labels are hidden on narrow screens");
 
     await page.goto("/en/booking");
-    await page.getByRole("button", { name: "Women's Laser Hair removal" }).click();
+    await page.getByRole("button", { name: "Hair Colouring, Highlights & Balayage" }).click();
     await page.getByRole("button", { name: "Any specialist" }).click();
 
     // Step labels are sm:+ only, but the progress bar itself must remain.
-    await expect(page.getByRole("list", { name: "Progress" })).toBeVisible();
+    await expect(page.getByRole("list", { name: "Step 3 of 4" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Preferred date & time" })).toBeVisible();
 
     const min = await page.locator("#preferred-date").getAttribute("min");

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Booking-request flow (Phase 5, step 2).
  *
  * Covers the public path the salon's revenue depends on: pick a service, pick a specialist
@@ -15,10 +15,10 @@
  */
 import { test, expect } from "@playwright/test";
 
-/** First service in the seeded catalog (order 1): 7000 cents = $70.00, 30 minutes. */
-const SERVICE_NAME = "Women's Laser Hair removal";
-const SERVICE_PRICE = "$70.00";
-const SERVICE_DURATION = "30 min";
+/** First service in the provisional seeded catalog; pricing and duration await approval. */
+const SERVICE_NAME = "Hair Colouring, Highlights & Balayage";
+const SERVICE_PRICE = "Confirmed during consultation";
+const SERVICE_DURATION = "Confirmed during consultation";
 /**
  * "Any specialist" is resolved server-side to the first qualified specialist ordered by name
  * ascending, which in the seeded catalog is "Specialist 1".
@@ -72,7 +72,7 @@ async function walkToDetails(
 }
 
 test.describe("booking request flow", () => {
-  test("submits a request and shows a correct confirmation summary", async ({ page }) => {
+  test("submits a request and shows a correct confirmation summary", async ({ page }, info) => {
     const day = await walkToDetails(page);
 
     // The details step already summarizes what was chosen. "Any specialist" is shown verbatim
@@ -106,6 +106,18 @@ test.describe("booking request flow", () => {
 
     // And the customer can start over.
     await expect(page.getByRole("button", { name: "Book another appointment" })).toBeVisible();
+    await page.screenshot({ path: info.outputPath("booking-confirmation.png"), fullPage: true });
+    await manageLink.click();
+    await expect(page.getByText("Pending", { exact: true })).toBeVisible();
+    await page.screenshot({ path: info.outputPath("booking-management.png"), fullPage: true });
+    await page.getByRole("button", { name: "Cancel appointment", exact: true }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await page.screenshot({ path: info.outputPath("booking-cancel-dialog.png") });
+    await page.keyboard.press("Escape");
+    await page.getByRole("button", { name: "Cancel appointment", exact: true }).click();
+    await page.getByRole("dialog").getByRole("button", { name: "Cancel appointment", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "Booking cancelled" })).toBeVisible();
+    await page.screenshot({ path: info.outputPath("booking-cancelled.png"), fullPage: true });
     expect(day).toBeTruthy();
   });
 
@@ -149,7 +161,7 @@ test.describe("booking request flow", () => {
   test("prefills service and specialist from the query string", async ({ page }) => {
     // The service pages link here with the service (and optionally the specialist) preselected,
     // so the customer lands straight on date & time.
-    await page.goto("/en/booking?service=womens-laser-hair-removal&staff=any");
+    await page.goto("/en/booking?service=hair-colour-balayage&staff=any");
 
     await expect(page.getByText("Step 3 of 4")).toBeVisible();
     await expect(page.getByRole("heading", { name: "Preferred date & time" })).toBeVisible();

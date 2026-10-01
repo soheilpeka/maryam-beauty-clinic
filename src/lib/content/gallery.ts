@@ -1,79 +1,46 @@
-/**
- * Gallery - real images from the live site (downloaded to /public/images).
- * Captions are the alt text used by the live site.
- */
+/** Temporary examples only. Replace with owner-approved client work before launch. */
 export interface GalleryItem {
   slug: string;
   title: string;
   caption: string;
   image: string;
-  /** Filter tag used by the gallery. */
-  tag: "Laser" | "Skin" | "Body" | "Brows";
+  tag: "Hair" | "Treatment";
   span?: boolean;
 }
 
 export const GALLERY_INTRO =
-  "There may be no better way to communicate what we do than through images. As you browse our site, take a few moments to let your eyes linger here, and see if you can get a feel for our signature touch.";
+  "This is a temporary visual direction using example images. Final client work, captions and permissions are still required before launch.";
 
 export const GALLERY: GalleryItem[] = [
   {
-    slug: "laser-hair-removal",
-    title: "Laser hair removal",
-    caption: "Get visibly smooth skin with our advanced laser technology.",
-    image: "/images/gallery-laser.png",
-    tag: "Laser",
+    slug: "example-layered-look",
+    title: "Layered hair inspiration",
+    caption: "Temporary example image — not presented as salon client work.",
+    image: "/example-pics/hair-look-1.png",
+    tag: "Hair",
   },
   {
-    slug: "facial-treatment",
-    title: "Facial treatment",
-    caption: "Our Phi certified esthetician performs organic facials.",
-    image: "/images/gallery-facial.png",
-    tag: "Skin",
+    slug: "example-bob-look",
+    title: "Modern bob inspiration",
+    caption: "Temporary example image — not presented as salon client work.",
+    image: "/example-pics/hair-look-2.jpeg",
+    tag: "Hair",
   },
   {
-    slug: "microneedling",
-    title: "Microneedling",
-    caption: "Phi microneedling for refined texture and renewed skin.",
-    image: "/images/gallery-microneedling.png",
-    tag: "Skin",
-  },
-  {
-    slug: "body-contouring",
-    title: "Body contouring",
-    caption: "Advanced RF body contouring technology targets stubborn areas.",
-    image: "/images/gallery-body.png",
-    tag: "Body",
+    slug: "example-seasonal-look",
+    title: "Seasonal hair inspiration",
+    caption: "Temporary example image — not presented as salon client work.",
+    image: "/example-pics/hair-look-3.jpeg",
+    tag: "Hair",
     span: true,
   },
   {
-    slug: "hair-growth",
-    title: "Hair growth",
-    caption: "Our experts use state-of-the-art hair restoration technology.",
-    image: "/images/gallery-hair.png",
-    tag: "Skin",
-  },
-  {
-    slug: "eyebrow-microblading",
-    title: "Eyebrow Microblading",
-    caption: "Our Phi Certified estheticians use new techniques.",
-    image: "/images/gallery-microblading.png",
-    tag: "Brows",
-  },
-  {
-    slug: "clinic-detail-1",
-    title: "The clinic",
-    caption: "A calm, considered space designed around your comfort.",
-    image: "/images/gallery-1.png",
-    tag: "Skin",
-  },
-  {
-    slug: "clinic-detail-2",
-    title: "The clinic",
-    caption: "Every visit is designed to feel unhurried and entirely your own.",
-    image: "/images/gallery-2.png",
-    tag: "Body",
-    span: true,
+    slug: "example-rf-device",
+    title: "RF treatment technology",
+    caption: "Temporary treatment image awaiting final owner-approved photography.",
+    image: "/example-pics/micromachin.jpeg",
+    tag: "Treatment",
   },
 ];
 
-export const GALLERY_TAGS = ["All", "Laser", "Skin", "Body", "Brows"] as const;
+export const GALLERY_TAGS = ["All", "Hair", "Treatment"] as const;

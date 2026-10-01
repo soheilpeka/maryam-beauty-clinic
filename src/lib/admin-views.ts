@@ -16,31 +16,39 @@ export interface ServiceView {
   id: string;
   slug: string;
   name: string;
+  nameFr: string;
   description: string | null;
+  descriptionFr: string | null;
   price: number;
   duration: number;
   bufferMin: number;
   category: string;
+  imageUrl: string | null;
   active: boolean;
   order: number;
   bookingCount: number;
+  images: { id: string; url: string; altEn: string; altFr: string; order: number }[];
 }
 
-type ServiceWithCount = Service & { _count?: { bookings: number } };
+type ServiceWithCount = Service & { _count?: { bookings: number }; images?: { id: string; url: string; altEn: string; altFr: string; order: number }[] };
 
 export function shapeService(s: ServiceWithCount): ServiceView {
   return {
     id: s.id,
     slug: s.slug,
     name: s.name,
+    nameFr: s.nameFr ?? s.name,
     description: s.description,
+    descriptionFr: s.descriptionFr,
     price: s.price,
     duration: s.duration,
     bufferMin: s.bufferMin,
     category: s.category,
+    imageUrl: s.imageUrl,
     active: s.active,
     order: s.order,
     bookingCount: s._count?.bookings ?? 0,
+    images: [...(s.images ?? [])].sort((a, b) => a.order - b.order),
   };
 }
 
@@ -58,8 +66,10 @@ export interface StaffView {
   name: string;
   role: string;
   bio: string | null;
+  bioFr: string | null;
   avatarUrl: string | null;
   active: boolean;
+  order: number;
   serviceIds: string[];
   schedule: ScheduleWindowView[];
   daysOff: DayOffView[];
@@ -80,8 +90,10 @@ export function shapeStaff(s: StaffWithRelations): StaffView {
     name: s.name,
     role: s.role,
     bio: s.bio,
+    bioFr: s.bioFr,
     avatarUrl: s.avatarUrl,
     active: s.active,
+    order: s.order,
     serviceIds: s.services.map((x) => x.serviceId),
     schedule: [...s.schedules]
       .sort((a, b) => a.dayOfWeek - b.dayOfWeek || a.startTime - b.startTime)
@@ -132,11 +144,15 @@ export const SERVICE_SELECT = {
   id: true,
   slug: true,
   name: true,
+  nameFr: true,
   description: true,
+  descriptionFr: true,
   price: true,
   duration: true,
   bufferMin: true,
   category: true,
+  imageUrl: true,
   active: true,
   order: true,
+  images: { orderBy: { order: "asc" } },
 } satisfies Prisma.ServiceSelect;

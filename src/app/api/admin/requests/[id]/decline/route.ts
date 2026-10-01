@@ -47,14 +47,14 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
     return NextResponse.json({ error: "NOT_FOUND", message: "Request not found." }, { status: 404 });
   }
 
-  const locale = request.cookies.get("locale")?.value === "fr" ? "fr" : "en";
+  const locale = before.locale === "fr" ? "fr" : "en";
 
   try {
     const booking = await declineBookingRequest(prisma, { bookingId: id, reason });
 
     // Tell the customer, with the reason when the salon gave one. Fire-and-forget: a
     // notification outage must not roll back the decline the admin just made.
-    void notificationProvider
+    await notificationProvider
       .sendEmail(
         bookingDeclinedEmail({
           customerName: before.customer.name,

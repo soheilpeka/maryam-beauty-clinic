@@ -64,6 +64,28 @@ beforeEach(async () => {
 });
 
 describe("request submission (no availability check at request time)", () => {
+  it("preserves historical service snapshots and the customer's locale after service edits", async () => {
+    const original = await prisma.service.findUniqueOrThrow({ where: { id: serviceId } });
+    const result = await createBookingRequest(prisma, { ...requestInput(START_A), locale: "fr" });
+    try {
+      await prisma.service.update({ where: { id: serviceId }, data: { name: "Renamed QA service", price: original.price + 100, duration: original.duration + 30 } });
+      const confirmed = await confirmBookingRequest(prisma, confirmInput(result.booking, START_A));
+      expect(confirmed.booking.serviceNameSnapshot).toBe(original.name);
+      expect(confirmed.booking.serviceNameFrSnapshot).toBe(original.nameFr ?? original.name);
+      expect(confirmed.booking.priceTotal).toBe(original.price);
+      expect(confirmed.booking.durationMinSnapshot).toBe(original.duration);
+      expect(confirmed.booking.locale).toBe("fr");
+    } finally {
+      await prisma.service.update({ where: { id: serviceId }, data: { name: original.name, price: original.price, duration: original.duration } });
+    }
+  });
+  it("requires an explicit duration when confirming an unknown-duration request", async () => {
+    const result = await createBookingRequest(prisma, requestInput(START_A));
+    await prisma.booking.update({ where: { id: result.booking.id }, data: { durationMinSnapshot: 0 } });
+    await expect(confirmBookingRequest(prisma, confirmInput(result.booking, START_A))).rejects.toBeInstanceOf(BookingStateError);
+    const confirmed = await confirmBookingRequest(prisma, { ...confirmInput(result.booking, START_A), durationMin: 30 });
+    expect(confirmed.booking.durationMinSnapshot).toBe(30);
+  });
   it("records a PENDING request with the derived end time and price", async () => {
     const result = await createBookingRequest(prisma, requestInput(START_A));
 

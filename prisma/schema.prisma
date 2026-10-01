@@ -1,4 +1,4 @@
-// Maryam Beauty Clinic - Prisma schema
+// Maryam C Beauté - Prisma schema
 // All datetimes are stored as UTC and rendered in the salon timezone (see SALON_TIMEZONE).
 
 generator client {
@@ -15,7 +15,9 @@ model Service {
   /// Stable key used to link translations and booking references
   slug        String   @unique
   name        String
+  nameFr      String?
   description String?
+  descriptionFr String?
   /// Price in cents (CAD)
   price       Int
   /// Duration in minutes
@@ -24,13 +26,29 @@ model Service {
   category    String   @default("General")
   /// Optional buffer minutes added after the service before the next booking
   bufferMin   Int      @default(0)
+  imageUrl    String?
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
+  updatedAt   DateTime? @updatedAt
   order       Int      @default(0)
   bookings    Booking[]
   services    StaffService[]
+  images      ServiceImage[]
+  packages    PackageService[]
 
   @@index([active])
+}
+
+model ServiceImage {
+  id        String  @id @default(cuid())
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  url       String
+  altEn     String
+  altFr     String
+  order     Int     @default(0)
+
+  @@index([serviceId, order])
 }
 
 model Staff {
@@ -40,9 +58,12 @@ model Staff {
   name        String
   role        String         @default("Specialist")
   bio         String?
+  bioFr       String?
   avatarUrl   String?
   active      Boolean        @default(true)
+  order       Int            @default(0)
   createdAt   DateTime       @default(now())
+  updatedAt   DateTime?      @updatedAt
   bookings    Booking[]
   services    StaffService[]
   schedules   StaffSchedule[]
@@ -129,6 +150,12 @@ model Booking {
   status     BookingStatus @default(PENDING)
   /// Total price in cents (CAD) snapshot at booking time
   priceTotal Int
+  /// Historical service snapshot. Nullable only for records created before this schema field.
+  serviceNameSnapshot String?
+  serviceNameFrSnapshot String?
+  locale String @default("en")
+  serviceSlugSnapshot String?
+  durationMinSnapshot Int?
   /// Optional customer note
   note       String?
   /// Timestamp of the last status change
@@ -158,7 +185,7 @@ enum BookingStatus {
 /// Salon-level configuration (single row, id = "default").
 model BusinessSetting {
   id                String  @id @default("default")
-  name              String  @default("Maryam Beauty Clinic")
+  name              String  @default("Maryam C Beauté")
   timezone          String  @default("America/Toronto")
   currency          String  @default("CAD")
   phone             String?
@@ -175,12 +202,81 @@ model BusinessSetting {
 
 /// DEMO placeholder gallery image metadata. Do not imply real customer photos.
 model GalleryItem {
-  id       String  @id @default(cuid())
-  title    String
-  imageUrl String
-  altText  String
-  active   Boolean @default(true)
-  order    Int     @default(0)
+  id        String     @id @default(cuid())
+  mediaId   String?
+  media     MediaAsset? @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+  imageUrl  String
+  /// Legacy fields retained for a non-destructive transition of existing demo rows.
+  title     String?
+  altText   String?
+  altEn     String?
+  altFr     String?
+  captionEn String?
+  captionFr String?
+  category  String     @default("General")
+  active    Boolean    @default(true)
+  order     Int        @default(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime?  @updatedAt
+
+  @@index([active, order])
+}
+
+/// Provider-neutral image metadata. For now assets point to a validated HTTPS URL or public path.
+model MediaAsset {
+  id        String        @id @default(cuid())
+  url       String        @unique
+  provider  String        @default("url")
+  mimeType  String?
+  sizeBytes Int?
+  width     Int?
+  height    Int?
+  createdAt DateTime      @default(now())
+  galleries GalleryItem[]
+}
+
+model Package {
+  id             String           @id @default(cuid())
+  slug           String           @unique
+  name           String
+  nameFr         String
+  description    String?
+  descriptionFr  String?
+  price          Int
+  sessions       Int              @default(1)
+  validityDays   Int?
+  badge          String?
+  imageUrl       String?
+  active         Boolean          @default(true)
+  order          Int              @default(0)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  services       PackageService[]
+  images         PackageImage[]
+
+  @@index([active, order])
+}
+
+model PackageService {
+  packageId String
+  serviceId String
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+
+  @@id([packageId, serviceId])
+  @@index([serviceId])
+}
+
+model PackageImage {
+  id        String  @id @default(cuid())
+  packageId String
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  url       String
+  altEn     String
+  altFr     String
+  order     Int     @default(0)
+
+  @@index([packageId, order])
 }
 
 /// DEMO placeholder FAQ entry. Marked demo in the seed; these are editorial samples.
@@ -279,3 +375,173 @@ model AuditLog {
   @@index([createdAt])
 }
 
+
+// ============================================================
+// STORE (e-commerce extension)
+// Retail products, customer orders and store configuration. Orders are guest checkout:
+// contact and shipping details are snapshotted on the order, so history survives product
+// edits and deletions exactly as the customer saw them at purchase time.
+// ============================================================
+
+/// A retail product sold through the online store. Prices are integer cents (CAD).
+model Product {
+  id          String   @id @default(cuid())
+  /// Stable key used for URLs and translations
+  slug        String   @unique
+  /// Merchant-facing stable stock identifier
+  sku         String?  @unique
+  name        String
+  nameFr      String?
+  description String?
+  descriptionFr String?
+  /// Price in cents (CAD)
+  price       Int
+  /// Optional strikethrough "was" price in cents, for sale display only
+  compareAtPrice Int?
+  /// Optional actual sale price; public checkout uses this when present.
+  salePrice  Int?
+  /// Product category used for grouping/filtering on the store page
+  category    String   @default("General")
+  /// Path or URL of the product image
+  imageUrl    String?
+  /// Units in stock. 0 = sold out; negative stock is never created.
+  stock       Int      @default(0)
+  /// Hide a product from the store without deleting it (keeps order history intact).
+  active      Boolean  @default(true)
+  featured    Boolean  @default(false)
+  /// Seeded placeholders stay out of the public store until replaced by owner-approved data.
+  demo        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  order       Int      @default(0)
+  orderItems  OrderItem[]
+  images      ProductImage[]
+
+  @@index([active])
+  @@index([active, featured, order])
+}
+
+/// Ordered product gallery. The Product.imageUrl field remains the primary/card image;
+/// this table supplies additional detail-page photography without storing JSON blobs.
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  altEn     String
+  altFr     String
+  order     Int     @default(0)
+
+  @@index([productId, order])
+}
+
+/// A customer order from the store. Guest checkout: contact + shipping are snapshotted.
+model Order {
+  id        String      @id @default(cuid())
+  /// Public reference shown to the customer, e.g. MBC-S-20260926-A3F2K
+  ref       String      @unique
+  status    OrderStatus @default(PENDING)
+  /// Browser-generated attempt id. Retries with the same key return the same order.
+  idempotencyKey String? @unique
+  locale    String      @default("en")
+  /// Customer contact snapshot
+  name      String
+  email     String
+  phone     String
+  /// Shipping address snapshot
+  address   String
+  city      String
+  province  String?
+  postalCode String?
+  country   String      @default("Canada")
+  note      String?
+  /// Money snapshot in cents (CAD)
+  subtotalCents Int
+  shippingCents Int
+  totalCents Int
+  /// Reservation lifecycle. Stock is decremented atomically before payment, committed on
+  /// PAID, and restored once on failure/expiry/cancellation/refund.
+  reservationExpiresAt DateTime?
+  inventoryReservedAt  DateTime?
+  inventoryCommittedAt DateTime?
+  inventoryRestoredAt  DateTime?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  items     OrderItem[]
+  paymentAttempts PaymentAttempt[]
+
+  @@index([status, createdAt])
+  @@index([status, reservationExpiresAt])
+  @@index([email])
+}
+
+/// One line of an order. Product name/price are snapshotted so an order always reads the
+/// same even if the product is later renamed, repriced or deleted (product is nullable and
+/// nulls on delete rather than cascading away the salon's history).
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  /// Product name snapshot at purchase time
+  name      String
+  /// Product slug snapshot, kept for a "view product" link back to the catalog
+  slug      String
+  /// Merchant SKU snapshot for fulfilment even if the product is later changed/deleted
+  sku       String?
+  imageUrl  String?
+  unitPriceCents Int
+  quantity  Int
+  lineTotalCents Int
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  PAYMENT_FAILED
+  EXPIRED
+  REFUNDED
+}
+
+/// Non-sensitive gateway attempt metadata. Never stores card numbers, CVV or credentials.
+model PaymentAttempt {
+  id          String        @id @default(cuid())
+  orderId     String
+  order       Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  provider    String
+  status      PaymentStatus
+  reference   String?
+  amountCents Int
+  message     String?
+  createdAt   DateTime      @default(now())
+
+  @@index([orderId, createdAt])
+  @@index([reference])
+}
+
+enum PaymentStatus {
+  APPROVED
+  DECLINED
+  ERROR
+}
+
+/// Store-level configuration (single row, id = "default").
+model StoreSetting {
+  id        String  @id @default("default")
+  /// Flat shipping fee in cents (CAD) applied when the free-shipping threshold is not met
+  shippingFeeCents Int @default(0)
+  /// Subtotal in cents at/above which shipping is free; 0 = shipping is never free
+  freeShippingThresholdCents Int @default(0)
+  /// Master switch so the salon can close the store while keeping the catalog visible
+  enabled   Boolean @default(true)
+  /// Maximum lifetime of an unpaid stock reservation.
+  reservationMinutes Int @default(15)
+}

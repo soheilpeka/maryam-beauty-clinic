@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
   if (!auth.ok) return auth.response as NextResponse;
 
   const services = await prisma.service.findMany({
-    include: { _count: { select: { bookings: true } } },
+    include: { _count: { select: { bookings: true } }, images: { orderBy: { order: "asc" } } },
     orderBy: [{ order: "asc" }, { name: "asc" }],
   });
 
@@ -70,15 +70,19 @@ export async function POST(request: NextRequest) {
       data: {
         slug,
         name: data.name,
+        nameFr: data.nameFr?.trim() || data.name,
         description: data.description?.trim() || null,
+        descriptionFr: data.descriptionFr?.trim() || null,
         price: data.price,
         duration: data.duration,
         bufferMin: data.bufferMin ?? 0,
         category: data.category?.trim() || "General",
+        imageUrl: data.imageUrl?.trim() || data.images?.[0]?.url || null,
         active: data.active ?? true,
-        order: (last?.order ?? 0) + 1,
+        order: data.order ?? (last?.order ?? 0) + 1,
+        images: data.images?.length ? { create: data.images.map((image, order) => ({ ...image, order })) } : undefined,
       },
-      include: { _count: { select: { bookings: true } } },
+      include: { _count: { select: { bookings: true } }, images: { orderBy: { order: "asc" } } },
     });
 
     await writeAuditLog({

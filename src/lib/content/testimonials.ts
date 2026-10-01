@@ -1,30 +1,32 @@
-/**
- * Testimonials - VERBATIM from the live site homepage.
- * These are the reviews published by the business; not invented.
- */
+/** Short excerpts verified directly on the owner-provided Google Maps listing. */
 export interface Testimonial {
   quote: string;
   author: string;
   location: string;
+  rating: 5;
+  date: string;
 }
 
 export const TESTIMONIALS: Testimonial[] = [
   {
-    quote:
-      "I am so happy with the service I received at Maryam Beauty Clinic. The staff was friendly and professional, and the results were amazing. I would definitely recommend this place to anyone looking for quality beauty treatments.",
-    author: "Samantha Smith",
-    location: "Thornhill",
+    quote: "Maryam is very professional. She does her work with great care and precision.",
+    author: "Hilda Teymoorzadeh",
+    location: "Google Maps",
+    rating: 5,
+    date: "5 months ago",
   },
   {
-    quote:
-      "I recently visited Maryam Beauty Clinic for a facial, and I was blown away by the results. My skin looked and felt amazing after just one treatment. I will definitely be going back for more services in the future.",
-    author: "Amy Jones",
-    location: "North York",
+    quote: "Laser hair removal with Ghazaleh is amazing. She is so sweet and friendly and the treatment was so worth it.",
+    author: "Amanda De Melo",
+    location: "Google Maps",
+    rating: 5,
+    date: "4 months ago",
   },
   {
-    quote:
-      "I had an amazing experience at Maryam Beauty Clinic. The staff was knowledgeable and professional, and the treatments were top-notch. I would highly recommend this place to anyone looking for a relaxing and rejuvenating beauty experience.",
-    author: "Olivia Heart",
-    location: "Richmond Hill",
+    quote: "Really appreciate my experience for hair removal Lazer with Ghazaleh, she took the time to explain clearly and she is very professional.",
+    author: "Minakshi Fagoo",
+    location: "Google Maps",
+    rating: 5,
+    date: "3 months ago",
   },
 ];

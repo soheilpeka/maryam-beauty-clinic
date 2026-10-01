@@ -21,9 +21,9 @@ export function FormField({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-stone-700 dark:text-stone-300">
+      <label htmlFor={id} className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
         {label}
-        {required && <span aria-hidden="true" className="text-brand-600"> *</span>}
+        {required && <span aria-hidden="true" className="text-brand"> *</span>}
       </label>
       <input
         id={id}
@@ -34,10 +34,10 @@ export function FormField({
         aria-invalid={error ? "true" : "false"}
         aria-describedby={error ? `${id}-error` : undefined}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-brand-500 focus:outline-none dark:border-stone-700 dark:bg-[#211b16] dark:text-stone-50"
+        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-brand focus:outline-none"
       />
       {error && (
-        <p id={`${id}-error`} className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+        <p id={`${id}-error`} className="mt-2 text-sm text-destructive" role="alert">
           {error}
         </p>
       )}

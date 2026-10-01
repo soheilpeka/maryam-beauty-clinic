@@ -4,9 +4,9 @@
 import type { Locale } from "@/i18n/routing";
 
 /** Format a price in integer cents as a CAD string, e.g. 7000 -> "$70". */
-export function formatPrice(cents: number): string {
+export function formatPrice(cents: number, locale: Locale = "en"): string {
   const whole = cents / 100;
-  return new Intl.NumberFormat("en-CA", {
+  return new Intl.NumberFormat(locale === "fr" ? "fr-CA" : "en-CA", {
     style: "currency",
     currency: "CAD",
     minimumFractionDigits: whole % 1 === 0 ? 0 : 2,

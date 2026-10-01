@@ -6,7 +6,8 @@ const baseURL = `http://localhost:${PORT}`;
 
 // The running server is pointed at the throwaway e2e database (never dev.db, never the
 // vitest test.db). Created + seeded before every run by e2e/global-setup.ts.
-const E2E_DATABASE_URL = `file:${process.cwd()}/prisma/e2e.db`.replace(/\\/g, "/");
+const E2E_DATABASE_URL = process.env.E2E_DATABASE_URL ?? `file:${process.cwd()}/prisma/e2e-${Date.now()}.db`.replace(/\\/g, "/");
+process.env.E2E_DATABASE_URL = E2E_DATABASE_URL;
 
 // This environment cannot download Playwright's bundled browsers
 // (cdn.playwright.dev returns 403 "service is not available in your location"), so both
@@ -44,21 +45,22 @@ export default defineConfig({
   ],
   webServer: {
     // `next dev` (not `next start`) so a production build is not a prerequisite for e2e.
-    // DATABASE_URL points at e2e.db; an explicit process.env value wins over .env, so the
+    // DATABASE_URL points at a unique e2e run database; process.env wins over .env, so the
     // dev.db path there is never used for e2e.
     command: `npx next dev -p ${PORT}`,
-    // No root "/" route exists (localePrefix is "always" and there is no redirect page),
-    // so probe a real locale route; the homepage touches no table, so it renders before
-    // e2e.db is seeded and cannot fail the readiness check.
-    url: `${baseURL}/en`,
+    // Public pages use CMS data; this readiness endpoint deliberately avoids the DB
+    // until global setup has created the isolated test database.
+    url: `${baseURL}/api/health`,
     timeout: 180_000,
-    // We must own this server: globalSetup deletes prisma/e2e.db, and reusing a stray
-    // server would leave it bound to a file that no longer exists.
+    // Own this server so it uses this run's isolated database, never a stray dev server.
     reuseExistingServer: false,
     env: {
       DATABASE_URL: E2E_DATABASE_URL,
       NEXT_PUBLIC_BASE_URL: baseURL,
       NOTIFICATION_PROVIDER: "mock",
+      // The e2e checkout intentionally uses the isolated mock provider; production/default
+      // runtime selection remains Stripe test mode and refuses checkout until configured.
+      PAYMENT_PROVIDER: "mock",
       // The suite submits several booking requests from one localhost IP in parallel;
       // the production default of 5/min would throttle it.
       BOOKING_RATE_LIMIT_PER_MINUTE: "60",

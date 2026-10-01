@@ -101,6 +101,8 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+  await prisma.package.deleteMany();
+  await prisma.galleryItem.deleteMany();
   await prisma.auditLog.deleteMany();
   await prisma.booking.deleteMany();
   await prisma.customer.deleteMany();
@@ -108,6 +110,38 @@ beforeEach(async () => {
   // Keep the seeded salon, drop anything a test created, so each test starts clean.
   await prisma.staff.deleteMany({ where: { slug: { not: "test-staff" } } });
   await prisma.service.deleteMany({ where: { slug: { not: "test-facial" } } });
+});
+
+describe("content management relationships and media", () => {
+  it("requires authorization and CSRF for packages", async () => {
+    const route = await import("@/app/api/admin/packages/route");
+    expect((await route.GET(new NextRequest(`${BASE}/api/admin/packages`))).status).toBe(401);
+    expect((await route.POST(postNoCsrf(`${BASE}/api/admin/packages`, {}))).status).toBe(403);
+  });
+  it("creates, edits and deactivates a bilingual package with ordered images", async () => {
+    const route = await import("@/app/api/admin/packages/route");
+    const one = await import("@/app/api/admin/packages/[id]/route");
+    const body = { name: "Test package", nameFr: "Forfait test", price: 10000, sessions: 2, serviceIds: [salon.serviceId], images: [{ url: "/example-pics/hair-look-1.png", altEn: "Example", altFr: "Exemple" }] };
+    expect((await route.POST(post(`${BASE}/api/admin/packages`, { ...body, serviceIds: ["missing"] }))).status).toBe(400);
+    const response = await route.POST(post(`${BASE}/api/admin/packages`, body));
+    expect(response.status).toBe(201);
+    const row = (await response.json()).package;
+    expect(row.services[0].serviceId).toBe(salon.serviceId);
+    expect(row.images[0].altFr).toBe("Exemple");
+    const ctx = { params: Promise.resolve({ id: row.id }) };
+    expect((await one.PATCH(patch(`${BASE}/api/admin/packages/${row.id}`, { order: 4, nameFr: "Forfait modifié" }), ctx)).status).toBe(200);
+    expect((await one.DELETE(del(`${BASE}/api/admin/packages/${row.id}`), ctx)).status).toBe(200);
+    expect((await prisma.package.findUniqueOrThrow({ where: { id: row.id } })).active).toBe(false);
+    expect(await prisma.auditLog.count({ where: { targetId: row.id } })).toBe(3);
+  });
+  it("reuses media records and rejects unsafe image URLs", async () => {
+    const route = await import("@/app/api/admin/gallery/route");
+    const body = { imageUrl: "/example-pics/hair-look-1.png", altEn: "Example hair", altFr: "Coiffure exemple", category: "Hair" };
+    expect((await route.POST(post(`${BASE}/api/admin/gallery`, { ...body, imageUrl: "javascript:alert(1)" }))).status).toBe(400);
+    expect((await route.POST(post(`${BASE}/api/admin/gallery`, body))).status).toBe(201);
+    expect((await route.POST(post(`${BASE}/api/admin/gallery`, body))).status).toBe(201);
+    expect(await prisma.mediaAsset.count({ where: { url: body.imageUrl } })).toBe(1);
+  });
 });
 
 describe("auth", () => {

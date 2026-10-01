@@ -1,27 +1,30 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { Link, useRouter, usePathname as useLocalePathname } from "@/i18n/routing";
-import { SERVICES, SERVICE_CATEGORIES, categoryLabel } from "@/lib/content/services";
+import { SERVICES, SERVICE_CATEGORIES, categoryLabel, localizeService } from "@/lib/content/services";
 import type { ServiceCategory } from "@/lib/content/services";
+import type { Service } from "@/lib/content/services";
+import { BUSINESS } from "@/lib/content/business";
 import { Locale } from "@/i18n/routing";
+import { CartBadge } from "@/components/store/cart-badge";
+import { BOOKING_URL } from "@/lib/site-config";
 
 /**
  * Premium site header: sticky, hairline-bordered, with a "Treatments" mega dropdown that
  * groups the complete catalog by category (so no service is hidden behind a "popular"
  * filter), plus a purpose-built mobile drawer.
  */
-export function SiteHeader() {
+export function SiteHeader({ services = [] }: { services?: Service[] }) {
   const t = useTranslations("Nav");
-  const tServices = useTranslations("Services");
+  const locale = (useLocale() === "fr" ? "fr" : "en") as Locale;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [treatmentsOpen, setTreatmentsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pathname = useLocalePathname();
-  const router = useRouter();
+  const menuButton = useRef<HTMLButtonElement>(null);
   const rawPath = usePathname();
 
   // Close everything on route change.
@@ -33,8 +36,14 @@ export function SiteHeader() {
   // Lock body scroll while the mobile drawer is open.
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
+    const regions = [document.getElementById("main"), document.querySelector("footer")];
+    regions.forEach(region => { if (region) region.inert = mobileOpen; });
+    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") { setMobileOpen(false); setTreatmentsOpen(false); menuButton.current?.focus(); } };
+    document.addEventListener("keydown", escape);
     return () => {
       document.body.style.overflow = "";
+      regions.forEach(region => { if (region) region.inert = false; });
+      document.removeEventListener("keydown", escape);
     };
   }, [mobileOpen]);
 
@@ -44,8 +53,6 @@ export function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  const locale: Locale = (pathname.split("/")[1] === "fr" ? "fr" : "en") as Locale;
 
   const onTreatmentsEnter = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -57,11 +64,12 @@ export function SiteHeader() {
 
   return (
     <>
+    <div className="site-social-bar flex flex-wrap justify-between gap-3 px-4 py-2 text-[10px] uppercase tracking-widest sm:px-8"><span>Maryam C Beauté</span>{BUSINESS.social.map(social => <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer">{social.label}</a>)}</div>
     <header
       className={`sticky top-0 z-50 w-full border-b transition-colors duration-300 ${
         scrolled || mobileOpen
-          ? "border-border bg-background/90 backdrop-blur-md"
-          : "border-transparent bg-background"
+          ? "site-header border-border backdrop-blur-md"
+          : "site-header border-transparent"
       }`}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
@@ -69,18 +77,14 @@ export function SiteHeader() {
         <Link
           href="/"
           className="flex items-center gap-2.5 text-foreground transition-opacity hover:opacity-70"
-          aria-label="Maryam Beauty Clinic home"
+          aria-label="Maryam C Beauté home"
         >
-          <span className="font-serif text-lg leading-none tracking-tight sm:text-xl">
-            Maryam
-          </span>
-          <span className="font-serif text-lg leading-none tracking-tight text-brand sm:text-xl">
-            Beauty Clinic
-          </span>
+          <img src="/preview/logo.png" alt="Maryam C Beauté" className="h-12 w-28 object-contain" />
         </Link>
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
+          <Link href="/" className="text-sm">{locale === "fr" ? "Accueil" : "Home"}</Link>
           <div
             className="relative"
             onMouseEnter={onTreatmentsEnter}
@@ -120,26 +124,25 @@ export function SiteHeader() {
                           {categoryLabel(cat, locale)}
                         </p>
                         <ul className="space-y-2.5">
-                          {SERVICES.filter((s) => s.category === cat).map((s) => (
+                          {services.filter((s) => s.category === cat).map((s) => {
+                            return (
                             <li key={s.slug}>
                               <Link
                                 href={`/service-page/${s.slug}`}
                                 className="group flex items-baseline justify-between gap-3 text-sm text-foreground transition-colors hover:text-brand"
                               >
                                 <span>{s.name}</span>
-                                <span className="shrink-0 text-xs text-muted-foreground">
-                                  {s.priceLabel.replace(/^From\s/, "")}
-                                </span>
                               </Link>
                             </li>
-                          ))}
+                            );
+                          })}
                         </ul>
                       </div>
                     ))}
                   </div>
                   <div className="flex items-center justify-between border-t border-border bg-muted/50 px-6 py-3 xl:px-8">
                     <p className="text-xs text-muted-foreground">
-                      {SERVICES.length} {t("allServices").toLowerCase()}
+                      {services.length} {t("allServices").toLowerCase()}
                     </p>
                     <Link
                       href="/book-online"
@@ -154,28 +157,22 @@ export function SiteHeader() {
           </div>
 
           <Link
-            href="/pricing-plans/packages"
+            href="/store"
             className="text-sm font-medium text-foreground transition-colors hover:text-brand"
           >
-            {t("packages")}
+            {t("store")}
+          </Link>
+          <Link
+            href="/about"
+            className="text-sm font-medium text-foreground transition-colors hover:text-brand"
+          >
+            {t("about")}
           </Link>
           <Link
             href="/gallery"
             className="text-sm font-medium text-foreground transition-colors hover:text-brand"
           >
             {t("results")}
-          </Link>
-          <Link
-            href="/blog"
-            className="text-sm font-medium text-foreground transition-colors hover:text-brand"
-          >
-            {t("blog")}
-          </Link>
-          <Link
-            href="/gift-card"
-            className="text-sm font-medium text-foreground transition-colors hover:text-brand"
-          >
-            {t("giftCard")}
           </Link>
           <Link
             href="/contact"
@@ -187,10 +184,11 @@ export function SiteHeader() {
 
         {/* Right actions */}
         <div className="flex items-center gap-2 sm:gap-3">
+          <div className="hidden sm:block"><CartBadge /></div>
           <LanguageSwitcher />
 
           <Link
-            href="/booking"
+            href={BOOKING_URL}
             className="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.03] sm:inline-flex"
           >
             {t("book")}
@@ -198,6 +196,7 @@ export function SiteHeader() {
 
           {/* Mobile menu button */}
           <button
+            ref={menuButton}
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
             className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted lg:hidden"
@@ -237,35 +236,34 @@ export function SiteHeader() {
                     {categoryLabel(cat, locale)}
                   </p>
                   <ul className="space-y-1">
-                    {SERVICES.filter((s) => s.category === cat).map((s) => (
+                    {services.filter((s) => s.category === cat).map((s) => {
+                      return (
                       <li key={s.slug}>
                         <Link
                           href={`/service-page/${s.slug}`}
                           className="flex items-baseline justify-between gap-3 rounded-lg px-2 py-1.5 text-sm text-foreground hover:bg-muted"
                         >
                           <span>{s.name}</span>
-                          <span className="shrink-0 text-xs text-muted-foreground">
-                            {s.priceLabel.replace(/^From\s/, "")}
-                          </span>
                         </Link>
                       </li>
-                    ))}
+                      );
+                    })}
                   </ul>
                 </div>
               ))}
             </MobileSection>
 
             <MobileSection title={t("clinic")}>
-              <Link href="/pricing-plans/packages" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("packages")}</Link>
+              <Link href="/store" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("store")}</Link>
+              <Link href="/about" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("about")}</Link>
+              <Link href="/store/cart" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("cart")}</Link>
               <Link href="/gallery" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("results")}</Link>
-              <Link href="/blog" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("blog")}</Link>
-              <Link href="/gift-card" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("giftCard")}</Link>
               <Link href="/contact" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("contact")}</Link>
             </MobileSection>
 
             <div className="mt-6">
               <Link
-                href="/booking"
+                href={BOOKING_URL}
                 className="flex w-full items-center justify-center rounded-full bg-primary px-6 py-3.5 text-sm font-medium text-primary-foreground"
               >
                 {t("book")}
@@ -317,13 +315,13 @@ function LanguageSwitcher() {
   const t = useTranslations("Nav");
   const router = useRouter();
   const pathname = useLocalePathname();
-  const locale: Locale = (pathname.split("/")[1] === "fr" ? "fr" : "en") as Locale;
+  const locale: Locale = (useLocale() === "fr" ? "fr" : "en") as Locale;
   const other = locale === "en" ? "fr" : "en";
 
   return (
     <button
       type="button"
-      onClick={() => router.replace(pathname, { locale: other })}
+      onClick={() => router.replace(`${pathname}${window.location.search}${window.location.hash}`, { locale: other })}
       className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border px-3 text-xs font-medium text-foreground transition-colors hover:border-brand hover:text-brand"
       aria-label={t("switchLanguage")}
     >

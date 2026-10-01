@@ -1,23 +1,29 @@
 @import "tailwindcss";
+
+.site-social-bar, .site-header { background: #171615; color: #fff; }
+.site-header > div > a, .site-header nav > a, .site-header nav > div > button, .site-header > div > div > button { color: #fff; }
+.site-header > div > a img { filter: brightness(0) invert(1); }
+.site-header a[href$="/store/cart"] { color: #fff; }
 @import "@fontsource-variable/inter/index.css";
 @import "@fontsource-variable/fraunces/index.css";
+@import "./preview.css";
+@import "./editorial.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * Maryam Beauty Clinic - design system.
- * Tokens are converted from the reference site's OK/Lab values (D65) and kept in sync
- * with the visual language: warm ivory background, near-black warm ink, dusty-rose
- * brand accent, champagne/gold highlights, Fraunces display + Inter body.
+ * Maryam C Beauté - design system.
+ * Shared editorial palette: warm ivory, near-black ink and restrained champagne.
+ * Fraunces display typography and Inter body text are shared across public and admin UI.
  */
 :root {
-  --color-background: #fbf7f2;
-  --color-foreground: #28211d;
-  --color-primary: #2f2723;
+  --color-background: #f6f4f1;
+  --color-foreground: #171615;
+  --color-primary: #171615;
   --color-primary-foreground: #fcf8f3;
-  --color-brand: #b37877;
+  --color-brand: #79624b;
   --color-brand-foreground: #fdfbf8;
-  --color-brand-soft: #fce1df;
+  --color-brand-soft: #eee5da;
   --color-gold: #caa56e;
   --color-champagne: #f2e4d4;
   --color-accent: #f6e9e0;
@@ -80,22 +86,23 @@ body {
 }
 
 .dark {
-  --color-background: #1a1613;
-  --color-foreground: #f2eae2;
-  --color-primary: #f6efe7;
-  --color-primary-foreground: #241d18;
-  --color-brand: #cf9b95;
-  --color-brand-soft: #4a2f2d;
-  --color-gold: #d8ba86;
-  --color-champagne: #3a2f24;
-  --color-accent: #2a231e;
-  --color-muted: #241f1b;
-  --color-muted-foreground: #b5a99e;
-  --color-border: #382f28;
-  --color-card: #211c18;
-  --color-card-foreground: #f2eae2;
-  --color-secondary: #2a241f;
-  --color-secondary-foreground: #e8ded3;
+  --color-background: #171615;
+  --color-foreground: #f6f4f1;
+  --color-primary: #f6f4f1;
+  --color-primary-foreground: #171615;
+  --color-brand: #c5b293;
+  --color-brand-soft: #302c26;
+  --color-gold: #c5b293;
+  --color-champagne: #302c26;
+  --color-accent: #262523;
+  --color-muted: #262523;
+  --color-muted-foreground: #bdb8b0;
+  --color-border: #45413c;
+  --color-card: #201f1d;
+  --color-card-foreground: #f6f4f1;
+  --color-secondary: #262523;
+  --color-secondary-foreground: #f6f4f1;
+  --editorial-stone: #262523;
 }
 
 /* Respect reduced motion: disable smooth scroll and long transitions. */
@@ -169,3 +176,25 @@ body {
   height: 1px;
   background-color: var(--color-border);
 }
+
+/* Shared editorial sections use the same scale as the approved homepage. */
+.home-catalog,.home-visit,.home-team-grid{padding:clamp(4rem,8vw,9rem) 8vw}
+.home-section-heading{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:2rem}
+.home-section-heading h2,.home-visit h2{font:300 clamp(2.8rem,5vw,5.5rem)/1 var(--font-serif);letter-spacing:-.04em;max-width:45rem}
+.home-category-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3rem 5vw;margin-top:4rem}
+.home-category-grid h3,.home-visit h3{font:300 2rem var(--font-serif);margin-bottom:1.2rem}
+.home-category-grid li{border-top:1px solid var(--color-border)}
+.home-category-grid li a{display:flex;justify-content:space-between;gap:1rem;padding:1rem 0;font-size:.9rem}
+.home-category-grid li a:hover{color:var(--color-brand)}
+.home-visit{display:grid;grid-template-columns:1.2fr 1fr;gap:8vw}
+.home-visit address{font-style:normal;line-height:1.8;margin:2rem 0}
+.home-visit address a{display:block;overflow-wrap:anywhere}
+.home-visit .preview-text-link{display:inline-block;margin:0 1.5rem 1rem 0}
+.home-visit li{display:flex;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--color-border);padding:1rem 0;font-size:.9rem}
+.home-team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:2rem}
+.home-team-grid img{width:100%;aspect-ratio:4/5;object-fit:cover}
+.home-team-grid h3{font:300 1.8rem var(--font-serif);margin-top:1rem}
+.home-team-grid p{font-size:.9rem;line-height:1.7;color:var(--color-muted-foreground)}
+dialog{margin:auto;max-height:90dvh;overflow:auto}
+dialog::backdrop{background:#17161590;backdrop-filter:blur(4px)}
+@media(max-width:640px){.home-category-grid,.home-visit{grid-template-columns:1fr}.home-section-heading{display:block}.home-section-heading .preview-text-link{display:inline-block;margin-top:2rem}}
