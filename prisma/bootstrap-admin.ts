@@ -15,7 +15,10 @@ import { env } from "@/lib/env";
 import { hashPassword } from "@/lib/auth";
 
 const prisma = new PrismaClient({
-  adapter: new PrismaLibSql({ url: env.databaseUrl }),
+  adapter: new PrismaLibSql({
+    url: env.databaseUrl,
+    authToken: process.env.DATABASE_AUTH_TOKEN,
+  }),
 });
 
 async function main() {
