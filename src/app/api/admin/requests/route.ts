@@ -12,9 +12,9 @@ export const dynamic = "force-dynamic";
  * place that derives the flag, so the admin UI can present DECLINED and customer-CANCELLED
  * requests as distinct buckets without a second status enum value.
  */
-export const DECLINED_NOTE_MARKER = "[declined]";
+const DECLINED_NOTE_MARKER = "[declined]";
 
-export function isDeclined(note: string | null): boolean {
+function isDeclined(note: string | null): boolean {
   return !!note && note.includes(DECLINED_NOTE_MARKER);
 }
 

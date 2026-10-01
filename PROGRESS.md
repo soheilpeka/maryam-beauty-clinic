@@ -1,5 +1,19 @@
 # Maryam Beauty Clinic - Progress
 
+## 2026-10-01 — Hostinger build compatibility
+
+- Investigated the supplied Hostinger log: native SWC requires GLIBC_2.29 unavailable on the host, followed by a TypeScript config import failure while falling back to WASM.
+- Converted `next.config.ts` to equivalent `next.config.mjs` and switched production builds to the supported `next build --webpack` path, allowing SWC WASM fallback without Turbopack native requirements.
+- Removed non-route helper exports from the requests API after Webpack's generated route validation identified them as invalid. The helpers and request behavior are unchanged.
+- Production build completed locally with SWC WASM forced for compatibility verification, including TypeScript validation and 83 generated pages. Hostinger redeployment still needs to confirm the result on the actual Linux host. Existing dependency advisories are not resolved by this compatibility change.
+
+## 2026-10-01 — Remote staging database initialized
+
+- Investigated the owner's failed staging setup: the database connection worked but no application tables existed. Retrying initialization succeeded; the original failure was not reproducible and its exact cause remains unconfirmed.
+- Improved initializer error reporting to show a bounded actionable message with environment credentials redacted, rather than the previous generic error.
+- Created all 27 application tables in the remote staging database, seeded the provisional catalog (16 services, 3 staff, 4 gallery items, 3 testimonial excerpts and 11 demo products), and bootstrapped the owner-configured administrator. Demo products remain subject to the existing public visibility guards.
+- Verified the service count and the configured administrator/password against the remote database. TypeScript compilation passed. The local development database was not modified and no Hostinger deployment was performed.
+
 ## 2026-10-01 — Staging database setup preparation
 
 - Added explicit libSQL client dependency and generated the empty initial SQL schema from the current Prisma schema. The SQL contains structure only, with no owner/customer data.

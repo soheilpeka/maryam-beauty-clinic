@@ -27,8 +27,14 @@ async function main() {
   }
 }
 
-main().catch(() => {
-  // Avoid dumping connection details or SDK errors that could contain credentials.
-  console.error("Staging initialization failed. Check the URL/token and ensure the database is empty.");
+main().catch((error: unknown) => {
+  // Report the actionable SDK error without dumping credentials or a stack trace.
+  let message = error instanceof Error ? error.message : "Unknown setup error.";
+  for (const [key, value] of Object.entries(process.env)) {
+    if (value && /TOKEN|PASSWORD|SECRET|DATABASE_URL/.test(key)) {
+      message = message.split(value).join("[redacted]");
+    }
+  }
+  console.error(`Staging initialization failed: ${message.slice(0, 600)}`);
   process.exitCode = 1;
 });
