@@ -1,5 +1,42 @@
 # Maryam Beauty Clinic - Progress
 
+## 2026-10-01 — Service frames, collection and colorful reviews
+
+- Extended the restrained white photo mats to service catalog/detail photos and gallery cards/lightbox. Gallery captions now sit below photos without covering them.
+- Replaced the homepage collection collage with three equal portraits in one row, subtle charcoal borders and shadows, without a white outer frame. Redesigned reviews with a warm cream background, rounded cards, rose/sage/gold accents and gold stars; existing quotes and attribution are preserved.
+- Production build passed with TypeScript validation and 83 generated pages. Inspected collection, gallery, service detail and reviews in the browser, including reviews at 320px with no horizontal overflow. Saved collection/review screenshots in artifacts. No automated tests or hosting deployment were performed.
+
+## 2026-10-01 — Single-image hero and centered mobile copy
+
+- Removed the four editorial portraits beneath the hero from EN/FR homepage markup and removed their unused layout rules. The main landscape image remains; other homepage media are preserved.
+- Centered hero copy and actions below 768px. Production build passed with TypeScript validation and 83 generated pages. Browser inspection at 390px confirmed centered copy, exactly one hero image and no horizontal overflow. No automated tests or hosting deployment were performed.
+
+## 2026-10-01 — Header Instagram and photo frames
+
+- Added the existing salon Instagram link as the first header action, with a visible icon/label, bilingual accessible name and safe new-tab behavior. It remains directly available on mobile; at the smallest widths the icon stays visible while its label is visually hidden.
+- Added restrained white photo mats, fine neutral borders and subtle shadows to homepage signature, treatment, collection and team media. The continuous hero images are unchanged.
+- Production build passed with TypeScript validation and 83 generated pages. Inspected the header/frame at desktop width and verified no horizontal overflow at 390px and 320px. No automated tests or hosting deployment were performed for this presentation change.
+
+## 2026-10-01 — Seamless hero photo layout
+
+- Removed only the hero's outer padding/maximum width, collection heading and portrait captions. The four portraits now meet edge-to-edge immediately under the main image; the mobile two-column layout also has zero gaps. Header, hero copy/actions, images and other sections retain their existing design.
+- Production build passed with TypeScript validation and 83 generated pages. Browser inspection at 1395px and 390px confirmed zero space between main image and portrait grid, no portrait captions and no mobile horizontal overflow. Local preview remains on port 3050; no deployment was performed.
+
+## 2026-10-01 — Compact header and supplied editorial hero
+
+- Replaced the oversized two-row masthead with a compact single-row header (64px below the desktop breakpoint, 72px on desktop). Removed the separate social strip, retained Instagram in the drawer/footer, shortened the booking CTA in EN/FR, and aligned the drawer offset with the new header height.
+- Added optimized WebP copies of the five owner-supplied generated editorial images in `public/media/editorial`. The landscape brunette image forms the hero, with live bilingual text and booking/service links over its left negative space. Four portrait inspirations follow in a four-column desktop/two-column mobile collection; these are editorial inspirations, not customer-result claims.
+- Mobile uses a readable text block above an art-directed crop of the landscape image, keeping the face visible. Inspected French desktop, the supplied 867px viewport, 390px mobile and 320px mobile/menu; no horizontal overflow was observed. Existing salon/gallery content and database were preserved.
+- TypeScript and the production Webpack build passed (83 generated pages). No automated test suites were run for this visual revision. No commit, push or hosting deployment was performed.
+
+## 2026-10-01 — Site-wide Blunt-inspired monochrome redesign
+
+- Inspected the supplied Blunt reference and applied a shared black/white/grayscale presentation across public pages, booking and management forms, store/cart/checkout, and admin components. Added a white masthead, black desktop navigation, bold Inter headings, rectangular controls, black page-title bands, neutral status surfaces, and a black footer.
+- Preserved EN/FR content, existing routes, owner photographs, CMS data and application workflows. All 16 services remain reachable from the footer. Empty commerce states now use the real salon photograph; the store has explicit responsive layouts for both empty and future populated collections.
+- Fixed the desktop treatment menu's hover/click interaction and centered its dropdown within the header. Inspected desktop home, booking, store, cart, gallery, contact and admin login; also inspected the 320px homepage/mobile menu, 390px booking, and 768px French cart without horizontal overflow. No booking or payment was submitted during visual inspection.
+- Verification for this visual update: TypeScript passed; production Webpack build passed with 83 generated pages; git diff whitespace check passed. The prior test-suite counts below predate this monochrome update and were not rerun for it. Protected admin screens inherit the shared design but were not visually inspected in an authenticated owner session.
+- Local production preview runs on port 3050. No database migration/reset, commit, push or Hostinger deployment was performed in this update.
+
 ## 2026-10-01 — Bare-domain homepage redirect
 
 - Added an exact-root temporary redirect from `/` to the existing default-language homepage `/en`. EN/FR page paths and the admin proxy are unchanged.
@@ -568,3 +605,14 @@ Legend: [ ] pending, [~] in progress, [x] done. Update after every phase.
   production build passed with 73 routes.
 
 
+## 2026-10-01 — Editorial UI polish and owner photographs
+
+Implemented the six annotated changes: logo at the left gutter, hero text outside the image without the black rectangle, supplied salon.jpeg for the salon section, Caver1.jpg.jpeg for the RF fallback image, all eight supplied HEIC photographs converted to WebP, and redesigned verified review cards.
+
+Added native-dialog gallery enlargement with Escape and focus restoration, service image hover polish, bilingual consultation guidance and FAQ, selective CSS reveals with reduced-motion support, real team photography, a native square gallery strip, and a mobile booking CTA excluded from booking/admin/store routes. The mobile drawer traps focus and keeps its close button visible. Replaced stacked legacy homepage CSS overrides with one responsive stylesheet.
+
+New components: ImageComparison (prepared but not mounted because no approved matching before/after pair exists) and ScrollReveal. New gallery upgrade script retains edited seed records and visibility. Applied it locally only; a repeated run changed zero records. Added local/staging npm commands and README instructions. The staging database still needs the media upgrade together with asset deployment.
+
+Verification: TypeScript 0 errors; Vitest 159 passed; full Playwright 52 passed, 2 intentional skips, 0 failed after correcting the new French test locator scope; production webpack build passed (83 generated pages). Browser inspections covered EN/FR, lightbox, mobile menu, RF page, reviews and 320/375/390/430/768/1024 widths without horizontal overflow. Screenshots and logs are in ignored artifacts/.
+
+Bookings, customers, service values, admin authentication and external provider configuration were preserved. No fabricated results, credentials, prices, ratings or timings were added. No commit, push or Hostinger deployment performed. Local production preview: http://localhost:3050/en. Earlier launch prerequisites still apply.

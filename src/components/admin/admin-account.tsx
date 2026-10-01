@@ -23,7 +23,7 @@ export function AdminAccount({
   }, [locale]);
 
   return (
-    <div className="flex items-center gap-3 text-sm text-stone-600 dark:text-stone-400">
+    <div className="flex items-center gap-3 text-sm text-neutral-600 dark:text-neutral-400">
       <span className="hidden sm:inline">
         {t("signedInAs")} {name ?? email}
       </span>
@@ -31,7 +31,7 @@ export function AdminAccount({
         type="button"
         onClick={onSignOut}
         disabled={signingOut}
-        className="rounded-lg border border-stone-300 px-3 py-1.5 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 disabled:opacity-60 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
       >
         {signingOut ? t("signingOut") : t("signOut")}
       </button>

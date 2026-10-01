@@ -29,7 +29,7 @@ export function AdminPageShell({
             {title}
           </h1>
           {hint && (
-            <p className="mt-1 text-sm text-muted-foreground dark:text-stone-400">{hint}</p>
+            <p className="mt-1 text-sm text-muted-foreground dark:text-neutral-400">{hint}</p>
           )}
         </div>
         <AdminAccount locale={locale} name={adminName} email={adminEmail} />

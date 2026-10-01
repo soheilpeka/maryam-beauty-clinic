@@ -72,10 +72,10 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
         <span
           className={`rounded-full px-3 py-1 text-xs font-semibold ${
             cancelled
-              ? "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300"
+              ? "bg-neutral-100 text-neutral-700 dark:bg-neutral-950/40 dark:text-neutral-300"
               : status === "CONFIRMED"
-                ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300"
-                : "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
+                ? "bg-neutral-100 text-neutral-700 dark:bg-neutral-950/40 dark:text-neutral-300"
+                : "bg-neutral-100 text-neutral-700 dark:bg-neutral-950/40 dark:text-neutral-300"
           }`}
         >
           {booking.declined && cancelled ? (tLocale === "fr" ? "Demande refusée" : "Request declined") : t(({ PENDING: "statusPending", CONFIRMED: "statusConfirmed", CANCELLED: "statusCancelled", COMPLETED: "statusCompleted" } as const)[status as "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED"])}
@@ -85,21 +85,21 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
       {error && (
         <div
           role="alert"
-          className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300"
+          className="mb-6 rounded-lg border border-neutral-200 bg-neutral-50 p-4 text-sm text-neutral-700 dark:border-neutral-900 dark:bg-neutral-950/40 dark:text-neutral-300"
         >
           {error}
         </div>
       )}
 
       {cancelled ? (
-        <div className="rounded-2xl border border-stone-200 bg-white p-8 text-center shadow-sm dark:border-stone-800 dark:bg-card">
-          <h2 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-8 text-center shadow-sm dark:border-neutral-800 dark:bg-card">
+          <h2 className="font-serif text-xl font-semibold text-neutral-900 dark:text-neutral-50">
             {booking.declined ? (tLocale === "fr" ? "Demande refusée" : "Request declined") : t("canceledTitle")}
           </h2>
-          <p className="mt-3 text-sm text-stone-600 dark:text-stone-400">{booking.declined ? (tLocale === "fr" ? "Contactez le studio pour discuter d’une autre date." : "Contact the studio to discuss another date.") : t("canceledBody")}</p>
+          <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">{booking.declined ? (tLocale === "fr" ? "Contactez le studio pour discuter d’une autre date." : "Contact the studio to discuss another date.") : t("canceledBody")}</p>
         </div>
       ) : (
-        <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-card">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-card">
           <dl className="space-y-3 text-sm">
             <Row label={t("bookingRef")} value={booking.ref} />
             <Row label={t("service")} value={booking.serviceName} />
@@ -117,12 +117,12 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
               type="button"
               onClick={() => confirmation.current?.showModal()}
               disabled={busy}
-              className="rounded-full border border-red-300 px-6 py-3 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 disabled:opacity-60 dark:border-red-900 dark:text-red-300 dark:hover:bg-red-950/40"
+              className="rounded-full border border-neutral-300 px-6 py-3 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 disabled:opacity-60 dark:border-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-950/40"
             >
               {busy ? "..." : t("cancel")}
             </button>
           </div>
-          <p className="mt-4 text-center text-xs text-stone-500 dark:text-stone-400">
+          <p className="mt-4 text-center text-xs text-neutral-500 dark:text-neutral-400">
             {t("confirmCancel")}
           </p>
         </div>
@@ -134,8 +134,8 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between gap-4">
-      <dt className="text-stone-500 dark:text-stone-400">{label}</dt>
-      <dd className="text-right font-medium text-stone-900 dark:text-stone-50">{value}</dd>
+      <dt className="text-neutral-500 dark:text-neutral-400">{label}</dt>
+      <dd className="text-right font-medium text-neutral-900 dark:text-neutral-50">{value}</dd>
     </div>
   );
 }

@@ -286,9 +286,9 @@ export function RequestsView({ locale }: RequestsViewProps) {
 
   if (sessionExpired) {
     return (
-      <div className="rounded-2xl border border-border bg-card p-8 text-center shadow-sm dark:border-stone-800 dark:bg-card">
-        <p className="text-sm font-medium text-foreground dark:text-stone-50">{t("sessionExpired")}</p>
-        <p className="mt-1 text-sm text-muted-foreground dark:text-stone-400">{t("sessionExpiredHint")}</p>
+      <div className="rounded-2xl border border-border bg-card p-8 text-center shadow-sm dark:border-neutral-800 dark:bg-card">
+        <p className="text-sm font-medium text-foreground dark:text-neutral-50">{t("sessionExpired")}</p>
+        <p className="mt-1 text-sm text-muted-foreground dark:text-neutral-400">{t("sessionExpiredHint")}</p>
         <a
           href={`/${locale}/admin/login`}
           className="mt-4 inline-block rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
@@ -316,7 +316,7 @@ export function RequestsView({ locale }: RequestsViewProps) {
         <div
           role="group"
           aria-label={t("filterLabel")}
-          className="flex flex-wrap gap-2 rounded-xl border border-border bg-card p-1.5 dark:border-stone-800 dark:bg-card"
+          className="flex flex-wrap gap-2 rounded-xl border border-border bg-card p-1.5 dark:border-neutral-800 dark:bg-card"
         >
           {FILTERS.map((f) => {
             const active = f === status;
@@ -340,7 +340,7 @@ export function RequestsView({ locale }: RequestsViewProps) {
                   "rounded-lg px-3 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 " +
                   (active
                     ? "bg-primary text-white"
-                    : "text-foreground hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800")
+                    : "text-foreground hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800")
                 }
               >
                 {t(labelKey)}
@@ -353,20 +353,20 @@ export function RequestsView({ locale }: RequestsViewProps) {
       {notice && (
         <p
           role="status"
-          className="mb-4 rounded-md border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
+          className="mb-4 rounded-md border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm text-neutral-700 dark:border-neutral-800 dark:bg-neutral-950/40 dark:text-neutral-300"
         >
           {notice}
         </p>
       )}
 
       {error && (
-        <div role="alert" className="mb-4 rounded-md border border-red-300 bg-red-50 px-3 py-3 text-sm dark:border-red-800 dark:bg-red-950/40">
-          <p className="font-medium text-red-700 dark:text-red-300">{t("errorTitle")}</p>
-          <p className="mt-0.5 text-red-600 dark:text-red-400">{error}</p>
+        <div role="alert" className="mb-4 rounded-md border border-neutral-300 bg-neutral-50 px-3 py-3 text-sm dark:border-neutral-800 dark:bg-neutral-950/40">
+          <p className="font-medium text-neutral-700 dark:text-neutral-300">{t("errorTitle")}</p>
+          <p className="mt-0.5 text-neutral-600 dark:text-neutral-400">{error}</p>
           <button
             type="button"
             onClick={() => void load(status)}
-            className="mt-2 rounded-lg border border-red-300 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-950/60"
+            className="mt-2 rounded-lg border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-950/60"
           >
             {t("retry")}
           </button>
@@ -378,17 +378,17 @@ export function RequestsView({ locale }: RequestsViewProps) {
           {[0, 1, 2].map((i) => (
             <li
               key={i}
-              className="animate-pulse rounded-2xl border border-border bg-card p-5 dark:border-stone-800 dark:bg-card"
+              className="animate-pulse rounded-2xl border border-border bg-card p-5 dark:border-neutral-800 dark:bg-card"
             >
-              <div className="h-4 w-1/3 rounded bg-stone-200 dark:bg-stone-800" />
-              <div className="mt-3 h-3 w-2/3 rounded bg-stone-200 dark:bg-stone-800" />
-              <div className="mt-2 h-3 w-1/2 rounded bg-stone-200 dark:bg-stone-800" />
+              <div className="h-4 w-1/3 rounded bg-neutral-200 dark:bg-neutral-800" />
+              <div className="mt-3 h-3 w-2/3 rounded bg-neutral-200 dark:bg-neutral-800" />
+              <div className="mt-2 h-3 w-1/2 rounded bg-neutral-200 dark:bg-neutral-800" />
             </li>
           ))}
         </ul>
       ) : bookings && bookings.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center dark:border-stone-700 dark:bg-card">
-          <p className="text-sm text-muted-foreground dark:text-stone-400">{t(emptyKey)}</p>
+        <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center dark:border-neutral-700 dark:bg-card">
+          <p className="text-sm text-muted-foreground dark:text-neutral-400">{t(emptyKey)}</p>
         </div>
       ) : (
         <ul className="space-y-3">
@@ -428,11 +428,11 @@ export function RequestsView({ locale }: RequestsViewProps) {
 
 const BADGE_CLASSES: Record<string, string> = {
   PENDING:
-    "border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300",
+    "border-neutral-300 bg-neutral-50 text-neutral-800 dark:border-neutral-800 dark:bg-neutral-950/40 dark:text-neutral-300",
   CONFIRMED:
-    "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
+    "border-neutral-300 bg-neutral-50 text-neutral-800 dark:border-neutral-800 dark:bg-neutral-950/40 dark:text-neutral-300",
   CANCELLED:
-    "border-border bg-stone-100 text-foreground dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300",
+    "border-border bg-neutral-100 text-foreground dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300",
 };
 
 function statusLabel(status: string, declined: boolean, t: (k: string) => string): string {
@@ -462,7 +462,7 @@ function RequestCard({
   const canCancel = booking.status === "CONFIRMED";
 
   return (
-    <li className="rounded-2xl border border-border bg-card p-5 shadow-sm dark:border-stone-800 dark:bg-card">
+    <li className="rounded-2xl border border-border bg-card p-5 shadow-sm dark:border-neutral-800 dark:bg-card">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
@@ -474,23 +474,23 @@ function RequestCard({
             >
               {statusLabel(booking.status, declined, t)}
             </span>
-            <h3 className="font-serif text-lg font-semibold text-foreground dark:text-stone-50">
+            <h3 className="font-serif text-lg font-semibold text-foreground dark:text-neutral-50">
               {booking.serviceNameSnapshot ?? booking.service.name}
             </h3>
-            <span className="text-sm text-stone-500 dark:text-stone-400">
+            <span className="text-sm text-neutral-500 dark:text-neutral-400">
               {formatDuration(booking.durationMinSnapshot ?? booking.service.duration, locale)}
             </span>
           </div>
-          <p className="mt-1 text-sm text-foreground dark:text-stone-300">
+          <p className="mt-1 text-sm text-foreground dark:text-neutral-300">
             <span className="font-medium">{t("specialist")}:</span> {booking.staff.name}
-            <span className="mx-2 text-stone-300 dark:text-foreground">|</span>
+            <span className="mx-2 text-neutral-300 dark:text-foreground">|</span>
             <span className="font-medium">{t("when")}:</span>{" "}
             {formatLongDate(start, locale)} {formatTime(start, locale)} &ndash;{" "}
             {formatTime(end, locale)}
           </p>
-          <p className="mt-1 text-sm text-foreground dark:text-stone-300">
+          <p className="mt-1 text-sm text-foreground dark:text-neutral-300">
             <span className="font-medium">{t("price")}:</span> {formatPrice(booking.priceTotal, locale)}
-            <span className="mx-2 text-stone-300 dark:text-foreground">|</span>
+            <span className="mx-2 text-neutral-300 dark:text-foreground">|</span>
             <span className="font-medium">{t("bookingRef")}:</span> {booking.ref}
           </p>
         </div>
@@ -508,20 +508,20 @@ function RequestCard({
             <button
               type="button"
               onClick={() => onDecline(booking)}
-              className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-stone-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+              className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
             >
               {canCancel ? t("cancelBooking") : t("declineButton")}
             </button>
           </div>
         )}
       </div>
-      <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-1.5 border-t border-stone-100 pt-3 text-sm sm:grid-cols-2 dark:border-stone-800">
+      <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-1.5 border-t border-neutral-100 pt-3 text-sm sm:grid-cols-2 dark:border-neutral-800">
         <div>
-          <dt className="inline font-medium text-muted-foreground dark:text-stone-400">{t("customer")}: </dt>
-          <dd className="inline text-foreground dark:text-stone-100">{booking.customer.name}</dd>
+          <dt className="inline font-medium text-muted-foreground dark:text-neutral-400">{t("customer")}: </dt>
+          <dd className="inline text-foreground dark:text-neutral-100">{booking.customer.name}</dd>
         </div>
         <div>
-          <dt className="inline font-medium text-muted-foreground dark:text-stone-400">{t("phone")}: </dt>
+          <dt className="inline font-medium text-muted-foreground dark:text-neutral-400">{t("phone")}: </dt>
           <dd className="inline">
             <a
               href={`tel:${booking.customer.phone.replace(/[^+\d]/g, "")}`}
@@ -532,7 +532,7 @@ function RequestCard({
           </dd>
         </div>
         <div className="sm:col-span-2">
-          <dt className="inline font-medium text-muted-foreground dark:text-stone-400">{t("email")}: </dt>
+          <dt className="inline font-medium text-muted-foreground dark:text-neutral-400">{t("email")}: </dt>
           <dd className="inline">
             <a
               href={`mailto:${booking.customer.email}`}
@@ -544,8 +544,8 @@ function RequestCard({
         </div>
         {booking.note && (
           <div className="sm:col-span-2">
-            <dt className="inline font-medium text-muted-foreground dark:text-stone-400">{t("note")}: </dt>
-            <dd className="inline whitespace-pre-wrap text-foreground dark:text-stone-100">
+            <dt className="inline font-medium text-muted-foreground dark:text-neutral-400">{t("note")}: </dt>
+            <dd className="inline whitespace-pre-wrap text-foreground dark:text-neutral-100">
               {booking.note}
             </dd>
           </div>
@@ -590,17 +590,17 @@ function ConfirmRequestDialog({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="confirm-title"
-      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-stone-800 dark:bg-card dark:text-stone-50"
+      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-neutral-800 dark:bg-card dark:text-neutral-50"
     >
       <h2 id="confirm-title" className="font-serif text-xl font-semibold">
         {t("confirmTitle")}
       </h2>
-      <p className="mt-1.5 text-sm text-muted-foreground dark:text-stone-400">{t("confirmHint")}</p>
+      <p className="mt-1.5 text-sm text-muted-foreground dark:text-neutral-400">{t("confirmHint")}</p>
 
       {state.conflict && (
         <div
           role="alert"
-          className="mt-4 rounded-md border border-amber-300 bg-amber-50 px-3 py-2.5 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
+          className="mt-4 rounded-md border border-neutral-300 bg-neutral-50 px-3 py-2.5 text-sm text-neutral-800 dark:border-neutral-800 dark:bg-neutral-950/40 dark:text-neutral-300"
         >
           <p className="font-semibold">{t("conflictTitle")}</p>
           <p className="mt-0.5">{state.conflict}</p>
@@ -608,7 +608,7 @@ function ConfirmRequestDialog({
         </div>
       )}
       {state.error && (
-        <p role="alert" className="mt-4 text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
           {state.error}
         </p>
       )}
@@ -623,7 +623,7 @@ function ConfirmRequestDialog({
         <div>
           <label
             htmlFor="confirm-date"
-            className="block text-sm font-medium text-foreground dark:text-stone-300"
+            className="block text-sm font-medium text-foreground dark:text-neutral-300"
           >
             {t("dateLabel")}
           </label>
@@ -633,14 +633,14 @@ function ConfirmRequestDialog({
             value={state.dayKey}
             required
             onChange={(e) => onChange({ dayKey: e.target.value, conflict: null })}
-            className="mt-1 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-stone-700 dark:bg-background"
+            className="mt-1 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-neutral-700 dark:bg-background"
           />
         </div>
         <label className="block text-sm">{t("duration")}<input id="confirm-duration" type="number" required min="5" max="480" value={state.durationMin} onChange={event => onChange({ durationMin: event.target.value })} className="mt-1 w-full rounded-lg border border-border bg-background p-3" /></label>
         <div>
           <label
             htmlFor="confirm-time"
-            className="block text-sm font-medium text-foreground dark:text-stone-300"
+            className="block text-sm font-medium text-foreground dark:text-neutral-300"
           >
             {t("timeLabel")}
           </label>
@@ -650,13 +650,13 @@ function ConfirmRequestDialog({
             value={state.timeValue}
             required
             onChange={(e) => onChange({ timeValue: e.target.value, conflict: null })}
-            className="mt-1 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-stone-700 dark:bg-background"
+            className="mt-1 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-neutral-700 dark:bg-background"
           />
         </div>
         <div>
           <label
             htmlFor="confirm-staff"
-            className="block text-sm font-medium text-foreground dark:text-stone-300"
+            className="block text-sm font-medium text-foreground dark:text-neutral-300"
           >
             {t("staffLabel")}
           </label>
@@ -664,7 +664,7 @@ function ConfirmRequestDialog({
             id="confirm-staff"
             value={state.staffId}
             onChange={(e) => onChange({ staffId: e.target.value, conflict: null })}
-            className="mt-1 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-stone-700 dark:bg-background"
+            className="mt-1 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-neutral-700 dark:bg-background"
           >
             {staff.map((s) => (
               <option key={s.id} value={s.id}>
@@ -677,7 +677,7 @@ function ConfirmRequestDialog({
           <button
             type="button"
             onClick={() => onDeclineInstead(state.booking)}
-            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
           >
             {t("declineInstead")}
           </button>
@@ -685,7 +685,7 @@ function ConfirmRequestDialog({
             type="button"
             onClick={onClose}
             disabled={state.submitting}
-            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-neutral-100 disabled:opacity-60 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
           >
             {t("cancel")}
           </button>
@@ -728,14 +728,14 @@ function DeclineRequestDialog({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="decline-title"
-      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-stone-800 dark:bg-background dark:text-stone-50"
+      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-neutral-800 dark:bg-background dark:text-neutral-50"
     >
       <h2 id="decline-title" className="font-serif text-xl font-semibold">
         {t("declineTitle")}
       </h2>
-      <p className="mt-1.5 text-sm text-muted-foreground dark:text-stone-400">{t("declineHint")}</p>
+      <p className="mt-1.5 text-sm text-muted-foreground dark:text-neutral-400">{t("declineHint")}</p>
       {state.error && (
-        <p role="alert" className="mt-4 text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
           {state.error}
         </p>
       )}
@@ -749,9 +749,9 @@ function DeclineRequestDialog({
         <div>
           <label
             htmlFor="decline-reason"
-            className="block text-sm font-medium text-foreground dark:text-stone-300"
+            className="block text-sm font-medium text-foreground dark:text-neutral-300"
           >
-            {t("reasonLabel")} <span className="font-normal text-stone-500">({t("optional")})</span>
+            {t("reasonLabel")} <span className="font-normal text-neutral-500">({t("optional")})</span>
           </label>
           <textarea
             id="decline-reason"
@@ -760,7 +760,7 @@ function DeclineRequestDialog({
             maxLength={500}
             placeholder={t("reasonPlaceholder")}
             onChange={(e) => onChange({ reason: e.target.value })}
-            className="mt-1 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-stone-700 dark:bg-background"
+            className="mt-1 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-neutral-700 dark:bg-background"
           />
         </div>
         <div className="flex items-center justify-end gap-2 pt-2">
@@ -768,14 +768,14 @@ function DeclineRequestDialog({
             type="button"
             onClick={onClose}
             disabled={state.submitting}
-            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-neutral-100 disabled:opacity-60 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
           >
             {t("cancel")}
           </button>
           <button
             type="submit"
             disabled={state.submitting}
-            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg bg-neutral-600 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {state.submitting ? t("declining") : t("declineSubmit")}
           </button>

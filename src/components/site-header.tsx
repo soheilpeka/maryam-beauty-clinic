@@ -24,8 +24,12 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
   const [treatmentsOpen, setTreatmentsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const drawer = useRef<HTMLDivElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
   const rawPath = usePathname();
+  const localePath = useLocalePathname();
+  const instagram = BUSINESS.social.find(social => social.label.toLowerCase() === "instagram");
+  const showMobileCta = !mobileOpen && !/^\/(booking|admin|store)(\/|$)/.test(localePath);
 
   // Close everything on route change.
   useEffect(() => {
@@ -48,6 +52,19 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
   }, [mobileOpen]);
 
   useEffect(() => {
+    if (!mobileOpen) return;
+    const trap = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const nodes = [menuButton.current, ...Array.from(drawer.current?.querySelectorAll<HTMLElement>('a[href],button:not([disabled])') ?? [])].filter((node): node is HTMLElement => !!node && node.getClientRects().length > 0);
+      const first = nodes[0], last = nodes[nodes.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    document.addEventListener("keydown", trap);
+    return () => document.removeEventListener("keydown", trap);
+  }, [mobileOpen]);
+
+  useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -64,7 +81,6 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
 
   return (
     <>
-    <div className="site-social-bar flex flex-wrap justify-between gap-3 px-4 py-2 text-[10px] uppercase tracking-widest sm:px-8"><span>Maryam C Beauté</span>{BUSINESS.social.map(social => <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer">{social.label}</a>)}</div>
     <header
       className={`sticky top-0 z-50 w-full border-b transition-colors duration-300 ${
         scrolled || mobileOpen
@@ -72,7 +88,7 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
           : "site-header border-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="site-header-inner flex w-full items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Brand */}
         <Link
           href="/"
@@ -83,16 +99,16 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
-          <Link href="/" className="text-sm">{locale === "fr" ? "Accueil" : "Home"}</Link>
+        <nav className="hidden items-center gap-6 xl:flex" aria-label="Main">
+          <Link href="/" className="text-sm" aria-current={localePath === "/" ? "page" : undefined}>{locale === "fr" ? "Accueil" : "Home"}</Link>
           <div
-            className="relative"
+            className="treatment-menu"
             onMouseEnter={onTreatmentsEnter}
             onMouseLeave={onTreatmentsLeave}
           >
             <button
               type="button"
-              onClick={() => setTreatmentsOpen((v) => !v)}
+              onClick={(event) => setTreatmentsOpen((open) => event.detail === 0 ? !open : true)}
               aria-expanded={treatmentsOpen}
               aria-haspopup="true"
               className="flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-brand"
@@ -183,7 +199,11 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
         </nav>
 
         {/* Right actions */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="site-header-actions flex items-center gap-2 sm:gap-3">
+          {instagram && <a className="header-instagram" href={instagram.href} target="_blank" rel="noopener noreferrer" aria-label={locale === "fr" ? "Maryam C Beauté sur Instagram" : "Maryam C Beauté on Instagram"}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none" /></svg>
+            <span>Instagram</span>
+          </a>}
           <div className="hidden sm:block"><CartBadge /></div>
           <LanguageSwitcher />
 
@@ -191,7 +211,7 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
             href={BOOKING_URL}
             className="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.03] sm:inline-flex"
           >
-            {t("book")}
+            {locale === "fr" ? "Réserver" : "Book now"}
           </Link>
 
           {/* Mobile menu button */}
@@ -199,7 +219,7 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
             ref={menuButton}
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted xl:hidden"
             aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
             aria-expanded={mobileOpen}
           >
@@ -218,16 +238,18 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
 
     </header>
 
+    {showMobileCta && <div className="mobile-consultation"><span>{locale === "fr" ? "Pensé autour de vous." : "Thoughtfully yours."}</span><Link href={BOOKING_URL}>{locale === "fr" ? "Demander un rendez-vous" : "Request an appointment"}<span aria-hidden="true">↗</span></Link></div>}
+
     {/*
       Mobile drawer, rendered OUTSIDE the <header> as a viewport-level overlay. The header
       gains backdrop-filter while the drawer is open, and backdrop-filter becomes the
       containing block for any fixed descendant, so a drawer nested inside the header was
-      clamped to the header 64px box instead of covering the viewport - its links then sat
-      under the sticky bar and page content and were unclickable. top-16 keeps the bar and
+      clamped to the header box instead of covering the viewport - its links then sat
+      under the sticky bar and page content and were unclickable. The drawer offset keeps the bar and
       its close button visible; z-[60] lifts the drawer above the header and page content.
     */}
     {mobileOpen && (
-      <div className="fixed inset-0 top-16 z-[60] overflow-y-auto bg-background lg:hidden">
+      <div ref={drawer} className="site-mobile-drawer fixed inset-0 z-[60] overflow-y-auto bg-background xl:hidden">
           <nav className="mx-auto max-w-7xl px-4 pb-24 pt-4 sm:px-6" aria-label="Mobile">
             <MobileSection title={t("treatments")}>
               {SERVICE_CATEGORIES.map((cat) => (
@@ -269,6 +291,7 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
                 {t("book")}
               </Link>
             </div>
+            <div className="mt-6 flex gap-4 text-xs uppercase tracking-widest">{BUSINESS.social.map(social => <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer">{social.label}</a>)}</div>
           </nav>
         </div>
       )}

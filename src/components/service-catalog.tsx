@@ -100,13 +100,13 @@ export function ServiceCatalog({ locale, services = SERVICES }: { locale: Locale
       ) : (
         <div className="service-editorial-grid mt-6 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((s) => (
-            <div key={s.slug} className="flex flex-col border-b border-border pb-8">
+            <div key={s.slug} className="service-discovery-card group flex flex-col border-b border-border pb-8">
               <div className="mb-5 aspect-[4/3] overflow-hidden rounded-xl bg-muted">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={s.image}
                   alt={s.name}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                   loading="lazy"
                 />
               </div>

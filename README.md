@@ -52,3 +52,12 @@ remote URL validation does not inspect actual image bytes or prove file size.
 
 Latest security maintenance: Next.js 16.3.6. See `SECURITY_REVIEW.md` for remaining transitive
 dependency advisories and production configuration gates.
+
+
+### Owner-supplied salon photography
+
+`public/media/salon/` contains optimized, metadata-free WebP derivatives of the supplied salon, Caver1, team and eight HEIC gallery photographs. Originals stay in the ignored `pics/` folder. No before/after relationship is inferred from these photographs.
+
+For an existing database, run `npm run prisma:refresh-salon-media` locally, or `npm run prisma:refresh-salon-media-staging` against the configured staging database. This is a one-time content upgrade: it replaces only untouched legacy gallery seed records, preserves their visibility, retains CMS edits, and creates the newly supplied gallery entries. It does not seed/reset services, users, bookings or orders. Future gallery edits use the existing admin panel. The staging command requires `.env.staging` and the existing remote database guard. Deploy the corresponding public assets together with this content upgrade.
+
+`ImageComparison` is an accessible, touch-enabled range component ready for an owner-approved before/after pair. It is intentionally not mounted for unrelated photos. Review original captions, photo permissions and business content before the public launch.

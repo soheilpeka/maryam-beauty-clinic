@@ -33,7 +33,7 @@ export default async function AdminLoginPage({
         <h1>
           {t("signIn")}
         </h1>
-        <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">
+        <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
           {t("signInHint")}
         </p>
       </div>

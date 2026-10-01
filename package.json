@@ -18,6 +18,8 @@
     "prisma:init-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/init-staging.ts",
     "prisma:seed-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/seed.ts",
     "prisma:bootstrap-admin-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/bootstrap-admin.ts",
+    "prisma:refresh-salon-media": "node --import tsx --require ./tsx-sandbox-shim.cjs prisma/refresh-salon-media.ts",
+    "prisma:refresh-salon-media-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/refresh-salon-media.ts",
     "prisma:studio": "prisma studio",
     "postinstall": "prisma generate"
   },

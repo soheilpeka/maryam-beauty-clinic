@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useLocale } from "next-intl";
-import { GALLERY, GALLERY_TAGS } from "@/lib/content/gallery";
+import { GALLERY } from "@/lib/content/gallery";
 
 export interface GalleryFilterItem { slug: string; image: string; caption: string; tag: string; title: string; alt?: string; span?: boolean }
 
@@ -11,6 +11,8 @@ export interface GalleryFilterItem { slug: string; image: string; caption: strin
  * keeping every gallery item reachable.
  */
 export function GalleryFilter({ items = GALLERY as GalleryFilterItem[] }: { items?: GalleryFilterItem[] }) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const [selected, setSelected] = useState<GalleryFilterItem | null>(null);
   const [tag, setTag] = useState<string>("All");
   const fr = useLocale() === "fr";
   const tags = ["All", ...new Set(items.map(item => item.tag))];
@@ -45,11 +47,11 @@ export function GalleryFilter({ items = GALLERY as GalleryFilterItem[] }: { item
         {visible.map((g) => (
           <figure
             key={g.slug}
-            className={`group relative overflow-hidden rounded-2xl bg-muted ${
+            className={`gallery-photo-card group relative bg-muted ${
               g.span ? "lg:col-span-2" : ""
             }`}
           >
-            <div className={g.span ? "aspect-[16/10]" : "aspect-square"}>
+            <button type="button" className="gallery-image-button" aria-label={`${fr ? "Agrandir" : "Enlarge"}: ${g.title}`} onClick={() => { setSelected(g); dialog.current?.showModal(); }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={g.image}
@@ -57,17 +59,21 @@ export function GalleryFilter({ items = GALLERY as GalleryFilterItem[] }: { item
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
               />
-            </div>
-            <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5">
-              <span className="text-xs font-semibold uppercase tracking-widest text-white/80">
+            </button>
+            <figcaption className="gallery-photo-caption">
+              <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 {label(g.tag)}
               </span>
-              <p className="mt-1 font-serif text-base text-white">{g.title}</p>
-              <p className="mt-1 text-xs text-white/70">{g.caption}</p>
+              <p className="mt-1 font-serif text-base text-foreground">{g.title}</p>
+              {g.caption !== g.title && <p className="mt-1 text-xs text-muted-foreground">{g.caption}</p>}
             </figcaption>
           </figure>
         ))}
       </div>
+      <dialog ref={dialog} aria-label={fr ? "Image agrandie" : "Enlarged image"} className="gallery-lightbox" onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
+        <button type="button" className="gallery-close" onClick={() => dialog.current?.close()} aria-label={fr ? "Fermer l’image" : "Close image"}>×</button>
+        {selected && <figure><img src={selected.image} alt={selected.alt ?? selected.caption} /><figcaption>{selected.title}</figcaption></figure>}
+      </dialog>
       {!visible.length && <p role="status" className="mt-8 text-muted-foreground">{fr ? "Aucune image dans cette catégorie pour le moment." : "No images in this category yet."}</p>}
     </div>
   );

@@ -189,6 +189,24 @@ export default async function ServiceDetailPage({
                 </div>
               )}
 
+              <section className="treatment-consultation" aria-labelledby="treatment-planning">
+                <p className="eyebrow">{loc === "fr" ? "Une approche personnelle" : "A personal approach"}</p>
+                <h3 id="treatment-planning" className="font-serif text-3xl mt-3">{loc === "fr" ? "Votre visite, en toute clarté." : "Your visit, clearly considered."}</h3>
+                <div className="treatment-facts">
+                  <div><h4>{loc === "fr" ? "Pour vous?" : "Right for you?"}</h4><p>{loc === "fr" ? "Vos objectifs, vos besoins et la pertinence du service sont discutés avec le salon avant de commencer." : "Your goals, needs and the suitability of the service are discussed with the salon before proceeding."}</p></div>
+                  <div><h4>{loc === "fr" ? "Durée et prix" : "Time and pricing"}</h4><p>{service.duration > 0 ? `${service.duration} ${t("min")}` : t("consultationDuration")}. {service.priceLabel}.</p></div>
+                </div>
+                {(loc === "fr" ? [
+                  ["À quoi puis-je m’attendre?", "Le salon explique le déroulement du service et les résultats possibles selon vos objectifs. Aucun résultat individuel n’est garanti."],
+                  ["Qu’en est-il du confort et des soins après la visite?", "Le confort, les précautions, le temps de récupération éventuel et les conseils après la visite dépendent du service et de votre situation. Discutez-en lors de la consultation."],
+                  ["Combien de visites prévoir?", "Le nombre de visites et l’entretien sont discutés avec le salon selon vos besoins. Votre demande ne devient un rendez-vous qu’après confirmation par le salon."],
+                ] : [
+                  ["What can I expect?", "The salon explains the service experience and possible outcomes in relation to your goals. Individual results are not guaranteed."],
+                  ["What about comfort and care after my visit?", "Comfort, precautions, any recovery time and aftercare depend on the service and your circumstances. Discuss these during your consultation."],
+                  ["How many visits should I plan?", "The number of visits and maintenance are discussed with the salon around your needs. Your request becomes an appointment only after the salon confirms it."],
+                ]).map(([question, answer]) => <details className="luxury-faq" key={question}><summary>{question}</summary><p>{answer}</p></details>)}
+              </section>
+
               <div className="mt-12 border-t border-border pt-8">
                 <h3 className="text-xs font-semibold uppercase tracking-widest text-brand">
                   {t("contactDetails")}

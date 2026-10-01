@@ -61,7 +61,6 @@ export async function SiteFooter() {
                   </p>
                   <ul className="space-y-1.5">
                     {services.filter((s) => s.category === cat)
-                      .slice(0, 6)
                       .map((source) => {
                         const s = localizeService(source, locale);
                         return (

@@ -371,10 +371,10 @@ export function StaffView({ locale }: { locale: string }) {
         {[0, 1].map((i) => (
           <div
             key={i}
-            className="animate-pulse rounded-2xl border border-border bg-card p-5 dark:border-stone-800 dark:bg-card"
+            className="animate-pulse rounded-2xl border border-border bg-card p-5 dark:border-neutral-800 dark:bg-card"
           >
-            <div className="h-4 w-1/4 rounded bg-stone-200 dark:bg-stone-800" />
-            <div className="mt-3 h-3 w-2/3 rounded bg-stone-200 dark:bg-stone-800" />
+            <div className="h-4 w-1/4 rounded bg-neutral-200 dark:bg-neutral-800" />
+            <div className="mt-3 h-3 w-2/3 rounded bg-neutral-200 dark:bg-neutral-800" />
           </div>
         ))}
       </div>
@@ -383,13 +383,13 @@ export function StaffView({ locale }: { locale: string }) {
 
   if (error) {
     return (
-      <div className="rounded-md border border-red-300 bg-red-50 px-3 py-3 text-sm dark:border-red-800 dark:bg-red-950/40">
-        <p className="font-medium text-red-700 dark:text-red-300">{t("errorTitle")}</p>
-        <p className="mt-0.5 text-red-600 dark:text-red-400">{error}</p>
+      <div className="rounded-md border border-neutral-300 bg-neutral-50 px-3 py-3 text-sm dark:border-neutral-800 dark:bg-neutral-950/40">
+        <p className="font-medium text-neutral-700 dark:text-neutral-300">{t("errorTitle")}</p>
+        <p className="mt-0.5 text-neutral-600 dark:text-neutral-400">{error}</p>
         <button
           type="button"
           onClick={() => void load()}
-          className="mt-2 rounded-lg border border-red-300 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-950/60"
+          className="mt-2 rounded-lg border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-950/60"
         >
           {t("retry")}
         </button>
@@ -411,8 +411,8 @@ export function StaffView({ locale }: { locale: string }) {
       </div>
 
       {visible.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center dark:border-stone-700 dark:bg-card">
-          <p className="text-sm text-muted-foreground dark:text-stone-400">{t("emptyStaff")}</p>
+        <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center dark:border-neutral-700 dark:bg-card">
+          <p className="text-sm text-muted-foreground dark:text-neutral-400">{t("emptyStaff")}</p>
         </div>
       ) : (
         <ul className="space-y-3">
@@ -514,51 +514,51 @@ function StaffCard({
   const serviceName = (id: string) => { const service = services.find(s => s.id === id); return (locale === "fr" ? service?.nameFr ?? service?.name : service?.name) ?? ""; };
 
   return (
-    <li className="rounded-2xl border border-border bg-card p-5 shadow-sm dark:border-stone-800 dark:bg-card">
+    <li className="rounded-2xl border border-border bg-card p-5 shadow-sm dark:border-neutral-800 dark:bg-card">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 max-w-full flex-1 basis-80">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="font-serif text-lg font-semibold text-foreground dark:text-stone-50">
+            <h3 className="font-serif text-lg font-semibold text-foreground dark:text-neutral-50">
               {member.name}
             </h3>
             <span
               className={
                 "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold " +
                 (member.active
-                  ? "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
-                  : "border-border bg-stone-100 text-muted-foreground dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400")
+                  ? "border-neutral-300 bg-neutral-50 text-neutral-800 dark:border-neutral-800 dark:bg-neutral-950/40 dark:text-neutral-300"
+                  : "border-border bg-neutral-100 text-muted-foreground dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400")
               }
             >
               {member.active ? t("active") : t("inactive")}
             </span>
-            <span className="text-sm text-stone-500 dark:text-stone-400">{member.role}</span>
+            <span className="text-sm text-neutral-500 dark:text-neutral-400">{member.role}</span>
           </div>
           {member.bio && (
-            <p className="mt-1 max-w-2xl text-sm text-muted-foreground dark:text-stone-400">{locale === "fr" ? member.bioFr ?? member.bio : member.bio}</p>
+            <p className="mt-1 max-w-2xl text-sm text-muted-foreground dark:text-neutral-400">{locale === "fr" ? member.bioFr ?? member.bio : member.bio}</p>
           )}
           {member.serviceIds.length > 0 ? (
             <div className="mt-2 flex flex-wrap gap-1.5">
               {member.serviceIds.map((id) => (
                 <span
                   key={id}
-                  className="rounded-full border border-border bg-background px-2.5 py-0.5 text-xs text-foreground dark:border-stone-700 dark:bg-stone-800/60 dark:text-stone-300"
+                  className="rounded-full border border-border bg-background px-2.5 py-0.5 text-xs text-foreground dark:border-neutral-700 dark:bg-neutral-800/60 dark:text-neutral-300"
                 >
                   {serviceName(id)}
                 </span>
               ))}
             </div>
           ) : (
-            <p className="mt-2 text-xs text-amber-700 dark:text-amber-400">{t("noServicesAssigned")}</p>
+            <p className="mt-2 text-xs text-neutral-700 dark:text-neutral-400">{t("noServicesAssigned")}</p>
           )}
 
           {member.schedule.length > 0 ? (
-            <dl className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 border-t border-stone-100 pt-3 text-sm sm:grid-cols-2 dark:border-stone-800">
+            <dl className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 border-t border-neutral-100 pt-3 text-sm sm:grid-cols-2 dark:border-neutral-800">
               {member.schedule.map((w) => (
                 <div key={w.id}>
-                  <dt className="inline font-medium text-muted-foreground dark:text-stone-400">
+                  <dt className="inline font-medium text-muted-foreground dark:text-neutral-400">
                     {t(DAY_KEYS[w.dayOfWeek])}:{" "}
                   </dt>
-                  <dd className="inline text-foreground dark:text-stone-100">
+                  <dd className="inline text-foreground dark:text-neutral-100">
                     {minutesToInputValue(w.startTime)}&ndash;{minutesToInputValue(w.endTime)}
                     {w.breaks.length > 0 &&
                       ` (${t("breakLabel")} ${minutesToInputValue(w.breaks[0].startTime)}-${minutesToInputValue(
@@ -569,27 +569,27 @@ function StaffCard({
               ))}
             </dl>
           ) : (
-            <p className="mt-3 border-t border-stone-100 pt-3 text-xs text-amber-700 dark:border-stone-800 dark:text-amber-400">
+            <p className="mt-3 border-t border-neutral-100 pt-3 text-xs text-neutral-700 dark:border-neutral-800 dark:text-neutral-400">
               {t("noSchedule")}
             </p>
           )}
 
           {member.daysOff.length > 0 && (
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <span className="text-xs font-medium uppercase tracking-wide text-stone-500 dark:text-stone-400">
+              <span className="text-xs font-medium uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
                 {t("daysOff")}:
               </span>
               {member.daysOff.map((d) => (
                 <span
                   key={d.id}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-0.5 text-xs text-foreground dark:border-stone-700 dark:bg-stone-800/60 dark:text-stone-300"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-0.5 text-xs text-foreground dark:border-neutral-700 dark:bg-neutral-800/60 dark:text-neutral-300"
                 >
                   {dayOffLabel(d, locale, t)}
                   <button
                     type="button"
                     aria-label={t("removeDayOff")}
                     onClick={() => onDeleteDayOff(d.id)}
-                    className="text-stone-400 hover:text-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:hover:text-red-400"
+                    className="text-neutral-400 hover:text-neutral-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:hover:text-neutral-400"
                   >
                     &times;
                   </button>
@@ -597,7 +597,7 @@ function StaffCard({
               ))}
             </div>
           )}
-          <p className="mt-2 text-xs text-stone-500 dark:text-stone-400">
+          <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
             {member.bookingCount} {t("bookingsWord")}
           </p>
         </div>
@@ -614,7 +614,7 @@ function StaffCard({
           <button
             type="button"
             onClick={onDelete}
-            className="rounded-lg border border-red-300 px-3.5 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-950/40"
+            className="rounded-lg border border-neutral-300 px-3.5 py-2 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-950/40"
           >
             {t("delete")}
           </button>
@@ -638,9 +638,9 @@ function dayOffLabel(d: DayOffView, locale: string, t: (k: string) => string): s
 }
 
 const actionClass =
-  "rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-stone-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800";
+  "rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800";
 const inputClass =
-  "mt-1 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-stone-700 dark:bg-background";
+  "mt-1 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-brand focus:outline-none dark:border-neutral-700 dark:bg-background";
 function StaffFormDialog({
   state,
   services,
@@ -670,13 +670,13 @@ function StaffFormDialog({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="staff-form-title"
-      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-stone-800 dark:bg-card dark:text-stone-50"
+      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-neutral-800 dark:bg-card dark:text-neutral-50"
     >
       <h2 id="staff-form-title" className="font-serif text-xl font-semibold">
         {state.mode === "create" ? t("addStaff") : t("editStaff")}
       </h2>
       {state.errors.form && (
-        <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
           {state.errors.form}
         </p>
       )}
@@ -689,7 +689,7 @@ function StaffFormDialog({
       >
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="staff-name" className="block text-sm font-medium text-foreground dark:text-stone-300">
+            <label htmlFor="staff-name" className="block text-sm font-medium text-foreground dark:text-neutral-300">
               {t("name")}
             </label>
             <input
@@ -702,13 +702,13 @@ function StaffFormDialog({
               className={inputClass}
             />
             {state.errors.name && (
-              <p role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">
+              <p role="alert" className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
                 {state.errors.name}
               </p>
             )}
           </div>
           <div>
-            <label htmlFor="staff-role" className="block text-sm font-medium text-foreground dark:text-stone-300">
+            <label htmlFor="staff-role" className="block text-sm font-medium text-foreground dark:text-neutral-300">
               {t("role")}
             </label>
             <input
@@ -722,7 +722,7 @@ function StaffFormDialog({
           </div>
         </div>
         <div>
-          <label htmlFor="staff-bio" className="block text-sm font-medium text-foreground dark:text-stone-300">
+          <label htmlFor="staff-bio" className="block text-sm font-medium text-foreground dark:text-neutral-300">
             {t("bio")}
           </label>
           <textarea
@@ -735,7 +735,7 @@ function StaffFormDialog({
           />
         </div>
         <div>
-          <label htmlFor="staff-avatar" className="block text-sm font-medium text-foreground dark:text-stone-300">
+          <label htmlFor="staff-avatar" className="block text-sm font-medium text-foreground dark:text-neutral-300">
             {t("avatarUrl")}
           </label>
           <input
@@ -746,7 +746,7 @@ function StaffFormDialog({
             className={inputClass}
           />
           {state.errors.avatarUrl && (
-            <p role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">
+            <p role="alert" className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
               {state.errors.avatarUrl}
             </p>
           )}
@@ -755,16 +755,16 @@ function StaffFormDialog({
           <label className="mt-4 block text-sm">{t("displayOrder")}<input type="number" min="0" value={state.order} onChange={e => onChange({ order: e.target.value })} className={inputClass} /></label>
           {state.avatarUrl && <img src={state.avatarUrl} alt={state.name} className="my-4 h-36 max-w-full rounded-xl object-contain" />}
         <fieldset>
-          <legend className="text-sm font-medium text-foreground dark:text-stone-300">
+          <legend className="text-sm font-medium text-foreground dark:text-neutral-300">
             {t("servicesPerformed")}
           </legend>
-          <div className="mt-2 grid max-h-48 grid-cols-1 gap-1.5 overflow-auto rounded-lg border border-border p-3 sm:grid-cols-2 dark:border-stone-700">
+          <div className="mt-2 grid max-h-48 grid-cols-1 gap-1.5 overflow-auto rounded-lg border border-border p-3 sm:grid-cols-2 dark:border-neutral-700">
             {services.map((service) => {
               const checked = state.serviceIds.includes(service.id);
               return (
                 <label
                   key={service.id}
-                  className="flex items-center gap-2 text-sm text-foreground dark:text-stone-300"
+                  className="flex items-center gap-2 text-sm text-foreground dark:text-neutral-300"
                 >
                   <input
                     type="checkbox"
@@ -784,7 +784,7 @@ function StaffFormDialog({
             })}
           </div>
         </fieldset>
-        <label className="flex items-center gap-2 text-sm font-medium text-foreground dark:text-stone-300">
+        <label className="flex items-center gap-2 text-sm font-medium text-foreground dark:text-neutral-300">
           <input
             type="checkbox"
             checked={state.active}
@@ -798,7 +798,7 @@ function StaffFormDialog({
             type="button"
             onClick={onClose}
             disabled={state.submitting}
-            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-neutral-100 disabled:opacity-60 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
           >
             {t("cancel")}
           </button>
@@ -846,16 +846,16 @@ function ScheduleDialog({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="schedule-title"
-      className="w-full max-w-2xl rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-stone-800 dark:bg-card dark:text-stone-50"
+      className="w-full max-w-2xl rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-neutral-800 dark:bg-card dark:text-neutral-50"
     >
       <h2 id="schedule-title" className="font-serif text-xl font-semibold">
         {t("scheduleTitle")}
       </h2>
-      <p className="mt-1.5 text-sm text-muted-foreground dark:text-stone-400">
+      <p className="mt-1.5 text-sm text-muted-foreground dark:text-neutral-400">
         {t("scheduleHint", { name: state.staffName })}
       </p>
       {state.error && (
-        <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
           {state.error}
         </p>
       )}
@@ -868,7 +868,7 @@ function ScheduleDialog({
       >
         {DAY_KEYS.map((dayKey, dayOfWeek) => (
           <fieldset key={dayKey}>
-            <legend className="text-sm font-semibold text-stone-800 dark:text-stone-200">
+            <legend className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
               {t(dayKey)}
             </legend>
             <div className="mt-2 space-y-2">
@@ -879,7 +879,7 @@ function ScheduleDialog({
                     <div>
                       <label
                         htmlFor={`win-${w.id}-start`}
-                        className="block text-xs text-stone-500 dark:text-stone-400"
+                        className="block text-xs text-neutral-500 dark:text-neutral-400"
                       >
                         {t("start")}
                       </label>
@@ -894,7 +894,7 @@ function ScheduleDialog({
                     <div>
                       <label
                         htmlFor={`win-${w.id}-end`}
-                        className="block text-xs text-stone-500 dark:text-stone-400"
+                        className="block text-xs text-neutral-500 dark:text-neutral-400"
                       >
                         {t("end")}
                       </label>
@@ -909,7 +909,7 @@ function ScheduleDialog({
                     <div>
                       <label
                         htmlFor={`win-${w.id}-bstart`}
-                        className="block text-xs text-stone-500 dark:text-stone-400"
+                        className="block text-xs text-neutral-500 dark:text-neutral-400"
                       >
                         {t("breakStart")}
                       </label>
@@ -924,7 +924,7 @@ function ScheduleDialog({
                     <div>
                       <label
                         htmlFor={`win-${w.id}-bend`}
-                        className="block text-xs text-stone-500 dark:text-stone-400"
+                        className="block text-xs text-neutral-500 dark:text-neutral-400"
                       >
                         {t("breakEnd")}
                       </label>
@@ -941,7 +941,7 @@ function ScheduleDialog({
                       onClick={() =>
                         onChange({ windows: state.windows.filter((x) => x.id !== w.id) })
                       }
-                      className="rounded-lg border border-border px-2.5 py-2 text-sm text-muted-foreground hover:bg-stone-100 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+                      className="rounded-lg border border-border px-2.5 py-2 text-sm text-muted-foreground hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
                       aria-label={t("removeWindow")}
                     >
                       &times;
@@ -977,7 +977,7 @@ function ScheduleDialog({
             type="button"
             onClick={onClose}
             disabled={state.submitting}
-            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-neutral-100 disabled:opacity-60 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
           >
             {t("cancel")}
           </button>
@@ -1019,16 +1019,16 @@ function DayOffDialog({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="dayoff-title"
-      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-stone-800 dark:bg-card dark:text-stone-50"
+      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-neutral-800 dark:bg-card dark:text-neutral-50"
     >
       <h2 id="dayoff-title" className="font-serif text-xl font-semibold">
         {t("addDayOffTitle")}
       </h2>
-      <p className="mt-1.5 text-sm text-muted-foreground dark:text-stone-400">
+      <p className="mt-1.5 text-sm text-muted-foreground dark:text-neutral-400">
         {t("addDayOffHint", { name: state.staffName })}
       </p>
       {state.errors.form && (
-        <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
           {state.errors.form}
         </p>
       )}
@@ -1040,7 +1040,7 @@ function DayOffDialog({
         }}
       >
         <div>
-          <label htmlFor="dayoff-date" className="block text-sm font-medium text-foreground dark:text-stone-300">
+          <label htmlFor="dayoff-date" className="block text-sm font-medium text-foreground dark:text-neutral-300">
             {t("dateLabel")}
           </label>
           <input
@@ -1052,7 +1052,7 @@ function DayOffDialog({
             className={inputClass}
           />
           {state.errors.dayKey && (
-            <p role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">
+            <p role="alert" className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
               {state.errors.dayKey}
             </p>
           )}
@@ -1061,9 +1061,9 @@ function DayOffDialog({
           <div>
             <label
               htmlFor="dayoff-start"
-              className="block text-sm font-medium text-foreground dark:text-stone-300"
+              className="block text-sm font-medium text-foreground dark:text-neutral-300"
             >
-              {t("start")} <span className="font-normal text-stone-500">({t("optional")})</span>
+              {t("start")} <span className="font-normal text-neutral-500">({t("optional")})</span>
             </label>
             <input
               id="dayoff-start"
@@ -1076,9 +1076,9 @@ function DayOffDialog({
           <div>
             <label
               htmlFor="dayoff-end"
-              className="block text-sm font-medium text-foreground dark:text-stone-300"
+              className="block text-sm font-medium text-foreground dark:text-neutral-300"
             >
-              {t("end")} <span className="font-normal text-stone-500">({t("optional")})</span>
+              {t("end")} <span className="font-normal text-neutral-500">({t("optional")})</span>
             </label>
             <input
               id="dayoff-end"
@@ -1090,13 +1090,13 @@ function DayOffDialog({
           </div>
         </div>
         {state.errors.endMin && (
-          <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+          <p role="alert" className="text-sm text-neutral-600 dark:text-neutral-400">
             {state.errors.endMin}
           </p>
         )}
         <div>
-          <label htmlFor="dayoff-note" className="block text-sm font-medium text-foreground dark:text-stone-300">
-            {t("note")} <span className="font-normal text-stone-500">({t("optional")})</span>
+          <label htmlFor="dayoff-note" className="block text-sm font-medium text-foreground dark:text-neutral-300">
+            {t("note")} <span className="font-normal text-neutral-500">({t("optional")})</span>
           </label>
           <input
             id="dayoff-note"
@@ -1112,7 +1112,7 @@ function DayOffDialog({
             type="button"
             onClick={onClose}
             disabled={state.submitting}
-            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+            className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-neutral-100 disabled:opacity-60 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
           >
             {t("cancel")}
           </button>
@@ -1153,18 +1153,18 @@ function DeleteStaffDialog({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="staff-delete-title"
-      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-stone-800 dark:bg-card dark:text-stone-50"
+      className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-neutral-800 dark:bg-card dark:text-neutral-50"
     >
       <h2 id="staff-delete-title" className="font-serif text-xl font-semibold">
         {t("deleteStaffTitle")}
       </h2>
-      <p className="mt-1.5 text-sm text-muted-foreground dark:text-stone-400">
+      <p className="mt-1.5 text-sm text-muted-foreground dark:text-neutral-400">
         {t("deleteStaffHint", { name: state.staffName })}
       </p>
       {state.error && (
         <div
           role="alert"
-          className="mt-4 rounded-md border border-amber-300 bg-amber-50 px-3 py-2.5 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
+          className="mt-4 rounded-md border border-neutral-300 bg-neutral-50 px-3 py-2.5 text-sm text-neutral-800 dark:border-neutral-800 dark:bg-neutral-950/40 dark:text-neutral-300"
         >
           {state.error}
         </div>
@@ -1174,7 +1174,7 @@ function DeleteStaffDialog({
           type="button"
           onClick={onClose}
           disabled={state.submitting}
-          className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800"
+          className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-neutral-100 disabled:opacity-60 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
         >
           {t("cancel")}
         </button>
@@ -1182,7 +1182,7 @@ function DeleteStaffDialog({
           type="button"
           onClick={() => void onSubmit(state)}
           disabled={state.submitting}
-          className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-lg bg-neutral-600 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {state.submitting ? t("deleting") : t("delete")}
         </button>

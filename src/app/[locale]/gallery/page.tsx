@@ -31,15 +31,15 @@ export default async function GalleryPage({
   return (
     <div className="editorial-page gallery-editorial">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <div className="max-w-2xl">
+        <div className="monochrome-title">
           <p className="eyebrow">{t("galleryEyebrow")}</p>
           <h1 className="display-heading mt-4 text-4xl sm:text-5xl lg:text-6xl">
             {t("galleryTitle")}
           </h1>
           <p className="mt-6 text-base leading-relaxed text-muted-foreground">
             {locale === "fr"
-              ? "Cette galerie présente des images temporaires. Les réalisations finales, les légendes et les autorisations devront être approuvées avant le lancement."
-              : "This gallery uses temporary example images. Final client work, captions and permissions must be approved before launch."}
+              ? "Couleur, texture et détails du salon. Découvrez la galerie, à votre rythme."
+              : "Colour, texture and details from the salon. Explore the gallery at your own pace."}
           </p>
         </div>
         <div className="mt-14">

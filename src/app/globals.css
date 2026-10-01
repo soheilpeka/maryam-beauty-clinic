@@ -1,47 +1,43 @@
 @import "tailwindcss";
 
-.site-social-bar, .site-header { background: #171615; color: #fff; }
-.site-header > div > a, .site-header nav > a, .site-header nav > div > button, .site-header > div > div > button { color: #fff; }
-.site-header > div > a img { filter: brightness(0) invert(1); }
-.site-header a[href$="/store/cart"] { color: #fff; }
 @import "@fontsource-variable/inter/index.css";
-@import "@fontsource-variable/fraunces/index.css";
 @import "./preview.css";
 @import "./editorial.css";
+@import "./monochrome.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
  * Maryam C Beauté - design system.
- * Shared editorial palette: warm ivory, near-black ink and restrained champagne.
- * Fraunces display typography and Inter body text are shared across public and admin UI.
+ * Shared editorial palette: black, white and neutral grayscale.
+ * Inter display typography and body text are shared across public and admin UI.
  */
 :root {
-  --color-background: #f6f4f1;
-  --color-foreground: #171615;
-  --color-primary: #171615;
-  --color-primary-foreground: #fcf8f3;
-  --color-brand: #79624b;
-  --color-brand-foreground: #fdfbf8;
-  --color-brand-soft: #eee5da;
-  --color-gold: #caa56e;
-  --color-champagne: #f2e4d4;
-  --color-accent: #f6e9e0;
-  --color-muted: #f6efe7;
-  --color-muted-foreground: #706761;
-  --color-border: #e3ddd7;
-  --color-card: #fefcf9;
-  --color-card-foreground: #28211d;
-  --color-secondary: #f6efe7;
-  --color-secondary-foreground: #3a322c;
-  --color-destructive: #b3473b;
+  --color-background: #ffffff;
+  --color-foreground: #000000;
+  --color-primary: #000000;
+  --color-primary-foreground: #ffffff;
+  --color-brand: #000000;
+  --color-brand-foreground: #ffffff;
+  --color-brand-soft: #f1f1f1;
+  --color-gold: #555555;
+  --color-champagne: #f4f4f4;
+  --color-accent: #f4f4f4;
+  --color-muted: #f5f5f5;
+  --color-muted-foreground: #595959;
+  --color-border: #d9d9d9;
+  --color-card: #ffffff;
+  --color-card-foreground: #000000;
+  --color-secondary: #f5f5f5;
+  --color-secondary-foreground: #222222;
+  --color-destructive: #111111;
 
-  --font-serif: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-serif: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  --radius: 0.75rem;
+  --radius: 0;
 
-  /* Editorial display scale - Fraunces at light weight, tight leading. */
+  /* Shared display scale with bold Inter typography. */
   --display-1: 4.063rem;   /* 65px h1 */
   --display-2: 3.5rem;     /* 56px h2 */
 }
@@ -86,23 +82,23 @@ body {
 }
 
 .dark {
-  --color-background: #171615;
-  --color-foreground: #f6f4f1;
-  --color-primary: #f6f4f1;
-  --color-primary-foreground: #171615;
-  --color-brand: #c5b293;
-  --color-brand-soft: #302c26;
-  --color-gold: #c5b293;
-  --color-champagne: #302c26;
-  --color-accent: #262523;
-  --color-muted: #262523;
-  --color-muted-foreground: #bdb8b0;
-  --color-border: #45413c;
-  --color-card: #201f1d;
-  --color-card-foreground: #f6f4f1;
-  --color-secondary: #262523;
-  --color-secondary-foreground: #f6f4f1;
-  --editorial-stone: #262523;
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+  --color-primary: #ffffff;
+  --color-primary-foreground: #000000;
+  --color-brand: #ffffff;
+  --color-brand-soft: #222222;
+  --color-gold: #ffffff;
+  --color-champagne: #222222;
+  --color-accent: #1c1c1c;
+  --color-muted: #1c1c1c;
+  --color-muted-foreground: #bdbdbd;
+  --color-border: #444444;
+  --color-card: #111111;
+  --color-card-foreground: #ffffff;
+  --color-secondary: #1c1c1c;
+  --color-secondary-foreground: #ffffff;
+  --editorial-stone: #1c1c1c;
 }
 
 /* Respect reduced motion: disable smooth scroll and long transitions. */
@@ -130,11 +126,11 @@ body {
   font-family: var(--font-serif);
 }
 
-/* Editorial display headings: light-weight Fraunces with optical sizing. */
+/* Shared sans-serif display typography inspired by the owner’s reference. */
 @utility display-heading {
   font-family: var(--font-serif);
-  font-weight: 300;
-  letter-spacing: -0.025em;
+  font-weight: 600;
+  letter-spacing: -0.045em;
   line-height: 1.05;
   font-optical-sizing: auto;
 }
@@ -196,5 +192,15 @@ body {
 .home-team-grid h3{font:300 1.8rem var(--font-serif);margin-top:1rem}
 .home-team-grid p{font-size:.9rem;line-height:1.7;color:var(--color-muted-foreground)}
 dialog{margin:auto;max-height:90dvh;overflow:auto}
-dialog::backdrop{background:#17161590;backdrop-filter:blur(4px)}
+dialog::backdrop{background:#00000090;backdrop-filter:blur(4px)}
 @media(max-width:640px){.home-category-grid,.home-visit{grid-template-columns:1fr}.home-section-heading{display:block}.home-section-heading .preview-text-link{display:inline-block;margin-top:2rem}}
+
+/* Shared interaction polish across the existing public page system. */
+.site-header nav>a{position:relative}.site-header nav>a::after{content:"";position:absolute;bottom:-5px;left:0;width:100%;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .2s}.site-header nav>a:hover::after,.site-header nav>a[aria-current="page"]::after{transform:scaleX(1)}
+.service-discovery-card{min-width:0}.service-discovery-card a:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.gallery-image-button{display:block;width:100%;aspect-ratio:4/5;overflow:hidden;cursor:zoom-in}.gallery-image-button img{width:100%;height:100%;object-fit:cover}.gallery-image-button:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.gallery-lightbox{margin:auto;border:1px solid var(--color-border);padding:24px;background:var(--color-background);color:var(--color-foreground);max-width:min(94vw,1000px);max-height:92dvh}.gallery-lightbox::backdrop{background:#000c}.gallery-lightbox img{max-height:75dvh;max-width:100%;width:auto;margin:auto;object-fit:contain}.gallery-lightbox figcaption{padding-top:14px;font-size:14px}.gallery-close{display:block;margin:0 0 12px auto;width:44px;height:44px;border:1px solid var(--color-border);border-radius:50%;font-size:28px;cursor:pointer}
+.treatment-consultation{margin-top:48px}.treatment-facts{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:28px 0}.treatment-facts h4{font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}.treatment-facts p{font-size:14px;line-height:1.8;color:var(--color-muted-foreground)}
+.mobile-consultation{display:none}.image-comparison{max-width:100%;margin:0}.comparison-images{position:relative;aspect-ratio:4/3;overflow:hidden}.comparison-images>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.comparison-line{position:absolute;top:0;bottom:0;width:2px;background:white;display:flex;align-items:center;justify-content:center;color:white;font-size:32px;pointer-events:none}.comparison-before,.comparison-after{position:absolute;top:20px;padding:8px 12px;background:#000b;color:white;font-size:12px}.comparison-before{left:20px}.comparison-after{right:20px}.comparison-images input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;touch-action:pan-y}.comparison-images:focus-within{outline:3px solid var(--color-brand);outline-offset:3px}.image-comparison figcaption{padding:14px 0;font-size:14px}
+@media(max-width:639px){.mobile-consultation{display:flex;position:fixed;bottom:0;inset-inline:0;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--color-border);background:var(--color-background);color:var(--color-foreground);z-index:40}.mobile-consultation>span{font:16px var(--font-serif);max-width:100px}.mobile-consultation>a{display:flex;align-items:center;gap:12px;min-height:44px;font-size:11px;background:var(--color-primary);color:var(--color-primary-foreground);padding:10px 14px;border-radius:30px}body:has(.mobile-consultation){padding-bottom:90px}.treatment-facts{grid-template-columns:1fr}.gallery-lightbox{padding:14px}}
+@media(prefers-reduced-motion:reduce){.site-header nav>a::after,.service-discovery-card img,.gallery-image-button img{transition:none!important;transform:none!important}}

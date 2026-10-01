@@ -82,10 +82,10 @@ export function DashboardView({ locale }: { locale: string }) {
         {[0, 1, 2, 3, 4, 5].map((i) => (
           <div
             key={i}
-            className="animate-pulse rounded-2xl border border-border bg-card p-5 dark:border-stone-800 dark:bg-card"
+            className="animate-pulse rounded-2xl border border-border bg-card p-5 dark:border-neutral-800 dark:bg-card"
           >
-            <div className="h-3 w-1/2 rounded bg-stone-200 dark:bg-stone-800" />
-            <div className="mt-3 h-6 w-1/3 rounded bg-stone-200 dark:bg-stone-800" />
+            <div className="h-3 w-1/2 rounded bg-neutral-200 dark:bg-neutral-800" />
+            <div className="mt-3 h-6 w-1/3 rounded bg-neutral-200 dark:bg-neutral-800" />
           </div>
         ))}
       </div>
@@ -94,13 +94,13 @@ export function DashboardView({ locale }: { locale: string }) {
 
   if (error || !stats) {
     return (
-      <div className="rounded-md border border-red-300 bg-red-50 px-3 py-3 text-sm dark:border-red-800 dark:bg-red-950/40">
-        <p className="font-medium text-red-700 dark:text-red-300">{t("errorTitle")}</p>
-        <p className="mt-0.5 text-red-600 dark:text-red-400">{error ?? t("errorHint")}</p>
+      <div className="rounded-md border border-neutral-300 bg-neutral-50 px-3 py-3 text-sm dark:border-neutral-800 dark:bg-neutral-950/40">
+        <p className="font-medium text-neutral-700 dark:text-neutral-300">{t("errorTitle")}</p>
+        <p className="mt-0.5 text-neutral-600 dark:text-neutral-400">{error ?? t("errorHint")}</p>
         <button
           type="button"
           onClick={() => void load()}
-          className="mt-2 rounded-lg border border-red-300 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-950/60"
+          className="mt-2 rounded-lg border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-950/60"
         >
           {t("retry")}
         </button>
@@ -142,14 +142,14 @@ export function DashboardView({ locale }: { locale: string }) {
 
       <section
         aria-labelledby="chart-title"
-        className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-stone-800 dark:bg-card"
+        className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-neutral-800 dark:bg-card"
       >
-        <h2 id="chart-title" className="font-serif text-lg font-semibold text-foreground dark:text-stone-50">
+        <h2 id="chart-title" className="font-serif text-lg font-semibold text-foreground dark:text-neutral-50">
           {t("chartTitle")}
         </h2>
-        <p className="mt-0.5 text-sm text-muted-foreground dark:text-stone-400">{t("chartHint")}</p>
+        <p className="mt-0.5 text-sm text-muted-foreground dark:text-neutral-400">{t("chartHint")}</p>
         {maxDay <= 1 && stats.days.every((d) => d.confirmed === 0 && d.pending === 0) ? (
-          <p className="mt-6 text-sm text-muted-foreground dark:text-stone-400">{t("noBookings")}</p>
+          <p className="mt-6 text-sm text-muted-foreground dark:text-neutral-400">{t("noBookings")}</p>
         ) : (
           <div className="relative overflow-x-auto" tabIndex={0} role="region" aria-labelledby="chart-title">
           <ul className="mt-6 flex h-40 min-w-[28rem] items-end gap-1.5 sm:gap-2" role="img" aria-label={t("chartAriaLabel")}>
@@ -169,14 +169,14 @@ export function DashboardView({ locale }: { locale: string }) {
                     style={{ height: `${heightPct}%` }}
                   >
                     {d.pending > 0 && (
-                      <span className="block w-full rounded-t-md bg-amber-400/90" style={{ height: "30%" }} />
+                      <span className="block w-full rounded-t-md bg-neutral-400/90" style={{ height: "30%" }} />
                     )}
                   </span>
                   <span className="sr-only">
                     {weekdayShort(d.dayKey, locale)}: {d.confirmed} {t("confirmedWord")}, {d.pending}{" "}
                     {t("pendingWord")}
                   </span>
-                  <span className="text-[10px] text-stone-500 dark:text-stone-400 sm:text-xs">
+                  <span className="text-[10px] text-neutral-500 dark:text-neutral-400 sm:text-xs">
                     {weekdayShort(d.dayKey, locale)}
                   </span>
                 </li>
@@ -185,12 +185,12 @@ export function DashboardView({ locale }: { locale: string }) {
           </ul>
           </div>
         )}
-        <div className="mt-3 flex gap-4 text-xs text-stone-500 dark:text-stone-400">
+        <div className="mt-3 flex gap-4 text-xs text-neutral-500 dark:text-neutral-400">
           <span className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-sm bg-primary" /> {t("confirmedWord")}
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-amber-400" /> {t("pendingWord")}
+            <span className="h-2.5 w-2.5 rounded-sm bg-neutral-400" /> {t("pendingWord")}
           </span>
         </div>
       </section>
@@ -198,24 +198,24 @@ export function DashboardView({ locale }: { locale: string }) {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <section
           aria-labelledby="popular-title"
-          className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-stone-800 dark:bg-card"
+          className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-neutral-800 dark:bg-card"
         >
-          <h2 id="popular-title" className="font-serif text-lg font-semibold text-foreground dark:text-stone-50">
+          <h2 id="popular-title" className="font-serif text-lg font-semibold text-foreground dark:text-neutral-50">
             {t("popularServices")}
           </h2>
           {stats.popularServices.length === 0 ? (
-            <p className="mt-3 text-sm text-muted-foreground dark:text-stone-400">{t("noPopular")}</p>
+            <p className="mt-3 text-sm text-muted-foreground dark:text-neutral-400">{t("noPopular")}</p>
           ) : (
             <ol className="mt-4 space-y-3">
               {stats.popularServices.map((s, i) => (
                 <li key={s.serviceId} className="flex items-center justify-between gap-3">
-                  <span className="flex min-w-0 items-center gap-2 text-sm text-foreground dark:text-stone-100">
-                    <span className="font-mono text-xs text-stone-400">{i + 1}.</span>
+                  <span className="flex min-w-0 items-center gap-2 text-sm text-foreground dark:text-neutral-100">
+                    <span className="font-mono text-xs text-neutral-400">{i + 1}.</span>
                     <span className="truncate">{s.name}</span>
                   </span>
                   <span className="flex shrink-0 items-baseline gap-2 text-sm">
-                    <span className="font-medium text-foreground dark:text-stone-100">{s.bookings}</span>
-                    <span className="text-stone-500 dark:text-stone-400">
+                    <span className="font-medium text-foreground dark:text-neutral-100">{s.bookings}</span>
+                    <span className="text-neutral-500 dark:text-neutral-400">
                       {formatPrice(s.revenue, locale)}
                     </span>
                   </span>
@@ -227,22 +227,22 @@ export function DashboardView({ locale }: { locale: string }) {
 
         <section
           aria-labelledby="staffload-title"
-          className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-stone-800 dark:bg-card"
+          className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-neutral-800 dark:bg-card"
         >
-          <h2 id="staffload-title" className="font-serif text-lg font-semibold text-foreground dark:text-stone-50">
+          <h2 id="staffload-title" className="font-serif text-lg font-semibold text-foreground dark:text-neutral-50">
             {t("staffLoadTitle")}
           </h2>
           {stats.staffLoad.length === 0 ? (
-            <p className="mt-3 text-sm text-muted-foreground dark:text-stone-400">{t("noStaffLoad")}</p>
+            <p className="mt-3 text-sm text-muted-foreground dark:text-neutral-400">{t("noStaffLoad")}</p>
           ) : (
             <ul className="mt-4 space-y-3">
               {stats.staffLoad.map((s) => (
                 <li key={s.staffId} className="flex items-center gap-3">
-                  <span className="w-28 shrink-0 truncate text-sm text-foreground dark:text-stone-100">
+                  <span className="w-28 shrink-0 truncate text-sm text-foreground dark:text-neutral-100">
                     {s.name}
                   </span>
                   <span
-                    className="h-2.5 flex-1 overflow-hidden rounded-full bg-stone-100 dark:bg-stone-800"
+                    className="h-2.5 flex-1 overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800"
                     role="img"
                     aria-label={`${s.name}: ${s.bookings} ${t("bookingsWord")}`}
                   >
@@ -251,7 +251,7 @@ export function DashboardView({ locale }: { locale: string }) {
                       style={{ width: `${(s.bookings / maxLoad) * 100}%` }}
                     />
                   </span>
-                  <span className="w-6 shrink-0 text-right text-sm font-medium text-foreground dark:text-stone-100">
+                  <span className="w-6 shrink-0 text-right text-sm font-medium text-foreground dark:text-neutral-100">
                     {s.bookings}
                   </span>
                 </li>
@@ -276,11 +276,11 @@ function KpiCard({
   to?: string;
 }) {
   const inner = (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-border dark:border-stone-800 dark:bg-card dark:hover:border-stone-700">
-      <p className="text-xs font-medium uppercase tracking-wide text-stone-500 dark:text-stone-400">{label}</p>
-      <p className="mt-2 font-serif text-2xl font-semibold text-foreground dark:text-stone-50">{value}</p>
+    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-border dark:border-neutral-800 dark:bg-card dark:hover:border-neutral-700">
+      <p className="text-xs font-medium uppercase tracking-wide text-neutral-500 dark:text-neutral-400">{label}</p>
+      <p className="mt-2 font-serif text-2xl font-semibold text-foreground dark:text-neutral-50">{value}</p>
       {children && (
-        <p className="mt-1 text-xs text-muted-foreground dark:text-stone-400">{children}</p>
+        <p className="mt-1 text-xs text-muted-foreground dark:text-neutral-400">{children}</p>
       )}
     </div>
   );
