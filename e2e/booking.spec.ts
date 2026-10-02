@@ -72,6 +72,39 @@ async function walkToDetails(
 }
 
 test.describe("booking request flow", () => {
+  for (const legacy of [false, true]) {
+    test(`manage link stays on the current site (${legacy ? "legacy response" : "relative path"})`, async ({ page }) => {
+      await page.route("**/api/bookings", async route => {
+        if (route.request().method() !== "POST") return route.continue();
+        const response = await route.fetch();
+        const data = await response.json();
+        if (response.ok()) {
+          const url = new URL(data.manageUrl);
+          url.port = "1";
+          data.manageUrl = url.toString();
+          if (legacy) delete data.managePath;
+        }
+        await route.fulfill({ response, json: data });
+      });
+      await walkToDetails(page);
+      await page.locator("#name").fill(CUSTOMER.name);
+      await page.locator("#email").fill(CUSTOMER.email);
+      await page.locator("#phone").fill(CUSTOMER.phone);
+      await page.getByRole("button", { name: "Send request" }).click();
+      const link = page.getByRole("link", { name: "Manage your booking", exact: true });
+      await expect(link).toHaveAttribute("href", /^\/en\/booking\/[^?]+\?t=/);
+      await link.click();
+      await expect(page.getByText("Pending", { exact: true })).toBeVisible();
+      await page.waitForLoadState("networkidle");
+      const token = new URL(page.url()).searchParams.get("t");
+      await page.getByRole("button", { name: "Switch language" }).click();
+      await expect(page).toHaveURL(/\/fr\/booking\/[^?]+\?t=/, { timeout: 15_000 });
+      expect(new URL(page.url()).searchParams.get("t")).toBe(token);
+      await page.reload();
+      await expect(page.locator("main h1")).toBeVisible();
+    });
+  }
+
   test("submits a request and shows a correct confirmation summary", async ({ page }, info) => {
     const day = await walkToDetails(page);
 

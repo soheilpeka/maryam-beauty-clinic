@@ -44,10 +44,12 @@ export default defineConfig({
     },
   ],
   webServer: {
-    // `next dev` (not `next start`) so a production build is not a prerequisite for e2e.
+    // Development is the default. E2E_USE_PRODUCTION=1 checks an existing production build.
     // DATABASE_URL points at a unique e2e run database; process.env wins over .env, so the
     // dev.db path there is never used for e2e.
-    command: `npx next dev -p ${PORT}`,
+    command: process.env.E2E_USE_PRODUCTION === "1"
+      ? `npx next start -p ${PORT}`
+      : `npx next dev -p ${PORT}`,
     // Public pages use CMS data; this readiness endpoint deliberately avoids the DB
     // until global setup has created the isolated test database.
     url: `${baseURL}/api/health`,

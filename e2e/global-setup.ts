@@ -49,6 +49,7 @@ function run(cmd: string, extraEnv: Record<string, string> = {}): void {
  */
 async function warmRoutes(): Promise<void> {
   const paths = [
+    ...["en", "fr"].flatMap(locale => ["", "/about", "/gallery", "/contact", "/book-online", "/service-page/rf-microneedling", "/booking", "/store", "/store/cart", "/store/checkout", "/pricing-plans/packages"].map(suffix => `/${locale}${suffix}`)),
     "/en",
     "/en/booking",
     "/en/contact",

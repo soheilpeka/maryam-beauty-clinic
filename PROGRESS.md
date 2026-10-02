@@ -1,5 +1,12 @@
 # Maryam Beauty Clinic - Progress
 
+## 2026-10-02 — Whole-site regression audit
+
+- Reviewed EN/FR public pages, linked service routes, local image responses, gallery/lightbox, contact validation, responsive navigation, booking/manage/cancellation, language switching with signed links, storefront/cart/checkout and admin pages/workflows using isolated databases.
+- Corrected service headings that broke long names mid-word. Preserved the existing compact mobile hero adjustment. Added crawling/image/overflow/runtime-error checks plus Manage regressions for both current and legacy API responses with a stale absolute origin.
+- Added optional E2E_USE_PRODUCTION=1 support; production checkout tests assert refusal of mock payments rather than expect a fake paid order. Expanded dev route warmup to avoid first-compile JSON failures.
+- Final development and production browser suites each passed 60 tests with 2 intentional desktop skips and 0 failures. Vitest passed 159 tests; production build generated 83 pages with TypeScript validation. npm audit still reports 4 high and 0 critical advisories. Real delivery/payment and Hostinger configuration were not validated. Details: SITE_QA_REPORT.md.
+
 ## 2026-10-01 — Booking manage link origin fix
 
 - Fixed confirmation-page Manage navigation to use the API's relative managePath on the current site, with a same-origin fallback for older API responses. Email links still use the configured absolute base URL. Updated the ignored local base URL from port 3020 to the active port 3050.
@@ -621,3 +628,10 @@ New components: ImageComparison (prepared but not mounted because no approved ma
 Verification: TypeScript 0 errors; Vitest 159 passed; full Playwright 52 passed, 2 intentional skips, 0 failed after correcting the new French test locator scope; production webpack build passed (83 generated pages). Browser inspections covered EN/FR, lightbox, mobile menu, RF page, reviews and 320/375/390/430/768/1024 widths without horizontal overflow. Screenshots and logs are in ignored artifacts/.
 
 Bookings, customers, service values, admin authentication and external provider configuration were preserved. No fabricated results, credentials, prices, ratings or timings were added. No commit, push or Hostinger deployment performed. Local production preview: http://localhost:3050/en. Earlier launch prerequisites still apply.
+## 2026-10-01 — Compact mobile hero copy and taller photograph
+
+- Updated only the existing below-768px hero rules in `src/app/monochrome.css`: smaller responsive headline, tighter copy spacing, and a taller 0.85 portrait crop. Desktop layout, photographs, translations and booking controls are unchanged.
+- At the annotated 568px French viewport, the copy height decreased from 334px to 259px and the photograph increased from 541px to 668px. The image remains right-aligned to retain the portrait subject.
+- Verified the production preview with Chrome/Playwright in EN and FR at 320, 390, 568, 767, 768 and 1280px: 12 read-only layout checks passed, images loaded, no horizontal overflow, and desktop copy remained overlaid. Visually inspected `artifacts/hero-mobile-568.png`.
+- `npm run typecheck`: passed, zero errors. `npm run build`: passed, 83 generated pages. `git diff --check`: passed. Full Vitest/E2E mutation suites were not rerun for this CSS-only adjustment. No database changes, commit, push or deployment.
+- Restarted the existing production preview on http://localhost:3050/fr with the new build.

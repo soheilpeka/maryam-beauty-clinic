@@ -80,7 +80,16 @@ test.describe("store customer and admin flows", () => {
     await page.locator("#checkout-address").fill("123 Store Street");
     await page.locator("#checkout-city").fill("Montreal");
     await page.locator("#checkout-postalCode").fill("H2X 1Y4");
+    const checkoutResponse = page.waitForResponse(response => response.url().endsWith("/api/store/orders") && response.request().method() === "POST");
     await page.getByRole("button", { name: "Place demo order" }).click();
+    if (process.env.E2E_USE_PRODUCTION === "1") {
+      // Production must refuse mock payments instead of reporting a fake paid order.
+      expect((await checkoutResponse).status()).toBe(503);
+      await expect(page.locator("#main [role=alert]")).toBeVisible();
+      await expect(page).toHaveURL(/\/store\/checkout$/);
+      return;
+    }
+    await checkoutResponse;
     await expect(page).toHaveURL(/\/store\/order\/[^?]+\?t=/, { timeout: 30_000 });
     await expect(page.getByRole("heading", { name: /Thank you, Store E2E Customer/ })).toBeVisible();
     await expect(page.getByText("Paid", { exact: true })).toBeVisible();

@@ -44,11 +44,12 @@ html { scroll-padding-top: 80px; }
 .salon-hero-actions a:first-child:hover { background: #fff; color: #111; }
 @media(max-width:767px) {
   .salon-hero-main { display: flex; flex-direction: column; background: #f5f4f1; }
-  .salon-hero-copy { position: relative; width: 100%; padding: 30px 22px 26px; order: -1; align-items: center; text-align: center; }
-  .salon-hero-copy h1 { font-size: clamp(36px, 9vw, 54px); max-width: 10em; }
-  .salon-hero-copy .preview-kicker { margin-bottom: 22px; }
-  .salon-hero-intro { margin: 20px 0 22px; }
-  .salon-hero-image { height: auto; aspect-ratio: 1.05; object-position: right center; }
+  .salon-hero-copy { position: relative; width: 100%; padding: 14px 18px; order: -1; align-items: center; text-align: center; }
+  .salon-hero-copy h1 { font-size: clamp(1.625rem, 6.4vw, 2.375rem); max-width: 12em; }
+  .salon-hero-copy .preview-kicker { margin-bottom: 8px; }
+  .salon-hero-intro { margin: 8px 0 10px; line-height: 1.5; }
+  /* A portrait crop gives the photograph more presence beneath the compact copy. */
+  .salon-hero-image { height: auto; aspect-ratio: 0.68; max-height: 42rem; object-position: right center; }
   .salon-hero-actions { gap: 14px; font-size: 10px; justify-content: center; }
   .salon-hero-actions a:first-child { padding-inline: 18px; gap: 20px; }
 }
@@ -56,6 +57,7 @@ html { scroll-padding-top: 80px; }
 .editorial-heading h1, .admin-page-heading h1, .admin-login-intro h1 { font-weight: 600; letter-spacing: -.045em; line-height: 1.08; }
 .preview-hero { padding-top: 55px; }
 .hero-editorial-copy h1 { font-size: clamp(44px, 5.4vw, 82px); }
+.service-editorial h1.display-heading { font-size: clamp(28px, 4vw, 58px); overflow-wrap: normal; hyphens: auto; text-wrap: balance; }
 .preview-page h2 { font-size: clamp(32px, 4.2vw, 62px); }
 .preview-parallax h2 { font-size: clamp(40px, 5.5vw, 78px); }
 .home-section-heading h2, .home-visit h2 { font-weight: 600; font-size: clamp(32px, 4vw, 58px); }
