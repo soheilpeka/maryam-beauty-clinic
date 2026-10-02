@@ -1,18 +1,18 @@
 "use client";
 import { useState } from "react";
 import { ImageComparison } from "@/components/image-comparison";
-import { COMPARISONS } from "@/lib/content/comparisons";
+import type { ComparisonContent } from "@/lib/comparison-validation";
 import styles from "./comparison-gallery.module.css";
 
 const PAGE_SIZE = 6;
-export function ComparisonGallery({ locale }: { locale: "en" | "fr" }) {
+export function ComparisonGallery({ locale, items }: { locale: "en" | "fr"; items: ComparisonContent[] }) {
   const fr = locale === "fr";
   const [filter, setFilter] = useState("all");
   const [page, setPage] = useState(0);
-  const filtered = COMPARISONS.filter(item => filter === "all" || item.family === filter);
-  const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
+  const filtered = items.filter(item => filter === "all" || item.category === filter);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const visible = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-  const filters = [{ id: "all", label: fr ? "Tout" : "All" }, { id: "laser", label: "Laser" }, { id: "rf", label: fr ? "Radiofréquence" : "Radiofrequency" }];
+  const filters = [{ id: "all", label: fr ? "Tout" : "All" }, { id: "laser", label: "Laser" }, { id: "rf", label: fr ? "Radiofréquence" : "Radiofrequency" }, ...(items.some(item => item.category === "other") ? [{ id: "other", label: fr ? "Autres" : "Other" }] : [])];
   return <section className={styles.section} aria-labelledby="comparison-title" id="before-after">
     <header className={styles.heading}>
       <p className="eyebrow">{fr ? "UN AUTRE REGARD" : "A CLOSER LOOK"}</p>
@@ -25,16 +25,18 @@ export function ComparisonGallery({ locale }: { locale: "en" | "fr" }) {
     <p className={styles.count} role="status">{fr ? `${filtered.length} comparaisons · Page ${page + 1} sur ${pageCount}` : `${filtered.length} comparisons · Page ${page + 1} of ${pageCount}`}</p>
     <div className={styles.grid}>
       {visible.map(item => {
-        const title = fr ? item.titleFr : item.title;
+        const title = fr ? item.nameFr : item.name;
         const beforeLabel = fr ? "Avant" : "Before", afterLabel = fr ? "Après" : "After";
         return <article key={item.id} className={styles.card}>
-          <ImageComparison before={{ src: item.image, alt: `${title} — ${beforeLabel}`, viewport: item.before }} after={{ src: item.image, alt: `${title} — ${afterLabel}`, viewport: item.after }}
-            beforeLabel={beforeLabel} afterLabel={afterLabel} label={fr ? `Glisser pour comparer : ${title}` : `Drag to compare: ${title}`} aspectRatio={item.before.width / item.before.height * item.boardRatio} />
-          <p className={styles.category}>{item.family === "laser" ? "Laser" : fr ? "Radiofréquence" : "Radiofrequency"}</p>
+          <ImageComparison before={{ src: item.imageUrl, alt: `${title} — ${beforeLabel}`, viewport: item.beforeCrop }} after={{ src: item.afterImageUrl, alt: `${title} — ${afterLabel}`, viewport: item.afterCrop }}
+            beforeLabel={beforeLabel} afterLabel={afterLabel} label={fr ? `Glisser pour comparer : ${title}` : `Drag to compare: ${title}`} aspectRatio={item.aspectRatio} />
+          <p className={styles.category}>{item.category === "laser" ? "Laser" : item.category === "rf" ? (fr ? "Radiofréquence" : "Radiofrequency") : (fr ? "Autres" : "Other")}</p>
           <h3>{title}</h3>
+          <p>{fr ? item.descriptionFr : item.description}</p>
         </article>;
       })}
     </div>
+    {!filtered.length && <p role="status">{fr ? "Aucune comparaison dans cette catégorie." : "No comparisons in this category."}</p>}
     <nav className={styles.pagination} aria-label={fr ? "Pages des comparaisons" : "Comparison pages"}>
       <button type="button" disabled={page === 0} onClick={() => setPage(value => value - 1)}>{fr ? "Précédent" : "Previous"}</button>
       <span>{page + 1} / {pageCount}</span>

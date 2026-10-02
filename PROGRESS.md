@@ -1,5 +1,15 @@
 # Maryam Beauty Clinic - Progress
 
+## 2026-10-02 — Before/after admin content management
+
+- Added an additive `ComparisonItem` model and imported the 18 supplied pairs with their existing viewports and copy. A second import created zero records; owner edits and inactive state are preserved. No database reset, deletion, booking/order/customer change or external migration.
+- Admin Gallery now includes a separate bilingual Before/after manager: create/edit names and text in EN/FR, before/after image URLs, category, ratio, optional advanced framing, display order, activation, search, filters, pagination and native-dialog/live-slider previews. Separate-photo additions default to full photographs; existing composite boards retain their saved crops.
+- Public gallery reads only active ordered database comparison records dynamically. Changes appear on the next page request; hidden comparisons cannot be resurrected by static fallback. Salon photograph CMS remains separate and intact.
+- New mutation endpoints require server-side session/CSRF authorization, strict shared Zod validation, safe URL-only media references and transactional audit logging. Activation-only PATCH does not apply creation defaults or erase text/order. No destructive deletion endpoint or production filesystem upload was added.
+- Verification: TypeScript passed, zero errors; Vitest 172 passed, zero failed across 12 files; production webpack build passed (85 generated pages). Full production Playwright: 83 passed, 3 intentional desktop skips of mobile-only tests, zero failed. Includes real isolated-database add/edit/public EN/FR/deactivate flows, audit persistence, authorization/CSRF/invalid input and existing booking/store/admin regressions. Actual local admin page and edit dialog also inspected without changing owner content.
+- Local schema/import applied; host still needs the controlled additive schema/import described in README. Preview restarted at http://localhost:3050/en/admin/gallery. No commit, push or deployment for this feature.
+- Existing lint command remains unavailable: `npm run lint` invokes removed `next lint` on Next 16; TypeScript, tests and build are the verified gates. No dependency/tooling changes were introduced for this feature.
+
 ## 2026-10-02 — Interactive before/after gallery
 
 - Reviewed all 18 supplied composite boards and recorded viewport boundaries and visual differences in `COMPARISON_MEDIA_REVIEW.md`. Preserved source files and photographs without retouching. Complete optimized WebP boards are displayed through separate before/after CSS viewports; privacy masks remain intact.

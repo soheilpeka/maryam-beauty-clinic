@@ -87,6 +87,7 @@ export default async function globalSetup(): Promise<void> {
 
   // 2. Schema. Prisma 7 dropped --skip-generate, so the client is regenerated too.
   run("npx prisma db push");
+  run("npm run prisma:import-comparisons");
 
   // 3. Demo catalog. The seed script is idempotent (upserts) and reads DATABASE_URL from
   //    the environment we pass here, never the developer's dev.db.

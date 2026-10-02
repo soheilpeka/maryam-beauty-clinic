@@ -16,6 +16,7 @@
     "prisma:seed": "node --import tsx --require ./tsx-sandbox-shim.cjs prisma/seed.ts",
     "prisma:bootstrap-admin": "node --import tsx --require ./tsx-sandbox-shim.cjs prisma/bootstrap-admin.ts",
     "prisma:publish-packages": "node --import tsx --require ./tsx-sandbox-shim.cjs prisma/publish-skin-programs.ts",
+    "prisma:import-comparisons": "node --import tsx --require ./tsx-sandbox-shim.cjs prisma/import-comparisons.ts",
     "prisma:init-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/init-staging.ts",
     "prisma:seed-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/seed.ts",
     "prisma:bootstrap-admin-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/bootstrap-admin.ts",

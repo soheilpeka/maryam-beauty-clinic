@@ -223,6 +223,26 @@ model GalleryItem {
 }
 
 /// Provider-neutral image metadata. For now assets point to a validated HTTPS URL or public path.
+model ComparisonItem {
+  id            String @id @default(cuid())
+  name          String
+  nameFr        String
+  description   String @default("")
+  descriptionFr String @default("")
+  imageUrl      String
+  afterImageUrl String
+  beforeCrop    Json
+  afterCrop     Json
+  aspectRatio   Float @default(1.3333333333)
+  category      String @default("laser")
+  active        Boolean @default(true)
+  order         Int @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([active, order])
+}
+
 model MediaAsset {
   id        String        @id @default(cuid())
   url       String        @unique

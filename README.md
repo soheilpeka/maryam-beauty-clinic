@@ -60,9 +60,17 @@ dependency advisories and production configuration gates.
 
 For an existing database, run `npm run prisma:refresh-salon-media` locally, or `npm run prisma:refresh-salon-media-staging` against the configured staging database. This is a one-time content upgrade: it replaces only untouched legacy gallery seed records, preserves their visibility, retains CMS edits, and creates the newly supplied gallery entries. It does not seed/reset services, users, bookings or orders. Future gallery edits use the existing admin panel. The staging command requires `.env.staging` and the existing remote database guard. Deploy the corresponding public assets together with this content upgrade.
 
-`ImageComparison` is an accessible, touch-enabled range component ready for an owner-approved before/after pair. It is intentionally not mounted for unrelated photos. Review original captions, photo permissions and business content before the public launch.
+`ImageComparison` is an accessible, touch-enabled range component mounted only for supplied before/after pairs, not unrelated salon photographs. Review original captions, photo permissions and business content before the public launch.
 # Owner-approved skin package content
 
 The EN/FR public package page reads active Package CMS records and uses the approved interactive presentation. To import the five owner-supplied programs into the configured database, run `npm run prisma:publish-packages`. This creates only missing slugs and never overwrites existing records. It has been run on the local database; a separate deployed database needs its own controlled import before the programs appear there. Confirm the target `DATABASE_URL` before running it.
 
 Names, descriptions, price, sessions, ordering and active state are editable through the existing admin. Extended schedules, inclusions and installment offers remain source-managed in `src/lib/content/skin-programs.ts` and `src/components/packages/package-experience.tsx`; French copy is in `src/lib/content/skin-programs-fr.ts`. Changing a CMS price hides the original savings/installments to avoid publishing an outdated offer.
+
+### Before/after CMS and deployment
+
+`/en/admin/gallery` and `/fr/admin/gallery` now have a separate Before/after section. Owners can add/edit bilingual names and descriptions, two image references, category, aspect ratio, viewport framing, visibility and display order, with live slider preview and search/filter/pagination. Existing salon gallery records are unchanged. Public comparisons read active `ComparisonItem` database records on every page request; the static source module is only the initial import manifest, not a public fallback that would undo deactivation.
+
+For a separate host database: back it up, verify the target `DATABASE_URL`, apply the additive schema using the project's existing `npx prisma db push` workflow (never use force-reset or accept-data-loss), regenerate the client, then run `npm run prisma:import-comparisons` once. The importer creates only missing fixed IDs and never changes saved copy, framing, order or inactive state. These steps have been performed on the local database, not the host. The WebP assets must be deployed with the code. Do not use the general seed script to upgrade an existing owner database.
+
+New image references accept validated public paths or HTTPS raster-image URLs through the shared media policy. URL references do not verify external file bytes; uploads require an approved cloud storage adapter later. No production filesystem upload is offered.

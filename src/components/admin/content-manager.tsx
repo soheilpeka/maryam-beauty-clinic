@@ -7,19 +7,22 @@ import { serviceSchema, productSchema, packageSchema, galleryItemSchema, flatten
 import { translateValidationKey } from "@/lib/booking-ui";
 import { getCsrfToken } from "@/lib/admin-client";
 import { MediaEditor, type ImageDraft } from "./media-editor";
+import { comparisonSchema, FULL_PHOTO } from "@/lib/comparison-validation";
+import { ComparisonEditor, ComparisonPreview } from "./comparison-editor";
 
-type Kind = "services" | "products" | "packages" | "gallery";
+type Kind = "services" | "products" | "packages" | "gallery" | "comparisons";
 type Row = { id: string; slug?: string; active: boolean; order: number; name?: string; nameFr?: string; category?: string; imageUrl?: string; images?: ImageDraft[]; services?: { serviceId: string }[]; [key: string]: unknown };
 type Field = { key: string; en: string; fr: string; type?: "number" | "textarea"; optional?: boolean; money?: boolean };
 const shared: Field[] = [{ key: "name", en: "Name", fr: "Nom anglais" }, { key: "nameFr", en: "French name", fr: "Nom français" }, { key: "description", en: "Description", fr: "Description anglaise", type: "textarea", optional: true }, { key: "descriptionFr", en: "French description", fr: "Description française", type: "textarea", optional: true }, { key: "price", en: "Price (CAD)", fr: "Prix (CAD)", type: "number", money: true }];
 const fields: Record<Kind, Field[]> = {
+  comparisons: shared.filter(field => field.key !== "price"),
   services: [...shared, { key: "duration", en: "Duration (min)", fr: "Durée (min)", type: "number" }, { key: "bufferMin", en: "Buffer (min)", fr: "Marge (min)", type: "number" }, { key: "category", en: "Category", fr: "Catégorie" }],
   products: [{ key: "sku", en: "SKU", fr: "UGS" }, ...shared, { key: "salePrice", en: "Sale price (CAD)", fr: "Prix promotionnel (CAD)", type: "number", money: true, optional: true }, { key: "stock", en: "Stock", fr: "Stock", type: "number" }, { key: "category", en: "Category", fr: "Catégorie" }],
   packages: [...shared, { key: "sessions", en: "Sessions", fr: "Séances", type: "number" }, { key: "validityDays", en: "Validity (days)", fr: "Validité (jours)", type: "number", optional: true }, { key: "badge", en: "Badge", fr: "Badge", optional: true }],
   gallery: [{ key: "altEn", en: "English alt text", fr: "Texte alternatif anglais" }, { key: "altFr", en: "French alt text", fr: "Texte alternatif français" }, { key: "captionEn", en: "English caption", fr: "Légende anglaise", optional: true }, { key: "captionFr", en: "French caption", fr: "Légende française", optional: true }, { key: "category", en: "Category", fr: "Catégorie" }],
 };
-const schemas = { services: serviceSchema, products: productSchema, packages: packageSchema, gallery: galleryItemSchema };
-const names = { services: ["service", "service"], products: ["product", "produit"], packages: ["package", "forfait"], gallery: ["image", "image"] };
+const schemas = { services: serviceSchema, products: productSchema, packages: packageSchema, gallery: galleryItemSchema, comparisons: comparisonSchema };
+const names = { services: ["service", "service"], products: ["product", "produit"], packages: ["package", "forfait"], gallery: ["image", "image"], comparisons: ["comparison", "comparaison"] };
 const defaults = { active: true, featured: false, order: "0", duration: "0", bufferMin: "0", sessions: "1", stock: "0", category: "Hair", imageUrl: "", images: [], serviceIds: [] };
 
 export function ContentManager({ kind, locale }: { kind: Kind; locale: string }) {
@@ -64,6 +67,7 @@ export function ContentManager({ kind, locale }: { kind: Kind; locale: string })
     const next: Record<string, unknown> = { ...defaults, images: [], serviceIds: [] };
     fields[kind].forEach(field => { next[field.key] = row?.[field.key] == null ? (next[field.key] ?? "") : field.money ? String(Number(row[field.key]) / 100) : String(row[field.key]); });
     if (row) Object.assign(next, { id: row.id, active: row.active, featured: row.featured ?? false, order: String(row.order), imageUrl: row.imageUrl ?? "", images: row.images?.map(({ url, altEn, altFr }) => ({ url, altEn, altFr })) ?? [], serviceIds: row.services?.map(item => item.serviceId) ?? [] });
+    if (kind === "comparisons") Object.assign(next, { category: row?.category ?? "laser", afterImageUrl: row?.afterImageUrl ?? "", beforeCrop: row?.beforeCrop ?? { ...FULL_PHOTO }, afterCrop: row?.afterCrop ?? { ...FULL_PHOTO }, aspectRatio: row?.aspectRatio ?? 4 / 3 });
     setDraft(next);
   }
   function close() { if (!busy) { dialog.current?.close(); setDraft(null); } }
@@ -75,11 +79,13 @@ export function ContentManager({ kind, locale }: { kind: Kind; locale: string })
       if (field.optional && !value) { payload[field.key] = field.type === "number" ? null : ""; }
       else payload[field.key] = field.type === "number" ? (field.money ? Math.round(Number(value) * 100) : Number(value)) : value;
     });
-    if (kind !== "gallery") payload.images = draft.images;
+    if (kind !== "gallery" && kind !== "comparisons") payload.images = draft.images;
+    if (kind === "comparisons") Object.assign(payload, { category: draft.category, afterImageUrl: draft.afterImageUrl, beforeCrop: draft.beforeCrop, afterCrop: draft.afterCrop, aspectRatio: Number(draft.aspectRatio) });
     if (kind === "products") payload.featured = draft.featured;
     if (kind === "packages") payload.serviceIds = draft.serviceIds;
     const parsed = schemas[kind].safeParse(payload);
     if (!parsed.success) {
+      if (kind === "comparisons") { setErrors({ form: fr ? "Vérifiez les noms (2–160 caractères), textes (1000 max), URL d’images, ratio et cadrages à l’intérieur de l’image." : "Check names (2–160 characters), text (1000 max), image URLs, ratio and crops inside the image." }); return; }
       setErrors(Object.fromEntries(Object.entries(flattenZodErrors<unknown>(parsed)).map(([key, value]) => [key, translateValidationKey(value, tv)])));
       return;
     }
@@ -116,7 +122,7 @@ export function ContentManager({ kind, locale }: { kind: Kind; locale: string })
       {kind === "services" && <p className="text-xs text-muted-foreground">{fr ? "Prix ou durée à 0 : les détails seront confirmés lors de la consultation." : "Price or duration of 0: details will be confirmed during consultation."}</p>}
       <div className="grid gap-4 sm:grid-cols-2">{fields[kind].map(field => <label key={field.key} className={`block text-sm ${field.type === "textarea" ? "sm:col-span-2" : ""}`}>{fr ? field.fr : field.en}{!field.optional ? " *" : ""}{field.type === "textarea" ? <textarea id={`${kind === "products" ? "product" : kind}-${field.key}`} aria-invalid={Boolean(errors[field.key])} rows={3} value={String(draft[field.key] ?? "")} onChange={e => update(field.key, e.target.value)} className="mt-1 w-full rounded-lg border border-border bg-background p-3" /> : <input id={`${kind === "products" ? "product" : kind}-${field.key}`} aria-invalid={Boolean(errors[field.key])} type={field.type ?? "text"} min={field.type === "number" ? 0 : undefined} step={field.money ? "0.01" : field.type === "number" ? "1" : undefined} value={String(draft[field.key] ?? "")} onChange={e => update(field.key, e.target.value)} className="mt-1 w-full rounded-lg border border-border bg-background p-3" />}{errors[field.key] && <span role="alert" className="mt-1 block text-xs text-destructive">{errors[field.key]}</span>}</label>)}<label className="text-sm">{fr ? "Ordre d’affichage" : "Display order"}<input type="number" min="0" value={String(draft.order)} onChange={e => update("order", e.target.value)} className="mt-1 w-full rounded-lg border border-border bg-background p-3" /></label></div>
       {kind === "packages" && <fieldset className="rounded-xl border border-border p-4"><legend>{fr ? "Services inclus" : "Included services"}</legend><div className="grid gap-2 sm:grid-cols-2">{services.map(service => <label key={service.id} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={(draft.serviceIds as string[]).includes(service.id)} onChange={e => update("serviceIds", e.target.checked ? [...draft.serviceIds as string[], service.id] : (draft.serviceIds as string[]).filter(id => id !== service.id))} />{fr ? service.nameFr : service.name}</label>)}</div>{errors.serviceIds && <p role="alert" className="text-sm text-destructive">{errors.serviceIds}</p>}</fieldset>}
-      <MediaEditor primary={String(draft.imageUrl)} images={kind === "gallery" ? [] : draft.images as ImageDraft[]} allowGallery={kind !== "gallery"} onPrimary={value => update("imageUrl", value)} onImages={value => update("images", value)} />
+      {kind === "comparisons" ? <ComparisonEditor draft={draft} update={update} fr={fr} /> : <MediaEditor primary={String(draft.imageUrl)} images={kind === "gallery" ? [] : draft.images as ImageDraft[]} allowGallery={kind !== "gallery"} onPrimary={value => update("imageUrl", value)} onImages={value => update("images", value)} />}
       {(errors.imageUrl || errors.images) && <p role="alert" className="text-sm text-destructive">{errors.imageUrl ?? errors.images}</p>}
       <div className="flex gap-6"><label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={Boolean(draft.active)} onChange={e => update("active", e.target.checked)} />{fr ? "Actif" : "Active"}</label>{kind === "products" && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={Boolean(draft.featured)} onChange={e => update("featured", e.target.checked)} />{fr ? "En vedette" : "Featured"}</label>}</div>
       <div className="sticky bottom-0 flex justify-end gap-3 border-t border-border bg-card py-3"><button type="button" disabled={busy} onClick={close} className="rounded-full border border-border px-5 py-3 text-sm">{fr ? "Annuler" : "Cancel"}</button><button type="submit" disabled={busy} className="rounded-full bg-primary px-5 py-3 text-sm text-primary-foreground disabled:opacity-50">{busy ? (fr ? "Enregistrement…" : "Saving…") : (fr ? "Enregistrer" : "Save")}</button></div>
@@ -128,5 +134,6 @@ function ContentPreview({ row, fr, close }: { row: Row; fr: boolean; close: () =
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => { ref.current?.showModal(); }, []);
   const name = String(fr ? row.nameFr || row.altFr || row.captionFr || "Aperçu" : row.name || row.altEn || row.captionEn || "Preview");
+  if (row.afterImageUrl) return <dialog ref={ref} onCancel={close} className="m-auto max-h-[90dvh] w-[min(44rem,calc(100%_-_2rem))] overflow-y-auto rounded-2xl border border-border bg-card p-6" aria-label={name}><h2 className="text-2xl">{name}</h2><ComparisonPreview data={row} fr={fr} /><p>{String(fr ? row.descriptionFr : row.description)}</p><button type="button" onClick={close} className="mt-4 rounded-full border border-border px-5 py-3">{fr ? "Fermer" : "Close"}</button></dialog>;
   return <dialog ref={ref} onCancel={close} className="m-auto max-h-[90dvh] w-[min(44rem,calc(100%_-_2rem))] overflow-y-auto rounded-2xl border border-border bg-card p-6 text-foreground" aria-labelledby="content-preview-title"><p className="eyebrow">{fr ? "Aperçu du contenu enregistré" : "Saved content preview"}</p><h2 id="content-preview-title" className="mt-3 font-serif text-4xl">{name}</h2>{row.imageUrl && <img src={row.imageUrl} alt={name} className="my-6 aspect-[4/3] w-full object-contain" />}<p className="my-5 whitespace-pre-wrap text-muted-foreground">{String(fr ? row.descriptionFr ?? row.captionFr ?? "" : row.description ?? row.captionEn ?? "")}</p><dl className="space-y-2">{["price", "duration", "sessions", "validityDays", "stock", "category", "order"].filter(key => row[key] != null).map(key => <div key={key} className="flex justify-between gap-6"><dt>{fr ? ({ price: "Prix CAD", duration: "Durée (min)", sessions: "Séances", validityDays: "Validité (jours)", stock: "Stock", category: "Catégorie", order: "Ordre" } as Record<string, string>)[key] : key}</dt><dd>{key === "price" ? (Number(row.price) / 100).toFixed(2) : String(row[key])}</dd></div>)}</dl>{row.images?.map((image, index) => <figure key={index} className="mt-6"><img src={image.url} alt={fr ? image.altFr : image.altEn} className="aspect-[4/3] w-full object-contain" /><figcaption className="mt-2 text-sm text-muted-foreground">{fr ? image.altFr : image.altEn}</figcaption></figure>)}<button type="button" onClick={close} className="mt-8 rounded-full bg-primary px-5 py-3 text-primary-foreground">{fr ? "Fermer" : "Close"}</button></dialog>;
 }

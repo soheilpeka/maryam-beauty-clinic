@@ -3,6 +3,8 @@ import { GalleryFilter } from "@/components/gallery-filter";
 import { ComparisonGallery } from "@/components/comparison-gallery";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { comparisonSchema } from "@/lib/comparison-validation";
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -27,6 +29,7 @@ export default async function GalleryPage({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Sections" });
   const records = await prisma.galleryItem.findMany({ where: { active: true }, orderBy: [{ order: "asc" }, { createdAt: "desc" }] });
+  const comparisons = (await prisma.comparisonItem.findMany({ where: { active: true }, orderBy: [{ order: "asc" }, { createdAt: "desc" }] })).map(({ id, createdAt, updatedAt, ...data }) => ({ id, ...comparisonSchema.parse(data) }));
   const items = records.map((item) => ({ slug: item.id, image: item.imageUrl, alt: (locale === "fr" ? item.altFr : item.altEn) ?? "", caption: locale === "fr" ? (item.captionFr ?? item.altFr ?? item.altText ?? "Gallery image") : (item.captionEn ?? item.altEn ?? item.altText ?? "Gallery image"), title: locale === "fr" ? (item.captionFr ?? item.altFr ?? item.title ?? "Gallery image") : (item.captionEn ?? item.altEn ?? item.title ?? "Gallery image"), tag: item.category }));
 
   return (
@@ -44,7 +47,7 @@ export default async function GalleryPage({
           </p>
         </div>
         <div className="mt-14">
-          <ComparisonGallery locale={locale === "fr" ? "fr" : "en"} />
+          <ComparisonGallery locale={locale === "fr" ? "fr" : "en"} items={comparisons} />
           <h2 className="display-heading mb-8 text-3xl">{locale === "fr" ? "Au salon." : "At the salon."}</h2>
           <GalleryFilter items={items} />
         </div>
