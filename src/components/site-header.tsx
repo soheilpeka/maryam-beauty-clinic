@@ -172,6 +172,9 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
             )}
           </div>
 
+          <Link href="/pricing-plans/packages" className="text-sm font-medium text-foreground" aria-current={localePath === "/pricing-plans/packages" ? "page" : undefined}>
+            {locale === "fr" ? "Forfaits" : "Packages"}
+          </Link>
           <Link
             href="/store"
             className="text-sm font-medium text-foreground transition-colors hover:text-brand"
@@ -276,6 +279,7 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
             </MobileSection>
 
             <MobileSection title={t("clinic")}>
+              <Link href="/pricing-plans/packages" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{locale === "fr" ? "Forfaits" : "Packages"}</Link>
               <Link href="/store" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("store")}</Link>
               <Link href="/about" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("about")}</Link>
               <Link href="/store/cart" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("cart")}</Link>

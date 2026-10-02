@@ -1,5 +1,21 @@
 # Maryam Beauty Clinic - Progress
 
+## 2026-10-02 — Interactive before/after gallery
+
+- Reviewed all 18 supplied composite boards and recorded viewport boundaries and visual differences in `COMPARISON_MEDIA_REVIEW.md`. Preserved source files and photographs without retouching. Complete optimized WebP boards are displayed through separate before/after CSS viewports; privacy masks remain intact.
+- Added bilingual comparison cards to `/en/gallery` and `/fr/gallery`, with rounded frames, native keyboard controls, pointer capture, horizontal touch dragging and preserved vertical scrolling. Added laser/radiofrequency filters and six-card pagination. Kept the existing CMS gallery and lightbox below the new section.
+- Visible copy is neutral and does not claim these photographs are salon client work. Names/credit strips are not shown in card viewports. No session counts or new medical promises were inferred. Publication permissions remain the owner's responsibility.
+- Comparison records are centralized in `src/lib/content/comparisons.ts`; this specific paired-photo collection is not editable through the existing single-image Gallery CMS. No database schema or customer records changed.
+- Verification: TypeScript passed with zero errors; Vitest 168 passed, zero failed across 11 files; production webpack build passed with 85 generated pages. Focused comparison Playwright: 11 passed, one intentional desktop touch-test skip, zero failed. Existing editorial/motion regression: 14 passed, zero failed. Full booking/store/admin mutation suites were not rerun for this gallery-only feature. No commit, push or deployment.
+
+## 2026-10-02 — Owner-approved skin packages published
+
+- Promoted the approved monochrome interactive design from preview to `/en/pricing-plans/packages` and `/fr/pricing-plans/packages`. Added desktop/mobile navigation, footer links, localized metadata and sitemap entries; retained the noindex preview.
+- Imported Discovery, Glow Renewal, Essential, Platinum and Diamond into the existing Package CMS using the supplied artwork prices and treatment counts. The idempotent `npm run prisma:publish-packages` command creates only missing slugs; a second run created zero records. Existing CMS records, activation and edits are preserved. No schema changes or external deployment.
+- Core publication state, names, descriptions, prices, ordering and session counts come from the database. Extended inclusions, treatment schedules and offer details are owner-approved source content in `src/lib/content/skin-programs.ts` and the shared presentation component. They are not new admin-editable fields. A later CMS price edit hides the old promotional savings and installment offer.
+- Completed French interface/content and CAD formatting. Browser checks confirmed both routes return HTTP 200, Diamond/Discovery selection updates correctly, indexable metadata, no page errors, and no overflow at 320/390/768/1440px. Screenshots: `artifacts/packages-published-en.png` and `artifacts/packages-published-fr.png`.
+- Verification: typecheck passed; Vitest 165/165 across 10 files passed; webpack production build passed (85 pages); diff whitespace check passed. The existing `npm run lint` script still calls removed `next lint` and cannot run with this Next.js version. Full booking/store/admin E2E was not repeated for this content feature.
+
 ## 2026-10-02 — Link visible business addresses to Google Maps
 
 - Made displayed salon addresses clickable across the home, footer, contact, about and service pages. All use the centralized business Maps URL and open the salon listing in a new tab; the existing clickable map card remains linked as before.

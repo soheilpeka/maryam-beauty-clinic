@@ -1,0 +1,16 @@
+.section { margin: 0 0 clamp(4rem, 8vw, 7rem); }
+.heading { max-width: 44rem; margin-bottom: 2rem; }
+.heading h2 { margin-top: .75rem; font-family: var(--font-serif), Georgia, serif; font-weight: 400; font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.12; letter-spacing: -.03em; }
+.heading > p:last-child { margin-top: 1rem; color: #625f5b; line-height: 1.7; }
+.filters { display: flex; flex-wrap: wrap; gap: .6rem; }
+.filters button, .pagination button { min-height: 2.75rem; padding: .65rem 1rem; border: 1px solid #d7d4ce; border-radius: 2rem; background: transparent; font-size: .8rem; }
+.filters button[aria-pressed="true"] { background: #181818; border-color: #181818; color: #fff; }
+.filters button:focus-visible, .pagination button:focus-visible { outline: 3px solid #74634b; outline-offset: 3px; }
+.count { margin: 1.5rem 0; font-size: .75rem; color: #625f5b; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.card { min-width: 0; padding: clamp(.75rem, 2vw, 1.5rem); border: 1px solid #dedbd5; border-radius: 2rem; background: #f8f7f4; }
+.category { margin-top: 1.5rem; font-size: .65rem; letter-spacing: .18em; text-transform: uppercase; color: #756957; }
+.card h3 { margin-top: .6rem; font-family: var(--font-serif), Georgia, serif; font-weight: 400; font-size: clamp(1.35rem, 3vw, 1.7rem); line-height: 1.35; }
+.pagination { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem; font-size: .8rem; }
+.pagination button:disabled { opacity: .4; cursor: not-allowed; }
+@media (min-width: 768px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; } }

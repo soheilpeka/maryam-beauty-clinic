@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { GalleryFilter } from "@/components/gallery-filter";
+import { ComparisonGallery } from "@/components/comparison-gallery";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 
@@ -43,6 +44,8 @@ export default async function GalleryPage({
           </p>
         </div>
         <div className="mt-14">
+          <ComparisonGallery locale={locale === "fr" ? "fr" : "en"} />
+          <h2 className="display-heading mb-8 text-3xl">{locale === "fr" ? "Au salon." : "At the salon."}</h2>
           <GalleryFilter items={items} />
         </div>
       </div>

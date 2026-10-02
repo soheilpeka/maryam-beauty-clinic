@@ -83,6 +83,9 @@ PROGRESS.md. After any context compaction, re-read this file and PROGRESS.md fir
 - Packages are first-class records with localized content, price, session count, validity, badge,
   images and an explicit many-to-many list of included services. Package content is provisional until
   owner-approved data exists; no final packages or prices may be invented.
+- OWNER APPROVAL 2026-10-02: publish the supplied Discovery, Glow Renewal, Essential, Platinum
+  and Diamond packages with the approved interactive monochrome design and artwork values.
+  Core values remain CMS-backed; extended schedule/inclusions/offer copy is source-managed.
 
 ### Store and payment boundary
 - The public store must show an honest empty state while only demo products exist. Admin-published

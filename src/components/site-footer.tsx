@@ -47,6 +47,7 @@ export async function SiteFooter() {
                 </a>
               ))}
             </div>
+            <Link href="/pricing-plans/packages" className="mt-6 inline-block text-sm underline underline-offset-4">{locale === "fr" ? "Découvrir les forfaits" : "Explore our packages"}</Link>
           </div>
 
           {/* Treatments index */}

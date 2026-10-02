@@ -24,6 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/contact", priority: 0.7, change: "yearly" },
     { path: "/about", priority: 0.8, change: "monthly" },
     { path: "/store", priority: 0.8, change: "weekly" },
+    { path: "/pricing-plans/packages", priority: 0.8, change: "monthly" },
   ];
 
   const entries: MetadataRoute.Sitemap = [];

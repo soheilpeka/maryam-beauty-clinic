@@ -1,0 +1,61 @@
+/** French copy for the owner-approved package presentation. */
+export const SKIN_PROGRAMS_FR: Record<string, string> = {
+  "MARYAM C BEAUTÉ / SKIN PROGRAMS": "MARYAM C BEAUTÉ / PROGRAMMES DE SOINS",
+  "Good skin.": "Une belle peau.", "A considered": "Un parcours", "journey.": "sur mesure.",
+  "From your first glow to a complete skin renewal program. Discover a treatment journey designed around you.": "De votre premier soin éclat à un programme complet de renouvellement. Découvrez un parcours pensé pour vous.",
+  "Find your program": "Trouvez votre programme", "ASSESS / TREAT / MAINTAIN": "ÉVALUER / SOIGNER / ENTRETENIR",
+  "Your skin.": "Votre peau.", "Your pace.": "Votre rythme.", "PERSONALIZED BY MARYAM C BEAUTÉ": "PERSONNALISÉ PAR MARYAM C BEAUTÉ",
+  "FOR NEW CLIENTS": "NOUVELLE CLIENTÈLE", "Start with Discovery.": "Commencez avec Discovery.",
+  "Three premium experiences. One visit.": "Trois expériences premium. Une visite.", "AI Skin Analysis": "Analyse de la peau par IA",
+  "Hydra Facial": "Hydra Facial", "Matrix Consultation": "Consultation Matrix", "Explore Discovery": "Découvrir Discovery",
+  "THE COLLECTION": "LA COLLECTION", "A little care.": "Un peu de soin.", "A lasting ritual.": "Un rituel durable.",
+  "Choose your program to explore the treatments, your journey and payment options.": "Choisissez votre programme pour découvrir les soins, le parcours et les options de paiement.",
+  "GLOW & MAINTENANCE": "ÉCLAT & ENTRETIEN", "RENEWAL & PREVENTION": "RENOUVELLEMENT & PRÉVENTION", "ADVANCED CARE": "SOINS AVANCÉS", "COMPLETE CARE": "SOINS COMPLETS",
+  "Hydrate · Brighten · Maintain": "Hydrater · Illuminer · Entretenir", "Prevent · Protect · Renew": "Prévenir · Protéger · Renouveler", "Rebuild · Renew · Restore": "Reconstruire · Renouveler · Restaurer",
+  "Discover. Experience. Transform.": "Découvrir. Vivre. Transformer.", "Your most complete skin journey": "Votre parcours le plus complet",
+  "premium": "soins", "treatments": "premium", " / month": " / mois", "YOUR PROGRAM /": "VOTRE PROGRAMME /",
+  "EXPERIENCES": "EXPÉRIENCES", "TREATMENTS": "SOINS", "Everything in your program": "Tout ce que comprend votre programme",
+  "STEP BY STEP": "ÉTAPE PAR ÉTAPE", "Your treatment journey": "Votre parcours de soins", "Designed for": "Pensé pour",
+  "YOUR INVESTMENT": "VOTRE INVESTISSEMENT", "Regular value": "Valeur habituelle", "Or spread your payments": "Ou étalez vos paiements",
+  "Book a consultation": "Demander une consultation", "✓ Personalized treatment plan": "✓ Plan de soins personnalisé",
+  "✓ Professional skin assessment": "✓ Évaluation professionnelle de la peau", "✓ Care guided by your skin goals": "✓ Soins adaptés à vos objectifs",
+  "LET’S FIND YOUR FIT": "TROUVONS VOTRE PROGRAMME", "Your next chapter": "Votre prochaine étape", "starts with a conversation.": "commence par un échange.", "Speak with the clinic": "Parler avec la clinique",
+  "The perfect intro to your best skin journey": "Le point de départ idéal de votre parcours de soins",
+  "Discover, experience and transform in one personalized session.": "Découvrez une expérience de soins personnalisée en une seule séance.",
+  "3 premium experiences": "3 expériences premium", "1 session": "1 séance", "New clients only": "Nouvelle clientèle uniquement",
+  "Advanced AI Skin Analysis": "Analyse avancée de la peau par IA", "Hydra Facial Experience": "Expérience Hydra Facial",
+  "Candela Matrix RF Microneedling Consultation": "Consultation de microneedling RF Candela Matrix",
+  "Personalized skin evaluation": "Évaluation personnalisée de la peau", "A clear treatment roadmap": "Un parcours de soins clair", "A first clinic experience": "Une première expérience à la clinique", "Introductory offer": "Offre découverte",
+  "Your skin’s essential glow program": "Votre programme essentiel pour une peau éclatante",
+  "A signature HydraFacial maintenance program for healthy, hydrated and radiant-looking skin.": "Un programme d’entretien HydraFacial signature pour une peau hydratée et d’apparence éclatante.",
+  "6 treatments": "6 soins", "90 min each": "90 min par séance", "12-month program": "Programme de 12 mois",
+  "6 Signature HydraFacial treatments": "6 soins HydraFacial signature", "Personalized Skin Evaluation": "Évaluation personnalisée de la peau", "Customized Treatment Protocol": "Protocole de soins sur mesure", "Before & After Progress Tracking": "Suivi des progrès avant et après",
+  "Dehydrated skin": "Peau déshydratée", "Dull complexion": "Teint terne", "Enlarged pores": "Pores dilatés", "Uneven skin tone": "Teint irrégulier", "Preventive skincare": "Soins préventifs", "Maintaining healthy skin": "Entretien d’une peau saine",
+  "Your first step to long-term skin rejuvenation": "Votre premier pas vers un renouvellement durable de la peau",
+  "A professionally designed program combining Candela Matrix RF Microneedling and Hydra Facial treatments.": "Un programme professionnel combinant le microneedling RF Candela Matrix et les soins Hydra Facial.",
+  "2 treatment phases": "2 phases de soins", "3 Candela Matrix RF Microneedling treatments": "3 soins de microneedling RF Candela Matrix", "3 Signature HydraFacial treatments": "3 soins HydraFacial signature",
+  "Personalized Treatment Plan": "Plan de soins personnalisé", "Progress Monitoring": "Suivi des progrès", "Early signs of aging": "Premiers signes de l’âge", "Fine lines": "Ridules", "Prevention and maintenance": "Prévention et entretien", "Healthy skin aging": "Accompagnement du vieillissement cutané",
+  "The ultimate skin transformation program": "Un programme complet de transformation de la peau",
+  "A comprehensive combination of Candela Matrix RF Microneedling, RF treatments and Hydra Facial.": "Une combinaison complète de microneedling RF Candela Matrix, de soins RF et de Hydra Facial.",
+  "10 premium treatments": "10 soins premium", "Personalized journey": "Parcours personnalisé", "3 RF treatments": "3 soins RF", "4 Signature HydraFacial treatments": "4 soins HydraFacial signature", "Progress Monitoring & Follow-Up": "Suivi des progrès et accompagnement", "Premium Aftercare Guidance": "Conseils de suivi premium",
+  "Fine lines and wrinkles": "Ridules et rides", "Loss of firmness and elasticity": "Perte de fermeté et d’élasticité", "Uneven skin tone and texture": "Teint et texture irréguliers", "Dull and dehydrated skin": "Peau terne et déshydratée", "Overall skin rejuvenation": "Renouvellement global de la peau",
+  "The ultimate skin transformation journey": "Le parcours complet de transformation de la peau",
+  "Our most comprehensive program combining Matrix RF Microneedling, RF treatments and HydraFacial.": "Notre programme le plus complet, combinant microneedling RF Matrix, soins RF et HydraFacial.",
+  "15 premium treatments": "15 soins premium", "Long-term support": "Accompagnement durable", "5 Candela Matrix RF Microneedling treatments": "5 soins de microneedling RF Candela Matrix", "5 RF treatments": "5 soins RF", "5 Signature HydraFacial treatments": "5 soins HydraFacial signature", "Long-term skin rejuvenation": "Renouvellement durable de la peau",
+  "Understand your skin": "Comprendre votre peau", "Advanced AI skin analysis and a personalized treatment plan.": "Analyse avancée de la peau par IA et plan de soins personnalisé.",
+  "Experience Hydra Facial": "Découvrir Hydra Facial", "Deep cleansing, gentle exfoliation, instant hydration and glow.": "Nettoyage en profondeur, exfoliation douce, hydratation et éclat.",
+  "Explore Matrix": "Découvrir Matrix", "Skin assessment, customized treatment mapping and a personalized Matrix treatment preview.": "Évaluation de la peau, cartographie personnalisée des soins et présentation du traitement Matrix.",
+  "Every 2 months": "Tous les 2 mois", "Signature Hydra Facial": "Hydra Facial signature", "6 treatments across 12 months. 90 minutes per session.": "6 soins sur 12 mois. 90 minutes par séance.", "Throughout": "Tout au long du programme", "Track your progress": "Suivre vos progrès", "AI analysis, personalized evaluation and before-and-after progress tracking.": "Analyse par IA, évaluation personnalisée et suivi avant et après.",
+  "Months 1–3": "Mois 1–3", "Skin regeneration": "Régénération de la peau", "3 Matrix RF Microneedling treatments, one every month.": "3 soins de microneedling RF Matrix, un par mois.", "6 weeks": "6 semaines", "Healing period": "Période de récupération", "Between your final Matrix treatment and the hydration phase.": "Entre votre dernier soin Matrix et la phase d’hydratation.", "Months 4.5 · 6 · 7.5": "Mois 4,5 · 6 · 7,5", "Hydrate & maintain": "Hydrater et entretenir", "3 Hydra Facial treatments, one every 6 weeks.": "3 soins Hydra Facial, un toutes les 6 semaines.",
+  "Months 1 · 2 · 3": "Mois 1 · 2 · 3", "Matrix + RF": "Matrix + RF", "2.5 hours each. Treatments spaced 4 weeks apart.": "2,5 heures par séance. Soins espacés de 4 semaines.", "6 weeks later": "6 semaines plus tard", "Transition to hydration": "Transition vers l’hydratation", "Begin your Hydra Facial phase after your Matrix + RF phase.": "Commencez la phase Hydra Facial après la phase Matrix + RF.", "Months 4 · 6 · 8 · 10 · 12": "Mois 4 · 6 · 8 · 10 · 12", "Hydra Facial journey": "Parcours Hydra Facial", "1.5 hours each, spaced 2 months apart.": "1,5 heure par séance, espacées de 2 mois.",
+  "Months 1–5": "Mois 1–5", "Rebuild & renew": "Reconstruire et renouveler", "5 Matrix + RF sessions, 4 weeks apart. 2.5 hours each.": "5 séances Matrix + RF, espacées de 4 semaines. 2,5 heures par séance.", "Months 6.5 · 8 · 9.5 · 11 · 12.5": "Mois 6,5 · 8 · 9,5 · 11 · 12,5", "5 HydraFacial sessions. 1.5 hours each.": "5 séances HydraFacial. 1,5 heure par séance.",
+  "Discuss your personalized schedule with the clinic.": "Discutez de votre calendrier personnalisé avec la clinique.",
+};
+
+export function packageCopy(text: string, locale: string): string {
+  if (locale !== "fr") return text;
+  if (SKIN_PROGRAMS_FR[text]) return SKIN_PROGRAMS_FR[text];
+  if (/^Save \$/.test(text)) return `Économisez ${text.slice(5)}`;
+  if (text.includes("monthly payments")) return text.replace("monthly payments", "versements mensuels").replace("0% interest", "0 % d’intérêt");
+  return text;
+}
