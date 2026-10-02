@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { SERVICES, SERVICE_CATEGORIES, categoryLabel } from "@/lib/content/services";
 import type { Service, ServiceCategory } from "@/lib/content/services";
-import { formatPrice } from "@/lib/content/format";
 import type { Locale } from "@/i18n/routing";
 
 /**
@@ -117,11 +116,7 @@ export function ServiceCatalog({ locale, services = SERVICES }: { locale: Locale
               <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
                 {s.summary}
               </p>
-              <div className="mt-5 grid grid-cols-2 gap-4 border-t border-border pt-4">
-                <div>
-                  <p className="text-[0.65rem] uppercase tracking-widest text-muted-foreground">{t("price")}</p>
-                  <p className="mt-1 text-sm font-medium text-foreground">{s.price > 0 ? s.priceLabel : t("consultationPrice")}</p>
-                </div>
+              <div className="mt-5 border-t border-border pt-4">
                 <div>
                   <p className="text-[0.65rem] uppercase tracking-widest text-muted-foreground">{t("duration")}</p>
                   <p className="mt-1 text-sm font-medium text-foreground">{s.duration > 0 ? `${s.duration} ${t("min")}` : t("consultationDuration")}</p>
@@ -148,5 +143,3 @@ export function ServiceCatalog({ locale, services = SERVICES }: { locale: Locale
     </div>
   );
 }
-
-export { formatPrice };

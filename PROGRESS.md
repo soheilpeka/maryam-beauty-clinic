@@ -1,5 +1,31 @@
 # Maryam Beauty Clinic - Progress
 
+## 2026-10-02 — Link visible business addresses to Google Maps
+
+- Made displayed salon addresses clickable across the home, footer, contact, about and service pages. All use the centralized business Maps URL and open the salon listing in a new tab; the existing clickable map card remains linked as before.
+- Added a subtle external-map arrow and accessible link name so the address reads as an action without changing its text.
+- Verification: `npm run typecheck`, `npm run build` (83 pages), and `git diff --check` passed. Browser inspection on `/fr`, `/en`, `/fr/contact`, `/fr/about` and `/fr/service-page/rf-microneedling` confirmed every displayed salon address links to the centralized Google Maps listing. Saved a mobile screenshot in `artifacts/address-map-mobile.png`.
+
+## 2026-10-02 — Homepage review carousel
+
+- Replaced the three side-by-side testimonial cards with a centered, single-review carousel inspired by the supplied reference. Added previous/next arrows, direct slide dots, wraparound navigation, and EN/FR accessible labels; retained the verified review text, author names, Google Maps attribution and external review link.
+- Styled the section with a soft warm neutral background, rose quote accent, circular initial portrait and restrained navigation controls. The single-column design adapts to narrow screens.
+- Verification: `npm run typecheck` passed; `npm run build` passed and generated all 83 pages. Browser inspection confirmed English and French labels and that Next advances from the first review to the second. Automated tests were not run.
+
+## 2026-10-02 — Bilingual service copy and hidden public prices
+
+- Follow-up polish: reframed all 16 EN/FR service descriptions and the shared service-detail FAQs in positive, customer-facing language. Removed FDA-warning, risk, diagnosis and “not guaranteed” copy from promotional descriptions; no FDA-clearance claim is made because the exact salon device/model and intended use have not been supplied.
+- Added researched, editable English/French descriptions for all 16 services, preserving owner-edited CMS copy and replacing only untouched legacy demo summaries. New seed descriptions stay within the admin field limits; the public detail pages show the fuller localized editorial text.
+- Removed prices from the public service catalogue, service details, booking selection/summary/confirmation, customer booking management, and customer confirmation emails. Financial values and historical booking snapshots remain available internally for admin and recordkeeping.
+- Rewrote the homepage price FAQ in both languages. Copy avoids guaranteed results and states that suitability should be assessed for higher-risk treatments. Research references: HydraFacial treatment overview; AAD guidance on laser hair removal, leg-vein procedures and cosmetic lasers; FDA safety communications on RF microneedling, microneedling devices and permanent makeup; Canfield VISIA; Elleebana lamination; NCCIH massage; AAD hair-color guidance.
+- Verification after the final copy-length adjustment: `npm run typecheck` passed; Vitest 9 files / 159 tests passed; `npm run build` passed and generated 83 pages. Prior Playwright public-route sweep (before the final seed-copy length-only adjustment) checked all 16 EN/FR service routes and both booking routes: 34/34 HTTP 200, localized detail copy present, no public prices, no runtime errors, and no mobile overflow. The local preview was restarted at `http://localhost:3050`; interactive browser verification was unavailable in this pass.
+- Research links: https://www.hydrafacial.com/pages/frequently-asked-questions ; https://www.aad.org/public/cosmetic/hair-removal/laser-hair-removal-faqs ; https://www.aad.org/public/cosmetic/younger-looking/how-dermatologists-treat-leg-veins ; https://www.aad.org/public/diseases/a-z/skin-conditions-lasers-treat ; https://www.fda.gov/medical-devices/safety-communications/potential-risks-certain-uses-radiofrequency-rf-microneedling-fda-safety-communication ; https://www.fda.gov/consumers/consumer-updates/microneedling-devices-getting-point-benefits-risks-and-safety ; https://www.fda.gov/cosmetics/cosmetic-products/tattoos-permanent-makeup-fact-sheet ; https://www.air.canfieldsci.com/imaging-systems/visia-complexion-analysis/ ; https://elleebana.com/elleeplex-brow-and-lash-lamination/ ; https://www.nccih.nih.gov/health/massage-therapy-what-you-need-to-know ; https://www.aad.org/public/everyday-care/hair-scalp-care/hair/coloring-perming-tips
+
+## 2026-10-02 — Narrow-phone hero proportions
+
+- Reduced mobile hero copy padding, headline minimum size and paragraph spacing. Made the image taller with a 0.68 portrait ratio capped at 42rem, and adjusted its horizontal crop to keep the subject better centered on narrow phones.
+- Browser inspection on the running development preview at 320, 355, 390, 568, 767 and 1280px showed no horizontal overflow. At 355px the French copy is 208px tall and the photograph 522px. Saved a mobile screenshot in artifacts. Desktop hero rules remain unchanged. No business logic or database changes.
+
 ## 2026-10-02 — Whole-site regression audit
 
 - Reviewed EN/FR public pages, linked service routes, local image responses, gallery/lightbox, contact validation, responsive navigation, booking/manage/cancellation, language switching with signed links, storefront/cart/checkout and admin pages/workflows using isolated databases.
@@ -635,3 +661,19 @@ Bookings, customers, service values, admin authentication and external provider 
 - Verified the production preview with Chrome/Playwright in EN and FR at 320, 390, 568, 767, 768 and 1280px: 12 read-only layout checks passed, images loaded, no horizontal overflow, and desktop copy remained overlaid. Visually inspected `artifacts/hero-mobile-568.png`.
 - `npm run typecheck`: passed, zero errors. `npm run build`: passed, 83 generated pages. `git diff --check`: passed. Full Vitest/E2E mutation suites were not rerun for this CSS-only adjustment. No database changes, commit, push or deployment.
 - Restarted the existing production preview on http://localhost:3050/fr with the new build.
+
+## 2026-10-02 — Flowly-style public motion and photo framing
+
+### Owner follow-up — Hero framing exception
+
+- Restored only the Hero's original full-bleed, square-edge framing in `site-motion.css` (zero side padding and zero image/container radius). Other photographs keep their rounded frames; motion, content and responsive portrait dimensions remain unchanged.
+- Verified EN/FR mobile and desktop layouts in the browser: hero width equals the available page width, image radius is 0px, other photo frames remain 32px, no horizontal overflow. Screenshot: `artifacts/hero-frame-restored.jpg`.
+- Typecheck and production build passed (83 generated pages); preview restarted on port 3050. Full business-mutation suites were not repeated for this CSS-only exception.
+
+- Inspected the supplied Flowly reference in the browser. Matched its short fade/up entrances, staggered content, image scale entrances, slow 1.05 hover zoom, fine card outlines, and 24/28/32px rounded edge-to-edge photo shells; hero uses up to 40px corners. Reference content/assets were not copied.
+- Added shared `site-motion.css` and mounted ScrollReveal in the locale layout, so public routes and dynamically filtered cards use the same system. Removed the conflicting homepage-only reveal. Wrapped home triptych/team and service/product detail photography in clipping frames. Compact mobile hero copy and taller portrait proportions remain intact.
+- Motion is progressively enhanced: server-rendered content stays visible without JavaScript, keyboard focus reveals pending cards, forms/admin controls are excluded, and reduced-motion preferences disable animation. No animation dependency or business-data change was introduced.
+- Browser inspection: desktop homepage, service catalogue/detail, About video and Store; French hero at 320/390/568/767/768/1280 widths without horizontal overflow. At 390px, copy is about 208px tall and photo about 534px. Proof screenshots: `artifacts/flowly-frames-desktop.jpg`, `artifacts/flowly-frames-mobile.jpg`, `artifacts/flowly-service-cards.jpg`.
+- Added behavioral Playwright coverage for scroll entrances, localized photo framing, reduced motion, filtered galleries, client navigation and no-JavaScript rendering. Updated stale booking-price assertions to respect the owner's hidden-price requirement and made store/visual test locators work with transient loading/empty states.
+- Prevented hidden entrance cards from intercepting pointer clicks, made keyboard focus reveal content without moving its activation target, and disabled product add controls until cart hydration is ready. Store mutation/checkout tests passed again on desktop and mobile.
+- Final verification: TypeScript zero errors; Vitest 159 passed, 0 failed (9 files); production webpack build passed, 83 generated pages; full production Playwright suite 68 passed, 2 intentional desktop-only skips, 0 failed. Logs: `artifacts/flowly-build-final.log` and `artifacts/flowly-playwright-final.log`. `git diff --check` passed. E2E mutations used isolated databases, not the salon database. Existing uncommitted work preserved; no commit, push or deployment. Production preview restarted at http://localhost:3050/en.

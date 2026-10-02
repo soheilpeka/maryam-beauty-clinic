@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { BookingFlow } from "@/components/booking/booking-flow";
 import type { Metadata } from "next";
 import { PUBLIC_STAFF_WHERE } from "@/lib/public-staff";
+import { publicServices } from "@/lib/public-content";
 
 export async function generateMetadata({
   params,
@@ -26,7 +27,7 @@ export default async function BookingPage({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Booking" });
 
-  const [services, staff, setting] = await Promise.all([
+  const [services, staff, setting, serviceContent] = await Promise.all([
     prisma.service.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
     prisma.staff.findMany({
       where: PUBLIC_STAFF_WHERE,
@@ -34,6 +35,7 @@ export default async function BookingPage({
       orderBy: { name: "asc" },
     }),
     prisma.businessSetting.findUnique({ where: { id: "default" } }),
+    publicServices(locale === "fr" ? "fr" : "en"),
   ]);
 
   return (
@@ -51,7 +53,7 @@ export default async function BookingPage({
         services={services.map((s) => ({
           id: s.id, slug: s.slug,
           name: locale === "fr" ? (s.nameFr ?? s.name) : s.name,
-          description: locale === "fr" ? (s.descriptionFr ?? s.description) : s.description,
+          description: serviceContent.find((item) => item.slug === s.slug)?.summary ?? (locale === "fr" ? (s.descriptionFr ?? s.description) : s.description),
           price: s.price, duration: s.duration, bufferMin: s.bufferMin, category: s.category,
         }))}
         staff={staff.map((s) => ({

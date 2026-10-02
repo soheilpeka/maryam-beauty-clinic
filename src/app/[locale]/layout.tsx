@@ -9,7 +9,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { CartProvider } from "@/components/store/cart-context";
 import { BUSINESS } from "@/lib/content/business";
 import { publicServices } from "@/lib/public-content";
+import { ScrollReveal } from "@/components/scroll-reveal";
 import "../globals.css";
+import "../site-motion.css";
 
 // Navigation reads owner-managed content and must not be frozen at build time.
 export const dynamic = "force-dynamic";
@@ -116,6 +118,7 @@ export default async function LocaleLayout({
               {children}
             </main>
             <SiteFooter />
+            <ScrollReveal />
             </CartProvider>
           </NextIntlClientProvider>
         </ThemeProvider>

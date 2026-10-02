@@ -21,6 +21,7 @@ import { BUSINESS } from "@/lib/content/business";
 import { GALLERY } from "@/lib/content/gallery";
 import { TESTIMONIALS } from "@/lib/content/testimonials";
 import { DEMO_PRODUCTS } from "@/lib/content/products";
+import { fullServiceDescription } from "@/lib/content/service-copy";
 
 const prisma = new PrismaClient({
   adapter: new PrismaLibSql({
@@ -70,8 +71,8 @@ async function main() {
           category: s.category,
           price: s.price,
           duration: s.duration,
-          description: s.summary,
-          descriptionFr: s.summaryFr ?? s.summary,
+          description: fullServiceDescription(s.slug, "en") ?? s.summary,
+          descriptionFr: fullServiceDescription(s.slug, "fr") ?? s.summaryFr ?? s.summary,
           order: s.order,
         },
       }),

@@ -3,9 +3,10 @@
  * Prices and durations deliberately remain consultation-based until approved in admin.
  */
 import type { Locale } from "@/i18n/routing";
+import { SERVICE_COPY } from "@/lib/content/service-copy";
 
 export type ServiceCategory = "Hair" | "Makeup" | "Aesthetic" | "Wellness";
-export interface ServiceDetail { tagline: string; paragraphs: string[]; highlights: string[]; }
+export interface ServiceDetail { tagline?: string; paragraphs: string[]; highlights?: string[]; }
 export interface Service {
   slug: string; name: string; nameFr?: string; category: ServiceCategory; priceLabel: string;
   price: number; duration: number; summary: string; summaryFr?: string; image: string;
@@ -57,6 +58,15 @@ export const SERVICES: Service[] = [
   { slug: "lash-brow-lamination", name: "Lash & Brow Lamination", nameFr: "Rehaussement des cils et lamination des sourcils", category: "Makeup", priceLabel: consultation, price: 0, duration: 0, summary: "A refined lash and brow service selected around your natural growth, features and preferred finish.", summaryFr: "Un soin raffiné des cils et sourcils choisi selon leur croissance naturelle, vos traits et le fini souhaité.", image: "/media/salon/img_8204.webp", order: 15 },
   { slug: "laser-skin-rejuvenation", name: "Laser Skin Rejuvenation", nameFr: "Rajeunissement cutané au laser", category: "Aesthetic", priceLabel: consultation, price: 0, duration: 0, summary: "Technology-led skin care with suitability, expectations and aftercare reviewed before treatment.", summaryFr: "Un soin de la peau assisté par technologie, avec pertinence, attentes et conseils après-traitement examinés avant le soin.", image: image("rf-device.jpeg"), order: 16 },
 ];
+
+for (const service of SERVICES) {
+  const copy = SERVICE_COPY[service.slug];
+  if (!copy) continue;
+  service.summary = copy.summary;
+  service.summaryFr = copy.summaryFr;
+  service.detail = copy.detail;
+  service.detailFr = copy.detailFr;
+}
 
 export function getServiceBySlug(slug: string): Service | undefined { return SERVICES.find((service) => service.slug === slug); }
 export function servicesByCategory(category: ServiceCategory): Service[] { return SERVICES.filter((service) => service.category === category).sort((a, b) => a.order - b.order); }

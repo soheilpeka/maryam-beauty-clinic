@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "@/i18n/routing";
-import { formatPrice, formatDuration } from "@/lib/datetime";
+import { formatDuration } from "@/lib/datetime";
 import { customerSchema, flattenZodErrors } from "@/lib/validation";
 import {
   minutesToLabel,
@@ -247,12 +247,6 @@ export function BookingFlow({
             <SummaryRow label={t("specialist")} value={result.staff} />
             <SummaryRow label={t("date")} value={result.whenLabel} />
             <SummaryRow label={t("duration")} value={result.durationMin > 0 ? formatDuration(result.durationMin, tLocale) : t("detailsPending")} />
-            <div className="flex justify-between gap-4 border-t border-border pt-3">
-              <dt className="text-muted-foreground">{t("total")}</dt>
-              <dd className="font-semibold text-brand">
-                {result.priceTotal > 0 ? formatPrice(result.priceTotal, tLocale) : t("detailsPending")}
-              </dd>
-            </div>
           </dl>
           <a
             href={result.manageUrl}
@@ -327,9 +321,6 @@ export function BookingFlow({
                     <span className="mt-3 block text-xs uppercase tracking-wider text-muted-foreground">
                       {s.duration > 0 ? formatDuration(s.duration, tLocale) : t("detailsPending")}
                     </span>
-                  </span>
-                  <span className="shrink-0 text-right text-xs font-semibold text-brand">
-                    {s.price > 0 ? formatPrice(s.price, tLocale) : t("detailsPending")}
                   </span>
                 </button>
               </li>
@@ -536,12 +527,6 @@ export function BookingFlow({
                   value={`${labelForDay(dayKey, tLocale)} ${minutesToLabel(startMinutes, tLocale)}`}
                 />
               )}
-              <div className="flex justify-between gap-4 border-t border-border pt-2">
-                <dt className="text-muted-foreground">{t("total")}</dt>
-                <dd className="font-semibold text-brand">
-                  {service.price > 0 ? formatPrice(service.price, tLocale) : t("detailsPending")}
-                </dd>
-              </div>
             </dl>
           </div>
 
@@ -572,7 +557,6 @@ export function BookingFlow({
         <dl className="mt-6 space-y-3 text-sm">
           <SummaryRow label={t("specialist")} value={staffId === "any" ? t("anyStaff") : (staffMember?.name ?? "—")} inverted />
           <SummaryRow label={t("date")} value={dayKey && startMinutes !== null ? `${labelForDay(dayKey, tLocale)} · ${minutesToLabel(startMinutes, tLocale)}` : "—"} inverted />
-          <SummaryRow label={t("total")} value={service ? (service.price > 0 ? formatPrice(service.price, tLocale) : t("detailsPending")) : "—"} inverted />
         </dl>
         <div className="mt-8 border-t border-primary-foreground/20 pt-6">
           <p className="text-xs uppercase tracking-[0.18em] text-primary-foreground/60">{t("steps.date")}</p>

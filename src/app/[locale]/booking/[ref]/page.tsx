@@ -48,7 +48,6 @@ export default async function ManageBookingPage({
           declined: booking.note?.includes("[declined]") ?? false,
           startUtc: booking.startUtc.toISOString(),
           endUtc: booking.endUtc.toISOString(),
-          priceTotal: booking.priceTotal,
           serviceName: (locale === "fr" ? booking.serviceNameFrSnapshot : booking.serviceNameSnapshot) ?? booking.serviceNameSnapshot ?? booking.service.name,
           staffName: booking.staff.name,
           durationMin: booking.durationMinSnapshot ?? booking.service.duration,

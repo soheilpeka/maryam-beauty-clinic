@@ -68,7 +68,9 @@ test("editorial route families, admin forms and customer failure states", async 
         await page.keyboard.press("Escape");
       }
       if (suffix === "/orders") {
-        await page.locator("summary").first().click();
+        // Production intentionally rejects mock checkout, so this isolated DB can have no orders.
+        const details = page.locator("summary").first();
+        if (await details.count()) await details.click();
         await shot(`${locale}-admin-order-details`);
       }
     }

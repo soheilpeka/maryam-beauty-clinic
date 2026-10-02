@@ -4,7 +4,7 @@
  * a verified sender are required and delivery is still only considered live after owner testing.
  */
 import { env } from "@/lib/env";
-import { formatLongDate, formatTime, formatPrice } from "@/lib/datetime";
+import { formatLongDate, formatTime } from "@/lib/datetime";
 
 export interface NotificationMessage {
   to: string;
@@ -77,7 +77,6 @@ export function bookingConfirmationEmail(data: BookingNotificationData): Notific
         `Service : ${data.serviceName}`,
         `Specialiste : ${data.staffName}`,
         `Date : ${when} - ${end}`,
-        `Prix : ${data.priceCents > 0 ? formatPrice(data.priceCents, "fr") + " CAD" : "À confirmer lors de la consultation"}`,
         ``,
         `Consultez ou annulez votre rendez-vous :`,
         `${data.manageUrl}`,
@@ -99,7 +98,6 @@ export function bookingConfirmationEmail(data: BookingNotificationData): Notific
       `Service: ${data.serviceName}`,
       `Specialist: ${data.staffName}`,
       `When: ${when} - ${end}`,
-      `Price: ${data.priceCents > 0 ? formatPrice(data.priceCents, "en") + " CAD" : "Confirmed during consultation"}`,
       ``,
       `View or cancel your appointment:`,
       `${data.manageUrl}`,

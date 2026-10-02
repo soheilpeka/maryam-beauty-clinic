@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { formatLongDate, formatTime, formatPrice, formatDuration } from "@/lib/datetime";
+import { formatLongDate, formatTime, formatDuration } from "@/lib/datetime";
 
 interface ManageBookingProps {
   booking: {
@@ -11,7 +11,6 @@ interface ManageBookingProps {
     declined?: boolean;
     startUtc: string;
     endUtc: string;
-    priceTotal: number;
     serviceName: string;
     staffName: string;
     durationMin: number;
@@ -109,7 +108,6 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
               value={`${formatLongDate(start, tLocale)} | ${formatTime(start, tLocale)}${booking.durationMin > 0 ? ` - ${formatTime(end, tLocale)}` : ""}`}
             />
             <Row label={t("duration")} value={booking.durationMin > 0 ? formatDuration(booking.durationMin, tLocale) : t("detailsPending")} />
-            <Row label={t("total")} value={booking.priceTotal > 0 ? `${formatPrice(booking.priceTotal, tLocale)} CAD` : t("detailsPending")} />
           </dl>
 
           <div className="mt-6 flex flex-wrap gap-3">

@@ -3,19 +3,17 @@ import { notFound } from "next/navigation";
 import { Link } from "@/i18n/routing";
 import { getServiceBySlug, SERVICES, categoryLabel, localizeService } from "@/lib/content/services";
 import { BUSINESS, localizedHours } from "@/lib/content/business";
+import { BusinessAddressLink } from "@/components/business-address-link";
 import type { Locale } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
-import { formatPrice } from "@/lib/content/format";
 import type { Service as ContentService } from "@/lib/content/services";
 import { publicServices } from "@/lib/public-content";
 
 export const dynamic = "force-dynamic";
 
 /**
- * Service detail page. The five services that have long-form copy on the live site render
- * their full description; every service still gets pricing, duration, booking and the
- * contact block, so no service is left without a page.
+ * Service detail page. Localized descriptions are shared with the service catalog and booking flow.
  */
 export async function generateStaticParams() {
   return SERVICES.map((s) => ({ slug: s.slug }));
@@ -50,17 +48,18 @@ export default async function ServiceDetailPage({
   const fallback = sourceFallback ? localizeService(sourceFallback, loc) : undefined;
   const record = await prisma.service.findUnique({ where: { slug }, include: { images: { orderBy: { order: "asc" } } } });
   if (!record?.active) notFound();
+  const publicCatalog = await publicServices(loc);
+  const publishedService = publicCatalog.find((item) => item.slug === slug);
   const service: ContentService | undefined = record
     ? {
-        ...(fallback ?? { slug, detail: undefined, order: record.order }),
-        detail: undefined,
         slug: record.slug,
         name: locale === "fr" ? (record.nameFr ?? record.name) : record.name,
         category: (record.category === "Hair" || record.category === "Makeup" || record.category === "Aesthetic" || record.category === "Wellness" ? record.category : "Aesthetic") as ContentService["category"],
         price: record.price,
         duration: record.duration,
-        priceLabel: record.price > 0 ? formatPrice(record.price, loc) : locale === "fr" ? "Détails confirmés lors de la consultation" : "Details confirmed during consultation",
-        summary: locale === "fr" ? (record.descriptionFr ?? record.description ?? "") : (record.description ?? ""),
+        priceLabel: "",
+        summary: publishedService?.summary ?? fallback?.summary ?? "",
+        detail: publishedService?.detail ?? fallback?.detail,
         image: record.imageUrl ?? record.images[0]?.url ?? fallback?.image ?? "/example-pics/hair-look-1.png",
         order: record.order,
       }
@@ -71,7 +70,7 @@ export default async function ServiceDetailPage({
   const tSections = await getTranslations({ locale, namespace: "Sections" });
   const typedLocale = locale as Locale;
 
-  const related = (await publicServices(loc)).filter(
+  const related = publicCatalog.filter(
     (s) => s.category === service.category && s.slug !== service.slug,
   ).slice(0, 3);
 
@@ -103,12 +102,6 @@ export default async function ServiceDetailPage({
               )}
               <div className="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-4 border-t border-border pt-6">
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-muted-foreground">
-                    {t("price")}
-                  </p>
-                  <p className="mt-1 font-serif text-2xl">{service.priceLabel}</p>
-                </div>
-                <div>
                   <p className="text-xs uppercase tracking-widest text-muted-foreground">{t("duration")}</p>
                   <p className="mt-1 text-sm">{service.duration > 0 ? `${service.duration} ${t("min")}` : t("consultationDuration")}</p>
                 </div>
@@ -129,7 +122,7 @@ export default async function ServiceDetailPage({
               </div>
             </div>
 
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
+            <div className="salon-photo-frame relative aspect-[4/3] overflow-hidden bg-muted">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={service.image}
@@ -150,7 +143,7 @@ export default async function ServiceDetailPage({
               <h2 className="display-heading text-3xl sm:text-4xl">
                 {t("serviceDescription")}
               </h2>
-              {record.images.length > 0 && <div className="my-8 grid gap-4 sm:grid-cols-2">{record.images.map(image => <img key={image.id} src={image.url} alt={loc === "fr" ? image.altFr : image.altEn} loading="lazy" className="aspect-[4/3] w-full rounded-xl object-cover" />)}</div>}
+              {record.images.length > 0 && <div className="my-8 grid gap-4 sm:grid-cols-2">{record.images.map(image => <div key={image.id} className="salon-photo-frame"><img src={image.url} alt={loc === "fr" ? image.altFr : image.altEn} loading="lazy" className="aspect-[4/3] w-full object-cover" /></div>)}</div>}
               {service.detail ? (
                 <div className="mt-8 space-y-6 text-base leading-relaxed text-muted-foreground">
                   {service.detail.paragraphs.map((p, i) => (
@@ -161,7 +154,7 @@ export default async function ServiceDetailPage({
                 <div className="mt-8 space-y-6 text-base leading-relaxed text-muted-foreground">
                   <p>{service.summary}</p>
                   <p>
-                    {BUSINESS.neighborhood} &middot; {BUSINESS.address}. {t("contactDetails")}:
+                    {BUSINESS.neighborhood} &middot; <BusinessAddressLink />. {t("contactDetails")}:
                     {BUSINESS.email}, {tSections("contactEyebrow")} {BUSINESS.phone}.
                   </p>
                 </div>
@@ -193,17 +186,17 @@ export default async function ServiceDetailPage({
                 <p className="eyebrow">{loc === "fr" ? "Une approche personnelle" : "A personal approach"}</p>
                 <h3 id="treatment-planning" className="font-serif text-3xl mt-3">{loc === "fr" ? "Votre visite, en toute clarté." : "Your visit, clearly considered."}</h3>
                 <div className="treatment-facts">
-                  <div><h4>{loc === "fr" ? "Pour vous?" : "Right for you?"}</h4><p>{loc === "fr" ? "Vos objectifs, vos besoins et la pertinence du service sont discutés avec le salon avant de commencer." : "Your goals, needs and the suitability of the service are discussed with the salon before proceeding."}</p></div>
-                  <div><h4>{loc === "fr" ? "Durée et prix" : "Time and pricing"}</h4><p>{service.duration > 0 ? `${service.duration} ${t("min")}` : t("consultationDuration")}. {service.priceLabel}.</p></div>
+                  <div><h4>{loc === "fr" ? "Un soin qui vous ressemble" : "Made for you"}</h4><p>{loc === "fr" ? "Nous prenons le temps de connaître vos objectifs beauté et vos préférences afin de personnaliser votre expérience." : "We take time to understand your beauty goals and preferences, then personalize the experience around you."}</p></div>
+                  <div><h4>{loc === "fr" ? "Durée" : "Duration"}</h4><p>{service.duration > 0 ? `${service.duration} ${t("min")}` : t("consultationDuration")}.</p></div>
                 </div>
                 {(loc === "fr" ? [
-                  ["À quoi puis-je m’attendre?", "Le salon explique le déroulement du service et les résultats possibles selon vos objectifs. Aucun résultat individuel n’est garanti."],
-                  ["Qu’en est-il du confort et des soins après la visite?", "Le confort, les précautions, le temps de récupération éventuel et les conseils après la visite dépendent du service et de votre situation. Discutez-en lors de la consultation."],
-                  ["Combien de visites prévoir?", "Le nombre de visites et l’entretien sont discutés avec le salon selon vos besoins. Votre demande ne devient un rendez-vous qu’après confirmation par le salon."],
+                  ["À quoi puis-je m’attendre?", "Votre spécialiste vous accueille, écoute vos envies et vous présente les étapes du soin pour une expérience personnalisée et tout en douceur."],
+                  ["Comment prendre soin de ma peau après la visite?", "Votre spécialiste vous partage des conseils personnalisés pour prolonger la sensation de fraîcheur et prendre soin de votre peau à la maison."],
+                  ["Combien de visites prévoir?", "Votre spécialiste peut vous proposer un rythme de visites personnalisé selon vos objectifs beauté et le soin choisi."],
                 ] : [
-                  ["What can I expect?", "The salon explains the service experience and possible outcomes in relation to your goals. Individual results are not guaranteed."],
-                  ["What about comfort and care after my visit?", "Comfort, precautions, any recovery time and aftercare depend on the service and your circumstances. Discuss these during your consultation."],
-                  ["How many visits should I plan?", "The number of visits and maintenance are discussed with the salon around your needs. Your request becomes an appointment only after the salon confirms it."],
+                  ["What can I expect?", "Your specialist welcomes you, listens to your goals and guides you through the service for a personalized, feel-good experience."],
+                  ["How can I care for my skin after my visit?", "Your specialist shares personalized tips to help you enjoy a fresh feeling and care for your skin at home."],
+                  ["How many visits should I plan?", "Your specialist can suggest a personalized visit plan around your beauty goals and chosen service."],
                 ]).map(([question, answer]) => <details className="luxury-faq" key={question}><summary>{question}</summary><p>{answer}</p></details>)}
               </section>
 
@@ -215,7 +208,7 @@ export default async function ServiceDetailPage({
                   <div className="text-sm text-muted-foreground">
                     <p className="font-medium text-foreground">{BUSINESS.name}</p>
                     <p>{BUSINESS.neighborhood}</p>
-                    <p>{BUSINESS.address}</p>
+                    <BusinessAddressLink className="block" />
                   </div>
                   <div className="text-sm text-muted-foreground">
                     <a
@@ -246,10 +239,6 @@ export default async function ServiceDetailPage({
             <aside className="lg:col-span-4">
               <div className="sticky top-24 space-y-6">
                 <div className="rounded-2xl border border-border bg-card p-6">
-                  <p className="text-xs uppercase tracking-widest text-muted-foreground">
-                    {t("price")}
-                  </p>
-                  <p className="mt-2 font-serif text-3xl">{service.priceLabel}</p>
                   <Link
                     href={`/booking?service=${service.slug}`}
                     className="mt-6 flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.03]"
@@ -295,7 +284,6 @@ export default async function ServiceDetailPage({
                   <h3 className="mt-2 font-serif text-lg transition-colors group-hover:text-brand">
                     {s.name}
                   </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{s.priceLabel}</p>
                 </Link>
               ))}
             </div>

@@ -1,0 +1,122 @@
+/* Shared photo and motion language, matched to the supplied Flowly reference. */
+:root {
+  --salon-photo-radius: 2rem;
+  --salon-card-radius: 1.75rem;
+  --salon-gallery-radius: 1.5rem;
+  --salon-photo-line: #0000001a;
+  --salon-motion-ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+/* Photos meet the edge of their rounded frame, without the previous white mat. */
+#main :is(.preview-page, .editorial-page) img {
+  border-radius: var(--salon-photo-radius);
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+#main :is(.salon-photo-frame, .preview-work-image, .preview-service-image, .salon-square-grid > a) {
+  overflow: hidden;
+  border-radius: var(--salon-photo-radius);
+  border: 1px solid var(--salon-photo-line);
+  padding: 0;
+  background: var(--color-muted);
+  box-shadow: none;
+  isolation: isolate;
+}
+#main :is(.salon-photo-frame, .preview-work-image, .preview-service-image, .salon-square-grid > a) img {
+  display: block;
+  width: 100%;
+  border-radius: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  transition: transform .9s var(--salon-motion-ease);
+}
+/* Hero is the owner's exception: retain the original full-bleed, square frame. */
+#main .salon-hero { padding: 0; }
+#main .salon-hero-main { overflow: hidden; border-radius: 0; }
+#main img.salon-hero-image { border-radius: 0; }
+#main .preview-team > .salon-photo-frame { width: 100%; min-width: 0; }
+#main .preview-gallery-grid > .salon-photo-frame { margin: 0; aspect-ratio: 4/5; border-radius: var(--salon-gallery-radius); }
+#main .preview-gallery-grid > .salon-photo-frame img { height: 100%; aspect-ratio: auto; object-fit: cover; }
+#main .salon-square-grid > a { border-radius: var(--salon-gallery-radius); }
+#main .salon-square-grid span { inset-inline: 0; bottom: 0; padding: 1rem; }
+
+/* Reference cards: a fine outline, a rounded shell and edge-to-edge photography. */
+#main :is(.service-discovery-card, .product-editorial-card) {
+  overflow: hidden;
+  border: 1px solid var(--salon-photo-line);
+  border-radius: var(--salon-card-radius);
+  background: var(--color-card);
+  padding-bottom: 1.5rem;
+  transition: translate .45s var(--salon-motion-ease), border-color .45s;
+}
+#main .service-discovery-card > div:first-child {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--color-muted);
+  box-shadow: none;
+}
+#main .service-discovery-card > :not(:first-child) { margin-inline: clamp(1rem, 2vw, 1.5rem); }
+#main .product-editorial-card > div { padding-inline: 1.5rem; }
+#main :is(.service-discovery-card, .product-editorial-card) > :first-child img {
+  border-radius: 0;
+  transition: transform .9s var(--salon-motion-ease);
+}
+#main .gallery-photo-card {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--salon-photo-line);
+  border-radius: var(--salon-gallery-radius);
+  background: var(--color-card);
+  box-shadow: none;
+  transition: translate .45s var(--salon-motion-ease), border-color .45s;
+}
+#main .gallery-photo-card img { border-radius: 0; transition: transform .9s var(--salon-motion-ease); }
+#main .gallery-photo-card .gallery-photo-caption { padding: 1.25rem; }
+#main .gallery-image-button:focus-visible { outline-offset: -5px; }
+#main .gallery-lightbox { border-radius: var(--salon-photo-radius); }
+#main .gallery-lightbox figure > img { padding: 0; border: 0; background: transparent; border-radius: var(--salon-gallery-radius); }
+#main .about-editorial figure { border-radius: var(--salon-photo-radius); }
+#main .store-hero > img, #main .editorial-empty-image { border: 1px solid var(--salon-photo-line); }
+#main .home-team-grid img { border: 1px solid var(--salon-photo-line); }
+#main .booking-workspace img { border-radius: 50%; }
+#main .product-thumbnail { border-radius: .75rem; }
+#main .product-thumbnail img { border-radius: 0; }
+
+/* Visible content is never hidden until the client observer has registered it. */
+@media (prefers-reduced-motion: no-preference) {
+  #main .site-motion-pending { opacity: 0; pointer-events: none; }
+  #main [data-site-motion="rise"].site-motion-entered {
+    animation: salon-rise .75s var(--salon-motion-ease) var(--motion-delay, 0ms) both;
+  }
+  #main [data-site-motion="image"].site-motion-entered {
+    animation: salon-photo-in .9s var(--salon-motion-ease) var(--motion-delay, 0ms) both;
+  }
+  #main .salon-hero-image { animation: salon-hero-in 1.15s var(--salon-motion-ease) both; }
+  #main .review-carousel-slide { animation: salon-rise .55s var(--salon-motion-ease) both; }
+  #main .luxury-faq[open] > p { animation: salon-rise .35s var(--salon-motion-ease) both; }
+  #main :is(.preview-text-link, .preview-button, .editorial-action, .salon-hero-actions a),
+  .site-header :is(a, button), .editorial-footer a {
+    transition: color .25s, background-color .25s, border-color .25s, translate .35s var(--salon-motion-ease);
+  }
+  #main :is(.preview-text-link, .preview-button, .editorial-action):focus-visible { translate: 0 -2px; }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  #main :is(.salon-photo-frame, .preview-work-image, .preview-service-image, .salon-square-grid > a):hover img,
+  #main :is(.service-discovery-card, .product-editorial-card, .gallery-photo-card):hover img { transform: scale(1.05); }
+  #main :is(.service-discovery-card, .product-editorial-card, .gallery-photo-card):hover { translate: 0 -6px; border-color: #00000038; }
+  #main :is(.preview-text-link, .preview-button, .editorial-action, .salon-hero-actions a):hover { translate: 0 -2px; }
+  #main .home-category-grid a { transition: padding-inline .35s var(--salon-motion-ease), color .25s; }
+  #main .home-category-grid a:hover { padding-inline: .5rem; }
+}
+@keyframes salon-rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes salon-photo-in { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
+@keyframes salon-hero-in { from { opacity: .4; transform: scale(1.035); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  #main *, .site-header *, .editorial-footer * { animation: none !important; transition: none !important; }
+  #main .site-motion-pending { opacity: 1; }
+  #main :is(.salon-photo-frame, .service-discovery-card, .product-editorial-card, .gallery-photo-card, .salon-square-grid) img { transform: none !important; }
+}

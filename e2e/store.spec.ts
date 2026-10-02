@@ -44,15 +44,16 @@ test.describe("store customer and admin flows", () => {
     await expect(row).toContainText("7");
 
     await page.goto("/en/store");
-    const firstCard = page.locator("article").filter({ has: page.getByRole("button", { name: "Add to cart" }) }).filter({ hasText: "E2E Test Product" }).first();
+    const firstCard = page.locator("article.product-editorial-card").filter({ hasText: "E2E Test Product" }).first();
     await expect(firstCard).toBeVisible();
     await firstCard.getByRole("button", { name: "Add to cart" }).click();
+    await expect(firstCard.getByRole("button", { name: "Added", exact: true })).toBeVisible();
     await firstCard.getByRole("link").first().click();
     await expect(page.locator("#main h1")).toHaveText("E2E Test Product");
     await page.screenshot({ path: testInfo.outputPath("product-detail.png"), fullPage: true });
     await page.goto("/en/store/cart");
     await expect(page).toHaveURL(/\/store\/cart$/);
-    await expect(page.getByRole("heading", { name: "Your cart" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Your cart", exact: true })).toBeVisible();
     await expect(page.getByRole("link", { name: "Continue to checkout" })).toBeVisible();
     await page.screenshot({ path: testInfo.outputPath("cart-populated.png"), fullPage: true });
     await page.goto("/fr/store/cart");

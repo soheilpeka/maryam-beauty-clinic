@@ -17,7 +17,6 @@ import { test, expect } from "@playwright/test";
 
 /** First service in the provisional seeded catalog; pricing and duration await approval. */
 const SERVICE_NAME = "Hair Colouring, Highlights & Balayage";
-const SERVICE_PRICE = "Confirmed during consultation";
 const SERVICE_DURATION = "Confirmed during consultation";
 /**
  * "Any specialist" is resolved server-side to the first qualified specialist ordered by name
@@ -113,7 +112,7 @@ test.describe("booking request flow", () => {
     const summary = page.locator("h3:has-text(\"Booking summary\")").locator("xpath=following-sibling::dl").first();
     await expect(summary).toContainText(SERVICE_NAME);
     await expect(summary).toContainText("Any specialist");
-    await expect(summary).toContainText(SERVICE_PRICE);
+    await expect(summary).not.toContainText("Price");
 
     await page.locator("#name").fill(CUSTOMER.name);
     await page.locator("#email").fill(CUSTOMER.email);
@@ -130,7 +129,7 @@ test.describe("booking request flow", () => {
     await expect(confirmation).toContainText(RESOLVED_SPECIALIST);
     await expect(confirmation).toContainText("11:00");
     await expect(confirmation).toContainText(SERVICE_DURATION);
-    await expect(confirmation).toContainText(SERVICE_PRICE);
+    await expect(confirmation).not.toContainText("Price");
 
     // The signed manage/cancel link is the customer's only way back to their booking.
     const manageLink = page.getByRole("link", { name: "Manage your booking" });

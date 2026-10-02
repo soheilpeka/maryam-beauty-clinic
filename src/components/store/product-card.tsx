@@ -14,7 +14,7 @@ import Image from "next/image";
  */
 export function ProductCard({ product, locale }: { product: ProductView; locale: string }) {
   const t = useTranslations("Store");
-  const { add } = useCart();
+  const { add, ready } = useCart();
   const [added, setAdded] = useState(false);
 
   const soldOut = product.stock <= 0;
@@ -84,7 +84,7 @@ export function ProductCard({ product, locale }: { product: ProductView; locale:
           <button
             type="button"
             onClick={handleAdd}
-            disabled={soldOut}
+            disabled={soldOut || !ready}
             className="min-h-11 flex-1 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
           >
             {soldOut ? t("soldOut") : added ? t("added") : t("addToCart")}

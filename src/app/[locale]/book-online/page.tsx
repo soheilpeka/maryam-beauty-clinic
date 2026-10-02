@@ -4,7 +4,6 @@ import type { Locale } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { SERVICES, localizeService, type Service } from "@/lib/content/services";
-import { formatPrice } from "@/lib/content/format";
 import { publicServices } from "@/lib/public-content";
 
 export const dynamic = "force-dynamic";

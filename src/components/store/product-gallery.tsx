@@ -18,7 +18,7 @@ export function ProductGallery({ images }: { images: GalleryImage[] }) {
 
   return (
     <div aria-label={t("galleryLabel")}>
-      <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-border bg-card">
+      <div className="salon-photo-frame relative aspect-[4/3] overflow-hidden bg-card">
         <Image
           src={image.url}
           alt={image.alt}
@@ -38,7 +38,7 @@ export function ProductGallery({ images }: { images: GalleryImage[] }) {
               onClick={() => setSelected(index)}
               aria-label={t("selectImage", { number: index + 1 })}
               aria-pressed={selected === index}
-              className={`relative aspect-square overflow-hidden rounded-xl border-2 bg-muted transition-colors ${
+              className={`product-thumbnail relative aspect-square overflow-hidden rounded-xl border-2 bg-muted transition-colors ${
                 selected === index ? "border-brand" : "border-transparent hover:border-border"
               }`}
             >

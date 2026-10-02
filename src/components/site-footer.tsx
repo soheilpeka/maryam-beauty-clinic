@@ -1,6 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { BUSINESS, localizedHours } from "@/lib/content/business";
+import { BusinessAddressLink } from "@/components/business-address-link";
 import { SERVICES, SERVICE_CATEGORIES, localizeService } from "@/lib/content/services";
 import type { Locale } from "@/i18n/routing";
 import { publicServices } from "@/lib/public-content";
@@ -88,7 +89,7 @@ export async function SiteFooter() {
             <address className="space-y-3 text-sm not-italic text-muted-foreground">
               <div>
                 <p className="text-foreground">{BUSINESS.neighborhood}</p>
-                <p>{BUSINESS.address}</p>
+                <BusinessAddressLink className="block" />
               </div>
               <div>
                 <a

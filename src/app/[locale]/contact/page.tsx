@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ContactForm } from "@/components/contact-form";
 import { BUSINESS, localizedHours } from "@/lib/content/business";
+import { BusinessAddressLink } from "@/components/business-address-link";
 import { Link } from "@/i18n/routing";
 import type { Metadata } from "next";
 
@@ -51,7 +52,7 @@ export default async function ContactPage({
                 {t("addressLabel")}
               </p>
               <p className="mt-2 text-sm text-foreground">{BUSINESS.neighborhood}</p>
-              <p className="text-sm text-muted-foreground">{BUSINESS.address}</p>
+              <BusinessAddressLink className="block text-sm text-muted-foreground" />
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-brand">
