@@ -12,6 +12,10 @@ for (const locale of ["en", "fr"]) {
     await submit.click();
     await expect(alert).toHaveText(unavailable);
     await page.unroute("**/api/admin/login");
+    await page.route("**/api/admin/login", route => route.fulfill({ status: 403, contentType: "application/json", body: '{"error":"FORBIDDEN"}' }));
+    await submit.click();
+    await expect(alert).toHaveText(unavailable);
+    await page.unroute("**/api/admin/login");
     await page.route("**/api/admin/login", route => route.abort("connectionfailed"));
     await submit.click();
     await expect(alert).toHaveText(unavailable);

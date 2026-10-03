@@ -12,6 +12,7 @@ import {
 import { adminLoginSchema, flattenZodErrors } from "@/lib/validation";
 import { env } from "@/lib/env";
 import { readJsonBody } from "@/lib/request-body";
+import { loginOriginAllowed } from "@/lib/login-origin";
 
 export const dynamic = "force-dynamic";
 
@@ -24,8 +25,7 @@ const DUMMY_HASH = "$2b$12$rw66it8s8Ps9AQgdxLTsoeXkn2aZljJ6FH1646iYJhIa6UO1g/xfe
 export async function POST(request: NextRequest) {
   // Login has no prior session token. Require a non-simple JSON request and reject
   // cross-origin browser submissions before accepting credentials or setting cookies.
-  const origin = request.headers.get("origin");
-  if ((origin && origin !== request.nextUrl.origin) || request.headers.get("sec-fetch-site") === "cross-site") {
+  if (!loginOriginAllowed(request)) {
     return NextResponse.json({ error: "FORBIDDEN", message: "Invalid request origin." }, { status: 403 });
   }
   if (request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase() !== "application/json") {

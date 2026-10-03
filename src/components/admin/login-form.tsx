@@ -35,7 +35,7 @@ export function LoginForm({ locale }: { locale: string }) {
       });
       const json = await res.json().catch(() => null);
 
-      if (res.status >= 500 || !json) {
+      if (res.status >= 500 || res.status === 403 || !json) {
         setFormError(t("signInUnavailable"));
         return;
       }
