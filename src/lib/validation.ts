@@ -16,10 +16,12 @@ export const customerSchema = z.object({
     .string()
     .trim()
     .toLowerCase()
+    .max(254, { message: "validation.email.invalid" })
     .email({ message: "validation.email.invalid" }),
   phone: z
     .string()
     .trim()
+    .max(40, { message: "validation.phone.invalid" })
     .regex(phoneRegex, { message: "validation.phone.invalid" }),
   note: z.string().trim().max(500, { message: "validation.note.max" }).optional().or(z.literal("")),
 });
@@ -28,7 +30,7 @@ export type CustomerInput = z.infer<typeof customerSchema>;
 
 export const contactSchema = z.object({
   name: z.string().trim().min(2, { message: "validation.name.min" }).max(80, { message: "validation.name.max" }),
-  email: z.string().trim().toLowerCase().email({ message: "validation.email.invalid" }),
+  email: z.string().trim().toLowerCase().max(254, { message: "validation.email.invalid" }).email({ message: "validation.email.invalid" }),
   message: z.string().trim().min(10, { message: "validation.message.min" }).max(2000, { message: "validation.message.max" }),
   locale: z.enum(["en", "fr"]).default("en"),
 }).strict();
@@ -63,8 +65,8 @@ export const declineRequestSchema = z.object({
 });
 
 export const adminLoginSchema = z.object({
-  email: z.string().trim().toLowerCase().email({ message: "validation.email.invalid" }),
-  password: z.string().min(8, { message: "validation.password.min" }),
+  email: z.string().trim().toLowerCase().max(254, { message: "validation.email.invalid" }).email({ message: "validation.email.invalid" }),
+  password: z.string().min(8, { message: "validation.password.min" }).max(72, { message: "validation.password.min" }),
 });
 
 /** Turn raw Zod errors into a flat {field: messageKey} map for i18n forms. */

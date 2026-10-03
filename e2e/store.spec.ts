@@ -1,4 +1,4 @@
-import { test, expect, type Page, type TestInfo } from "@playwright/test";
+import { test, expect, type Page, type TestInfo } from "./local-test";
 import { storeAdminForProject } from "./admin-credentials";
 
 test.describe("store customer and admin flows", () => {

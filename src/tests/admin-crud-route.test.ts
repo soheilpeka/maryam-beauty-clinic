@@ -412,7 +412,16 @@ describe("staff CRUD", () => {
       params: Promise.resolve({ id: staff.id }),
     });
     expect(res.status).toBe(409);
+    expect((await res.json()).bookingCount).toBe(1);
     expect(await prisma.staff.count({ where: { id: staff.id } })).toBe(1);
+    const before = await prisma.booking.findUniqueOrThrow({ where: { ref: "MBC-CRUD-2" } });
+    const updated = await staffOneRoute.PATCH(patch(`${BASE}/api/admin/staff/${staff.id}`, {
+      name: "Updated booked specialist", bio: "Updated biography", bioFr: "Biographie mise à jour", active: false,
+    }), { params: Promise.resolve({ id: staff.id }) });
+    expect(updated.status).toBe(200);
+    expect((await updated.json()).staff).toMatchObject({ name: "Updated booked specialist", active: false, bookingCount: 1 });
+    expect(await prisma.booking.findUniqueOrThrow({ where: { ref: "MBC-CRUD-2" } })).toEqual(before);
+    expect(await prisma.auditLog.count({ where: { targetId: staff.id, action: "staff.update" } })).toBe(1);
   });
 });
 
@@ -578,6 +587,29 @@ describe("days off", () => {
 });
 
 describe("customers", () => {
+  it("paginates customers without duplicate or unreachable rows", async () => {
+    await prisma.customer.createMany({ data: Array.from({ length: 53 }, (_, index) => ({ name: `Pagination ${index}`, email: `pagination-${index}@example.com`, phone: "+1 555 0199" })) });
+    const first = await (await customersRoute.GET(get(`${BASE}/api/admin/customers?limit=50`))).json();
+    const second = await (await customersRoute.GET(get(`${BASE}/api/admin/customers?limit=50&offset=50`))).json();
+    expect(first.customers).toHaveLength(50); expect(first.hasMore).toBe(true);
+    expect(second.customers).toHaveLength(3); expect(second.hasMore).toBe(false);
+    expect(new Set([...first.customers, ...second.customers].map(row => row.id)).size).toBe(53);
+  });
+
+  it.each(["Service original", null])("paginates booking history and preserves historical snapshots after a rename (French snapshot: %s)", async frenchSnapshot => {
+    const customer = await prisma.customer.create({ data: { name: "History", email: "history-pages@example.com", phone: "+1 555 0199" } });
+    await prisma.booking.createMany({ data: Array.from({ length: 51 }, (_, index) => ({ ref: `HISTORY-${index}`, customerId: customer.id, serviceId: salon.serviceId, staffId: salon.staffId, startUtc: new Date("2027-04-01T10:00:00Z"), endUtc: new Date("2027-04-01T11:00:00Z"), priceTotal: 10000, serviceNameSnapshot: "Original service", serviceNameFrSnapshot: frenchSnapshot, durationMinSnapshot: 60 })) });
+    const original = await prisma.service.findUniqueOrThrow({ where: { id: salon.serviceId } });
+    try {
+      await prisma.service.update({ where: { id: salon.serviceId }, data: { name: "Changed service", nameFr: "Service modifié", duration: 15 } });
+      const first = (await (await customerRoute.GET(get(`${BASE}/api/admin/customers/${customer.id}`), { params: Promise.resolve({ id: customer.id }) })).json()).customer;
+      const last = (await (await customerRoute.GET(get(`${BASE}/api/admin/customers/${customer.id}?offset=50`), { params: Promise.resolve({ id: customer.id }) })).json()).customer;
+      expect(first.bookings).toHaveLength(50); expect(first.hasMoreBookings).toBe(true);
+      expect(last.bookings).toHaveLength(1); expect(last.hasMoreBookings).toBe(false);
+      expect(first.bookings[0].service).toEqual({ name: "Original service", nameFr: frenchSnapshot ?? "Original service", duration: 60 });
+      expect(new Set([...first.bookings, ...last.bookings].map(row => row.id)).size).toBe(51);
+    } finally { await prisma.service.update({ where: { id: salon.serviceId }, data: { name: original.name, nameFr: original.nameFr, duration: original.duration } }); }
+  });
   async function makeCustomer(name: string, email: string) {
     return prisma.customer.create({ data: { name, email, phone: "+1 555 0199" } });
   }

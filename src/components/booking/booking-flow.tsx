@@ -12,6 +12,8 @@ import {
   translateValidationKey,
 } from "@/lib/booking-ui";
 import { FormField } from "@/components/booking/form-field";
+import { groupBookingServices } from "@/lib/booking-service-groups";
+import groupStyles from "./service-groups.module.css";
 
 export interface ServiceOption {
   id: string;
@@ -73,6 +75,12 @@ export function BookingFlow({
   const t = useTranslations("Booking");
   const tValidation = useTranslations("Validation");
   const tLocale = useLocale();
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const serviceGroups = useMemo(() => groupBookingServices(services), [services]);
+  const categoryName = (category: string) =>
+    ["Hair", "Aesthetic", "Makeup", "Wellness"].includes(category)
+      ? t(`serviceCategories.${category}`)
+      : category || t("otherServices");
   const router = useRouter();
 
   const initialService = useMemo(
@@ -305,8 +313,42 @@ export function BookingFlow({
           <h3 className="font-serif text-2xl text-foreground">
             {t("chooseService")}
           </h3>
-          <ul className="mt-6 grid gap-4">
-            {services.map((s) => (
+          <p className="mt-2 text-sm text-muted-foreground">{t("categoryHint")}</p>
+          <div
+            className={groupStyles.filters}
+            role="group"
+            aria-label={t("filterCategory")}
+          >
+            <button type="button" className={groupStyles.filter} aria-pressed={categoryFilter === null} onClick={() => setCategoryFilter(null)}>
+              {t("allServices")}<span className={groupStyles.count}>{services.length}</span>
+            </button>
+            {serviceGroups.map(({ category, items }) => (
+              <button key={category} type="button" className={groupStyles.filter} aria-pressed={categoryFilter === category} onClick={() => setCategoryFilter(category)}>
+                {categoryName(category)}<span className={groupStyles.count}>{items.length}</span>
+              </button>
+            ))}
+          </div>
+          <p className="sr-only" role="status">
+            {t("serviceCount", {
+              count: serviceGroups
+                .filter((group) => categoryFilter === null || group.category === categoryFilter)
+                .reduce((count, group) => count + group.items.length, 0),
+            })}
+          </p>
+          {serviceGroups
+            .filter((group) => categoryFilter === null || group.category === categoryFilter)
+            .map(({ category, items }) => (
+              <section
+                key={category}
+                className={groupStyles.group}
+                aria-label={categoryName(category)}
+              >
+                <h4 className={groupStyles.heading}>
+                  {categoryName(category)}
+                  <span>{t("serviceCount", { count: items.length })}</span>
+                </h4>
+                <ul className="mt-4 grid gap-4">
+                  {items.map((s) => (
               <li key={s.id} className="min-w-0">
                 <button
                   type="button"
@@ -324,8 +366,10 @@ export function BookingFlow({
                   </span>
                 </button>
               </li>
+                  ))}
+                </ul>
+              </section>
             ))}
-          </ul>
         </section>
       )}
 

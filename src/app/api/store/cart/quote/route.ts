@@ -1,15 +1,22 @@
+import { readJsonBody } from "@/lib/request-body";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { cartQuoteSchema, flattenZodErrors } from "@/lib/validation";
 import { cartSubtotal, shippingFor } from "@/lib/cart";
 import { getStoreSettings, releaseExpiredReservations } from "@/lib/order";
+import { clientIpFromHeaders, consumeRateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
+  const budget = await consumeRateLimit(`store-quote:${clientIpFromHeaders(request.headers)}`, { limit: 60, windowMs: 60_000 });
+  if (!budget.ok) {
+    return NextResponse.json({ error: "TOO_MANY_REQUESTS" }, { status: budget.unavailable ? 503 : 429,
+      headers: { "Retry-After": String(Math.ceil(budget.retryAfterMs / 1000)) } });
+  }
   let body: unknown;
   try {
-    body = await request.json();
+    body = await readJsonBody(request);
   } catch {
     return NextResponse.json({ error: "BAD_REQUEST", message: "Invalid JSON body." }, { status: 400 });
   }
@@ -29,7 +36,7 @@ export async function POST(request: Request) {
   const bySlug = new Map(products.map((product) => [product.slug, product]));
   const lines = [...wanted].map(([slug, quantity]) => {
     const product = bySlug.get(slug);
-    if (!product || !product.active) return { slug, quantity, available: false as const };
+    if (!product || !product.active || product.demo) return { slug, quantity, available: false as const };
     return {
       slug,
       quantity,

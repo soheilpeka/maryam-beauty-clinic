@@ -1,3 +1,4 @@
+import { readJsonBody } from "@/lib/request-body";
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -6,7 +7,7 @@ import { comparisonPatchSchema } from "@/lib/comparison-validation";
 export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   const auth = await authorizeAdminMutation(request); if (!auth.ok) return auth.response;
   const { id } = await ctx.params;
-  let body: unknown; try { body = await request.json(); } catch { return NextResponse.json({ error: "BAD_REQUEST" }, { status: 400 }); }
+  let body: unknown; try { body = await readJsonBody(request); } catch { return NextResponse.json({ error: "BAD_REQUEST" }, { status: 400 }); }
   const parsed = comparisonPatchSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "VALIDATION" }, { status: 400 });
   try {

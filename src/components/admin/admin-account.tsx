@@ -16,10 +16,13 @@ export function AdminAccount({
 }) {
   const t = useTranslations("Admin");
   const [signingOut, setSigningOut] = useState(false);
+  const [signOutFailed, setSignOutFailed] = useState(false);
 
   const onSignOut = useCallback(async () => {
     setSigningOut(true);
-    await signOutAdmin(locale);
+    setSignOutFailed(false);
+    try { await signOutAdmin(locale); }
+    catch { setSignOutFailed(true); setSigningOut(false); }
   }, [locale]);
 
   return (
@@ -35,6 +38,7 @@ export function AdminAccount({
       >
         {signingOut ? t("signingOut") : t("signOut")}
       </button>
+      {signOutFailed && <span role="alert">{locale === "fr" ? "La déconnexion a échoué. Réessayez." : "Sign out failed. Please try again."}</span>}
     </div>
   );
 }

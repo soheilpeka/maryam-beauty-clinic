@@ -104,9 +104,9 @@ export async function GET(request: NextRequest) {
       staff: b.staff,
       customer: {
         id: b.customer.id,
-        name: b.customer.name,
-        email: b.customer.email,
-        phone: b.customer.phone,
+        name: b.customerNameSnapshot ?? b.customer.name,
+        email: b.customerEmailSnapshot ?? b.customer.email,
+        phone: b.customerPhoneSnapshot ?? b.customer.phone,
       },
     }))
     .sort((a, b) => RANK[a.status] - RANK[b.status]);

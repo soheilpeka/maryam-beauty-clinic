@@ -1,3 +1,5 @@
+import { logServerError } from "@/lib/safe-log";
+import { readJsonBody } from "@/lib/request-body";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authorizeAdminMutation } from "@/lib/admin-guard";
@@ -24,7 +26,7 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
 
   let body: unknown;
   try {
-    body = await request.json();
+    body = await readJsonBody(request);
   } catch {
     return NextResponse.json({ error: "BAD_REQUEST", message: "Invalid JSON body" }, { status: 400 });
   }
@@ -69,7 +71,7 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
             : "The order status could not be updated.";
       return NextResponse.json({ error: e.code, message }, { status: 409 });
     }
-    console.error("admin order status error", e);
+    logServerError("admin order status error", e);
     return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });
   }
 }

@@ -141,6 +141,10 @@ model Booking {
   /// Public reference shown to the customer
   ref        String       @unique
   customerId String
+  /// Contact submitted for this request; legacy bookings fall back to Customer.
+  customerNameSnapshot String?
+  customerEmailSnapshot String?
+  customerPhoneSnapshot String?
   serviceId  String
   staffId    String
   /// UTC start of the appointment
@@ -551,6 +555,15 @@ enum PaymentStatus {
   APPROVED
   DECLINED
   ERROR
+}
+
+/// Shared sliding-window budgets. Keys are HMACs, never customer data or raw IPs.
+model RateLimitBucket {
+  key       String @id
+  hitsJson  String
+  expiresAt BigInt
+
+  @@index([expiresAt])
 }
 
 /// Store-level configuration (single row, id = "default").

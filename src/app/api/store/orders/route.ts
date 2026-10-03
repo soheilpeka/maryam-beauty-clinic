@@ -1,8 +1,10 @@
+import { logServerError } from "@/lib/safe-log";
+import { readJsonBody } from "@/lib/request-body";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { checkoutSchema, flattenZodErrors } from "@/lib/validation";
 import { createOrder, StoreError, getStoreSettings } from "@/lib/order";
-import { rateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
+import { consumeRateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
 import { signOrderToken } from "@/lib/tokens";
 import { env } from "@/lib/env";
 
@@ -23,11 +25,11 @@ const RATE_LIMIT = { limit: env.storeRateLimitPerMinute, windowMs: 60_000 };
  */
 export async function POST(request: NextRequest) {
   const ip = clientIpFromHeaders(request.headers);
-  const rl = rateLimit(`store-checkout:${ip}`, RATE_LIMIT);
+  const rl = await consumeRateLimit(`store-checkout:${ip}`, RATE_LIMIT);
   if (!rl.ok) {
     return NextResponse.json(
       { error: "TOO_MANY_REQUESTS", message: "Too many requests. Please wait a minute." },
-      { status: 429, headers: { "Retry-After": String(Math.ceil(rl.retryAfterMs / 1000)) } },
+      { status: rl.unavailable ? 503 : 429, headers: { "Retry-After": String(Math.ceil(rl.retryAfterMs / 1000)) } },
     );
   }
 
@@ -41,7 +43,7 @@ export async function POST(request: NextRequest) {
 
   let body: unknown;
   try {
-    body = await request.json();
+    body = await readJsonBody(request);
   } catch {
     return NextResponse.json({ error: "BAD_REQUEST", message: "Invalid JSON body" }, { status: 400 });
   }
@@ -56,6 +58,8 @@ export async function POST(request: NextRequest) {
   const data = parsed.data;
 
   try {
+    // Refuse insecure production configuration before reserving inventory or payment.
+    void env.bookingLinkSecret;
     const result = await createOrder(prisma, {
       idempotencyKey: data.idempotencyKey,
       locale: data.locale,
@@ -93,7 +97,7 @@ export async function POST(request: NextRequest) {
   } catch (e) {
     if (e instanceof StoreError) {
       const status =
-        e.code === "PRODUCT_UNAVAILABLE" || e.code === "INSUFFICIENT_STOCK"
+        e.code === "PRODUCT_UNAVAILABLE" || e.code === "INSUFFICIENT_STOCK" || e.code === "IDEMPOTENCY_CONFLICT"
           ? 409
           : e.code === "PAYMENT_NOT_CONFIGURED"
             ? 503
@@ -110,7 +114,7 @@ export async function POST(request: NextRequest) {
                 : "We could not place your order. Please check your details and try again.";
       return NextResponse.json({ error: e.code, message }, { status });
     }
-    console.error("store checkout error", e);
+    logServerError("store checkout error", e);
     return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });
   }
 }

@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./local-test";
 
 test("homepage remains readable at all requested widths", async ({ page }) => {
   for (const locale of ["en", "fr"]) {

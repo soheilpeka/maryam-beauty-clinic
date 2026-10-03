@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { deleteSession } from "@/lib/sessions";
 import { authorizeAdminMutation, tokenFromRequest } from "@/lib/admin-guard";
 import { env } from "@/lib/env";
+import { logServerError } from "@/lib/safe-log";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +14,12 @@ export async function POST(request: NextRequest) {
 
   // Server-side invalidation: deleting the row means the token stops working even if the
   // browser keeps the cookie value.
-  await deleteSession(tokenFromRequest(request));
+  try {
+    await deleteSession(tokenFromRequest(request));
+  } catch (error) {
+    logServerError("admin logout failed", error);
+    return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });
+  }
 
   const response = NextResponse.json({ ok: true });
   response.cookies.set(env.sessionCookieName, "", {

@@ -1,3 +1,5 @@
+import { logServerError } from "@/lib/safe-log";
+import { readJsonBody } from "@/lib/request-body";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {
@@ -5,7 +7,7 @@ import {
   BookingStateError,
 } from "@/lib/booking";
 import { bookingRequestSchema, flattenZodErrors } from "@/lib/validation";
-import { rateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
+import { consumeRateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
 import { signBookingToken } from "@/lib/tokens";
 import { sendRequestReceipt, notifyAdminNewRequest } from "@/lib/notifications";
 import { env } from "@/lib/env";
@@ -20,17 +22,17 @@ const RATE_LIMIT = { limit: env.bookingRateLimitPerMinute, windowMs: 60_000 };
 
 export async function POST(request: NextRequest) {
   const ip = clientIpFromHeaders(request.headers);
-  const rl = rateLimit(`bookings:${ip}`, RATE_LIMIT);
+  const rl = await consumeRateLimit(`bookings:${ip}`, RATE_LIMIT);
   if (!rl.ok) {
     return NextResponse.json(
       { error: "TOO_MANY_REQUESTS", message: "Too many requests. Please wait a minute." },
-      { status: 429, headers: { "Retry-After": String(Math.ceil(rl.retryAfterMs / 1000)) } },
+      { status: rl.unavailable ? 503 : 429, headers: { "Retry-After": String(Math.ceil(rl.retryAfterMs / 1000)) } },
     );
   }
 
   let body: unknown;
   try {
-    body = await request.json();
+    body = await readJsonBody(request);
   } catch {
     return NextResponse.json({ error: "BAD_REQUEST", message: "Invalid JSON body" }, { status: 400 });
   }
@@ -77,6 +79,8 @@ export async function POST(request: NextRequest) {
   const locale = data.locale ?? (request.cookies.get("NEXT_LOCALE")?.value === "fr" ? "fr" : "en");
 
   try {
+    // Refuse insecure production configuration before writing a customer/request.
+    void env.bookingLinkSecret;
     const result = await createBookingRequest(prisma, {
       serviceId: service.id,
       staffId: staff.id,
@@ -96,21 +100,21 @@ export async function POST(request: NextRequest) {
     const manageUrl = `${env.baseUrl.replace(/\/$/, "")}${managePath}`;
     const whenLabel = `${formatLongDate(result.booking.startUtc, locale)} ${formatTime(result.booking.startUtc, locale)}`;
 
-    await sendRequestReceipt({ customerName: result.customer.name, customerEmail: result.customer.email, ref: result.booking.ref, manageUrl, locale }).catch(() => console.error("request receipt delivery failed"));
+    await sendRequestReceipt({ customerName: data.customer.name, customerEmail: data.customer.email, ref: result.booking.ref, manageUrl, locale }).catch(() => console.error("request receipt delivery failed"));
     // Alert the salon immediately; failures must not fail the request itself.
     await notifyAdminNewRequest({
       ref: result.booking.ref,
-      customerName: result.customer.name,
+      customerName: data.customer.name,
       serviceName: result.booking.serviceNameSnapshot ?? service.name,
       staffName: staff.name,
       whenLabel,
-      customerEmail: result.customer.email,
-      customerPhone: result.customer.phone,
+      customerEmail: data.customer.email,
+      customerPhone: data.customer.phone,
       note: result.booking.note,
       adminEmail: env.notificationAdminEmail,
       adminUrl: `${env.baseUrl}/${locale}/admin/requests`,
       locale,
-    }).catch((e) => console.error("admin notification failed", e));
+    }).catch((e) => logServerError("admin notification failed", e));
 
     return NextResponse.json({
       ok: true,
@@ -133,7 +137,7 @@ export async function POST(request: NextRequest) {
     if (e instanceof BookingStateError) {
       return NextResponse.json({ error: "PAST_TIME", message: "Please choose a future date and time." }, { status: 400 });
     }
-    console.error("booking request error", e);
+    logServerError("booking request error", e);
     return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });
   }
 }

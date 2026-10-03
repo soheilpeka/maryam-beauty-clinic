@@ -1,4 +1,5 @@
 // Central place for environment variables. Fails loudly on missing required values in prod.
+import "server-only";
 
 export const env = {
   get databaseUrl(): string {
@@ -12,13 +13,17 @@ export const env = {
   get baseUrl(): string {
     return process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
   },
-  /** Secret used to sign manage/cancel links. Must be set in production. */
+  /** Secret used to sign manage/cancel links. Production requires a unique random key. */
   get bookingLinkSecret(): string {
     const v = process.env.BOOKING_LINK_SECRET;
-    if (!v) {
-      if (process.env.NODE_ENV === "production") {
-        throw new Error("BOOKING_LINK_SECRET is not set");
+    if (process.env.NODE_ENV === "production") {
+      const candidate = v?.trim() ?? "";
+      const placeholder = /^(?:dev[-_ ]?only|change[-_ ]?me|replace[-_ ]?me|your[-_ ]|example[-_ ]|placeholder|test[-_ ]secret)/i.test(candidate);
+      if (candidate.length < 32 || placeholder) {
+        throw new Error("BOOKING_LINK_SECRET must be a unique random production secret of at least 32 characters");
       }
+    }
+    if (!v) {
       return "dev-only-change-me-in-production";
     }
     return v;

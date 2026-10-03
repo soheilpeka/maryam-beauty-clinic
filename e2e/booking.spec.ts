@@ -13,7 +13,7 @@
  * is in, while still being unambiguously in the future (min + 1 day at 11:00) or in the past
  * (min - 1 day at 00:05) for the server, which interprets the day key in salon time.
  */
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./local-test";
 
 /** First service in the provisional seeded catalog; pricing and duration await approval. */
 const SERVICE_NAME = "Hair Colouring, Highlights & Balayage";

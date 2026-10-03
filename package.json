@@ -6,8 +6,9 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint",
-    "typecheck": "tsc --noEmit",
+    "lint": "eslint src e2e prisma scripts *.config.ts *.config.mjs tsx-sandbox-shim.cjs",
+    "security:maintain-local": "node --import tsx --require ./tsx-sandbox-shim.cjs scripts/security-maintenance.ts --apply-local",
+    "typecheck": "node node_modules/@typescript/native/bin/tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
@@ -17,6 +18,7 @@
     "prisma:bootstrap-admin": "node --import tsx --require ./tsx-sandbox-shim.cjs prisma/bootstrap-admin.ts",
     "prisma:publish-packages": "node --import tsx --require ./tsx-sandbox-shim.cjs prisma/publish-skin-programs.ts",
     "prisma:import-comparisons": "node --import tsx --require ./tsx-sandbox-shim.cjs prisma/import-comparisons.ts",
+    "prisma:migrate-booking-contacts": "node --import tsx --require ./tsx-sandbox-shim.cjs prisma/migrate-booking-contacts.ts",
     "prisma:init-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/init-staging.ts",
     "prisma:seed-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/seed.ts",
     "prisma:bootstrap-admin-staging": "node --env-file=.env.staging --require ./prisma/staging-guard.cjs --import tsx --require ./tsx-sandbox-shim.cjs prisma/bootstrap-admin.ts",
@@ -44,6 +46,14 @@
     "server-only": "^0.0.1",
     "zod": "^4.6.5"
   },
+  "overrides": {
+    "prisma": {
+      "mysql2": "3.24.5"
+    },
+    "@prisma/config": {
+      "deepmerge-ts": "8.0.2"
+    }
+  },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4.3.3",
@@ -52,13 +62,16 @@
     "@types/node": "^26.6.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@typescript/native": "npm:typescript@7.0.2",
     "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.6",
     "jsdom": "^30.1.0",
     "postcss": "^8.5.28",
     "prisma": "^7.10.0",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2",
+    "typescript": "6.0.3",
     "vitest": "^5.0.1"
   }
 }

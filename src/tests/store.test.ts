@@ -1,6 +1,6 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { PrismaClient } from "@prisma/client";
-import { cartCount, cartSubtotal, shippingFor } from "@/lib/cart";
+import { cartCount, cartSubtotal, shippingFor, setLineQuantity, addLine } from "@/lib/cart";
 import {
   createOrder,
   releaseExpiredReservations,
@@ -83,7 +83,16 @@ afterAll(async () => {
   await closeTestDb();
 });
 
+afterEach(() => vi.restoreAllMocks());
+
 describe("store validation and totals", () => {
+  it("removes the last unit and keeps added quantities within the allowed range", () => {
+    const lines = [{ slug: "a", name: "A", priceCents: 1299, quantity: 1 }];
+    expect(setLineQuantity(lines, "a", 0)).toEqual([]);
+    expect(setLineQuantity(lines, "a", -1)).toEqual([]);
+    expect(setLineQuantity(lines, "a", 200)[0].quantity).toBe(99);
+    expect(addLine([], lines[0], 0)[0].quantity).toBe(1);
+  });
   it("calculates integer-cent cart totals, counts and shipping boundaries", () => {
     const lines = [
       { slug: "a", name: "A", priceCents: 1299, quantity: 2 },
@@ -153,6 +162,57 @@ describe("order pricing, snapshots and idempotency", () => {
     expect(second.order.id).toBe(first.order.id);
     expect(await prisma.order.count()).toBe(1);
     expect((await prisma.product.findUniqueOrThrow({ where: { slug: "demo-serum" } })).stock).toBe(1);
+  });
+
+  it("rejects a retry key with changed identity, address, locale, note or cart without leaking an order", async () => {
+    await product({ stock: 4 });
+    const args = checkout();
+    await createOrder(prisma, args, { paymentProvider: approved });
+    const changed: Array<Partial<typeof args>> = [
+      { email: "other@example.com" }, { name: "Other Guest" }, { phone: "+1 555 9999" },
+      { address: "456 Other Street" }, { city: "Other City" }, { province: "Ontario" },
+      { postalCode: "K1A 0B1" }, { country: "USA" }, { locale: "fr" }, { note: "different" },
+      { lines: [{ slug: "demo-serum", quantity: 2 }] },
+    ];
+    for (const change of changed) {
+      await expect(createOrder(prisma, { ...args, ...change }, { paymentProvider: approved }))
+        .rejects.toMatchObject({ code: "IDEMPOTENCY_CONFLICT" });
+    }
+    expect(await prisma.order.count()).toBe(1);
+    expect(await prisma.paymentAttempt.count()).toBe(1);
+    expect((await prisma.product.findUniqueOrThrow({ where: { slug: "demo-serum" } })).stock).toBe(3);
+  });
+
+  it("accepts an equivalent cart retry with split quantities and empty optional fields", async () => {
+    await product({ stock: 4 });
+    const args = checkout({ province: undefined, postalCode: undefined, lines: [{ slug: "demo-serum", quantity: 2 }] });
+    const first = await createOrder(prisma, args, { paymentProvider: approved });
+    const retry = await createOrder(prisma, {
+      ...args, province: "", postalCode: "", note: "",
+      lines: [{ slug: "demo-serum", quantity: 1 }, { slug: "demo-serum", quantity: 1 }],
+    }, { paymentProvider: approved });
+    expect(retry.reused).toBe(true);
+    expect(retry.order.id).toBe(first.order.id);
+  });
+
+  it("also rejects mismatched identity when recovering the winner of a retry race", async () => {
+    await product({ stock: 4 });
+    const args = checkout();
+    await createOrder(prisma, args, { paymentProvider: approved });
+    vi.spyOn(prisma.order, "findUnique").mockResolvedValueOnce(null);
+    vi.spyOn(prisma, "$transaction").mockRejectedValueOnce(new Error("Simulated concurrent insert"));
+    await expect(createOrder(prisma, { ...args, email: "other@example.com" }, { paymentProvider: approved }))
+      .rejects.toMatchObject({ code: "IDEMPOTENCY_CONFLICT" });
+  });
+
+  it("rejects an active demo product before reserving stock or authorizing payment", async () => {
+    const p = await product({ stock: 4 });
+    await prisma.product.update({ where: { id: p.id }, data: { demo: true } });
+    await expect(createOrder(prisma, checkout(), { paymentProvider: approved }))
+      .rejects.toMatchObject({ code: "PRODUCT_UNAVAILABLE" });
+    expect(await prisma.order.count()).toBe(0);
+    expect(await prisma.paymentAttempt.count()).toBe(0);
+    expect((await prisma.product.findUniqueOrThrow({ where: { id: p.id } })).stock).toBe(4);
   });
 });
 

@@ -1,3 +1,5 @@
+import { logServerError } from "@/lib/safe-log";
+import { readJsonBody } from "@/lib/request-body";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authorizeAdmin, authorizeAdminMutation } from "@/lib/admin-guard";
@@ -45,7 +47,7 @@ export async function POST(request: NextRequest) {
 
   let body: unknown;
   try {
-    body = await request.json();
+    body = await readJsonBody(request);
   } catch {
     return NextResponse.json({ error: "BAD_REQUEST", message: "Invalid JSON body" }, { status: 400 });
   }
@@ -105,7 +107,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true, staff: shapeStaff(created) }, { status: 201 });
   } catch (e) {
-    console.error("admin staff create error", e);
+    logServerError("admin staff create error", e);
     return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });
   }
 }

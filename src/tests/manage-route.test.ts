@@ -9,13 +9,14 @@
  * rescheduling was removed together with the slot engine, so there is no PATCH handler to
  * test anymore; cancel remains and is covered below.
  */
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, afterEach, beforeEach, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import { NextRequest } from "next/server";
 import { useTestDb, seedTestSalon, resetBookings, closeTestDb, testDbUrl } from "@/tests/db";
 import { signBookingToken } from "@/lib/tokens";
 import { resetRateLimiter } from "@/lib/rate-limit";
+import * as notifications from "@/lib/notifications";
 import { localToUtc, parseDayKey, toLocalMinutes } from "@/lib/datetime";
 import type { PrismaClient } from "@prisma/client";
 
@@ -56,7 +57,7 @@ let dayKey: string;
 async function createBookingRow(
   startMinutes: number,
   email: string,
-  status: "PENDING" | "CONFIRMED" = "PENDING",
+  status: "PENDING" | "CONFIRMED" | "COMPLETED" | "NO_SHOW" = "PENDING",
 ) {
   const { year, month, day } = parseDayKey(dayKey);
   const startUtc = localToUtc(year, month, day, startMinutes);
@@ -135,6 +136,8 @@ beforeEach(async () => {
   resetRateLimiter();
 });
 
+afterEach(() => vi.restoreAllMocks());
+
 describe("POST /api/bookings (public request submission)", () => {
   it("records a PENDING request and returns the secure manage link", async () => {
     const res = await bookingsRoute.POST(postRequest(validRequestBody()));
@@ -160,6 +163,26 @@ describe("POST /api/bookings (public request submission)", () => {
     expect(first.status).toBe(200);
     expect(second.status).toBe(200);
     expect(await prisma.booking.count()).toBe(2);
+  });
+
+  it("preserves stored repeat-customer contact and sends only the submitted contact in the new alert", async () => {
+    const email = "repeat-route@example.com";
+    const original = await prisma.customer.create({ data: { name: "Stored Guest", email, phone: "+1 555 0123" } });
+    const receipt = vi.spyOn(notifications, "sendRequestReceipt").mockResolvedValue(undefined);
+    const alert = vi.spyOn(notifications, "notifyAdminNewRequest").mockResolvedValue([]);
+    const body = validRequestBody(START_A, email);
+    body.customer.name = "Submitted Guest";
+    body.customer.phone = "+1 555 9999";
+    const res = await bookingsRoute.POST(postRequest(body));
+    expect(res.status).toBe(200);
+    expect(await prisma.customer.findUniqueOrThrow({ where: { id: original.id } })).toEqual(original);
+    expect(receipt).toHaveBeenCalledWith(expect.objectContaining({ customerName: body.customer.name, customerEmail: email }));
+    expect(alert).toHaveBeenCalledWith(expect.objectContaining({ customerName: body.customer.name, customerPhone: body.customer.phone, customerEmail: email }));
+    const response = await res.json();
+    expect(JSON.stringify(response)).not.toContain("Stored Guest");
+    const stored = await prisma.booking.findUniqueOrThrow({ where: { ref: response.booking.ref } });
+    expect(stored.customerNameSnapshot).toBe(body.customer.name);
+    expect(stored.customerPhoneSnapshot).toBe(body.customer.phone);
   });
 
   it("rejects a body with missing fields (400 VALIDATION)", async () => {
@@ -205,6 +228,68 @@ describe("POST /api/bookings (public request submission)", () => {
 });
 
 describe("DELETE /api/bookings/[ref] (cancel via secure link)", () => {
+  it("uses the contact submitted for this booking in the cancellation receipt", async () => {
+    const booking = await createBookingRow(START_A, "cancel-canonical@example.com");
+    await prisma.booking.update({ where: { id: booking.id }, data: {
+      customerNameSnapshot: "Submitted Guest", customerEmailSnapshot: "cancel-submitted@example.com", customerPhoneSnapshot: "+1 555 9999",
+    } });
+    const email = vi.spyOn(notifications.notificationProvider, "sendEmail").mockResolvedValue(undefined);
+    const token = await signBookingToken({ sub: booking.id, cust: booking.customerId });
+    const res = await refRoute.DELETE(deleteRequest(booking.ref, token), { params: Promise.resolve({ ref: booking.ref }) });
+    expect(res.status).toBe(200);
+    expect(email).toHaveBeenCalledWith(expect.objectContaining({ to: "cancel-submitted@example.com", body: expect.stringContaining("Submitted Guest") }));
+    expect(await prisma.customer.findUniqueOrThrow({ where: { id: booking.customerId } })).toEqual(booking.customer);
+  });
+
+  it.each(["COMPLETED", "NO_SHOW"] as const)("rejects cancellation of %s history", async (status) => {
+    const booking = await createBookingRow(START_A, `${status.toLowerCase()}@example.com`, status);
+    const token = await signBookingToken({ sub: booking.id, cust: booking.customerId });
+    const email = vi.spyOn(notifications.notificationProvider, "sendEmail").mockResolvedValue(undefined);
+    const res = await refRoute.DELETE(deleteRequest(booking.ref, token), { params: Promise.resolve({ ref: booking.ref }) });
+    expect(res.status).toBe(409);
+    expect((await prisma.booking.findUniqueOrThrow({ where: { id: booking.id } })).status).toBe(status);
+    expect(email).not.toHaveBeenCalled();
+  });
+
+  it("cancels concurrent duplicates once and sends a single notification", async () => {
+    const booking = await createBookingRow(START_A, "cancel-concurrent@example.com");
+    const token = await signBookingToken({ sub: booking.id, cust: booking.customerId });
+    const email = vi.spyOn(notifications.notificationProvider, "sendEmail").mockResolvedValue(undefined);
+    const responses = await Promise.all([0, 1].map(() => refRoute.DELETE(deleteRequest(booking.ref, token), {
+      params: Promise.resolve({ ref: booking.ref }),
+    })));
+    expect(responses.map((res) => res.status)).toEqual([200, 200]);
+    expect(email).toHaveBeenCalledTimes(1);
+    expect((await prisma.booking.findUniqueOrThrow({ where: { id: booking.id } })).status).toBe("CANCELLED");
+  });
+
+  it("does not overwrite an admin finalization between token authorization and cancellation", async () => {
+    const booking = await createBookingRow(START_A, "finalize-race@example.com");
+    const token = await signBookingToken({ sub: booking.id, cust: booking.customerId });
+    const email = vi.spyOn(notifications.notificationProvider, "sendEmail").mockResolvedValue(undefined);
+    const routeClient = (await import("@/lib/prisma")).prisma;
+    const updateMany = routeClient.booking.updateMany.bind(routeClient.booking);
+    const interleavingUpdate = (async (args: Parameters<typeof updateMany>[0]) => {
+      await prisma.booking.update({ where: { id: booking.id }, data: { status: "COMPLETED" } });
+      return updateMany(args);
+    }) as unknown as typeof updateMany;
+    vi.spyOn(routeClient.booking, "updateMany").mockImplementationOnce(interleavingUpdate);
+    const res = await refRoute.DELETE(deleteRequest(booking.ref, token), { params: Promise.resolve({ ref: booking.ref }) });
+    expect(res.status).toBe(409);
+    expect((await prisma.booking.findUniqueOrThrow({ where: { id: booking.id } })).status).toBe("COMPLETED");
+    expect(email).not.toHaveBeenCalled();
+  });
+
+  it.each([null, [], { token: 123 }])("rejects malformed token envelopes safely: %j", async (body) => {
+    const booking = await createBookingRow(START_A, "bad-envelope@example.com");
+    const request = new NextRequest(`http://localhost:3000/api/bookings/${booking.ref}`, {
+      method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify(body),
+    });
+    const res = await refRoute.DELETE(request, { params: Promise.resolve({ ref: booking.ref }) });
+    expect(res.status).toBe(403);
+    expect((await prisma.booking.findUniqueOrThrow({ where: { id: booking.id } })).status).toBe("PENDING");
+  });
+
   it("cancels a confirmed booking", async () => {
     const booking = await createBookingRow(START_A, "cancel-confirmed@example.com", "CONFIRMED");
     const token = await signBookingToken({ sub: booking.id, cust: booking.customerId });

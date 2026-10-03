@@ -1,5 +1,54 @@
 # Maryam Beauty Clinic - Progress
 
+## 2026-10-03 — Booking service categories
+
+- Grouped the booking choices by service category with localized category labels, per-category counts, an all-services choice, and keyboard-accessible filter buttons. Categories created in the CMS are retained and shown too; service order within each group and the request flow stay intact.
+- Added a compact responsive category picker in the booking theme and localized guidance in English and French. TypeScript and the production build passed with zero errors (85 pages). Browser verification showed all 16 services across four groups in English and French, and filtering to Skin & aesthetic narrowed the list to its 9 services. No booking/database content was changed.
+
+## 2026-10-03 — Before/after gallery theme refinement
+
+- Replaced hardcoded ivory cards with the existing monochrome theme tokens: neutral gray in light mode, charcoal in dark mode, matching foreground/border/muted text. Explicitly scoped caption colours prevent shared salon-gallery styles from making text white on a light card. Smaller coordinated frame radii, refined heading spacing and compact neutral filter controls replace the oversized pale panels and champagne accents.
+- Kept all photographs, crop geometry, CMS content, comparison dragging, filters and pagination unchanged. Shared slider radius/focus variables are scoped to these public cards, preserving other previews. Responsive grid retains one column below 768px and two above it; reduced-motion controls remain supported.
+- Verified card screenshots in both themes; browser contrast regression requires at least 4.5:1 for card text. Production comparison suite: 13 passed, one intentional desktop touch-test skip, zero failed, including EN/FR, touch/pointer/keyboard and 320/390/522/768/1280px checks. TypeScript: zero errors; full Vitest: 441 passed across 27 files; production build: passed, 85 pages; lint: zero errors, 63 warnings. Concurrent changes were preserved; full site Playwright was not rerun for this scoped styling change.
+- Refreshed the production preview at http://localhost:3050/en/gallery. No database content change, commit, push or deployment.
+
+## 2026-10-03 — Referenced specialist removal made actionable
+
+- The reported delete error was the intentional booking-history guard: a specialist referenced by bookings must not be permanently deleted. The admin card/dialog now offers a localized deactivation action and a direct profile-edit action, explaining that appointments/history remain intact and reactivation remains possible. Specialists without bookings retain permanent deletion.
+- Deactivation uses the existing authorized, CSRF-protected, validated, audited PATCH route. DELETE still returns 409, now with the booking count so a stale zero-booking list can switch to the safe action. No owner specialist was modified or removed during verification.
+- Verified actual profile editing, deactivation and reactivation with linked bookings in EN/FR on desktop/mobile. Expanded the database regression to assert unchanged booking records and the update audit. Final TypeScript: zero errors; Vitest: 433 passed, zero failed; production build: passed, 85 pages; lint: zero errors, 63 existing warnings; focused production browser regression: 8 passed, zero skipped/failed; development lifecycle regression: 4 passed.
+- An initial browser test expected the wrong booking success status (201 rather than the existing 200 contract); corrected the test. A combined 14-test production run exceeded the real 10-per-minute login IP budget (12 passed, 2 throttled). The final eight-test isolated run passed without weakening production rate limits. Full site Playwright was not rerun for this targeted change.
+- Refreshed the verified local production preview at http://localhost:3050/en/admin/staff. No commit, push, deployment or destructive data operation.
+
+## 2026-10-03 — Whole-site QA continuation verified
+
+- Preserved the concurrent security/tooling work. Fixed last-unit cart removal and stale removed product images, fresh checkout quotes/shipping/availability and retry, stale quote responses, customer/history pagination and historical EN/FR service labels, late customer-dialog responses, incomplete team hours, multiple-break data loss and silent day-off errors. Busy team dialogs now resist Escape until the mutation finishes.
+- Added a repeatable contact-column migration and applied its three additive nullable columns locally after a consistent backup; no reset, seeding, row rewrite or remote change. Tests/mutations use isolated databases and synthetic credentials.
+- Final verification: TypeScript passed with zero errors; Vitest 433 passed, zero failed across 26 files; production build passed with 85 generated pages; full production Playwright 103 passed, 3 intentional desktop skips of mobile-only tests, zero failed. Final development store/quote/customer/team regression: 18 passed, zero skipped/failed, including successful isolated mock order and admin mutations. Lint: zero errors, 63 warnings; runtime dependency audit: zero vulnerabilities; whitespace check passed.
+- Independent live-preview browser sweep: 162 EN/FR page/viewport combinations at 320/390/1280px; zero HTTP/runtime/image/overflow problems on its final complete run. Six final-build cart/login checks also passed. Prior failed/aborted runs are not represented as green. Preview refreshed and running at http://localhost:3050/en (French at /fr).
+- Details and production limitations: `QA_REVIEW_2026-10-03.md`. No commit, push or deployment.
+
+## 2026-10-03 — Authorized local security operations follow-up
+
+- Replaced process-local production request budgets with atomic shared SQLite/libSQL sliding windows for login, booking, contact, cancellation, quote and checkout. HMAC keys, database clock, bounded cardinality and fail-closed 503 behavior are covered by eight focused tests. Development/test budgets remain in memory.
+- Added and successfully ran local-only encrypted backup/maintenance: consistent backup and integrity check, authenticated encryption/decryption verification, additive schema, selective weak signing-key replacement and private file permissions. Zero contact columns needed adding at the successful run; existing records were preserved. Old local guest links are invalid after rotation. Remote URLs are refused.
+- Repaired lint with Next 16 flat ESLint configuration and the TypeScript 6 API alongside explicit native TypeScript 7 typechecking. Lint: 0 errors, 63 visible quality warnings. Runtime security checks remain enforced.
+- Follow-up verification: Prisma generation/typecheck/build passed; 428 tests across 25 files passed; build generated 85 pages; isolated production Playwright passed 99 with 3 intentional desktop skips, zero failures. npm audit reports 0 known advisories; diff whitespace check passed.
+- Hostinger access is blocked by Cloudflare and the remote DB target is unidentified. No remote DB/credential/settings change, deployment, commit, push or third-party test traffic. See `SECURITY_OPERATIONS_2026-10-03.md`; first-pass notes below are historical.
+
+## 2026-10-03 — Security hardening first pass and isolated verification
+
+- Inspected the real Next.js/Prisma/libSQL architecture, protected admin and guest flows, media URL policy, integrations and existing controls. Preserved all pre-existing UI/content edits. Findings, severity, evidence, affected paths and manual deployment actions are in `SECURITY_HARDENING_2026-10-02.md`.
+- Prevented anonymous booking input from overwriting existing customer contacts; added three nullable per-booking contact snapshots and removed customer contact props from guest management pages. Bound checkout retries to the complete original request and blocked hidden demo products.
+- Hardened signing secrets/claim validation, login origin checks and bcrypt work/length limits, atomic session replacement and password-reset revocation/race handling, retryable logout, fixed-window login counters, conditional cancellation, bounded JSON parsing, sanitized logs, security/private-cache headers and proxy-header trust. Scoped dependency overrides remove the four original high npm advisories; final audit reports zero vulnerabilities.
+- Final verification: `npm run typecheck` passed; Vitest 412 passed across 22 files, zero failures; production build passed with 85 generated pages; default production Playwright passed 89 with 3 intentional desktop skips of mobile-only tests, zero failures. The initial parallel run had shared-fixture failures; the harness now serializes CMS/session fixtures while keeping focused concurrency tests. `npm run lint` failed because the existing script invokes removed `next lint`; no lint verdict is claimed. Diff whitespace check passed.
+- All tests used isolated databases, synthetic credentials and mock deliveries; browser external-resource requests were blocked. No owner/production schema or data changes, credentials reset, commit, push, deployment or live security traffic. Before deployment, back up/verify the database and apply the three additive Booking columns, configure a random production signing key and verified proxy/HTTPS/cache settings. Shared deployment rate limiting, host/database/backup permissions and real email/payment behavior remain unverified or manual work.
+
+## 2026-10-02 — Wide-screen header logo alignment
+
+- Removed the centered 1440px maximum width from the header container. The logo now stays 32px from the left edge on large screens instead of gaining an increasing outer margin.
+- Production build passed with TypeScript validation and 85 generated pages. Inspected EN/FR headers at 320, 390, 1024, 1280, 1864 and 2560px: no horizontal overflow or header-element overlap; logo left offset remained 16px on phones and 32px on desktop. Saved `artifacts/header-wide-fixed.png` and refreshed the local production preview on port 3050.
+
 ## 2026-10-02 — Before/after admin content management
 
 - Added an additive `ComparisonItem` model and imported the 18 supplied pairs with their existing viewports and copy. A second import created zero records; owner edits and inactive state are preserved. No database reset, deletion, booking/order/customer change or external migration.

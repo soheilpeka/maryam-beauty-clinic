@@ -1,4 +1,10 @@
-# Continuation security review — 2026-09-30
+# Security review history
+
+Latest implementation and verification: [2026-10-02 to 2026-10-03 security hardening](SECURITY_HARDENING_2026-10-02.md).
+Local operations and current checks: [2026-10-03 security operations](SECURITY_OPERATIONS_2026-10-03.md).
+The dependency advisories below are historical; the current scoped overrides remove them.
+
+## Continuation security review — 2026-09-30
 
 Scope: this owned Next.js application, its protected CMS, manual booking workflow and store. No deployment or external-account changes were performed.
 

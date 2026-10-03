@@ -29,6 +29,8 @@ export async function GET(request: NextRequest) {
   const q = request.nextUrl.searchParams.get("q")?.trim();
   const rawLimit = Number(request.nextUrl.searchParams.get("limit"));
   const limit = Number.isFinite(rawLimit) && rawLimit > 0 ? Math.min(Math.floor(rawLimit), 100) : 50;
+  const rawOffset = Number(request.nextUrl.searchParams.get("offset"));
+  const offset = Number.isSafeInteger(rawOffset) && rawOffset >= 0 ? rawOffset : 0;
 
   const where = q
     ? {
@@ -51,8 +53,9 @@ export async function GET(request: NextRequest) {
           select: { startUtc: true, status: true },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       take: limit + 1,
+      skip: offset,
     }),
     prisma.customer.count({ where }),
   ]);
@@ -71,5 +74,5 @@ export async function GET(request: NextRequest) {
       : null,
   }));
 
-  return NextResponse.json({ ok: true, customers, total, hasMore, limit });
+  return NextResponse.json({ ok: true, customers, total, hasMore, limit, offset });
 }

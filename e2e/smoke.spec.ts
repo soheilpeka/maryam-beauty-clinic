@@ -1,4 +1,4 @@
-﻿/**
+/**
  * SMOKE TEST - the only e2e test for now.
  *
  * Goal of phase 5 step 1: prove the Playwright pipeline works end to end against the
@@ -9,7 +9,7 @@
  *
  * The full booking + admin suites come in the next step; do not add them here.
  */
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./local-test";
 
 // Anchors that exist only in the given locale's messages, so a wrong-locale render fails.
 const EXPECTED = {

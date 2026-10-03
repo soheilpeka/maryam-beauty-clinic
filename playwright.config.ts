@@ -1,5 +1,7 @@
 ﻿import { defineConfig } from "@playwright/test";
 
+import { randomBytes } from "node:crypto";
+
 // Dedicated e2e port so a developer's `next dev` on 3000/3010 never collides.
 const PORT = process.env.E2E_PORT || "3020";
 const baseURL = `http://localhost:${PORT}`;
@@ -8,6 +10,10 @@ const baseURL = `http://localhost:${PORT}`;
 // vitest test.db). Created + seeded before every run by e2e/global-setup.ts.
 const E2E_DATABASE_URL = process.env.E2E_DATABASE_URL ?? `file:${process.cwd()}/prisma/e2e-${Date.now()}.db`.replace(/\\/g, "/");
 process.env.E2E_DATABASE_URL = E2E_DATABASE_URL;
+// Synthetic credentials and signing key: never reuse the owner's .env credentials.
+process.env.E2E_ADMIN_EMAIL = "security-e2e@example.com";
+process.env.E2E_ADMIN_PASSWORD ??= randomBytes(24).toString("base64url");
+process.env.E2E_LINK_SECRET ??= randomBytes(32).toString("hex");
 
 // This environment cannot download Playwright's bundled browsers
 // (cdn.playwright.dev returns 403 "service is not available in your location"), so both
@@ -19,7 +25,10 @@ const CHROME = { channel: "chrome" as const };
 export default defineConfig({
   testDir: "./e2e",
   globalSetup: "./e2e/global-setup.ts",
-  fullyParallel: true,
+  // CMS mutation specs and public crawls share this run's DB; serialize suites so
+  // one test cannot deactivate another's page or revoke its single-account session.
+  fullyParallel: false,
+  workers: 1,
   retries: process.env.CI ? 2 : 0,
   reporter: [["html", { open: "never" }], ["list"]],
   use: {
@@ -27,6 +36,7 @@ export default defineConfig({
     ...CHROME,
     trace: "on-first-retry",
     screenshot: "only-on-failure",
+    serviceWorkers: "block",
   },
   projects: [
     {
@@ -63,9 +73,11 @@ export default defineConfig({
       // The e2e checkout intentionally uses the isolated mock provider; production/default
       // runtime selection remains Stripe test mode and refuses checkout until configured.
       PAYMENT_PROVIDER: "mock",
+      BOOKING_LINK_SECRET: process.env.E2E_LINK_SECRET,
       // The suite submits several booking requests from one localhost IP in parallel;
       // the production default of 5/min would throttle it.
       BOOKING_RATE_LIMIT_PER_MINUTE: "60",
+      TRUSTED_CLIENT_IP_HEADER: "x-forwarded-for",
     },
   },
 });

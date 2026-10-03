@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./local-test";
 
 test("scroll entrances reveal content and preserve rounded photographs in both locales", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });

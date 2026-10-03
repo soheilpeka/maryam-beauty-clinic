@@ -4,8 +4,8 @@
  */
 
 /** The CSRF token lives in sessionStorage after sign-in; fall back to the session route. */
-export async function getCsrfToken(): Promise<string | null> {
-  if (typeof window !== "undefined") {
+export async function getCsrfToken(refresh = false): Promise<string | null> {
+  if (!refresh && typeof window !== "undefined") {
     const stored = window.sessionStorage.getItem("admin-csrf");
     if (stored) return stored;
   }
@@ -24,15 +24,14 @@ export async function getCsrfToken(): Promise<string | null> {
  * sent to the sign-in page.
  */
 export async function signOutAdmin(locale: string): Promise<void> {
-  try {
-    const token = await getCsrfToken();
-    await fetch("/api/admin/logout", {
-      method: "POST",
-      headers: token ? { "x-admin-csrf": token } : {},
-    });
-  } catch {
-    // Ignore: we navigate away regardless.
-  }
+  // Another tab may have replaced the session cookie since this tab cached its token.
+  const token = await getCsrfToken(true);
+  const response = await fetch("/api/admin/logout", {
+    method: "POST",
+    headers: token ? { "x-admin-csrf": token } : {},
+  });
+  // An expired/missing session is already signed out; all other failures need a retry.
+  if (!response.ok && response.status !== 401) throw new Error("Logout failed");
   if (typeof window !== "undefined") {
     window.sessionStorage.removeItem("admin-csrf");
     window.location.href = `/${locale}/admin/login`;

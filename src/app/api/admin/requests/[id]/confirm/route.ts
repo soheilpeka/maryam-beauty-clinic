@@ -1,3 +1,5 @@
+import { logServerError } from "@/lib/safe-log";
+import { readJsonBody } from "@/lib/request-body";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authorizeAdminMutation } from "@/lib/admin-guard";
@@ -30,7 +32,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
 
   let body: unknown;
   try {
-    body = await request.json();
+    body = await readJsonBody(request);
   } catch {
     return NextResponse.json({ error: "BAD_REQUEST", message: "Invalid JSON body" }, { status: 400 });
   }
@@ -75,9 +77,9 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
       const manageUrl = `${env.baseUrl}/${locale}/booking/${updated.ref}?t=${token}`;
       await sendBookingNotifications({
         ref: updated.ref,
-        customerName: updated.customer.name,
-        customerEmail: updated.customer.email,
-        customerPhone: updated.customer.phone,
+        customerName: updated.customerNameSnapshot ?? updated.customer.name,
+        customerEmail: updated.customerEmailSnapshot ?? updated.customer.email,
+        customerPhone: updated.customerPhoneSnapshot ?? updated.customer.phone,
         serviceName: (before.locale === "fr" ? updated.serviceNameFrSnapshot : updated.serviceNameSnapshot) ?? updated.serviceNameSnapshot ?? updated.service.name,
         staffName: updated.staff.name,
         startUtc: updated.startUtc,
@@ -85,7 +87,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
         priceCents: updated.priceTotal,
         manageUrl,
         locale,
-      }).catch((e) => console.error("confirm notification failed", e));
+      }).catch((e) => logServerError("confirm notification failed", e));
     }
 
     const when = `${formatLongDate(updated.startUtc, locale)} ${formatTime(updated.startUtc, locale)}`;
@@ -118,9 +120,9 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
         staff: { id: updated.staff.id, name: updated.staff.name },
         customer: {
           id: updated.customer.id,
-          name: updated.customer.name,
-          email: updated.customer.email,
-          phone: updated.customer.phone,
+          name: updated.customerNameSnapshot ?? updated.customer.name,
+          email: updated.customerEmailSnapshot ?? updated.customer.email,
+          phone: updated.customerPhoneSnapshot ?? updated.customer.phone,
         },
       },
     });
@@ -145,7 +147,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
         { status: 409 },
       );
     }
-    console.error("admin confirm error", e);
+    logServerError("admin confirm error", e);
     return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });
   }
 }

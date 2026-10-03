@@ -26,6 +26,14 @@ export interface AdminSessionInfo {
   expiresAt: Date;
 }
 
+/** Credentials changed after password verification; the caller must sign in again. */
+export class SessionCredentialsChangedError extends Error {
+  constructor() {
+    super("Admin credentials changed.");
+    this.name = "SessionCredentialsChangedError";
+  }
+}
+
 function toInfo(row: {
   adminId: string;
   tokenHash: string;
@@ -47,7 +55,7 @@ function toInfo(row: {
  * the row info. Also revokes older sessions for the same admin so one sign-in invalidates
  * the previous one - a single concurrent session per account.
  */
-export async function createSession(adminId: string): Promise<{
+export async function createSession(adminId: string, verifiedPasswordHash?: string): Promise<{
   token: string;
   info: AdminSessionInfo;
 }> {
@@ -55,14 +63,22 @@ export async function createSession(adminId: string): Promise<{
   const tokenHash = sessionTokenHash(token);
   const expiresAt = new Date(Date.now() + sessionTtl());
 
-  // Single-session-per-account: drop any existing sessions for this admin first. Deleting
-  // before inserting keeps at most one live row per admin, even though the two writes are
-  // not in one transaction (SQLite is single-writer; the window cannot be double-booked).
-  await prisma.adminSession.deleteMany({ where: { adminId } });
-
-  const row = await prisma.adminSession.create({
-    data: { adminId, tokenHash, csrfHash: sha256(csrfTokenFor(tokenHash)), expiresAt },
-    include: { admin: { select: { email: true, name: true, role: true } } },
+  // Keep revocation and replacement in one write transaction: two sign-ins must not
+  // interleave their deletions and leave two live sessions behind.
+  const row = await prisma.$transaction(async (tx) => {
+    await tx.adminSession.deleteMany({ where: { adminId } });
+    // The first write above acquires SQLite's transaction write lock. A password
+    // reset cannot race between this credential check and session insertion.
+    if (verifiedPasswordHash !== undefined) {
+      const admin = await tx.adminUser.findUnique({ where: { id: adminId }, select: { passwordHash: true } });
+      if (!admin || admin.passwordHash !== verifiedPasswordHash) {
+        throw new SessionCredentialsChangedError();
+      }
+    }
+    return tx.adminSession.create({
+      data: { adminId, tokenHash, csrfHash: sha256(csrfTokenFor(tokenHash)), expiresAt },
+      include: { admin: { select: { email: true, name: true, role: true } } },
+    });
   });
 
   return { token, info: toInfo(row) };
@@ -87,9 +103,9 @@ export async function getSession(token: string | undefined | null): Promise<Admi
 /** Delete a session by its raw token (logout). Missing tokens are a no-op. */
 export async function deleteSession(token: string | undefined | null): Promise<void> {
   if (!token) return;
-  await prisma.adminSession
-    .delete({ where: { tokenHash: sessionTokenHash(token) } })
-    .catch(() => {});
+  // Missing rows are harmless; database failures must reach the caller so logout
+  // never claims the token was revoked when the store could not be updated.
+  await prisma.adminSession.deleteMany({ where: { tokenHash: sessionTokenHash(token) } });
 }
 
 /** True when the presented CSRF token matches the one bound to this session. */

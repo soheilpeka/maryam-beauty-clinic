@@ -16,6 +16,7 @@
  * Times are stored in UTC and rendered in the salon timezone (see src/lib/datetime.ts).
  */
 import { Prisma } from "@prisma/client";
+import "server-only";
 import type { PrismaClient, Booking, Service, Staff, Customer } from "@prisma/client";
 import { localToUtc, parseDayKey } from "@/lib/datetime";
 import { bookingRequestSchema } from "@/lib/validation";
@@ -138,7 +139,8 @@ export async function createBookingRequest(
 
     const customer = await tx.customer.upsert({
       where: { email: data.customer.email },
-      update: { name: data.customer.name, phone: data.customer.phone },
+      // A submitted email is not proof of ownership of an existing customer record.
+      update: {},
       create: {
         email: data.customer.email,
         name: data.customer.name,
@@ -150,6 +152,9 @@ export async function createBookingRequest(
       data: {
         ref: generateBookingRef(),
         customerId: customer.id,
+        customerNameSnapshot: data.customer.name,
+        customerEmailSnapshot: data.customer.email,
+        customerPhoneSnapshot: data.customer.phone,
         serviceId: service.id,
         staffId: staff.id,
         startUtc,

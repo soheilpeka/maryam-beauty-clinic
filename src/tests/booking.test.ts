@@ -127,6 +127,30 @@ describe("request submission (no availability check at request time)", () => {
     expect(await prisma.customer.count()).toBe(1);
   });
 
+  it("does not let an unverified repeat email overwrite stored customer contact or history", async () => {
+    const first = await createBookingRequest(prisma, requestInput(START_A, "repeat@example.com"));
+    const input = requestInput(START_FREE, "repeat@example.com");
+    input.customer.name = "Different Submitter";
+    input.customer.phone = "+1 555 9999";
+    const second = await createBookingRequest(prisma, input);
+    expect(second.customer).toEqual(first.customer);
+    expect(await prisma.customer.findUniqueOrThrow({ where: { id: first.customer.id } })).toEqual(first.customer);
+    const originalBooking = await prisma.booking.findUniqueOrThrow({
+      where: { id: first.booking.id }, include: { customer: true },
+    });
+    expect(originalBooking.customer.name).toBe("Test Guest");
+    expect(originalBooking.customer.phone).toBe("+1 555 0100");
+    expect(second.booking.customerId).toBe(first.customer.id);
+    expect(second.booking.customerNameSnapshot).toBe("Different Submitter");
+    expect(second.booking.customerEmailSnapshot).toBe("repeat@example.com");
+    expect(second.booking.customerPhoneSnapshot).toBe("+1 555 9999");
+    expect(originalBooking.customerNameSnapshot).toBe("Test Guest");
+    expect(originalBooking.customerPhoneSnapshot).toBe("+1 555 0100");
+    const persisted = await prisma.booking.findUniqueOrThrow({ where: { id: second.booking.id } });
+    expect(persisted.customerNameSnapshot).toBe("Different Submitter");
+    expect(persisted.customerPhoneSnapshot).toBe("+1 555 9999");
+  });
+
   it("rejects a preferred time in the past", async () => {
     await expect(
       createBookingRequest(prisma, requestInput(START_A, "past@example.com", "2025-06-01")),

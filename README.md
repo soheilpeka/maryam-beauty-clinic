@@ -34,9 +34,18 @@ in production.
 
 ## Verification
 
+Latest whole-site QA continuation: `QA_REVIEW_2026-10-03.md` lists corrected defects, exact
+verification results and production limitations. `node scripts/qa-preview.mjs http://localhost:3050`
+runs a read-only local browser sweep without submitting owner-preview forms.
+For an existing database missing only the three Booking contact snapshot columns, use
+`npm run prisma:migrate-booking-contacts`: it backs up a local database and performs an additive,
+repeatable transaction without resetting or rewriting records. Verify/back up any separate host
+database first; remote execution requires the explicit `--allow-remote` flag. Do not publish backups.
+
 ```text
-npm run typecheck      # TypeScript
-npm test -- --run       # 159 Vitest tests
+npm run typecheck      # TypeScript 7 native compiler; TypeScript 6 API is used by build/lint
+npm run lint           # ESLint flat config; current quality warnings remain visible
+npm test -- --run       # latest whole-site continuation: 433 Vitest tests
 npm run build          # production build, current route count is printed by Next.js
 npx playwright test    # desktop/mobile browser regression
 ```
@@ -50,8 +59,19 @@ packages, staff and gallery, with validated URL-based media and reusable preview
 sample photos as the salon's real client work. Uploads require an approved storage adapter;
 remote URL validation does not inspect actual image bytes or prove file size.
 
-Latest security maintenance: Next.js 16.3.6. See `SECURITY_REVIEW.md` for remaining transitive
-dependency advisories and production configuration gates.
+Latest security hardening: see `SECURITY_HARDENING_2026-10-02.md` for findings and
+`SECURITY_OPERATIONS_2026-10-03.md` for the completed local maintenance, verification and
+remaining production actions. Before deployment, back up and verify the identified target
+database, then apply the three nullable Booking contact snapshot columns and the additive
+RateLimitBucket table/index. Production request budgets use that shared table and refuse
+requests with 503 if it is unavailable; development/test budgets remain in memory.
+
+`npm run security:maintain-local` backs up only an existing local database inside `prisma/`,
+encrypts and verifies the backup, applies only that additive security schema, replaces weak
+local signing keys, and protects the affected files. It refuses remote database URLs.
+The command has run successfully on the local database. No remote/production database,
+hosting setting, deployment or external account was changed. Keep the ignored `.private/keys/`
+separate from encrypted backups; losing the key makes those backups unrecoverable.
 
 
 ### Owner-supplied salon photography

@@ -1,3 +1,5 @@
+import { logServerError } from "@/lib/safe-log";
+import { readJsonBody } from "@/lib/request-body";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authorizeAdminMutation } from "@/lib/admin-guard";
@@ -25,7 +27,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
 
   let body: unknown;
   try {
-    body = await request.json();
+    body = await readJsonBody(request);
   } catch {
     return NextResponse.json({ error: "BAD_REQUEST", message: "Invalid JSON body" }, { status: 400 });
   }
@@ -57,14 +59,14 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
     await notificationProvider
       .sendEmail(
         bookingDeclinedEmail({
-          customerName: before.customer.name,
-          customerEmail: before.customer.email,
+          customerName: before.customerNameSnapshot ?? before.customer.name,
+          customerEmail: before.customerEmailSnapshot ?? before.customer.email,
           ref: booking.ref,
           reason,
           locale,
         }),
       )
-      .catch((e) => console.error("decline notification failed", e));
+      .catch((e) => logServerError("decline notification failed", e));
 
     await writeAuditLog({
       adminId: auth.session.adminId,
@@ -90,7 +92,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
     if (e instanceof BookingNotFoundError) {
       return NextResponse.json({ error: "NOT_FOUND", message: "Request not found." }, { status: 404 });
     }
-    console.error("admin decline error", e);
+    logServerError("admin decline error", e);
     return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });
   }
 }

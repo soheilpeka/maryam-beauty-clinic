@@ -1,3 +1,5 @@
+import { logServerError } from "@/lib/safe-log";
+import { readJsonBody } from "@/lib/request-body";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authorizeAdminMutation } from "@/lib/admin-guard";
@@ -24,7 +26,7 @@ export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: str
 
   let body: unknown;
   try {
-    body = await request.json();
+    body = await readJsonBody(request);
   } catch {
     return NextResponse.json({ error: "BAD_REQUEST", message: "Invalid JSON body" }, { status: 400 });
   }
@@ -80,7 +82,7 @@ export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: str
     });
     return NextResponse.json({ ok: true, staff: shapeStaff(staff) });
   } catch (e) {
-    console.error("admin schedule update error", e);
+    logServerError("admin schedule update error", e);
     return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });
   }
 }

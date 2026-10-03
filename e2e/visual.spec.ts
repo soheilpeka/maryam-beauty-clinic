@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./local-test";
 import { adminForProject } from "./admin-credentials";
 
 test("editorial route families, admin forms and customer failure states", async ({ page }, info) => {

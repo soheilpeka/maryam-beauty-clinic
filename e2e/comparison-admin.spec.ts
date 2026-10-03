@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./local-test";
 import { createClient } from "@libsql/client";
 import { adminForProject } from "./admin-credentials";
 test("comparison mutations require authorization", async ({ request }) => {

@@ -9,7 +9,7 @@ body button, body a { -webkit-tap-highlight-color: transparent; }
 
 /* Compact single-row masthead with balanced navigation and touch controls. */
 .site-header { background: #fff; color: #000; backdrop-filter: none; border-color: #ddd; }
-.site-header-inner { height: 64px; max-width: 1440px; margin-inline: auto; }
+.site-header-inner { height: 64px; max-width: none; }
 .site-header-inner > a { flex-shrink: 0; }
 .site-header-inner > a, .site-header-inner > div { color: #000; }
 .site-header-inner > a img { filter: brightness(0); width: 92px; height: 44px; }

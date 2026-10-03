@@ -1,6 +1,7 @@
 import { SKIN_PROGRAMS } from "@/lib/content/skin-programs";
 import { formatPrice } from "@/lib/content/format";
 import { packageCopy } from "@/lib/content/skin-programs-fr";
+import { skinProgramDetails } from "@/lib/content/skin-program-details";
 
 type Record = { slug: string; name: string; nameFr: string; description: string | null; descriptionFr: string | null; price: number; sessions: number; badge: string | null; validityDays: number | null; services: { service: { active: boolean; name: string; nameFr: string | null } }[] };
 
@@ -10,10 +11,12 @@ export function presentPackage(record: Record, locale: string) {
   const language = locale === "fr" ? "fr" : "en";
   const price = (text: string) => formatPrice(Math.round(Number(text.replace(/[^\d.]/g, "")) * 100), language);
   const unchangedPrice = source && record.price === Number(source.price.replace(/[^\d.]/g, "")) * 100;
+  const description = (language === "fr" ? record.descriptionFr : record.description) ?? "";
+  const untouchedDescription = source && description === packageCopy(source.description, locale);
   return {
     slug: record.slug,
     name: language === "fr" ? record.nameFr : record.name,
-    description: (language === "fr" ? record.descriptionFr : record.description) ?? "",
+    description: untouchedDescription ? skinProgramDetails(record.slug, locale)?.story ?? description : description,
     strapline: source ? packageCopy(source.strapline, locale) : record.badge ?? "",
     stats: source && record.sessions === (record.slug === "discovery" ? 1 : Number(source.stats[0].match(/\d+/)?.[0])) ? source.stats : [language === "fr" ? `${record.sessions} séances` : `${record.sessions} sessions`],
     included: source?.included ?? record.services.filter(link => link.service.active).map(link => language === "fr" ? link.service.nameFr ?? link.service.name : link.service.name),

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
@@ -8,61 +7,13 @@ import { useCart } from "@/components/store/cart-context";
 import { cartSubtotal, lineTotal } from "@/lib/cart";
 import { formatPrice } from "@/lib/datetime";
 import { EditorialHeading, EditorialEmpty } from "@/components/editorial";
-
-interface QuoteLine {
-  slug: string;
-  quantity: number;
-  available: boolean;
-  stock?: number;
-  name?: string;
-  imageUrl?: string | null;
-  priceCents?: number;
-  lineTotalCents?: number;
-}
-
-interface Quote {
-  enabled: boolean;
-  lines: QuoteLine[];
-  subtotalCents: number;
-  shippingCents: number;
-  totalCents: number;
-  freeShippingThresholdCents: number;
-}
+import { useCartQuote } from "@/components/store/use-cart-quote";
 
 export default function CartPage() {
   const t = useTranslations("Store");
   const locale = useLocale();
   const { lines, ready, setQuantity, remove } = useCart();
-  const [quote, setQuote] = useState<Quote | null>(null);
-  const [quoteError, setQuoteError] = useState(false);
-  const lineKey = useMemo(() => JSON.stringify(lines.map(({ slug, quantity }) => ({ slug, quantity }))), [lines]);
-
-  useEffect(() => {
-    if (!ready || lines.length === 0) {
-      setQuote(null);
-      setQuoteError(false);
-      return;
-    }
-    const controller = new AbortController();
-    setQuote(null);
-    setQuoteError(false);
-    fetch("/api/store/cart/quote", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ locale, lines: lines.map(({ slug, quantity }) => ({ slug, quantity })) }),
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error("quote failed");
-        const data = await response.json();
-        setQuote(data);
-      })
-      .catch((error) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
-        setQuoteError(true);
-      });
-    return () => controller.abort();
-  }, [lineKey, locale, ready]);
+  const { quote, quoteError, refresh } = useCartQuote(lines, ready, locale);
 
   const quoteBySlug = new Map(quote?.lines.map((line) => [line.slug, line]) ?? []);
   const fallbackSubtotal = cartSubtotal(lines);
@@ -85,6 +36,7 @@ export default function CartPage() {
               {quoteError && (
                 <p role="alert" className="mb-4 rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
                   {t("quoteError")}
+                  <button type="button" onClick={refresh} className="ml-3 min-h-11 underline">{t("retryQuote")}</button>
                 </p>
               )}
               <ul className="cart-lines space-y-4">
@@ -92,7 +44,7 @@ export default function CartPage() {
                   const fresh = quoteBySlug.get(line.slug);
                   const price = fresh?.priceCents ?? line.priceCents;
                   const name = fresh?.name ?? line.name;
-                  const imageUrl = fresh?.imageUrl ?? line.imageUrl;
+                  const imageUrl = fresh?.imageUrl !== undefined ? fresh.imageUrl : line.imageUrl;
                   return (
                     <li key={line.slug} className="grid grid-cols-[5rem_minmax(0,1fr)] gap-4 rounded-3xl border border-border bg-card p-4 sm:grid-cols-[6rem_minmax(0,1fr)_auto] sm:items-center sm:p-5">
                       <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted">

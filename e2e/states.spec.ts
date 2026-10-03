@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./local-test";
 import { CART_STORAGE_KEY } from "../src/lib/cart";
 
 // Client-only presentation fixtures: no owner catalog rows or payments are created.

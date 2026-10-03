@@ -1,4 +1,31 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./local-test";
+
+test("comparison text remains readable in light and dark themes", async ({ page }, info) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/en/gallery");
+  const card = page.locator("#before-after article").first();
+  for (const dark of [false, true]) {
+    await page.evaluate(value => document.documentElement.classList.toggle("dark", value), dark);
+    await card.evaluate(element => element.scrollIntoView({ block: "center", behavior: "instant" }));
+    const ratios = await card.evaluate(element => {
+      const luminance = (color: string) => {
+        const rgb = color.match(/[\d.]+/g)!.slice(0, 3).map(Number).map(value => {
+          const channel = value / 255;
+          return channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4;
+        });
+        return rgb[0] * .2126 + rgb[1] * .7152 + rgb[2] * .0722;
+      };
+      const background = luminance(getComputedStyle(element).backgroundColor);
+      return [...element.querySelectorAll("h3, figcaption, p")].filter(node => node.textContent?.trim()).map(node => {
+        const text = luminance(getComputedStyle(node).color);
+        return (Math.max(text, background) + .05) / (Math.min(text, background) + .05);
+      });
+    });
+    for (const ratio of ratios) expect(ratio).toBeGreaterThanOrEqual(4.5);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+    await card.screenshot({ path: info.outputPath(`comparison-${dark ? "dark" : "light"}.png`) });
+  }
+});
 
 for (const locale of ["en", "fr"]) {
   test(`${locale}: all 18 comparisons are reachable, localized and filterable`, async ({ page }) => {

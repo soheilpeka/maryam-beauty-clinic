@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./local-test";
 
 for (const locale of ["en", "fr"]) {
   test(`all linked ${locale} public pages and images remain usable`, async ({ page, request, baseURL }, info) => {

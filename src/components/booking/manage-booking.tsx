@@ -14,8 +14,6 @@ interface ManageBookingProps {
     serviceName: string;
     staffName: string;
     durationMin: number;
-    customerName: string;
-    customerEmail: string;
   };
   token: string;
   locale: string;
@@ -56,14 +54,15 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
   }
 
   const cancelled = status === "CANCELLED";
+  const canCancel = status === "PENDING" || status === "CONFIRMED";
 
   return (
     <div>
-      <dialog ref={confirmation} aria-labelledby="cancel-request-title" className="w-[min(32rem,calc(100%_-_2rem))] border border-border bg-background p-8 text-foreground">
+      {canCancel && <dialog ref={confirmation} aria-labelledby="cancel-request-title" className="w-[min(32rem,calc(100%_-_2rem))] border border-border bg-background p-8 text-foreground">
         <h2 id="cancel-request-title" className="font-serif text-3xl">{t("cancel")}</h2>
         <p className="my-6 leading-7 text-muted-foreground">{t("confirmCancel")}</p>
         <div className="flex flex-wrap gap-5"><button type="button" onClick={() => confirmation.current?.close()} className="editorial-action">{tLocale === "fr" ? "Conserver la demande" : "Keep request"}</button><button type="button" onClick={() => void cancel()} className="editorial-action text-destructive">{t("cancel")}</button></div>
-      </dialog>
+      </dialog>}
       <div className="mb-8 flex items-center justify-between gap-4">
         <h1 className="display-heading">
           {t("title")}
@@ -77,7 +76,7 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
                 : "bg-neutral-100 text-neutral-700 dark:bg-neutral-950/40 dark:text-neutral-300"
           }`}
         >
-          {booking.declined && cancelled ? (tLocale === "fr" ? "Demande refusée" : "Request declined") : t(({ PENDING: "statusPending", CONFIRMED: "statusConfirmed", CANCELLED: "statusCancelled", COMPLETED: "statusCompleted" } as const)[status as "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED"])}
+          {booking.declined && cancelled ? (tLocale === "fr" ? "Demande refusée" : "Request declined") : t(({ PENDING: "statusPending", CONFIRMED: "statusConfirmed", CANCELLED: "statusCancelled", COMPLETED: "statusCompleted", NO_SHOW: "statusNoShow" } as const)[status as "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED" | "NO_SHOW"])}
         </span>
       </div>
 
@@ -110,7 +109,7 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
             <Row label={t("duration")} value={booking.durationMin > 0 ? formatDuration(booking.durationMin, tLocale) : t("detailsPending")} />
           </dl>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          {canCancel && <><div className="mt-6 flex flex-wrap gap-3">
             <button
               type="button"
               onClick={() => confirmation.current?.showModal()}
@@ -122,7 +121,7 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
           </div>
           <p className="mt-4 text-center text-xs text-neutral-500 dark:text-neutral-400">
             {t("confirmCancel")}
-          </p>
+          </p></>}
         </div>
       )}
     </div>

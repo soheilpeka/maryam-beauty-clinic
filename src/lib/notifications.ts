@@ -4,6 +4,7 @@
  * a verified sender are required and delivery is still only considered live after owner testing.
  */
 import { env } from "@/lib/env";
+import "server-only";
 import { formatLongDate, formatTime } from "@/lib/datetime";
 
 export interface NotificationMessage {

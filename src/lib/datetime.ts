@@ -2,9 +2,8 @@
  * Time helpers. Business logic works with "minutes from midnight in the salon timezone" plus
  * UTC instants, which keeps recurrence, DST, and storage simple and unambiguous.
  */
-import { env } from "@/lib/env";
-
-export const SALON_TIMEZONE = env.salonTimezone;
+// Shared date formatting must not import the server-only credentials module.
+export const SALON_TIMEZONE = process.env.SALON_TIMEZONE ?? "America/Toronto";
 
 export const MINUTES_PER_DAY = 24 * 60;
 

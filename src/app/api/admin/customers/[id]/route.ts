@@ -15,17 +15,20 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ id: str
   const auth = await authorizeAdmin(request);
   if (!auth.ok) return auth.response as NextResponse;
   const { id } = await ctx.params;
+  const rawOffset = Number(request.nextUrl.searchParams.get("offset"));
+  const offset = Number.isSafeInteger(rawOffset) && rawOffset >= 0 ? rawOffset : 0;
 
   const customer = await prisma.customer.findUnique({
     where: { id },
     include: {
       bookings: {
         include: {
-          service: { select: { name: true, duration: true } },
+          service: { select: { name: true, nameFr: true, duration: true } },
           staff: { select: { name: true } },
         },
-        orderBy: { startUtc: "desc" },
-        take: 50,
+        orderBy: [{ startUtc: "desc" }, { id: "desc" }],
+        take: 51,
+        skip: offset,
       },
       _count: { select: { bookings: true } },
     },
@@ -45,7 +48,9 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ id: str
       notes: customer.notes,
       createdAt: customer.createdAt.toISOString(),
       bookingCount: customer._count.bookings,
-      bookings: customer.bookings.map((b) => ({
+      historyOffset: offset,
+      hasMoreBookings: customer.bookings.length > 50,
+      bookings: customer.bookings.slice(0, 50).map((b) => ({
         id: b.id,
         ref: b.ref,
         status: b.status,
@@ -55,7 +60,7 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ id: str
         startMinutes: toLocalMinutes(b.startUtc),
         priceTotal: b.priceTotal,
         note: b.note,
-        service: { name: b.service.name, duration: b.service.duration },
+        service: { name: b.serviceNameSnapshot ?? b.service.name, nameFr: b.serviceNameFrSnapshot ?? b.serviceNameSnapshot ?? b.service.nameFr ?? b.service.name, duration: b.durationMinSnapshot ?? b.service.duration },
         staff: { name: b.staff.name },
       })),
     },

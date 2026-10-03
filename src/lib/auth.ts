@@ -42,6 +42,9 @@ function safeEqual(a: string, b: string): boolean {
 }
 
 export async function hashPassword(plain: string): Promise<string> {
+  // bcrypt ignores bytes past 72: reject them instead of silently treating two
+  // different passwords with the same prefix as identical credentials.
+  if (Buffer.byteLength(plain, "utf8") > 72) throw new Error("Password exceeds bcrypt's 72-byte limit.");
   return bcrypt.hash(plain, BCRYPT_COST);
 }
 
@@ -50,7 +53,7 @@ export async function hashPassword(plain: string): Promise<string> {
  * rather than throwing, so the caller always follows a single failure path.
  */
 export async function verifyPassword(plain: string, hash: string): Promise<boolean> {
-  if (!plain || !hash || typeof hash !== "string") return false;
+  if (!plain || !hash || typeof hash !== "string" || Buffer.byteLength(plain, "utf8") > 72) return false;
   try {
     return await bcrypt.compare(plain, hash);
   } catch {

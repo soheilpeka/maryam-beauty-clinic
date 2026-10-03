@@ -1,3 +1,4 @@
+import { logServerError } from "@/lib/safe-log";
 /**
  * Audit logging for admin actions.
  *
@@ -42,7 +43,7 @@ export async function writeAuditLog(entry: AuditEntry): Promise<void> {
       },
     });
   } catch (e) {
-    console.error("audit log write failed", e);
+    logServerError("audit log write failed", e);
   }
 }
 

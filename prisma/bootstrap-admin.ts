@@ -12,7 +12,8 @@ import "@/lib/env-preload";
 import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import { env } from "@/lib/env";
-import { hashPassword } from "@/lib/auth";
+import { resetInitialAdminPassword } from "@/lib/admin-password";
+import { logServerError } from "@/lib/safe-log";
 
 const prisma = new PrismaClient({
   adapter: new PrismaLibSql({
@@ -25,25 +26,16 @@ async function main() {
   const email = env.adminInitialEmail;
   const password = env.adminInitialPassword;
 
-  if (password.length < 10) {
-    throw new Error("ADMIN_INITIAL_PASSWORD must be at least 10 characters.");
-  }
+  await resetInitialAdminPassword(prisma, email, password);
 
-  const passwordHash = await hashPassword(password);
-  await prisma.adminUser.upsert({
-    where: { email },
-    update: { passwordHash },
-    create: { email, passwordHash, name: "Administrator", role: "admin" },
-  });
-
-  console.info(`Admin account ready: ${email}`);
+  console.info("Admin account ready; prior sessions revoked.");
   console.info("Only the bcrypt hash is stored; the plaintext lives solely in your environment.");
 }
 
 main()
   .then(() => prisma.$disconnect())
   .catch(async (e) => {
-    console.error(e);
+    logServerError("admin bootstrap failed", e);
     await prisma.$disconnect();
     process.exit(1);
   });

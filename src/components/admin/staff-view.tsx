@@ -4,11 +4,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   staffSchema,
-  scheduleSchema,
   dayOffSchema,
   flattenZodErrors,
 } from "@/lib/validation";
 import { translateValidationKey } from "@/lib/booking-ui";
+import { parseScheduleDrafts, type WindowDraft } from "@/lib/admin-schedule";
 import {
   getCsrfToken,
   minutesToInputValue,
@@ -26,15 +26,6 @@ import {
  * change goes back through those routes with a session + CSRF token, and the forms are
  * validated on the client with the same schemas the server enforces.
  */
-
-interface WindowDraft {
-  id: string;
-  dayOfWeek: number;
-  startInput: string;
-  endInput: string;
-  breakStartInput: string;
-  breakEndInput: string;
-}
 
 interface StaffList {
   ok: true;
@@ -82,6 +73,7 @@ type DayOffFormState = {
 type DeleteState = {
   staffId: string;
   staffName: string;
+  active: boolean;
   bookingCount: number;
   error: string | null;
   submitting: boolean;
@@ -134,8 +126,7 @@ function scheduleDraftsFromStaff(staff: StaffView): WindowDraft[] {
     dayOfWeek: w.dayOfWeek,
     startInput: minutesToInputValue(w.startTime),
     endInput: minutesToInputValue(w.endTime),
-    breakStartInput: w.breaks[0] ? minutesToInputValue(w.breaks[0].startTime) : "",
-    breakEndInput: w.breaks[0] ? minutesToInputValue(w.breaks[0].endTime) : "",
+    breaks: w.breaks.map(b => ({ id: nextDraftId(), startInput: minutesToInputValue(b.startTime), endInput: minutesToInputValue(b.endTime) })),
   }));
 }
 
@@ -233,31 +224,9 @@ export function StaffView({ locale }: { locale: string }) {
   }
 
   async function submitSchedule(state: ScheduleState) {
-    const windows = state.windows
-      .map((w) => ({
-        dayOfWeek: w.dayOfWeek,
-        startTime: timeValueToMinutes(w.startInput),
-        endTime: timeValueToMinutes(w.endInput),
-        breakStart: w.breakStartInput ? timeValueToMinutes(w.breakStartInput) : undefined,
-        breakEnd: w.breakEndInput ? timeValueToMinutes(w.breakEndInput) : undefined,
-      }))
-      // A row with both times cleared is a deletion; any other half-filled row is a real
-      // error and is reported by the schema below instead of being silently dropped.
-      .filter((w) => w.startTime !== null && w.endTime !== null);
-
-    const clientParsed = scheduleSchema.safeParse({
-      windows: windows.map((w) => ({
-        dayOfWeek: w.dayOfWeek,
-        startTime: w.startTime,
-        endTime: w.endTime,
-        breaks:
-          w.breakStart !== undefined && w.breakEnd !== undefined
-            ? [{ startTime: w.breakStart, endTime: w.breakEnd }]
-            : [],
-      })),
-    });
+    const clientParsed = parseScheduleDrafts(state.windows);
     if (!clientParsed.success) {
-      const first = Object.values(flattenZodErrors(clientParsed))[0] ?? tValidation("form");
+      const first = clientParsed.error.issues.find(issue => issue.message.startsWith("validation."))?.message ?? "validation.time.invalid";
       setDialog({ ...state, error: translateValidationKey(first, tValidation) });
       return;
     }
@@ -330,15 +299,16 @@ export function StaffView({ locale }: { locale: string }) {
 
   async function deleteDayOff(dayOffId: string) {
     const token = await getCsrfToken();
-    if (!token) return;
+    if (!token) { setError(tValidation("form")); return; }
     try {
-      await fetch(`/api/admin/days-off/${dayOffId}`, {
+      const response = await fetch(`/api/admin/days-off/${dayOffId}`, {
         method: "DELETE",
         headers: { "x-admin-csrf": token },
       });
+      if (!response.ok) throw new Error("day off removal failed");
       void load();
     } catch {
-      // The list refresh shows the row is still there; nothing else to do.
+      setError(t("errorHint"));
     }
   }
 
@@ -351,11 +321,16 @@ export function StaffView({ locale }: { locale: string }) {
     }
     try {
       const res = await fetch(`/api/admin/staff/${state.staffId}`, {
-        method: "DELETE",
-        headers: { "x-admin-csrf": token },
+        method: state.bookingCount > 0 ? "PATCH" : "DELETE",
+        headers: { "content-type": "application/json", "x-admin-csrf": token },
+        ...(state.bookingCount > 0 ? { body: JSON.stringify({ active: false }) } : {}),
       });
-      const json = (await res.json()) as { ok?: boolean; message?: string };
+      const json = (await res.json()) as { ok?: boolean; message?: string; bookingCount?: number };
       if (!res.ok) {
+        if (res.status === 409 && json.bookingCount) {
+          setDialog({ ...state, submitting: false, bookingCount: json.bookingCount, error: null });
+          return;
+        }
         setDialog({ ...state, submitting: false, error: json.message ?? t("errorHint") });
         return;
       }
@@ -383,7 +358,7 @@ export function StaffView({ locale }: { locale: string }) {
 
   if (error) {
     return (
-      <div className="rounded-md border border-neutral-300 bg-neutral-50 px-3 py-3 text-sm dark:border-neutral-800 dark:bg-neutral-950/40">
+      <div role="alert" className="rounded-md border border-neutral-300 bg-neutral-50 px-3 py-3 text-sm dark:border-neutral-800 dark:bg-neutral-950/40">
         <p className="font-medium text-neutral-700 dark:text-neutral-300">{t("errorTitle")}</p>
         <p className="mt-0.5 text-neutral-600 dark:text-neutral-400">{error}</p>
         <button
@@ -450,6 +425,7 @@ export function StaffView({ locale }: { locale: string }) {
                   staffId: member.id,
                   staffName: member.name,
                   bookingCount: member.bookingCount,
+                  active: member.active,
                   error: null,
                   submitting: false,
                 })
@@ -486,7 +462,10 @@ export function StaffView({ locale }: { locale: string }) {
         />
       )}
       {dialog && "bookingCount" in dialog && (
-        <DeleteStaffDialog state={dialog} onClose={closeDialog} onSubmit={submitDelete} />
+        <DeleteStaffDialog state={dialog} onClose={closeDialog} onSubmit={submitDelete} onEdit={() => {
+          const member = staff?.find(item => item.id === dialog.staffId);
+          if (member) setDialog(staffFormFromExisting(member));
+        }} />
       )}
     </div>
   );
@@ -560,10 +539,7 @@ function StaffCard({
                   </dt>
                   <dd className="inline text-foreground dark:text-neutral-100">
                     {minutesToInputValue(w.startTime)}&ndash;{minutesToInputValue(w.endTime)}
-                    {w.breaks.length > 0 &&
-                      ` (${t("breakLabel")} ${minutesToInputValue(w.breaks[0].startTime)}-${minutesToInputValue(
-                        w.breaks[0].endTime,
-                      )})`}
+                    {w.breaks.length > 0 && ` (${t("breakLabel")} ${w.breaks.map(b => `${minutesToInputValue(b.startTime)}-${minutesToInputValue(b.endTime)}`).join(", ")})`}
                   </dd>
                 </div>
               ))}
@@ -616,7 +592,7 @@ function StaffCard({
             onClick={onDelete}
             className="rounded-lg border border-neutral-300 px-3.5 py-2 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-950/40"
           >
-            {t("delete")}
+            {t(member.bookingCount > 0 ? "deactivateStaff" : "delete")}
           </button>
         </div>
       </div>
@@ -665,7 +641,7 @@ function StaffFormDialog({
   return (
     <dialog
       ref={ref}
-      onCancel={onClose}
+      onCancel={event => { if (state.submitting) event.preventDefault(); else onClose(); }}
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
@@ -751,8 +727,8 @@ function StaffFormDialog({
             </p>
           )}
         </div>
-          <label className="block text-sm">{t("descriptionFr")}<textarea value={state.bioFr} onChange={e => onChange({ bioFr: e.target.value })} className={inputClass} rows={3} /></label>
-          <label className="mt-4 block text-sm">{t("displayOrder")}<input type="number" min="0" value={state.order} onChange={e => onChange({ order: e.target.value })} className={inputClass} /></label>
+          <label className="block text-sm">{t("descriptionFr")}<textarea maxLength={1000} value={state.bioFr} onChange={e => onChange({ bioFr: e.target.value })} className={inputClass} rows={3} /></label>
+          <label className="mt-4 block text-sm">{t("displayOrder")}<input type="number" min="0" max="100000" value={state.order} onChange={e => onChange({ order: e.target.value })} className={inputClass} /></label>
           {state.avatarUrl && <img src={state.avatarUrl} alt={state.name} className="my-4 h-36 max-w-full rounded-xl object-contain" />}
         <fieldset>
           <legend className="text-sm font-medium text-foreground dark:text-neutral-300">
@@ -841,7 +817,7 @@ function ScheduleDialog({
   return (
     <dialog
       ref={ref}
-      onCancel={onClose}
+      onCancel={event => { if (state.submitting) event.preventDefault(); else onClose(); }}
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
@@ -906,36 +882,12 @@ function ScheduleDialog({
                         className={inputClass}
                       />
                     </div>
-                    <div>
-                      <label
-                        htmlFor={`win-${w.id}-bstart`}
-                        className="block text-xs text-neutral-500 dark:text-neutral-400"
-                      >
-                        {t("breakStart")}
-                      </label>
-                      <input
-                        id={`win-${w.id}-bstart`}
-                        type="time"
-                        value={w.breakStartInput}
-                        onChange={(e) => setWindow(w.id, { breakStartInput: e.target.value })}
-                        className={inputClass}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor={`win-${w.id}-bend`}
-                        className="block text-xs text-neutral-500 dark:text-neutral-400"
-                      >
-                        {t("breakEnd")}
-                      </label>
-                      <input
-                        id={`win-${w.id}-bend`}
-                        type="time"
-                        value={w.breakEndInput}
-                        onChange={(e) => setWindow(w.id, { breakEndInput: e.target.value })}
-                        className={inputClass}
-                      />
-                    </div>
+                    {w.breaks.map((b, index) => <div key={b.id} className="flex w-full flex-wrap items-end gap-2 border-l border-border pl-3">
+                      <div><label htmlFor={`win-${w.id}-${b.id}-bstart`} className="block text-xs text-muted-foreground">{t("breakStart")} {index + 1}</label><input id={`win-${w.id}-${b.id}-bstart`} type="time" value={b.startInput} onChange={e => setWindow(w.id, { breaks: w.breaks.map(item => item.id === b.id ? { ...item, startInput: e.target.value } : item) })} className={inputClass} /></div>
+                      <div><label htmlFor={`win-${w.id}-${b.id}-bend`} className="block text-xs text-muted-foreground">{t("breakEnd")} {index + 1}</label><input id={`win-${w.id}-${b.id}-bend`} type="time" value={b.endInput} onChange={e => setWindow(w.id, { breaks: w.breaks.map(item => item.id === b.id ? { ...item, endInput: e.target.value } : item) })} className={inputClass} /></div>
+                      <button type="button" onClick={() => setWindow(w.id, { breaks: w.breaks.filter(item => item.id !== b.id) })} className={actionClass} aria-label={`${t("removeBreak")} ${index + 1}`}>&times;</button>
+                    </div>)}
+                    <button type="button" disabled={w.breaks.length >= 8} onClick={() => setWindow(w.id, { breaks: [...w.breaks, { id: nextDraftId(), startInput: "", endInput: "" }] })} className={`${actionClass} disabled:opacity-40`}>{t("addBreak")}</button>
                     <button
                       type="button"
                       onClick={() =>
@@ -959,8 +911,7 @@ function ScheduleDialog({
                         dayOfWeek,
                         startInput: "10:00",
                         endInput: "17:00",
-                        breakStartInput: "",
-                        breakEndInput: "",
+                        breaks: [],
                       },
                     ],
                   })
@@ -1014,7 +965,7 @@ function DayOffDialog({
   return (
     <dialog
       ref={ref}
-      onCancel={onClose}
+      onCancel={event => { if (state.submitting) event.preventDefault(); else onClose(); }}
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
@@ -1133,10 +1084,12 @@ function DeleteStaffDialog({
   state,
   onClose,
   onSubmit,
+  onEdit,
 }: {
   state: DeleteState;
   onClose: () => void;
   onSubmit: (s: DeleteState) => void;
+  onEdit: () => void;
 }) {
   const t = useTranslations("Admin");
   const ref = useRef<HTMLDialogElement>(null);
@@ -1148,7 +1101,7 @@ function DeleteStaffDialog({
   return (
     <dialog
       ref={ref}
-      onCancel={onClose}
+      onCancel={event => { if (state.submitting) event.preventDefault(); else onClose(); }}
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
@@ -1156,10 +1109,12 @@ function DeleteStaffDialog({
       className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-neutral-800 dark:bg-card dark:text-neutral-50"
     >
       <h2 id="staff-delete-title" className="font-serif text-xl font-semibold">
-        {t("deleteStaffTitle")}
+        {t(state.bookingCount > 0 ? "deactivateStaffTitle" : "deleteStaffTitle")}
       </h2>
       <p className="mt-1.5 text-sm text-muted-foreground dark:text-neutral-400">
-        {t("deleteStaffHint", { name: state.staffName })}
+        {state.bookingCount > 0
+          ? t("deactivateStaffHint", { name: state.staffName, count: state.bookingCount })
+          : t("deleteStaffHint", { name: state.staffName })}
       </p>
       {state.error && (
         <div
@@ -1169,7 +1124,8 @@ function DeleteStaffDialog({
           {state.error}
         </div>
       )}
-      <div className="mt-6 flex items-center justify-end gap-2">
+      <div className="mt-6 flex flex-wrap items-center justify-end gap-2">
+        {state.bookingCount > 0 && <button type="button" onClick={onEdit} disabled={state.submitting} className={actionClass}>{t("editStaff")}</button>}
         <button
           type="button"
           onClick={onClose}
@@ -1181,10 +1137,10 @@ function DeleteStaffDialog({
         <button
           type="button"
           onClick={() => void onSubmit(state)}
-          disabled={state.submitting}
+          disabled={state.submitting || (state.bookingCount > 0 && !state.active)}
           className="rounded-lg bg-neutral-600 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {state.submitting ? t("deleting") : t("delete")}
+          {state.bookingCount > 0 ? (state.submitting ? t("saving") : t(state.active ? "deactivateStaff" : "inactive")) : (state.submitting ? t("deleting") : t("delete"))}
         </button>
       </div>
     </dialog>

@@ -1,10 +1,10 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/routing";
 import { useCart } from "@/components/store/cart-context";
-import { cartSubtotal, lineTotal } from "@/lib/cart";
+import { useCartQuote } from "@/components/store/use-cart-quote";
 import { formatPrice } from "@/lib/datetime";
 import { EditorialHeading, EditorialEmpty } from "@/components/editorial";
 
@@ -13,6 +13,8 @@ export default function CheckoutPage() {
   const locale = useLocale();
   const router = useRouter();
   const { lines, ready, clear } = useCart();
+  const { quote, quoteError, refresh } = useCartQuote(lines, ready, locale);
+  const canOrder = Boolean(quote?.enabled && quote.lines.length && quote.lines.every(line => line.available));
   const [attemptId, setAttemptId] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,15 +34,13 @@ export default function CheckoutPage() {
     setAttemptId(crypto.randomUUID());
   }, []);
 
-  const subtotal = useMemo(() => cartSubtotal(lines), [lines]);
-
   function update(field: keyof typeof form, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!attemptId || submitting) return;
+    if (!attemptId || submitting || !canOrder) return;
     setSubmitting(true);
     setError(null);
     try {
@@ -57,6 +57,7 @@ export default function CheckoutPage() {
       const data = await response.json();
       if (!response.ok) {
         setError(data.error === "INSUFFICIENT_STOCK" || data.error === "PRODUCT_UNAVAILABLE" ? t("stockChanged") : data.error === "STORE_CLOSED" ? t("storeClosed") : t("checkoutError"));
+        refresh();
         return;
       }
       clear();
@@ -91,6 +92,8 @@ export default function CheckoutPage() {
         </div>
         <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
           <form onSubmit={submit} className="space-y-8">
+            {quoteError && <p role="alert" className="text-sm text-destructive">{t("quoteError")} <button type="button" onClick={refresh} className="min-h-11 underline">{t("retryQuote")}</button></p>}
+            {quote && !canOrder && <p role="alert" className="text-sm text-destructive">{quote.enabled ? t("stockChanged") : t("storeClosed")} <Link href="/store/cart" className="underline">{t("returnToCart")}</Link></p>}
             {error && <p role="alert" className="rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">{error}</p>}
             <fieldset className="checkout-fields">
               <legend className="px-2 font-serif text-xl text-foreground">{t("contactDetails")}</legend>
@@ -122,7 +125,7 @@ export default function CheckoutPage() {
             </div>
             <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
               <Link href="/store/cart" className="text-center text-sm font-medium text-muted-foreground hover:text-brand">{t("returnToCart")}</Link>
-              <button type="submit" disabled={submitting || !attemptId} className="min-h-12 rounded-full bg-primary px-8 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50">
+              <button type="submit" disabled={submitting || !attemptId || !canOrder} className="min-h-12 rounded-full bg-primary px-8 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50">
                 {submitting ? t("placingOrder") : t("placeOrder")}
               </button>
             </div>
@@ -130,10 +133,15 @@ export default function CheckoutPage() {
 
           <aside className="commerce-summary h-fit lg:sticky lg:top-24">
             <h2 className="font-serif text-xl">{t("orderSummary")}</h2>
+            {!quote && !quoteError && <p role="status" className="mt-4 text-sm">{t("loading")}</p>}
             <ul className="mt-5 space-y-4">
-              {lines.map((line) => <li key={line.slug} className="flex justify-between gap-4 text-sm"><span className="min-w-0 text-muted-foreground">{line.name} × {line.quantity}</span><span className="shrink-0 font-medium tabular-nums">{formatPrice(lineTotal(line), locale)}</span></li>)}
+              {lines.map(line => { const fresh = quote?.lines.find(item => item.slug === line.slug); return <li key={line.slug} className="flex justify-between gap-4 text-sm"><span className="min-w-0 text-muted-foreground">{fresh?.name ?? line.name} × {line.quantity}</span><span className="shrink-0 font-medium tabular-nums">{fresh?.lineTotalCents == null ? "—" : formatPrice(fresh.lineTotalCents, locale)}</span></li>; })}
             </ul>
-            <div className="mt-5 flex justify-between border-t border-border pt-4 text-base"><span className="font-medium">{t("subtotal")}</span><span className="font-serif text-xl tabular-nums">{formatPrice(subtotal, locale)}</span></div>
+            <dl className="mt-5 space-y-3 border-t border-border pt-4 text-sm">
+              <div className="flex justify-between gap-4"><dt>{t("subtotal")}</dt><dd>{quote ? formatPrice(quote.subtotalCents, locale) : "—"}</dd></div>
+              <div className="flex justify-between gap-4"><dt>{t("shipping")}</dt><dd>{quote ? (quote.shippingCents ? formatPrice(quote.shippingCents, locale) : t("free")) : "—"}</dd></div>
+              <div className="flex justify-between gap-4 text-base"><dt>{t("estimatedTotal")}</dt><dd className="font-serif text-xl tabular-nums">{quote ? formatPrice(quote.totalCents, locale) : "—"}</dd></div>
+            </dl>
           </aside>
         </div>
       </div>

@@ -79,3 +79,25 @@
 .dark :is(.admin-shell,.admin-login) .bg-primary{color:var(--color-primary-foreground)}
 @media(max-width:900px){.admin-workspace{grid-template-columns:1fr;gap:2rem}.admin-navigation{position:static;flex-direction:row;flex-wrap:wrap}.admin-navigation a{flex:1 1 8rem}.editorial-empty-split{gap:2rem}.admin-login-intro{padding:2rem;min-height:20rem}}
 @media(max-width:640px){.editorial-empty-split,.admin-login{grid-template-columns:1fr}.editorial-empty-image{aspect-ratio:16/9}.editorial-heading{margin-bottom:2rem}.admin-login{gap:2rem}.admin-login-intro{min-height:0}.admin-login-intro h1{font-size:2.7rem}.admin-page-heading{gap:1rem}.service-editorial>section:first-child .aspect-\[4\/3\]{aspect-ratio:4/3}}
+@media(max-width:640px){
+  .admin-shell{padding-block:2rem}
+  .admin-page-heading{align-items:flex-start;padding-bottom:1.25rem;margin-bottom:1.25rem}
+  .admin-page-heading h1{font-size:clamp(2.2rem,10vw,3rem)}
+  .admin-workspace{gap:1.25rem}
+  .admin-navigation{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x proximity;padding-bottom:.25rem}
+  .admin-navigation a{flex:0 0 auto;min-height:44px;padding:.8rem .9rem;white-space:nowrap;scroll-snap-align:start}
+  .admin-content-manager .cms-toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end;gap:.75rem}
+  .admin-content-manager .cms-toolbar>*{min-width:0}
+  .admin-content-manager .cms-toolbar .cms-search,.admin-content-manager .cms-toolbar .cms-add{grid-column:1/-1}
+  .admin-content-manager .cms-toolbar select{min-width:0;font-size:.875rem}
+  .admin-content-manager .cms-add{width:100%;min-height:44px}
+  .admin-content-manager .cms-item{align-items:stretch;padding:1rem;gap:1rem}
+  .admin-content-manager .cms-item-summary{min-width:0;width:100%}
+  .admin-content-manager .cms-item-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:.5rem}
+  .admin-content-manager .cms-item-actions>*{display:flex;align-items:center;justify-content:center;min-width:0;min-height:44px;text-align:center;padding-inline:.5rem;overflow-wrap:anywhere}
+  .admin-shell dialog{width:calc(100% - 1rem);max-width:44rem;max-height:94dvh;padding:1rem}
+  .admin-shell dialog h2{font-size:1.8rem}
+  .admin-content-manager dialog form{margin-top:1rem}
+  .admin-content-manager dialog form>.sticky{position:sticky;bottom:-1rem;margin-inline:-1rem;margin-bottom:-1rem;padding:1rem;background:var(--color-background)}
+  .admin-content-manager dialog form>.sticky>*{flex:1;min-height:44px;padding-inline:.5rem}
+}

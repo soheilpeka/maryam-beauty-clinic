@@ -97,7 +97,11 @@ export default async function globalSetup(): Promise<void> {
   //    admin-credentials.ts; only the bcrypt hash is stored. Each Playwright project signs
   //    in as its own account so the parallel desktop+mobile run cannot evict each other's
   //    sessions (the session store keeps one live session per admin).
-  run("npm run prisma:bootstrap-admin");
+  const desktopAdmin = adminForProject("desktop");
+  run("npm run prisma:bootstrap-admin", {
+    ADMIN_INITIAL_EMAIL: desktopAdmin.email,
+    ADMIN_INITIAL_PASSWORD: desktopAdmin.password,
+  });
   const mobileAdmin = adminForProject("mobile");
   run("npm run prisma:bootstrap-admin", {
     ADMIN_INITIAL_EMAIL: mobileAdmin.email,

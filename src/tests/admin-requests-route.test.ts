@@ -9,7 +9,7 @@
  * that session. Unauthenticated and token-less calls are rejected before any data moves.
  * Each mutation also writes an AuditLog row, which these tests assert on.
  */
-import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, afterEach, beforeEach, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import { NextRequest } from "next/server";
@@ -52,7 +52,7 @@ const T_1000 = 10 * 60; // 10:00-11:00 for the 60-minute test service
 const T_1030 = 10 * 60 + 30; // 10:30-11:30, partial overlap with 10:00
 const T_1300 = 13 * 60; // 13:00-14:00, clear of the lunch break
 
-let dayKey = DAY_KEY;
+const dayKey = DAY_KEY;
 
 /** A PENDING request fixture written through the same library the public flow uses. */
 async function createPendingRequest(startMinutes: number, email: string, note?: string) {
@@ -148,6 +148,8 @@ beforeEach(async () => {
   await prisma.customer.deleteMany();
 });
 
+afterEach(() => vi.restoreAllMocks());
+
 describe("auth and CSRF", () => {
   it("rejects an unauthenticated GET with 401 and leaks no bookings", async () => {
     const res = await requestsRoute.GET(
@@ -188,6 +190,23 @@ describe("auth and CSRF", () => {
 });
 
 describe("GET /api/admin/requests", () => {
+  it("shows each request's submitted contact while preserving legacy contact fallback", async () => {
+    const legacy = await createPendingRequest(T_1000, "legacy-contact@example.com");
+    const current = await createPendingRequest(T_1300, "canonical-contact@example.com");
+    await prisma.booking.update({ where: { id: current.id }, data: {
+      customerNameSnapshot: "Submitted Guest", customerEmailSnapshot: "submitted@example.com", customerPhoneSnapshot: "+1 555 9999",
+    } });
+    const res = await requestsRoute.GET(authedGet("http://localhost:3000/api/admin/requests"));
+    const body = await res.json();
+    expect(body.bookings.find((row: { id: string }) => row.id === current.id).customer).toEqual({
+      id: current.customerId, name: "Submitted Guest", email: "submitted@example.com", phone: "+1 555 9999",
+    });
+    expect(body.bookings.find((row: { id: string }) => row.id === legacy.id).customer).toEqual({
+      id: legacy.customerId, name: legacy.customer.name, email: legacy.customer.email, phone: legacy.customer.phone,
+    });
+    expect(await prisma.customer.findUniqueOrThrow({ where: { id: current.customerId } })).toEqual(current.customer);
+  });
+
   it("lists PENDING requests first, then confirmed ones", async () => {
     const confirmed = await createPendingRequest(T_1300, "list-confirmed@example.com");
     await prisma.booking.update({ where: { id: confirmed.id }, data: { status: "CONFIRMED" } });
@@ -246,6 +265,25 @@ describe("GET /api/admin/requests", () => {
 });
 
 describe("POST /api/admin/requests/[id]/confirm", () => {
+  it("uses submitted contact snapshots in its response and confirmation email/SMS", async () => {
+    const booking = await createPendingRequest(T_1000, "confirm-canonical@example.com");
+    await prisma.booking.update({ where: { id: booking.id }, data: {
+      customerNameSnapshot: "Submitted Guest", customerEmailSnapshot: "confirm-submitted@example.com", customerPhoneSnapshot: "+1 555 9999",
+    } });
+    const notify = vi.spyOn(notifications, "sendBookingNotifications").mockResolvedValue([]);
+    const res = await confirmRoute.POST(authedPost(`http://localhost:3000/api/admin/requests/${booking.id}/confirm`, {
+      dayKey, startMinutes: T_1000,
+    }), { params: Promise.resolve({ id: booking.id }) });
+    expect(res.status).toBe(200);
+    expect((await res.json()).booking.customer).toEqual({
+      id: booking.customerId, name: "Submitted Guest", email: "confirm-submitted@example.com", phone: "+1 555 9999",
+    });
+    expect(notify).toHaveBeenCalledWith(expect.objectContaining({
+      customerName: "Submitted Guest", customerEmail: "confirm-submitted@example.com", customerPhone: "+1 555 9999",
+    }));
+    expect(await prisma.customer.findUniqueOrThrow({ where: { id: booking.customerId } })).toEqual(booking.customer);
+  });
+
   it("confirms a pending request, notifies the customer, and writes an audit entry", async () => {
     const sendEmail = vi.spyOn(notifications.notificationProvider, "sendEmail");
     const sendSms = vi.spyOn(notifications.notificationProvider, "sendSms");
@@ -423,6 +461,20 @@ describe("POST /api/admin/requests/[id]/confirm", () => {
 });
 
 describe("POST /api/admin/requests/[id]/decline", () => {
+  it("sends the decline receipt to the submitted booking contact", async () => {
+    const booking = await createPendingRequest(T_1000, "decline-canonical@example.com");
+    await prisma.booking.update({ where: { id: booking.id }, data: {
+      customerNameSnapshot: "Submitted Guest", customerEmailSnapshot: "decline-submitted@example.com", customerPhoneSnapshot: "+1 555 9999",
+    } });
+    const email = vi.spyOn(notifications.notificationProvider, "sendEmail").mockResolvedValue(undefined);
+    const res = await declineRoute.POST(authedPost(`http://localhost:3000/api/admin/requests/${booking.id}/decline`, {
+      reason: "Fixture decline",
+    }), { params: Promise.resolve({ id: booking.id }) });
+    expect(res.status).toBe(200);
+    expect(email).toHaveBeenCalledWith(expect.objectContaining({ to: "decline-submitted@example.com", body: expect.stringContaining("Submitted Guest") }));
+    expect(await prisma.customer.findUniqueOrThrow({ where: { id: booking.customerId } })).toEqual(booking.customer);
+  });
+
   it("declines a request, notifies the customer with the reason, and audits", async () => {
     const sendEmail = vi.spyOn(notifications.notificationProvider, "sendEmail");
     const booking = await createPendingRequest(T_1000, "decline-ok@example.com");

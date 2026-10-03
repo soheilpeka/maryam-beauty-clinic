@@ -1,3 +1,5 @@
+import { logServerError } from "@/lib/safe-log";
+import { readJsonBody } from "@/lib/request-body";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authorizeAdmin, authorizeAdminMutation } from "@/lib/admin-guard";
@@ -40,7 +42,7 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
 
   let body: unknown;
   try {
-    body = await request.json();
+    body = await readJsonBody(request);
   } catch {
     return NextResponse.json({ error: "BAD_REQUEST", message: "Invalid JSON body" }, { status: 400 });
   }
@@ -103,7 +105,7 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
 
     return NextResponse.json({ ok: true, product: shapeProduct(updated) });
   } catch (e) {
-    console.error("admin product update error", e);
+    logServerError("admin product update error", e);
     return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });
   }
 }
@@ -151,7 +153,7 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
     });
     return NextResponse.json({ ok: true });
   } catch (e) {
-    console.error("admin product delete error", e);
+    logServerError("admin product delete error", e);
     return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });
   }
 }

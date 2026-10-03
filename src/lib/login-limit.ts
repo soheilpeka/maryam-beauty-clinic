@@ -1,11 +1,10 @@
 /**
- * Login rate limiting: both per-IP and per-account, DB-backed so limits survive across
- * requests and processes (the in-memory limiter is per-process only).
+ * Login rate limiting: account failures and production IP budgets are DB-backed.
  *
  * - Per account (by submitted email): after MAX_FAILED failures inside the window the email
  *   is locked for LOCKOUT_MINUTES. A successful sign-in resets the counter.
- * - Per IP: in-memory sliding window (the same helper the booking endpoints use), enough to
- *   stop brute-force storms from a single client.
+ * - Per IP: shared database sliding window in production (memory only in development/tests),
+ *   using the same fail-closed helper as public forms.
  *
  * Failures are tracked by the submitted email, not by account id, on purpose: an unknown
  * email and a wrong password for a real account are treated exactly the same, so the
@@ -13,7 +12,7 @@
  */
 import "server-only";
 import { prisma } from "@/lib/prisma";
-import { rateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
+import { consumeRateLimit, clientIpFromHeaders, type RateLimitResult } from "@/lib/rate-limit";
 
 const MAX_FAILED = 5;
 const WINDOW_MS = 15 * 60_000;
@@ -26,9 +25,9 @@ export interface LoginGateResult {
   retryAfterSec: number;
 }
 
-/** True when the IP has exceeded its login attempt budget. */
-export function ipLoginLimited(ip: string): boolean {
-  return !rateLimit(`admin-login:${ip}`, IP_LIMIT).ok;
+/** Consume one login attempt and return the budget or storage-unavailable result. */
+export function ipLoginBudget(ip: string): Promise<RateLimitResult> {
+  return consumeRateLimit(`admin-login:${ip}`, IP_LIMIT);
 }
 
 /**
@@ -46,31 +45,34 @@ export async function accountLockState(email: string): Promise<LoginGateResult> 
 /** Record a failed attempt for the submitted email, locking it when the threshold is crossed. */
 export async function recordFailedLogin(email: string): Promise<LoginGateResult> {
   const now = Date.now();
-  const windowStart = new Date(now - WINDOW_MS);
+  const timestamp = new Date(now);
+  const cutoff = new Date(now - WINDOW_MS);
+  const lockedUntil = new Date(now + LOCKOUT_MS);
 
-  const row = await prisma.loginFailure.upsert({
-    where: { email },
-    create: { email, attempts: 1, windowStart: new Date(now) },
-    update: {
-      // Failures older than the window do not count: reset the counter when the last
-      // window has lapsed, then count this attempt.
-      attempts: { increment: 1 },
-      windowStart: { set: new Date(now) },
-    },
-    select: { attempts: true, windowStart: true },
-  });
-
-  const inWindow = row.windowStart.getTime() > now - WINDOW_MS;
-  const attempts = inWindow ? row.attempts : 1;
-
-  if (attempts >= MAX_FAILED) {
-    await prisma.loginFailure.update({
-      where: { email },
-      data: { attempts: 0, lockedUntil: new Date(now + LOCKOUT_MS), windowStart: new Date(now) },
-    });
-    return { locked: true, retryAfterSec: Math.ceil(LOCKOUT_MS / 1000) };
-  }
-  return { locked: false, retryAfterSec: 0 };
+  // One SQLite write counts the failure, resets an expired fixed window, and locks
+  // at the threshold. Racing requests cannot lose increments or extend a live lock.
+  await prisma.$executeRaw`
+    INSERT INTO "LoginFailure" ("email", "attempts", "windowStart", "lockedUntil", "updatedAt")
+    VALUES (${email}, 1, ${timestamp}, NULL, ${timestamp})
+    ON CONFLICT ("email") DO UPDATE SET
+      "attempts" = CASE
+        WHEN "lockedUntil" > ${timestamp} THEN "attempts"
+        WHEN "windowStart" <= ${cutoff} THEN 1
+        ELSE MIN("attempts" + 1, ${MAX_FAILED})
+      END,
+      "lockedUntil" = CASE
+        WHEN "lockedUntil" > ${timestamp} THEN "lockedUntil"
+        WHEN "windowStart" > ${cutoff} AND "attempts" + 1 >= ${MAX_FAILED} THEN ${lockedUntil}
+        ELSE NULL
+      END,
+      "windowStart" = CASE
+        WHEN "lockedUntil" > ${timestamp} THEN "windowStart"
+        WHEN "windowStart" <= ${cutoff} THEN ${timestamp}
+        ELSE "windowStart"
+      END,
+      "updatedAt" = ${timestamp}
+  `;
+  return accountLockState(email);
 }
 
 /** Reset the failure counter on a successful sign-in. */

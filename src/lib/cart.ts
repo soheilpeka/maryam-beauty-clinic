@@ -67,8 +67,8 @@ export function addLine(lines: CartLine[], product: { slug: string; name: string
 
 /** Set an exact quantity, removing the line when it drops to zero. */
 export function setLineQuantity(lines: CartLine[], slug: string, quantity: number): CartLine[] {
+  if (Number.isFinite(quantity) && quantity <= 0) return removeLine(lines, slug);
   const q = clampQty(quantity);
-  if (q <= 0) return lines.filter((l) => l.slug !== slug);
   return lines.map((l) => (l.slug === slug ? { ...l, quantity: q } : l));
 }
 

@@ -1,3 +1,4 @@
+import { readJsonBody } from "@/lib/request-body";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authorizeAdmin, authorizeAdminMutation } from "@/lib/admin-guard";
@@ -12,7 +13,7 @@ export async function GET(request: NextRequest) {
 }
 export async function POST(request: NextRequest) {
   const auth = await authorizeAdminMutation(request); if (!auth.ok) return auth.response;
-  let body: unknown; try { body = await request.json(); } catch { return NextResponse.json({ error: "BAD_REQUEST" }, { status: 400 }); }
+  let body: unknown; try { body = await readJsonBody(request); } catch { return NextResponse.json({ error: "BAD_REQUEST" }, { status: 400 }); }
   const parsed = comparisonSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "VALIDATION" }, { status: 400 });
   try {

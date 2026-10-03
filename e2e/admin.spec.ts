@@ -19,7 +19,7 @@
  * same specialist+day+time the second confirm would 409, so each test derives its wall-clock
  * time from its worker and project index - unique across the concurrent run.
  */
-import { test, expect, type Page, type TestInfo } from "@playwright/test";
+import { test, expect, type Page, type TestInfo } from "./local-test";
 import { adminForProject, type AdminCredentials } from "./admin-credentials";
 
 const SERVICE_NAME = "Hair Colouring, Highlights & Balayage";

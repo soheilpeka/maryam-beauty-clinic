@@ -1,3 +1,4 @@
+import { logServerError } from "@/lib/safe-log";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authorizeAdminMutation } from "@/lib/admin-guard";
@@ -39,7 +40,7 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
     });
     return NextResponse.json({ ok: true });
   } catch (e) {
-    console.error("admin day off delete error", e);
+    logServerError("admin day off delete error", e);
     return NextResponse.json({ error: "INTERNAL", message: "Something went wrong." }, { status: 500 });
   }
 }

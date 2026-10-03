@@ -11,42 +11,24 @@
  * project its own account removes the collision without weakening the real single-session
  * rule the app enforces in production.
  *
- * The credentials come from .env - the same file e2e/global-setup.ts bootstraps both admin
- * rows against. The mobile account is a plus-addressed alias of the demo admin, so both stay
- * obviously demo accounts and share the demo password.
+ * Playwright config generates synthetic credentials for the isolated test database.
+ * No owner credentials or .env values are read. Mobile/store aliases remain separate.
  */
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 
 export interface AdminCredentials {
   email: string;
   password: string;
 }
 
-function envFromFile(): Record<string, string> {
-  const values: Record<string, string> = {};
-  const raw = readFileSync(resolve(process.cwd(), ".env"), "utf8");
-  for (const line of raw.split(/\r?\n/)) {
-    const match = /^([A-Z0-9_]+)=(.*)$/.exec(line.trim());
-    if (match) {
-      values[match[1]] = match[2].replace(/^"|"$/g, "");
-    }
-  }
-  return values;
-}
-
-const ENV = envFromFile();
-
 /**
- * The sign-in credentials for one project. Throws when .env has no demo admin, so the test
- * fails loudly instead of looping on "invalid credentials".
+ * Synthetic sign-in credentials for one project; fail if the config was not loaded.
  */
 export function adminForProject(projectName: string | undefined): AdminCredentials {
-  const email = ENV.ADMIN_INITIAL_EMAIL ?? process.env.ADMIN_INITIAL_EMAIL;
-  const password = ENV.ADMIN_INITIAL_PASSWORD ?? process.env.ADMIN_INITIAL_PASSWORD;
+  const email = process.env.E2E_ADMIN_EMAIL;
+  const password = process.env.E2E_ADMIN_PASSWORD;
   if (!email || !password) {
     throw new Error(
-      "ADMIN_INITIAL_EMAIL / ADMIN_INITIAL_PASSWORD must be set in .env for the admin e2e tests.",
+      "Synthetic E2E credentials must be initialized by the Playwright config.",
     );
   }
   if (projectName === "mobile") {
@@ -56,9 +38,9 @@ export function adminForProject(projectName: string | undefined): AdminCredentia
 }
 
 export function storeAdminForProject(projectName: string | undefined): AdminCredentials {
-  const email = ENV.ADMIN_INITIAL_EMAIL ?? process.env.ADMIN_INITIAL_EMAIL;
-  const password = ENV.ADMIN_INITIAL_PASSWORD ?? process.env.ADMIN_INITIAL_PASSWORD;
-  if (!email || !password) throw new Error("ADMIN_INITIAL_EMAIL / ADMIN_INITIAL_PASSWORD must be set in .env.");
+  const email = process.env.E2E_ADMIN_EMAIL;
+  const password = process.env.E2E_ADMIN_PASSWORD;
+  if (!email || !password) throw new Error("Synthetic E2E credentials must be initialized by the Playwright config.");
   const alias = projectName === "mobile" ? "+store-mobile@" : "+store@";
   return { email: email.replace("@", alias), password };
 }

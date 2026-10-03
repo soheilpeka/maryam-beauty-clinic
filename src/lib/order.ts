@@ -74,6 +74,24 @@ const ORDER_INCLUDE = {
 
 type OrderWithRelations = Prisma.OrderGetPayload<{ include: typeof ORDER_INCLUDE }>;
 
+function canonicalLines(lines: CheckoutLineInput[]): string {
+  const quantities = new Map<string, number>();
+  for (const line of lines) quantities.set(line.slug, (quantities.get(line.slug) ?? 0) + line.quantity);
+  return JSON.stringify([...quantities].sort(([a], [b]) => a.localeCompare(b)));
+}
+
+/** A retry key identifies one checkout attempt, never permission to read a different order. */
+function assertMatchingCheckout(order: OrderWithRelations, args: Parameters<typeof createOrder>[1]): void {
+  const matches = order.locale === args.locale && order.name === args.name &&
+    order.email === args.email && order.phone === args.phone && order.address === args.address &&
+    order.city === args.city && order.province === (args.province || null) &&
+    order.postalCode === (args.postalCode || null) && order.country === args.country &&
+    order.note === (args.note || null) && canonicalLines(order.items) === canonicalLines(args.lines);
+  if (!matches) {
+    throw new StoreError("IDEMPOTENCY_CONFLICT", "We could not place your order. Please try again.");
+  }
+}
+
 /**
  * Releases a reservation or committed stock exactly once and changes status atomically.
  * The conditional order update is the ownership flag: only the caller that sets
@@ -195,6 +213,7 @@ export async function createOrder(
     include: ORDER_INCLUDE,
   });
   if (prior) {
+    assertMatchingCheckout(prior, args);
     return {
       order: prior,
       paymentReference: prior.paymentAttempts.find((p) => p.status === "APPROVED")?.reference ?? null,
@@ -217,7 +236,7 @@ export async function createOrder(
   const bySlug = new Map(products.map((product) => [product.slug, product]));
   const resolved = [...wanted].map(([slug, quantity]) => {
     const product = bySlug.get(slug);
-    if (!product || !product.active) {
+    if (!product || !product.active || product.demo) {
       throw new StoreError("PRODUCT_UNAVAILABLE", "A product in your cart is no longer available.");
     }
     return { product, quantity };
@@ -235,7 +254,7 @@ export async function createOrder(
     order = await prisma.$transaction(async (tx) => {
       for (const { product, quantity } of resolved) {
         const reserved = await tx.product.updateMany({
-          where: { id: product.id, active: true, stock: { gte: quantity } },
+          where: { id: product.id, active: true, demo: false, stock: { gte: quantity } },
           data: { stock: { decrement: quantity } },
         });
         if (reserved.count !== 1) {
@@ -286,7 +305,10 @@ export async function createOrder(
       where: { idempotencyKey: args.idempotencyKey },
       include: ORDER_INCLUDE,
     });
-    if (winner) return { order: winner, paymentReference: null, reused: true };
+    if (winner) {
+      assertMatchingCheckout(winner, args);
+      return { order: winner, paymentReference: null, reused: true };
+    }
     throw error;
   }
 

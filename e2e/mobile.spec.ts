@@ -5,7 +5,7 @@
  * gated on the mobile project. The "no horizontal overflow" checks are viewport-agnostic and
  * run under both projects - a page that spills sideways is broken at any width.
  */
-import { test, expect, type TestInfo } from "@playwright/test";
+import { test, expect, type TestInfo } from "./local-test";
 
 /** True when running as the mobile project (touch, phone-class viewport). */
 function isMobile(testInfo: TestInfo): boolean {

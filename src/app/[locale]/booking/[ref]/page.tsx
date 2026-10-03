@@ -35,7 +35,7 @@ export default async function ManageBookingPage({
 
   const booking = await prisma.booking.findUnique({
     where: { ref },
-    include: { customer: true, service: true, staff: true },
+    include: { service: true, staff: true },
   });
   if (!booking || booking.id !== payload.sub || booking.customerId !== payload.cust) notFound();
 
@@ -51,8 +51,6 @@ export default async function ManageBookingPage({
           serviceName: (locale === "fr" ? booking.serviceNameFrSnapshot : booking.serviceNameSnapshot) ?? booking.serviceNameSnapshot ?? booking.service.name,
           staffName: booking.staff.name,
           durationMin: booking.durationMinSnapshot ?? booking.service.duration,
-          customerName: booking.customer.name,
-          customerEmail: booking.customer.email,
         }}
         token={token}
         locale={locale}

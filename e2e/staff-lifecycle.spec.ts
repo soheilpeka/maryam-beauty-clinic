@@ -1,0 +1,53 @@
+import { test, expect } from "./local-test";
+import { adminForProject } from "./admin-credentials";
+
+for (const locale of ["en", "fr"]) {
+  test(`${locale}: booked specialists can be edited, deactivated and reactivated without losing bookings`, async ({ page }, info) => {
+    const credentials = adminForProject(info.project.name);
+    await page.goto(`/${locale}/admin/login`);
+    await page.locator("#admin-email").fill(credentials.email);
+    await page.locator("#admin-password").fill(credentials.password);
+    await page.locator('button[type="submit"]').click();
+    await expect(page).toHaveURL(new RegExp(`/${locale}/admin$`));
+    const session = await (await page.request.get("/api/admin/session")).json();
+    const headers = { "x-admin-csrf": session.csrfToken };
+    const services = await (await page.request.get("/api/admin/services")).json();
+    const service = services.services.find((item: { active: boolean }) => item.active);
+    const name = `Lifecycle QA ${locale} ${info.project.name}`;
+    const creation = await page.request.post("/api/admin/staff", { headers, data: { name, active: true, serviceIds: [service.id] } });
+    expect(creation.status()).toBe(201);
+    const { staff } = await creation.json();
+    const dayKey = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+    const booking = await page.request.post("/api/bookings", { data: { locale, serviceId: service.id, staffId: staff.id, dayKey, startMinutes: 660, customer: { name: "Lifecycle QA Guest", email: `lifecycle-${locale}-${info.project.name}@example.com`, phone: "+1 555 010 1234" } } });
+    expect(booking.status()).toBe(200);
+    const deletion = await page.request.delete(`/api/admin/staff/${staff.id}`, { headers });
+    expect(deletion.status()).toBe(409);
+    expect((await deletion.json()).bookingCount).toBe(1);
+    await page.goto(`/${locale}/admin/staff`);
+    await page.getByRole("searchbox").fill(name);
+    const row = page.locator("#main li").filter({ has: page.getByRole("heading", { name, exact: true }) });
+    const deactivate = locale === "fr" ? "Désactiver la spécialiste" : "Deactivate specialist";
+    await row.getByRole("button", { name: deactivate, exact: true }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toContainText(locale === "fr" ? "1 réservations associées" : "1 linked bookings");
+    await expect(dialog.getByRole("button", { name: locale === "fr" ? "Supprimer" : "Delete", exact: true })).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+    await page.screenshot({ path: info.outputPath(`${locale}-safe-deactivation.png`) });
+    await dialog.getByRole("button", { name: locale === "fr" ? "Modifier la spécialiste" : "Edit specialist", exact: true }).click();
+    await dialog.locator("#staff-role").fill("Updated QA role");
+    await dialog.locator('button[type="submit"]').click();
+    await expect(dialog).not.toBeVisible();
+    await expect(row).toContainText("Updated QA role");
+    await row.getByRole("button", { name: deactivate, exact: true }).click();
+    await dialog.getByRole("button", { name: deactivate, exact: true }).click();
+    await expect(dialog).not.toBeVisible();
+    const inactive = await (await page.request.get(`/api/admin/staff/${staff.id}`)).json();
+    expect(inactive.staff).toMatchObject({ active: false, bookingCount: 1, role: "Updated QA role" });
+    await row.getByRole("button", { name: locale === "fr" ? "Modifier" : "Edit", exact: true }).click();
+    await dialog.getByRole("checkbox", { name: locale === "fr" ? "Cette spécialiste est réservable en ligne" : "This specialist is bookable online" }).check();
+    await dialog.locator('button[type="submit"]').click();
+    await expect(dialog).not.toBeVisible();
+    const reactivated = await (await page.request.get(`/api/admin/staff/${staff.id}`)).json();
+    expect(reactivated.staff).toMatchObject({ active: true, bookingCount: 1 });
+  });
+}

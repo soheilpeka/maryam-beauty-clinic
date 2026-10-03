@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./local-test";
 import { SERVICES } from "../src/lib/content/services";
 import { adminForProject } from "./admin-credentials";
 
