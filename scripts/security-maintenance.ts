@@ -1,5 +1,6 @@
 /** Local-only security maintenance. No remote database, provider or host is contacted. */
 import "@/lib/env-preload";
+import { applyMediaSchema } from "./media-schema";
 import { createClient, type Client } from "@libsql/client";
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 import { execFileSync } from "node:child_process";
@@ -144,6 +145,7 @@ async function main(): Promise<void> {
     console.info("Encrypted local database backup created; decryption and integrity verified.");
     maintenanceStage = "additive database schema";
     const added = await applySecuritySchema(client);
+    await applyMediaSchema(client);
     console.info(`Local security schema applied: ${added} contact columns added; shared budget table ready. Existing records preserved.`);
   } finally {
     client.close();

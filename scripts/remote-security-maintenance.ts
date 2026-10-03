@@ -7,6 +7,7 @@ import { existsSync, mkdirSync, readFileSync, realpathSync, readdirSync, lstatSy
 import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { applySecuritySchema, decryptBackup, encryptBackup, protectPath } from "./security-maintenance";
+import { applyMediaSchema } from "./media-schema";
 
 let stage = "target verification";
 const CONTACT_COLUMNS = ["customerNameSnapshot", "customerEmailSnapshot", "customerPhoneSnapshot"];
@@ -106,6 +107,12 @@ async function main(): Promise<void> {
     // Reopen the decrypted restore copy in SQLite; no customer records are printed.
     execFileSync("python", ["-c", 'import sqlite3,sys,pathlib\ndb=sqlite3.connect(pathlib.Path(sys.argv[1]).as_uri()+"?mode=ro",uri=True)\ntry:\n if db.execute("PRAGMA integrity_check").fetchone()[0]!="ok": raise RuntimeError("Invalid restore")\nfinally: db.close()', restore], { stdio: "pipe" });
     console.info("Encrypted remote snapshot saved; authenticated decryption and isolated restore integrity verified.");
+    if (process.argv.includes("--apply-media-schema")) {
+      stage = "additive upload schema";
+      client = createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN, intMode: "bigint" });
+      await applyMediaSchema(client);
+      console.info("Upload table ready after verified encrypted backup. Existing records preserved.");
+    }
     if (process.argv.includes("--apply-security-schema")) {
       stage = "remote schema preflight";
       client = createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN, intMode: "bigint" });

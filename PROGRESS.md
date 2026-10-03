@@ -1,3 +1,11 @@
+## 2026-10-03 — Direct CMS photograph uploads
+
+- Added EN/FR file selection and previews for primary/additional photos, before/after photos and staff portraits. Save and cancel are blocked while photos upload; closing/removing inputs aborts stale callbacks.
+- Authenticated CSRF-protected upload endpoint streams at most 10 MiB, verifies decoded raster input, strips metadata, normalizes orientation and bounds output to 512 KiB WebP. Processing is limited to two concurrent images with a deadline. Rate limits and an atomic 200 MiB / 2,000-image storage quota are enforced.
+- Uploads persist in the existing database and backups, so rebuilds preserve them. Unsaved/inactive photographs require an admin session; active CMS references make photographs publicly readable with no-store responses.
+- Added additive backup-first local/remote schema maintenance. Remote upload table was added after an authenticated encrypted backup and isolated restore integrity check succeeded. Added image processing, authorization, publication, binary persistence, quota-race and EN/FR desktop/mobile browser checks. See README for limits and upgrade commands.
+- Verification: 451 unit tests passed, 18 relevant EN/FR desktop/mobile browser tests passed, build/typecheck passed, lint passed with 63 existing warnings. Production dependency audit reports zero known advisories; the full audit reports five high development entries rooted in the braces/ESLint glob dependency chain. No force downgrade or weakened checks were applied. Native and WebAssembly WebP processing were verified locally; no synthetic uploads were written into production as tests.
+
 # Maryam Beauty Clinic - Progress
 
 ## 2026-10-03 — Booking service categories

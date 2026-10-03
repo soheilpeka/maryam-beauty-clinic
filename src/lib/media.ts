@@ -1,4 +1,4 @@
-/** URL-only media policy. No filesystem upload or remote fetch is performed. */
+/** Image references and processed CMS uploads; external URLs are never fetched here. */
 export const MEDIA_POLICY = {
   provider: "url" as const,
   maxBytes: 10 * 1024 * 1024,
@@ -12,6 +12,7 @@ export const MEDIA_POLICY = {
 export function isSafeImageUrl(value: string): boolean {
   if (!value) return true;
   if (value.startsWith("/") && !value.startsWith("//")) {
+    if (value.startsWith("/media/uploads/")) return /^\/media\/uploads\/[a-f0-9]{32}\.webp$/.test(value);
     if (/[\\%\s]/.test(value) || value.split("/").some(part => part === "." || part === "..")) return false;
     return MEDIA_POLICY.publicDirectories.includes(value.split("/")[1]) && /\.(avif|gif|jpe?g|png|webp)$/i.test(value);
   }

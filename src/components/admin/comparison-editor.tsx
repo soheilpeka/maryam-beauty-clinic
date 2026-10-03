@@ -2,17 +2,20 @@
 import { ImageComparison } from "@/components/image-comparison";
 import { comparisonSchema, FULL_PHOTO } from "@/lib/comparison-validation";
 import type { PhotoViewport } from "@/lib/content/comparisons";
+import { ImageUpload } from "./image-upload";
 export function ComparisonPreview({ data, fr }: { data: Record<string, unknown>; fr: boolean }) {
   const parsed = comparisonSchema.safeParse({ name: data.name, nameFr: data.nameFr, description: data.description, descriptionFr: data.descriptionFr, imageUrl: data.imageUrl, afterImageUrl: data.afterImageUrl, beforeCrop: data.beforeCrop, afterCrop: data.afterCrop, aspectRatio: Number(data.aspectRatio), category: data.category, active: Boolean(data.active), order: Number(data.order) });
   if (!parsed.success) return <p className="text-sm text-muted-foreground">{fr ? "Complétez les champs valides pour voir l’aperçu." : "Complete valid fields to see the preview."}</p>;
   const p = parsed.data, title = fr ? p.nameFr : p.name;
   return <div className="my-4"><ImageComparison before={{ src: p.imageUrl, alt: title, viewport: p.beforeCrop }} after={{ src: p.afterImageUrl, alt: title, viewport: p.afterCrop }} beforeLabel={fr ? "Avant" : "Before"} afterLabel={fr ? "Après" : "After"} label={fr ? "Glisser pour comparer" : "Drag to compare"} aspectRatio={p.aspectRatio} /></div>;
 }
-export function ComparisonEditor({ draft, update, fr }: { draft: Record<string, unknown>; update: (key: string, value: unknown) => void; fr: boolean }) {
-  return <fieldset className="space-y-4 rounded-xl border border-border p-4">
+export function ComparisonEditor({ draft, update, fr, onActivity, disabled = false }: { draft: Record<string, unknown>; update: (key: string, value: unknown) => void; fr: boolean; onActivity?: (active: boolean) => void; disabled?: boolean }) {
+  return <fieldset disabled={disabled} className="space-y-4 rounded-xl border border-border p-4">
     <legend>{fr ? "Photos avant / après" : "Before / after photographs"}</legend>
-    <p className="text-xs text-muted-foreground">{fr ? "Deux photos séparées ou deux cadrages d’une même image. Utilisez des chemins publics ou URL HTTPS. Aucun téléversement local n’est proposé." : "Use two separate photos or two viewports from one board. Enter public paths or HTTPS image URLs. Local uploads are not provided."}</p>
+    <p className="text-xs text-muted-foreground">{fr ? "Deux photos séparées ou deux cadrages d’une même image. Sélectionnez vos photos ou saisissez leurs adresses." : "Use two separate photos or two viewports from one board. Choose your photos or enter their addresses."}</p>
     {(["imageUrl", "afterImageUrl"] as const).map((key, index) => <label key={key} className="block text-sm">{fr ? (index ? "Image après" : "Image avant") : (index ? "After image" : "Before image")}<input id={`comparisons-${key}`} value={String(draft[key] ?? "")} onChange={e => update(key, e.target.value)} className="mt-1 w-full rounded-lg border border-border bg-background p-3" /></label>)}
+    <ImageUpload onActivity={onActivity} label={fr ? "Image avant" : "Before image"} onUploaded={url => update("imageUrl", url)} />
+    <ImageUpload onActivity={onActivity} label={fr ? "Image après" : "After image"} onUploaded={url => update("afterImageUrl", url)} />
     <label className="block text-sm">{fr ? "Catégorie" : "Category"}<select value={String(draft.category)} onChange={e => update("category", e.target.value)} className="mt-1 w-full rounded-lg border border-border bg-background p-3"><option value="laser">Laser</option><option value="rf">{fr ? "Radiofréquence" : "Radiofrequency"}</option><option value="other">{fr ? "Autres" : "Other"}</option></select></label>
     <label className="block text-sm">{fr ? "Ratio largeur / hauteur" : "Width / height ratio"}<input type="number" min="0.25" max="4" step="0.01" value={String(draft.aspectRatio)} onChange={e => update("aspectRatio", e.target.value)} className="mt-1 w-full rounded-lg border border-border bg-background p-3" /></label>
     <button type="button" onClick={() => { update("beforeCrop", { ...FULL_PHOTO }); update("afterCrop", { ...FULL_PHOTO }); }} className="rounded-full border border-border px-4 py-2 text-sm">{fr ? "Utiliser les photos entières" : "Use complete photographs"}</button>

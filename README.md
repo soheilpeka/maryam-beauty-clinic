@@ -55,8 +55,8 @@ accounts, so it does not mutate `prisma/dev.db`.
 
 Run the local owner preview with `npm run dev -- -p 3020`, then open
 `http://localhost:3020/en` or `/fr`. The protected content pages cover services, products,
-packages, staff and gallery, with validated URL-based media and reusable previews. Do not publish
-sample photos as the salon's real client work. Uploads require an approved storage adapter;
+packages, staff and gallery, with validated image references, direct photo uploads and reusable previews. Do not publish
+sample photos as the salon's real client work. Uploaded photographs use bounded persistent database storage;
 remote URL validation does not inspect actual image bytes or prove file size.
 
 Latest security hardening: see `SECURITY_HARDENING_2026-10-02.md` for findings and
@@ -93,4 +93,8 @@ Names, descriptions, price, sessions, ordering and active state are editable thr
 
 For a separate host database: back it up, verify the target `DATABASE_URL`, apply the additive schema using the project's existing `npx prisma db push` workflow (never use force-reset or accept-data-loss), regenerate the client, then run `npm run prisma:import-comparisons` once. The importer creates only missing fixed IDs and never changes saved copy, framing, order or inactive state. These steps have been performed on the local database, not the host. The WebP assets must be deployed with the code. Do not use the general seed script to upgrade an existing owner database.
 
-New image references accept validated public paths or HTTPS raster-image URLs through the shared media policy. URL references do not verify external file bytes; uploads require an approved cloud storage adapter later. No production filesystem upload is offered.
+New image references accept validated public paths or HTTPS raster-image URLs. Admins can also choose JPEG, PNG or WebP files directly from a phone or computer in services, packages, products, gallery, comparisons and staff forms. `/api/admin/media/upload` requires a live admin session, CSRF and a shared admin upload budget. Uploads are streamed with a 10 MiB cap, decoded with a 24 megapixel cap, auto-oriented, stripped of metadata and converted to WebP within 1600 x 1600 and 512 KiB. SVG, animated formats and unsupported HEIC are rejected; export HEIC to JPEG first. Two images may be processed concurrently per instance, with a ten-second processing deadline.
+
+Processed files are stored in the `MediaUpload` SQLite/libSQL BLOB table, independent of Hostinger deployment files. This small-clinic storage is capped atomically at 200 MiB and 2,000 images, including unlinked drafts. Database storage, transfer and backups therefore grow with photographs; larger catalogs should move to object storage. No original filename, EXIF or GPS data is retained. Drafts are accessible only to authenticated admins. A photograph becomes public only while referenced by an active CMS record. Image responses are always private/no-store so deactivating content revokes public access; copies already downloaded cannot be recalled. Removing a form image/reference does not delete stored bytes.
+
+Local upgrade: `npm run security:maintain-local` backs up the local DB then creates the upload table additively. Remote upgrade: use `scripts/remote-security-maintenance.ts --allow-remote --expected-target-sha256 <verified-fingerprint> --apply-media-schema` with the verified host environment; it creates and verifies an encrypted backup before creating only the upload table. Do not run a general seed/reset. `sharp` and its supported WebAssembly fallback are included for Hostinger compatibility; production upload writes were not used as a test. External URL references still do not verify remote file bytes.

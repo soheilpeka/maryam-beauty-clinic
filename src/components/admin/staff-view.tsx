@@ -9,6 +9,7 @@ import {
 } from "@/lib/validation";
 import { translateValidationKey } from "@/lib/booking-ui";
 import { parseScheduleDrafts, type WindowDraft } from "@/lib/admin-schedule";
+import { ImageUpload } from "./image-upload";
 import {
   getCsrfToken,
   minutesToInputValue,
@@ -632,6 +633,7 @@ function StaffFormDialog({
 }) {
   const t = useTranslations("Admin");
   const locale = useLocale();
+  const [uploading, setUploading] = useState(false);
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -641,9 +643,9 @@ function StaffFormDialog({
   return (
     <dialog
       ref={ref}
-      onCancel={event => { if (state.submitting) event.preventDefault(); else onClose(); }}
+      onCancel={event => { if (state.submitting || uploading) event.preventDefault(); else onClose(); }}
       onClick={(e) => {
-        if (e.target === ref.current) onClose();
+        if (e.target === ref.current && !uploading) onClose();
       }}
       aria-labelledby="staff-form-title"
       className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl dark:border-neutral-800 dark:bg-card dark:text-neutral-50"
@@ -660,7 +662,7 @@ function StaffFormDialog({
         className="mt-4 space-y-4"
         onSubmit={(e) => {
           e.preventDefault();
-          void onSubmit(state);
+          if (!uploading) void onSubmit(state);
         }}
       >
         <div className="grid grid-cols-2 gap-4">
@@ -730,6 +732,7 @@ function StaffFormDialog({
           <label className="block text-sm">{t("descriptionFr")}<textarea maxLength={1000} value={state.bioFr} onChange={e => onChange({ bioFr: e.target.value })} className={inputClass} rows={3} /></label>
           <label className="mt-4 block text-sm">{t("displayOrder")}<input type="number" min="0" max="100000" value={state.order} onChange={e => onChange({ order: e.target.value })} className={inputClass} /></label>
           {state.avatarUrl && <img src={state.avatarUrl} alt={state.name} className="my-4 h-36 max-w-full rounded-xl object-contain" />}
+          <ImageUpload onActivity={setUploading} label={t("avatarUrl")} onUploaded={avatarUrl => onChange({ avatarUrl })} />
         <fieldset>
           <legend className="text-sm font-medium text-foreground dark:text-neutral-300">
             {t("servicesPerformed")}
@@ -773,14 +776,14 @@ function StaffFormDialog({
           <button
             type="button"
             onClick={onClose}
-            disabled={state.submitting}
+            disabled={state.submitting || uploading}
             className="rounded-lg border border-border px-3.5 py-2 text-sm font-semibold text-foreground hover:bg-neutral-100 disabled:opacity-60 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
           >
             {t("cancel")}
           </button>
           <button
             type="submit"
-            disabled={state.submitting}
+            disabled={state.submitting || uploading}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {state.submitting ? t("saving") : t("save")}

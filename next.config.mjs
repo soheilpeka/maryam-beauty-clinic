@@ -22,6 +22,7 @@ const nextConfig = {
       "/admin/:path*", "/booking/:path*", "/store/order/:path*",
       "/:locale(en|fr)/admin/:path*", "/:locale(en|fr)/booking/:path*",
       "/:locale(en|fr)/store/order/:path*",
+      "/media/uploads/:path*",
     ];
     return [
       { source: "/:path*", headers },

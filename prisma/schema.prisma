@@ -259,6 +259,16 @@ model MediaAsset {
   galleries GalleryItem[]
 }
 
+/// Bounded, processed CMS photographs. Drafts are readable only by signed-in admins.
+model MediaUpload {
+  id        String   @id
+  data      Bytes
+  sizeBytes Int
+  width     Int
+  height    Int
+  createdAt DateTime @default(now())
+}
+
 model Package {
   id             String           @id @default(cuid())
   slug           String           @unique
