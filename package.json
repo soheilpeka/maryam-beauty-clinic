@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "preview": "node scripts/preview.mjs",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint src e2e prisma scripts *.config.ts *.config.mjs tsx-sandbox-shim.cjs",

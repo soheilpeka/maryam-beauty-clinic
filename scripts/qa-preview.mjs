@@ -22,6 +22,18 @@ try {
     const page = await context.newPage();
     let current = "";
     page.on("pageerror", error => problems.push({ width, path: current, error: error.message }));
+    page.on("response", response => {
+      const url = new URL(response.url());
+      if (url.origin === origin && url.pathname.startsWith("/_next/static/") && response.status() >= 400) {
+        problems.push({ width, path: current, asset: url.pathname, status: response.status() });
+      }
+    });
+    page.on("requestfailed", request => {
+      const url = new URL(request.url());
+      if (url.origin === origin && url.pathname.startsWith("/_next/static/")) {
+        problems.push({ width, path: current, asset: url.pathname, failed: true });
+      }
+    });
     for (const locale of ["en", "fr"]) {
       await page.goto(`${origin}/${locale}`);
       const services = await page.locator('a[href*="/service-page/"]').evaluateAll(anchors => [...new Set(anchors.map(anchor => new URL(anchor.href).pathname))]);

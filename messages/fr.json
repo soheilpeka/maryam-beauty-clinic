@@ -490,6 +490,7 @@
     "signOut": "Se déconnecter",
     "invalidCredentials": "Courriel ou mot de passe invalide.",
     "tooManyAttempts": "Trop de tentatives. Veuillez patienter une minute.",
+    "signInUnavailable": "La connexion est temporairement indisponible. Vérifiez votre connexion et réessayez dans quelques instants.",
     "dashboard": "Tableau de bord",
     "calendar": "Calendrier",
     "bookings": "Réservations",

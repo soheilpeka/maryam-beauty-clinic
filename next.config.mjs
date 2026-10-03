@@ -2,6 +2,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  distDir: process.env.CLINIC_PREVIEW_BUILD === "1" ? ".next-preview" : ".next",
   reactStrictMode: true,
   poweredByHeader: false,
   async headers() {

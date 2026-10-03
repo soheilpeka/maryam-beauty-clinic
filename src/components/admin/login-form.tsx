@@ -33,7 +33,12 @@ export function LoginForm({ locale }: { locale: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const json = await res.json();
+      const json = await res.json().catch(() => null);
+
+      if (res.status >= 500 || !json) {
+        setFormError(t("signInUnavailable"));
+        return;
+      }
 
       if (res.ok) {
         // Keep the CSRF token client-side for the admin dashboard mutations.
@@ -56,7 +61,7 @@ export function LoginForm({ locale }: { locale: string }) {
       // Any credential problem - unknown email, wrong password - shows the same message.
       setFormError(t("invalidCredentials"));
     } catch {
-      setFormError(t("invalidCredentials"));
+      setFormError(t("signInUnavailable"));
     } finally {
       setBusy(false);
     }

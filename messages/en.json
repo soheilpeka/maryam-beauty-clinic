@@ -490,6 +490,7 @@
     "signOut": "Sign out",
     "invalidCredentials": "Invalid email or password.",
     "tooManyAttempts": "Too many attempts. Please wait a minute.",
+    "signInUnavailable": "Sign-in is temporarily unavailable. Check your connection and try again shortly.",
     "dashboard": "Dashboard",
     "calendar": "Calendar",
     "bookings": "Bookings",

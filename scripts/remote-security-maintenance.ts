@@ -8,6 +8,10 @@ import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { applySecuritySchema, decryptBackup, encryptBackup, protectPath } from "./security-maintenance";
 import { applyMediaSchema } from "./media-schema";
+import { applyComparisonSchema } from "./content-schema";
+import { publishSkinPrograms, importComparisons, refreshSalonMedia } from "./content-upgrade";
+import { PrismaClient } from "@prisma/client";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
 
 let stage = "target verification";
 const CONTACT_COLUMNS = ["customerNameSnapshot", "customerEmailSnapshot", "customerPhoneSnapshot"];
@@ -107,6 +111,20 @@ async function main(): Promise<void> {
     // Reopen the decrypted restore copy in SQLite; no customer records are printed.
     execFileSync("python", ["-c", 'import sqlite3,sys,pathlib\ndb=sqlite3.connect(pathlib.Path(sys.argv[1]).as_uri()+"?mode=ro",uri=True)\ntry:\n if db.execute("PRAGMA integrity_check").fetchone()[0]!="ok": raise RuntimeError("Invalid restore")\nfinally: db.close()', restore], { stdio: "pipe" });
     console.info("Encrypted remote snapshot saved; authenticated decryption and isolated restore integrity verified.");
+    if (process.argv.includes("--apply-content-upgrade")) {
+      stage = "additive content schema";
+      client = createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN, intMode: "bigint" });
+      await applyComparisonSchema(client);
+      const db = new PrismaClient({ adapter: new PrismaLibSql({ url, authToken: process.env.DATABASE_AUTH_TOKEN }) });
+      try {
+        stage = "approved content import";
+        const packages = await publishSkinPrograms(db);
+        const comparisons = await importComparisons(db);
+        const gallery = await refreshSalonMedia(db);
+        console.info(`Approved content upgrade: ${packages} packages, ${comparisons} comparisons added; ${gallery} untouched gallery entries upgraded. Existing CMS edits and visibility preserved.`);
+      } finally { await db.$disconnect(); }
+      client.close(); client = undefined;
+    }
     if (process.argv.includes("--apply-media-schema")) {
       stage = "additive upload schema";
       client = createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN, intMode: "bigint" });

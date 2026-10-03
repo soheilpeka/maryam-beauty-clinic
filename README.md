@@ -59,6 +59,12 @@ packages, staff and gallery, with validated image references, direct photo uploa
 sample photos as the salon's real client work. Uploaded photographs use bounded persistent database storage;
 remote URL validation does not inspect actual image bytes or prove file size.
 
+For a stable production preview on port 3050, use `npm run preview`. Stop the existing
+preview first. This builds and serves `.next-preview`, separately from ordinary `.next`
+builds and test servers, so later builds do not invalidate its stylesheet/chunk URLs.
+Set `PREVIEW_PORT` for a different local port. `qa-preview.mjs` now also reports failed
+Next.js static assets, including missing stylesheets.
+
 Latest security hardening: see `SECURITY_HARDENING_2026-10-02.md` for findings and
 `SECURITY_OPERATIONS_2026-10-03.md` for the completed local maintenance, verification and
 remaining production actions. Before deployment, back up and verify the identified target
@@ -92,6 +98,14 @@ Names, descriptions, price, sessions, ordering and active state are editable thr
 `/en/admin/gallery` and `/fr/admin/gallery` now have a separate Before/after section. Owners can add/edit bilingual names and descriptions, two image references, category, aspect ratio, viewport framing, visibility and display order, with live slider preview and search/filter/pagination. Existing salon gallery records are unchanged. Public comparisons read active `ComparisonItem` database records on every page request; the static source module is only the initial import manifest, not a public fallback that would undo deactivation.
 
 For a separate host database: back it up, verify the target `DATABASE_URL`, apply the additive schema using the project's existing `npx prisma db push` workflow (never use force-reset or accept-data-loss), regenerate the client, then run `npm run prisma:import-comparisons` once. The importer creates only missing fixed IDs and never changes saved copy, framing, order or inactive state. These steps have been performed on the local database, not the host. The WebP assets must be deployed with the code. Do not use the general seed script to upgrade an existing owner database.
+
+For an existing remote database missing `ComparisonItem` or the owner-approved content,
+use the backup-gated `scripts/remote-security-maintenance.ts` command with `--allow-remote`,
+`--expected-target-sha256 <verified-fingerprint>` and `--apply-content-upgrade`. It verifies
+an encrypted snapshot and isolated restore before adding only the comparison table/index,
+then imports missing approved packages/comparisons and untouched legacy salon gallery entries.
+Existing CMS changes and inactive records remain authoritative. This is an explicit release
+operation, never an automatic seed on application startup or a reset of customer records.
 
 New image references accept validated public paths or HTTPS raster-image URLs. Admins can also choose JPEG, PNG or WebP files directly from a phone or computer in services, packages, products, gallery, comparisons and staff forms. `/api/admin/media/upload` requires a live admin session, CSRF and a shared admin upload budget. Uploads are streamed with a 10 MiB cap, decoded with a 24 megapixel cap, auto-oriented, stripped of metadata and converted to WebP within 1600 x 1600 and 512 KiB. SVG, animated formats and unsupported HEIC are rejected; export HEIC to JPEG first. Two images may be processed concurrently per instance, with a ten-second processing deadline.
 
