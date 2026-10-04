@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import { getCsrfToken } from "@/lib/admin-client";
+import { prepareUpload } from "@/lib/prepare-upload";
 
 export function ImageUpload({ onUploaded, label, onActivity }: { onUploaded: (url: string) => void; label: string; onActivity?: (active: boolean) => void }) {
   const fr = useLocale() === "fr";
@@ -19,10 +20,13 @@ export function ImageUpload({ onUploaded, label, onActivity }: { onUploaded: (ur
     activity.current?.(true);
     setBusy(true); setMessage("");
     try {
+      const photograph = await prepareUpload(file);
+      if (controller.signal.aborted) return;
       const csrf = await getCsrfToken(true);
       if (!csrf) throw new Error();
-      const response = await fetch("/api/admin/media/upload", { method: "POST", headers: { "Content-Type": file.type || "application/octet-stream", "x-admin-csrf": csrf }, body: file, signal: controller.signal });
-      const result = await response.json();
+      if (controller.signal.aborted) return;
+      const response = await fetch("/api/admin/media/upload", { method: "POST", headers: { "Content-Type": photograph.type, "x-admin-csrf": csrf }, body: photograph, signal: controller.signal });
+      const result = await response.json().catch(() => ({ error: "UPLOAD_FAILED" }));
       if (controller.signal.aborted) return;
       if (!response.ok) {
         if (["INVALID_IMAGE", "TOO_LARGE"].includes(result.error)) setMessage(fr ? "Choisissez une photo JPEG, PNG ou WebP de moins de 10 Mo (24 mégapixels max). Pour HEIC, exportez en JPEG." : "Choose a JPEG, PNG or WebP photo under 10 MB (24 megapixels max). Export HEIC as JPEG.");
@@ -31,7 +35,9 @@ export function ImageUpload({ onUploaded, label, onActivity }: { onUploaded: (ur
         return;
       }
       onUploaded(result.url);
-    } catch { if (!controller.signal.aborted) setMessage(fr ? "Téléversement impossible. Vérifiez votre connexion et réessayez." : "Upload failed. Check your connection and try again."); }
+    } catch (error) { if (!controller.signal.aborted) setMessage(error instanceof Error && ["INVALID_IMAGE", "TOO_LARGE"].includes(error.message)
+      ? (fr ? "Choisissez une photo JPEG, PNG ou WebP (24 mégapixels max). Pour HEIC, exportez en JPEG." : "Choose a JPEG, PNG or WebP photo (24 megapixels max). Export HEIC as JPEG.")
+      : (fr ? "Téléversement impossible. Vérifiez votre connexion et réessayez." : "Upload failed. Check your connection and try again.")); }
     finally { if (pending.current === controller) { pending.current = null; activity.current?.(false); setBusy(false); if (input.current) input.current.value = ""; } }
   }
   return <div className="mt-2 space-y-2">

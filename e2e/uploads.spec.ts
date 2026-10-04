@@ -1,6 +1,7 @@
 import { test, expect } from "./local-test";
 import { adminForProject } from "./admin-credentials";
 import sharp from "sharp";
+import { randomBytes } from "node:crypto";
 
 for (const locale of ["en", "fr"]) {
   test(`${locale}: admin uploads a photo, saves it and visitors can see it`, async ({ page, playwright }, info) => {
@@ -14,10 +15,13 @@ for (const locale of ["en", "fr"]) {
     await page.goto(`/${locale}/admin/gallery`);
     await page.getByRole("button", { name: fr ? "Ajouter un image" : "Add image", exact: true }).click();
     const dialog = page.getByRole("dialog");
-    const photo = await sharp({ create: { width: 200, height: 160, channels: 3, background: "#ca9273" } }).jpeg().withMetadata().toBuffer();
+    // A realistic transport stress case: a noisy PNG larger than typical proxy limits.
+    const photo = await sharp(randomBytes(1600 * 1600 * 3), { raw: { width: 1600, height: 1600, channels: 3 } }).png().toBuffer();
+    expect(photo.length).toBeGreaterThan(7 * 1024 * 1024);
     const uploaded = page.waitForResponse(response => response.url().endsWith("/api/admin/media/upload"));
-    await dialog.locator('input[type="file"]').setInputFiles({ name: "synthetic-photo.jpg", mimeType: "image/jpeg", buffer: photo });
+    await dialog.locator('input[type="file"]').setInputFiles({ name: "synthetic-photo.png", mimeType: "image/png", buffer: photo });
     const response = await uploaded;
+    expect(response.request().postDataBuffer()!.length).toBeLessThanOrEqual(480 * 1024);
     expect(response.status()).toBe(201);
     const { url } = await response.json();
     await expect(dialog.getByLabel(fr ? "Image principale" : "Primary image", { exact: true })).toHaveValue(url);
