@@ -1,3 +1,10 @@
+## 2026-10-04 — Store operations settings
+
+- Added protected `/[locale]/admin/store-settings` controls for order acceptance, shipping fee, free-shipping threshold and pending-stock reservation duration. The EN/FR admin navigation and labels are complete.
+- Added a strict server schema and authenticated, CSRF-protected GET/PATCH API. Changes use the existing StoreSetting row and produce an audit event; currency values remain integer CAD cents. No schema migration or owner content changes were made.
+- Verification: typecheck and production build passed (88 generated pages). Repository lint exited 0 with existing warnings; all three new files lint clean. EN/FR translation keys/types match. No test suite or checkout transaction was run in this pass.
+- Hosted Stripe Checkout, webhook signature configuration, approved product/shipping/returns information, and a test transaction remain owner launch requirements. No payment credentials or live transactions were used.
+
 ## 2026-10-03 — Final local QA and deployed content parity
 
 - Reproduced the broken local layout: port 3050 still served an older build manifest whose CSS URL returned 404 after another build replaced `.next`. Added `npm run preview` with an isolated `.next-preview` build; the owner preview now stays usable during ordinary builds and isolated browser tests. The read-only route sweep also checks missing Next.js static assets.
@@ -779,3 +786,37 @@ Bookings, customers, service values, admin authentication and external provider 
 - Reproduced live transport failure: a valid 7.7 MB PNG returned a non-JSON 500, while a tiny PNG succeeded; a high-detail JPEG also exceeded the existing 512 KiB stored-output ceiling. The server validation, authentication, CSRF, quotas and draft privacy remain enforced.
 - Added browser raster decoding, orientation handling, a 24 MP bound, proportional resizing and adaptive WebP compression to at most 480 KiB before upload. This avoids sending multi-megabyte bodies through the hosting proxy. Bitmap resources are released and cancelled inputs cannot send stale requests. Non-JSON server errors are handled safely.
 - Typecheck/build passed; lint: zero errors, 63 existing warnings. Eleven focused unit/security tests passed. Four EN/FR desktop/mobile production browser tests passed: a >7 MiB PNG is transmitted within 480 KiB, saved, private before CMS publication and visible to visitors after saving active content. Initial browser run used a build compiled for another local origin; rebuilding with the isolated test origin resolved that harness mismatch without weakening origin checks. Only the generated live diagnostic draft was removed; owner photos were preserved.
+## 2026-10-04 — Responsive store product cards
+
+- Unified featured and filtered product grids. Bounded card widths, consistent 4:3 photographs, aligned price/actions and 44px touch targets; two columns on normal phones and one below 375px. Opaque charcoal copy panels in dark mode and blush pink in light mode use explicit readable text colours. Narrow store headers also accommodate both social links without horizontal overflow.
+- Category labels now check translation availability, retain custom CMS category names and localize Hair/Skin in EN/FR rather than exposing Store.categories keys. Preserved all concurrent content, header, cart and admin settings edits.
+- Typecheck and production/isolated preview builds passed; lint: 0 errors, 63 existing warnings. Read-only browser inspection confirmed mobile/desktop layout and both themes; 320/390/568/1024/1440px had no overflow or raw category keys, all purchase buttons remain at least 44px high. No purchase, database mutation, commit or deployment for this scoped visual change.
+
+## 2026-10-04 — Owner brochure package correction
+
+- Replaced the four program prices, regular values and installment copy in EN/FR: Glow Renewal $1,248 / $2,094 / $104 monthly; Essential $1,800 / $2,516 / $150 monthly; Platinum $2,712 / $3,773 / $226 monthly; Diamond $4,200 / $6,295 / $350 monthly. All use 12 payments and 0% interest. Discovery remains unchanged.
+- Owner directed literal brochure values after clarification: Glow retains the printed $950 saving despite the handwritten regular-price arithmetic mismatch; Platinum follows the lower Package Includes list (4 HydraFacial, 10 total treatments), not the conflicting upper 5-session label.
+- Removed crossed-out Diamond progress monitoring/follow-up and Glow chemical peel/oxygen facial references; removed obsolete progress-tracking inclusions. Corrected mottos, phases and visit details while preserving the approved UI. Removed old Essential/Diamond durations and absolute month schedules not supplied by the revised brochures; Platinum retains the specified 4-week/2-month intervals and 2.5-hour/1.5-hour durations.
+- Added a local-only, read-only-by-default correction command: `node --import tsx --require ./tsx-sandbox-shim.cjs prisma/correct-skin-programs.ts --apply-local`. Updated exactly four local CMS package prices/counts transactionally; old values retained in audit entries. CMS names, descriptions, visibility, order, service links, custom packages and Discovery remain untouched. Repeat and rollback behavior are tested.
+- Verification: production build/typecheck passed; lint 0 errors, 63 existing warnings; all 460 tests passed. Read-only Chrome checks passed for EN/FR at 390px and 1440px, all four prices and appointment disclosures, no overflow or page errors. Updated local preview runs on http://localhost:3030/en/pricing-plans/packages. No remote database change, deployment, commit or push.
+
+## 2026-10-04 — Compact mobile package collection
+
+- Replaced the narrow two-column phone layout with full-width, compact cards through 650px. Treatment count sits beside the title, service mix uses the full width, and regular/offer price and saving share a concise row. Retained all content, desktop layout, theme variables, native selection buttons and keyboard focus behavior. CSS changes are scoped to the package module.
+- Rebuilt and restarted the local 3030 preview. Production build/typecheck and all 460 tests passed; lint remains 0 errors / 63 existing warnings. Chrome EN/FR light/dark checks at 320/390/495/650/768/1440px verified card bounds and selection/timetable behavior; 200% text scaling did not overflow cards. At the reported 495px viewport, the first card is now approximately 299px tall and 436px wide. Screenshots inspected in both themes.
+- Existing shared header overflows at 320px (header actions extend to 343px); this is outside the package-card change and was left untouched to preserve concurrent header work. Package cards themselves remain within the viewport. No database change or remote deployment.
+
+## 2026-10-04 — Four-at-a-glance package comparison
+
+- Owner requested all four choices together rather than full-width stacked cards. Mobile now uses a compact 2-by-2 collection with name, service mix, regular/offer price and monthly installment. Marketing mottos, oversized treatment counters and saving badges are omitted only from the mobile overview; full details remain below. Kept small decorative icons beside titles following the owner annotation. Desktop unchanged.
+- Production build/typecheck passed; all 460 tests passed before the final icon-only CSS adjustment; lint 0 errors / 63 existing warnings. EN/FR light/dark collection bounds checked at 320/390/481/650/1440px. Fresh EN/FR 481x884 checks confirm all four cards and all four icons fit above the fixed bottom bar and selection still opens the correct program. Local 3030 preview rebuilt/restarted; no database mutation or deployment.
+## 2026-10-04 — Editable product discounts
+
+- Added an EN/FR percentage discount control and explicit removal action to the existing protected product editor, reusing persisted salePrice and its authenticated/CSRF/audited save path. Percentage updates the monetary sale price; administrators can also edit the amount directly.
+- Fixed storefront use of salePrice in product cards, product detail/structured offers, price sorting and both add-to-cart actions. Original prices are crossed out and the discount percentage is shown. Existing server quotes/checkout already independently use salePrice. Server validation rejects zero or non-discount sale prices; localized validation messages were added.
+- Typecheck and production build passed; lint: zero errors, 63 existing warnings. Inspected the local admin form: 100 CAD with 20% off becomes 80 CAD; removing the discount clears the sale price. The draft was cancelled without changing an owner product. No test suites, purchases, commit or deployment performed for this change.
+
+## 2026-10-04 — Gallery result presentation
+
+- Refined the before-and-after comparison area with a neutral premium surface, rose active filters and slider states, and restrained brand accents in salon image captions. Comparable salon and clinic galleries commonly pair simple service/concern filters with clear before/after labels and treatment context.
+- Checked the local EN dark-mode gallery at mobile width: contrast remains readable and no horizontal overflow appears. This was a style-only preview check; no production build was run for this adjustment.

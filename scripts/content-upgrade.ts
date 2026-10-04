@@ -4,6 +4,27 @@ import { packageCopy } from "@/lib/content/skin-programs-fr";
 import { COMPARISONS } from "@/lib/content/comparisons";
 import { GALLERY } from "@/lib/content/gallery";
 
+/** October 3 brochure correction, explicitly approved by the owner. Discovery is unchanged. */
+export async function correctSkinProgramPrices(db: PrismaClient): Promise<number> {
+  return db.$transaction(async tx => {
+    let count = 0;
+    for (const p of SKIN_PROGRAMS.filter(p => p.slug !== "discovery")) {
+      const existing = await tx.package.findUnique({ where: { slug: p.slug } });
+      if (!existing) throw new Error(`Missing package: ${p.slug}; import packages first.`);
+      const price = Number(p.price.replace(/[^\d]/g, "")) * 100;
+      const sessions = Number(p.stats[0].match(/\d+/)?.[0]);
+      if (existing.price === price && existing.sessions === sessions) continue;
+      await tx.package.update({ where: { id: existing.id }, data: { price, sessions } });
+      await tx.auditLog.create({ data: {
+        action: "package.brochure-correction", targetType: "Package", targetId: existing.id,
+        detail: JSON.stringify({ source: "owner-brochures-2026-10-03", slug: p.slug, before: { price: existing.price, sessions: existing.sessions }, after: { price, sessions } }),
+      } });
+      count++;
+    }
+    return count;
+  }, { maxWait: 10_000, timeout: 60_000 });
+}
+
 /** Owner-approved manifests only. Existing CMS changes and inactive records take precedence. */
 export async function publishSkinPrograms(db: PrismaClient): Promise<number> {
   const services = await db.service.findMany({ where: { slug: { in: ["ai-skin-analysis", "hydrafacial", "rf-microneedling", "rf-skin-treatment"] } }, select: { id: true, slug: true } });

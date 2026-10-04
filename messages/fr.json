@@ -137,12 +137,12 @@
     "country": "Pays",
     "note": "Note de commande",
     "optional": "facultatif",
-    "placeOrder": "Passer la commande démo",
+    "placeOrder": "Continuer vers le paiement sécurisé",
     "placingOrder": "Commande en cours...",
     "checkoutEmpty": "Ajoutez un produit avant de passer au paiement.",
     "returnToCart": "Retour au panier",
-    "paymentDemoTitle": "Configuration du paiement sécurisée en cours",
-    "paymentDemoBody": "Les paiements en ligne ne sont pas encore ouverts. Contactez le studio pour toute question sur un produit. Aucune donnée de carte n’est demandée ici.",
+    "paymentDemoTitle": "Paiement sécurisé",
+    "paymentDemoBody": "Continuez vers le paiement sécurisé Stripe pour confirmer la livraison et payer. Les taxes applicables sont calculées selon l’adresse de livraison. Les données de votre carte ne sont jamais saisies ni stockées sur ce site.",
     "checkoutError": "La commande n'a pas pu être finalisée. Vérifiez votre panier et réessayez.",
     "quoteError": "La disponibilité n'a pas pu être actualisée. Veuillez réessayer.",
     "retryQuote": "Réessayer",
@@ -169,6 +169,8 @@
     "orderLinkInvalid": "Ce lien de commande est invalide ou a expiré.",
     "categories": {
       "Skincare": "Soins de la peau",
+      "Hair": "Cheveux",
+      "Skin": "Peau",
       "Haircare": "Soins capillaires",
       "Brow & Lash": "Sourcils et cils",
       "Devices": "Outils beauté",
@@ -475,6 +477,9 @@
     "compareAtPrice": {
       "invalid": "Le prix comparatif doit être supérieur au prix de vente."
     },
+    "salePrice": {
+      "invalid": "Le prix promotionnel doit être supérieur à zéro et inférieur au prix habituel."
+    },
     "checkout": {
       "invalid": "Veuillez recommencer le paiement."
     }
@@ -729,7 +734,20 @@
     "inventoryRestored": "Stock restauré",
     "noOrders": "Aucune commande ne correspond à ce filtre.",
     "savedProduct": "Produit enregistré.",
-    "statusSaved": "Statut de la commande mis à jour."
+    "statusSaved": "Statut de la commande mis à jour.",
+    "storeSettings": "Paramètres boutique",
+    "storeSettingsTitle": "Paramètres de la boutique",
+    "storeSettingsHint": "Définissez les règles de livraison et indiquez quand les commandes sont acceptées.",
+    "storeOrdersEnabled": "Accepter les commandes",
+    "storeOrdersEnabledHint": "Les clientes peuvent ajouter des produits et envoyer une commande lorsque cette option est activée.",
+    "storeShippingFee": "Frais de livraison (CAD)",
+    "storeFreeShippingThreshold": "Seuil de livraison gratuite (CAD)",
+    "storeFreeShippingThresholdHint": "Saisissez 0 pour désactiver le seuil de livraison gratuite.",
+    "storeReservationMinutes": "Réservation du stock sans paiement (minutes)",
+    "storeSettingsPaymentNote": "Avant le lancement, ajoutez la clé Stripe en mode réel et le secret de signature du webhook, activez Stripe Tax pour vos lieux d’inscription fiscale, puis testez un paiement et un remboursement réels.",
+    "storeSettingsLoadError": "Impossible de charger les paramètres de la boutique.",
+    "storeSettingsSaveError": "Impossible d’enregistrer les paramètres. Réessayez.",
+    "storeSettingsSaved": "Paramètres de la boutique enregistrés."
   },
   "NotFound": {
     "title": "Page introuvable",

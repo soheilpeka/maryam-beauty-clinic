@@ -75,6 +75,21 @@
 }
 #main .gallery-photo-card img { border-radius: 0; transition: transform .9s var(--salon-motion-ease); }
 #main .gallery-photo-card .gallery-photo-caption { padding: 1.25rem; }
+#main .gallery-editorial .gallery-photo-card {
+  border-color: color-mix(in srgb, var(--color-brand) 22%, var(--color-border));
+  background: color-mix(in srgb, var(--color-brand-soft) 20%, var(--color-card));
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--color-brand) 7%, transparent);
+}
+#main .gallery-editorial .gallery-photo-card:hover { border-color: var(--color-brand); }
+#main .gallery-editorial .gallery-photo-caption {
+  --color-foreground: #241d20;
+  --color-muted-foreground: #66565a;
+}
+#main .gallery-editorial .gallery-photo-caption > span { color: var(--color-brand); }
+.dark #main .gallery-editorial .gallery-photo-caption {
+  --color-foreground: #fff7f8;
+  --color-muted-foreground: #d0bec3;
+}
 #main .gallery-image-button:focus-visible { outline-offset: -5px; }
 #main .gallery-lightbox { border-radius: var(--salon-photo-radius); }
 #main .gallery-lightbox figure > img { padding: 0; border: 0; background: transparent; border-radius: var(--salon-gallery-radius); }

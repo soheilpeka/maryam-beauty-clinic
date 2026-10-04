@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import { applySecuritySchema, decryptBackup, encryptBackup, protectPath } from "./security-maintenance";
 import { applyMediaSchema } from "./media-schema";
 import { applyComparisonSchema } from "./content-schema";
-import { publishSkinPrograms, importComparisons, refreshSalonMedia } from "./content-upgrade";
+import { publishSkinPrograms, importComparisons, refreshSalonMedia, correctSkinProgramPrices } from "./content-upgrade";
 import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 
@@ -111,6 +111,32 @@ async function main(): Promise<void> {
     // Reopen the decrypted restore copy in SQLite; no customer records are printed.
     execFileSync("python", ["-c", 'import sqlite3,sys,pathlib\ndb=sqlite3.connect(pathlib.Path(sys.argv[1]).as_uri()+"?mode=ro",uri=True)\ntry:\n if db.execute("PRAGMA integrity_check").fetchone()[0]!="ok": raise RuntimeError("Invalid restore")\nfinally: db.close()', restore], { stdio: "pipe" });
     console.info("Encrypted remote snapshot saved; authenticated decryption and isolated restore integrity verified.");
+    if (process.argv.includes("--apply-store-release")) {
+      stage = "additive store release schema";
+      client = createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN, intMode: "bigint" });
+      const additions = [
+        ["Order", "taxCents", "INTEGER NOT NULL DEFAULT 0"],
+        ["Order", "shippingCarrier", "TEXT"],
+        ["Order", "trackingNumber", "TEXT"],
+        ["Order", "trackingUrl", "TEXT"],
+        ["PaymentAttempt", "paymentIntentId", "TEXT"],
+      ] as const;
+      for (const [table, column, definition] of additions) {
+        const columns = await client.execute(`PRAGMA table_info("${table}")`);
+        if (!columns.rows.length) throw new Error("Required store table missing.");
+        const existing = columns.rows.find(row => row.name === column);
+        if (existing && String(existing.type).toUpperCase() !== definition.split(" ")[0]) throw new Error("Unexpected store column type.");
+        if (!existing) await client.execute(`ALTER TABLE "${table}" ADD COLUMN "${column}" ${definition}`);
+        const verified = await client.execute(`PRAGMA table_info("${table}")`);
+        if (!verified.rows.some(row => row.name === column)) throw new Error("Store column verification failed.");
+      }
+      stage = "approved brochure price correction";
+      const db = new PrismaClient({ adapter: new PrismaLibSql({ url, authToken: process.env.DATABASE_AUTH_TOKEN }) });
+      try {
+        console.info(`Store columns verified; ${await correctSkinProgramPrices(db)} approved package prices corrected with audit history.`);
+      } finally { await db.$disconnect(); }
+      client.close(); client = undefined;
+    }
     if (process.argv.includes("--apply-content-upgrade")) {
       stage = "additive content schema";
       client = createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN, intMode: "bigint" });

@@ -6,6 +6,7 @@ import { Link } from "@/i18n/routing";
 import { useCart } from "@/components/store/cart-context";
 import type { ProductView } from "@/lib/store-views";
 import { useRouter } from "@/i18n/routing";
+import { productPricing } from "@/lib/product-pricing";
 
 /**
  * Add-to-cart + quantity controls on the product detail page. Server data (price, stock)
@@ -18,9 +19,10 @@ export function ProductDetailActions({ product }: { product: ProductView; locale
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const soldOut = product.stock <= 0;
+  const { price } = productPricing(product);
 
   function handleAdd() {
-    add({ slug: product.slug, name: product.name, priceCents: product.price, imageUrl: product.imageUrl }, qty);
+    add({ slug: product.slug, name: product.name, priceCents: price, imageUrl: product.imageUrl }, qty);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
   }
@@ -65,7 +67,7 @@ export function ProductDetailActions({ product }: { product: ProductView; locale
       <button
         type="button"
         onClick={() => {
-          add({ slug: product.slug, name: product.name, priceCents: product.price, imageUrl: product.imageUrl }, qty);
+          add({ slug: product.slug, name: product.name, priceCents: price, imageUrl: product.imageUrl }, qty);
           router.push("/store/checkout");
         }}
         disabled={soldOut}

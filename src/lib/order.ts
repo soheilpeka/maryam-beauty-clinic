@@ -23,6 +23,7 @@ import type {
   StoreSetting,
 } from "@prisma/client";
 import { cartSubtotal, shippingFor } from "@/lib/cart";
+import { signOrderToken } from "@/lib/tokens";
 import {
   getPaymentProvider,
   PAYMENT_PROVIDER_NAME,
@@ -38,6 +39,7 @@ export interface CheckoutLineInput {
 export interface CheckoutResult {
   order: OrderWithRelations;
   paymentReference: string | null;
+  checkoutUrl: string | null;
   reused: boolean;
 }
 
@@ -49,7 +51,7 @@ export class StoreError extends Error {
 }
 
 export async function getStoreSettings(prisma: PrismaClient): Promise<StoreSetting> {
-  return prisma.storeSetting.upsert({
+  const settings = await prisma.storeSetting.upsert({
     where: { id: "default" },
     update: {},
     create: {
@@ -57,9 +59,12 @@ export async function getStoreSettings(prisma: PrismaClient): Promise<StoreSetti
       shippingFeeCents: 1500,
       freeShippingThresholdCents: 15000,
       enabled: true,
-      reservationMinutes: 15,
+      reservationMinutes: 30,
     },
   });
+  return settings.reservationMinutes < 30
+    ? prisma.storeSetting.update({ where: { id: "default" }, data: { reservationMinutes: 30 } })
+    : settings;
 }
 
 function generateOrderRef(now = new Date()): string {
@@ -149,6 +154,7 @@ export async function transitionOrderStatus(
   prisma: PrismaClient,
   orderId: string,
   nextStatus: OrderStatus,
+  tracking?: { shippingCarrier: string; trackingNumber: string; trackingUrl: string },
 ): Promise<OrderWithRelations> {
   const current = await prisma.order.findUnique({ where: { id: orderId }, include: ORDER_INCLUDE });
   if (!current) throw new StoreError("NOT_FOUND", "Order not found.");
@@ -164,7 +170,7 @@ export async function transitionOrderStatus(
   }
   return prisma.order.update({
     where: { id: orderId, status: current.status },
-    data: { status: nextStatus },
+    data: { status: nextStatus, ...(nextStatus === "SHIPPED" && tracking ? tracking : {}) },
     include: ORDER_INCLUDE,
   });
 }
@@ -214,9 +220,16 @@ export async function createOrder(
   });
   if (prior) {
     assertMatchingCheckout(prior, args);
+    const pendingAttempt = prior.paymentAttempts.find((p) => p.status === "PENDING");
+    let checkoutUrl: string | null = null;
+    if (prior.status === "PENDING" && pendingAttempt?.reference) {
+      const provider = dependencies.paymentProvider ?? getPaymentProvider();
+      checkoutUrl = await provider.resume?.(pendingAttempt.reference) ?? null;
+    }
     return {
       order: prior,
-      paymentReference: prior.paymentAttempts.find((p) => p.status === "APPROVED")?.reference ?? null,
+      paymentReference: pendingAttempt?.reference ?? prior.paymentAttempts.find((p) => p.status === "APPROVED")?.reference ?? null,
+      checkoutUrl,
       reused: true,
     };
   }
@@ -247,7 +260,21 @@ export async function createOrder(
   );
   const shippingCents = shippingFor(subtotalCents, settings);
   const now = dependencies.now ?? new Date();
-  const reservationExpiresAt = new Date(now.getTime() + settings.reservationMinutes * 60_000);
+  // Stripe-hosted Checkout sessions cannot expire sooner than 30 minutes. Keep the
+  // inventory reservation at least as long as the payment session to avoid overselling.
+  const reservationExpiresAt = new Date(now.getTime() + Math.max(30, settings.reservationMinutes) * 60_000);
+
+  let provider: PaymentProvider;
+  let pendingCheckoutReference: string | null = null;
+  try {
+    // Validate credentials before reserving any stock.
+    provider = dependencies.paymentProvider ?? getPaymentProvider();
+  } catch (error) {
+    if (error instanceof PaymentConfigurationError) {
+      throw new StoreError("PAYMENT_NOT_CONFIGURED", "Checkout is temporarily unavailable.");
+    }
+    throw error;
+  }
 
   let order: OrderWithRelations;
   try {
@@ -307,36 +334,33 @@ export async function createOrder(
     });
     if (winner) {
       assertMatchingCheckout(winner, args);
-      return { order: winner, paymentReference: null, reused: true };
-    }
-    throw error;
-  }
-
-  let provider: PaymentProvider;
-  try {
-    provider = dependencies.paymentProvider ?? getPaymentProvider();
-  } catch (error) {
-    await restoreInventory(prisma, order.id, "PAYMENT_FAILED");
-    if (error instanceof PaymentConfigurationError) {
-      // Do not reflect provider/configuration details to a guest checkout response.
-      throw new StoreError("PAYMENT_NOT_CONFIGURED", "Checkout is temporarily unavailable.");
+      return { order: winner, paymentReference: null, checkoutUrl: null, reused: true };
     }
     throw error;
   }
 
   try {
+    const orderToken = await signOrderToken({ sub: order.id, email: order.email });
     const result = await provider.authorize({
       ref: order.ref,
       amountCents: order.totalCents,
       email: order.email,
+      locale: args.locale,
+      orderId: order.id,
+      orderToken,
+      items: order.items.map((item) => ({ name: item.name, quantity: item.quantity, unitAmountCents: item.unitPriceCents })),
+      shippingCents: order.shippingCents,
+      expiresAt: reservationExpiresAt,
     });
+    if (result.pending) pendingCheckoutReference = result.reference;
     await prisma.paymentAttempt.create({
       data: {
         orderId: order.id,
         provider: PAYMENT_PROVIDER_NAME,
-        status: result.ok ? "APPROVED" : "DECLINED",
+        status: result.pending ? "PENDING" : result.ok ? "APPROVED" : "DECLINED",
         reference: result.reference || null,
         amountCents: order.totalCents,
+        paymentIntentId: null,
         message: result.ok ? null : result.reason?.slice(0, 240) || "Payment declined",
       },
     });
@@ -344,6 +368,11 @@ export async function createOrder(
     if (!result.ok) {
       await restoreInventory(prisma, order.id, "PAYMENT_FAILED");
       throw new StoreError("PAYMENT_DECLINED", "Payment was declined. No stock was held.");
+    }
+
+    if (result.pending) {
+      order = await prisma.order.findUniqueOrThrow({ where: { id: order.id }, include: ORDER_INCLUDE });
+      return { order, paymentReference: result.reference, checkoutUrl: result.checkoutUrl ?? null, reused: false };
     }
 
     order = await prisma.order.update({
@@ -355,9 +384,12 @@ export async function createOrder(
       },
       include: ORDER_INCLUDE,
     });
-    return { order, paymentReference: result.reference, reused: false };
+    return { order, paymentReference: result.reference, checkoutUrl: null, reused: false };
   } catch (error) {
     if (error instanceof StoreError) throw error;
+    if (pendingCheckoutReference) {
+      await provider.cancel?.(pendingCheckoutReference).catch(() => {});
+    }
     if (error instanceof PaymentConfigurationError) {
       await restoreInventory(prisma, order.id, "PAYMENT_FAILED");
       throw new StoreError("PAYMENT_NOT_CONFIGURED", "Checkout is temporarily unavailable.");

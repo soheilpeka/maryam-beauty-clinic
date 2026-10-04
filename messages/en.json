@@ -137,12 +137,12 @@
     "country": "Country",
     "note": "Order note",
     "optional": "optional",
-    "placeOrder": "Place demo order",
+    "placeOrder": "Continue to secure payment",
     "placingOrder": "Placing order...",
     "checkoutEmpty": "Add a product before checking out.",
     "returnToCart": "Return to cart",
-    "paymentDemoTitle": "Secure payment setup in progress",
-    "paymentDemoBody": "Online payments are not open yet. Please contact the studio if you have a question about a product. No card details are requested here.",
+    "paymentDemoTitle": "Secure payment",
+    "paymentDemoBody": "Continue to Stripe’s secure checkout to confirm delivery details and pay. Applicable tax is calculated from the delivery address. Your card details are never entered or stored on this website.",
     "checkoutError": "The order could not be completed. Review your cart and try again.",
     "quoteError": "We could not refresh availability. Please try again.",
     "retryQuote": "Try again",
@@ -169,6 +169,8 @@
     "orderLinkInvalid": "This order link is invalid or has expired.",
     "categories": {
       "Skincare": "Skincare",
+      "Hair": "Hair",
+      "Skin": "Skin",
       "Haircare": "Haircare",
       "Brow & Lash": "Brow & lash",
       "Devices": "Beauty tools",
@@ -475,6 +477,9 @@
     "compareAtPrice": {
       "invalid": "The compare-at price must be higher than the sale price."
     },
+    "salePrice": {
+      "invalid": "The sale price must be greater than zero and lower than the regular price."
+    },
     "checkout": {
       "invalid": "Please start checkout again."
     }
@@ -729,7 +734,20 @@
     "inventoryRestored": "Inventory restored",
     "noOrders": "No orders match this filter.",
     "savedProduct": "Product saved.",
-    "statusSaved": "Order status updated."
+    "statusSaved": "Order status updated.",
+    "storeSettings": "Store settings",
+    "storeSettingsTitle": "Store settings",
+    "storeSettingsHint": "Set local shipping rules and decide when customers can place orders.",
+    "storeOrdersEnabled": "Accept orders",
+    "storeOrdersEnabledHint": "Customers may add products and submit checkout while this is on.",
+    "storeShippingFee": "Shipping fee (CAD)",
+    "storeFreeShippingThreshold": "Free shipping threshold (CAD)",
+    "storeFreeShippingThresholdHint": "Use 0 to disable threshold-based free shipping.",
+    "storeReservationMinutes": "Unpaid stock reservation (minutes)",
+    "storeSettingsPaymentNote": "Before launch, add the live Stripe key and webhook signing secret, enable Stripe Tax with your registered tax locations, then complete a real test checkout and refund.",
+    "storeSettingsLoadError": "Could not load store settings.",
+    "storeSettingsSaveError": "Could not save store settings. Try again.",
+    "storeSettingsSaved": "Store settings saved."
   },
   "NotFound": {
     "title": "Page not found",

@@ -38,11 +38,15 @@ export default async function ContactPage({
           <div className="mt-7 flex flex-wrap gap-3">
             <Link href="/booking" className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground">{locale === "fr" ? "Demander un rendez-vous" : "Request an appointment"}</Link>
             <a href={BUSINESS.instagramHref} target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:border-brand hover:text-brand">Instagram</a>
+            {BUSINESS.facebookHref && <a href={BUSINESS.facebookHref} target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:border-brand hover:text-brand">Facebook</a>}
           </div>
         </div>
       </section>
-      <div className="mx-auto grid max-w-7xl items-start gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-28">
-        <div>
+      <div className="mx-auto grid max-w-7xl items-start gap-12 px-4 pb-20 pt-8 sm:px-6 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-28">
+        <div className="lg:col-start-2 lg:row-start-1">
+          <ContactForm />
+        </div>
+        <div className="lg:col-start-1 lg:row-start-1">
           <p className="eyebrow">{tSections("contactEyebrow")}</p>
           <h2 className="display-heading mt-4 text-4xl sm:text-5xl">{BUSINESS.neighborhood}</h2>
 
@@ -107,9 +111,6 @@ export default async function ContactPage({
           </div>
         </div>
 
-        <div>
-          <ContactForm />
-        </div>
       </div>
     </div>
   );

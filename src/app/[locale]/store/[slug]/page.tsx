@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { productPricing } from "@/lib/product-pricing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -75,7 +76,7 @@ export default async function ProductDetailPage({
       : [];
 
   const soldOut = product.stock <= 0;
-  const onSale = product.compareAtPrice !== null && product.compareAtPrice > product.price;
+  const { price, original, onSale, percent } = productPricing(product);
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -86,7 +87,7 @@ export default async function ProductDetailPage({
     offers: {
       "@type": "Offer",
       priceCurrency: "CAD",
-      price: (product.price / 100).toFixed(2),
+      price: (price / 100).toFixed(2),
       availability: soldOut ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       url: `/${locale}/store/${product.slug}`,
     },
@@ -125,19 +126,19 @@ export default async function ProductDetailPage({
           </div>
 
           <div>
-            <p className="eyebrow">{t(("categories." + product.category) as never)}</p>
+            <p className="eyebrow">{t.has("categories." + product.category) ? t(("categories." + product.category) as never) : product.category}</p>
             <h1 className="display-heading mt-3 text-4xl sm:text-5xl">{product.name}</h1>
             <div className="mt-5 flex items-baseline gap-3">
               <span className="text-3xl font-light text-foreground">
-                {formatPrice(product.price, locale)}
+                {formatPrice(price, locale)}
               </span>
               {onSale && (
                 <>
                   <span className="text-lg text-muted-foreground line-through">
-                    {formatPrice(product.compareAtPrice as number, locale)}
+                    {formatPrice(original, locale)}
                   </span>
                   <span className="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-brand">
-                    {t("sale")}
+                    {t("sale")} −{percent}%
                   </span>
                 </>
               )}

@@ -7,6 +7,7 @@
  * available only for isolated tests and local demo flows; no PAN ever enters this application.
  */
 import { env } from "@/lib/env";
+import Stripe from "stripe";
 
 export interface PaymentCapture {
   /** Order reference the capture belongs to */
@@ -15,6 +16,12 @@ export interface PaymentCapture {
   amountCents: number;
   /** Customer email, passed for the receipt */
   email: string;
+  locale: "en" | "fr";
+  orderId: string;
+  orderToken: string;
+  items: Array<{ name: string; quantity: number; unitAmountCents: number }>;
+  shippingCents: number;
+  expiresAt: Date;
 }
 
 export interface PaymentResult {
@@ -23,10 +30,15 @@ export interface PaymentResult {
   reference: string;
   /** Human-readable reason when ok is false */
   reason?: string;
+  checkoutUrl?: string;
+  pending?: boolean;
 }
 
 export interface PaymentProvider {
   authorize(payment: PaymentCapture): Promise<PaymentResult>;
+  resume?(reference: string): Promise<string | null>;
+  refund?(paymentIntentId: string, orderId: string): Promise<void>;
+  cancel?(reference: string): Promise<void>;
 }
 
 export class MockPaymentProvider implements PaymentProvider {
@@ -40,22 +52,72 @@ export class MockPaymentProvider implements PaymentProvider {
 }
 
 /**
- * Configuration-safe Stripe boundary. Keeping this explicit prevents a false impression that
- * a server-side order authorization is a payment integration. A future hosted Checkout adapter
- * can implement the same interface and webhook reconciliation without changing order logic.
+ * Stripe hosted Checkout adapter. The browser never receives the secret key or card data.
  */
-export class StripeTestPaymentProvider implements PaymentProvider {
+export class StripeCheckoutPaymentProvider implements PaymentProvider {
   readonly name = "stripe";
+  private readonly stripe: Stripe;
 
-  async authorize(): Promise<PaymentResult> {
-    if (!env.stripeSecretKey || !env.stripeSecretKey.startsWith("sk_test_")) {
+  constructor() {
+    if (!env.stripeSecretKey) {
       throw new PaymentConfigurationError(
-        "Stripe test mode is not configured. Add STRIPE_SECRET_KEY=sk_test_... and connect hosted checkout.",
+        "Stripe is not configured. Add STRIPE_SECRET_KEY.",
       );
     }
-    throw new PaymentConfigurationError(
-      "Stripe hosted checkout is not enabled until the owner supplies and verifies the payment flow.",
-    );
+    if (!env.stripeWebhookSecret) {
+      throw new PaymentConfigurationError("Stripe webhook signing secret is not configured.");
+    }
+    if (process.env.NODE_ENV === "production" && !env.stripeSecretKey.startsWith("sk_live_")) {
+      throw new PaymentConfigurationError("Production requires a live Stripe secret key.");
+    }
+    if (process.env.NODE_ENV === "production" && !env.baseUrl.startsWith("https://")) {
+      throw new PaymentConfigurationError("Production checkout requires the public HTTPS site URL.");
+    }
+    this.stripe = new Stripe(env.stripeSecretKey);
+  }
+
+  async authorize(payment: PaymentCapture): Promise<PaymentResult> {
+    const locale = payment.locale === "fr" ? "fr-CA" : "en-CA";
+    const session = await this.stripe.checkout.sessions.create({
+      mode: "payment",
+      line_items: [
+        ...payment.items.map((item) => ({
+          quantity: item.quantity,
+          price_data: { currency: "cad", unit_amount: item.unitAmountCents, product_data: { name: item.name } },
+        })),
+      ],
+      shipping_options: [{
+        shipping_rate_data: {
+          type: "fixed_amount",
+          fixed_amount: { amount: payment.shippingCents, currency: "cad" },
+          display_name: payment.locale === "fr" ? "Livraison" : "Shipping",
+        },
+      }],
+      customer_email: payment.email,
+      automatic_tax: { enabled: true },
+      shipping_address_collection: { allowed_countries: ["CA"] },
+      locale,
+      expires_at: Math.floor(payment.expiresAt.getTime() / 1000),
+      metadata: { orderId: payment.orderId, orderRef: payment.ref },
+      success_url: `${env.baseUrl}/${payment.locale}/store/order/${encodeURIComponent(payment.ref)}?t=${encodeURIComponent(payment.orderToken)}&checkout=success`,
+      cancel_url: `${env.baseUrl}/${payment.locale}/store/order/${encodeURIComponent(payment.ref)}?t=${encodeURIComponent(payment.orderToken)}&checkout=cancelled`,
+    }, { idempotencyKey: `checkout-${payment.orderId}` });
+    if (!session.url) throw new PaymentConfigurationError("Stripe did not return a Checkout URL.");
+    return { ok: true, pending: true, reference: session.id, checkoutUrl: session.url };
+  }
+
+  async resume(reference: string): Promise<string | null> {
+    const session = await this.stripe.checkout.sessions.retrieve(reference);
+    return session.status === "open" ? session.url : null;
+  }
+
+  async cancel(reference: string): Promise<void> {
+    const session = await this.stripe.checkout.sessions.retrieve(reference);
+    if (session.status === "open") await this.stripe.checkout.sessions.expire(reference);
+  }
+
+  async refund(paymentIntentId: string, orderId: string): Promise<void> {
+    await this.stripe.refunds.create({ payment_intent: paymentIntentId }, { idempotencyKey: `refund-${orderId}` });
   }
 }
 
@@ -79,7 +141,7 @@ export class PaymentConfigurationError extends Error {
 
 export function getPaymentProvider(): PaymentProvider {
   assertPaymentProviderSafe();
-  return env.paymentProvider === "mock" ? new MockPaymentProvider() : new StripeTestPaymentProvider();
+  return env.paymentProvider === "mock" ? new MockPaymentProvider() : new StripeCheckoutPaymentProvider();
 }
 
 export const PAYMENT_PROVIDER_NAME = env.paymentProvider;

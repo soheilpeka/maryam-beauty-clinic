@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { SKIN_PROGRAM_DETAILS, skinProgramDetails } from "@/lib/content/skin-program-details";
+import { SKIN_PROGRAMS } from "@/lib/content/skin-programs";
 
 describe("complete owner-supplied skin program detail", () => {
   it("keeps the Discovery consultation separate from an actual Matrix treatment", () => {
@@ -13,13 +14,19 @@ describe("complete owner-supplied skin program detail", () => {
   });
   it("preserves every appointment and interval supplied in the artwork", () => {
     expect(skinProgramDetails("glow-renewal", "en")!.visits).toHaveLength(6);
-    expect(skinProgramDetails("essential", "en")!.visits!.map(v => v.when)).toEqual(["Month 1", "Month 2", "Month 3", "Month 4.5", "Month 6", "Month 7.5"]);
-    expect(skinProgramDetails("platinum", "en")!.visits!.map(v => v.when)).toEqual(["Month 1", "Month 2", "Month 3", "Month 4", "Month 6", "Month 8", "Month 10", "Month 12"]);
+    const essential = skinProgramDetails("essential", "en")!;
+    expect(essential.visits!.map(v => v.when)).toEqual(["Month 1", "Month 2", "Month 3", "Visit 4", "Visit 5", "Visit 6"]);
+    expect(essential.visits![3].interval).toBe("6 weeks after your final Matrix treatment");
+    expect(essential.visits!.every(v => !v.duration)).toBe(true);
+    const platinum = skinProgramDetails("platinum", "en")!;
+    expect(platinum.visits).toHaveLength(7);
+    expect(platinum.visits!.filter(v => v.treatment === "Signature Hydra Facial")).toHaveLength(4);
+    expect(platinum.visits![0].duration).toBe("2.5 hours");
+    expect(platinum.visits![3].interval).toBe("2 months between visits");
     const diamond = skinProgramDetails("diamond", "en")!;
     expect(diamond.visits).toHaveLength(10);
-    expect(diamond.visits!.at(-1)!.when).toBe("Month 12.5");
-    expect(diamond.visits![4].duration).toBe("2.5 hours");
-    expect(diamond.visits![5].interval).toBe("6 weeks between visits");
+    expect(diamond.visits!.at(-1)!.when).toBe("Visit 10");
+    expect(diamond.visits!.every(v => !v.duration && !v.interval)).toBe(true);
   });
   it("retains program-specific goals, aftercare-related concerns and package mix", () => {
     expect(skinProgramDetails("essential", "en")!.goals).toHaveLength(5);
@@ -39,10 +46,23 @@ describe("complete owner-supplied skin program detail", () => {
       } else Object.values(value).forEach(check);
     }
     check(SKIN_PROGRAM_DETAILS);
-    expect(skinProgramDetails("diamond", "fr")!.visits!.at(-1)!.when).toBe("Mois 12,5");
+    expect(skinProgramDetails("diamond", "fr")!.visits!.at(-1)!.when).toBe("Visite 10");
     expect(skinProgramDetails("discovery", "fr")!.experiences![0].title).toContain("Analyse");
   });
   it("does not invent source detail for a custom CMS package", () => {
     expect(skinProgramDetails("owner-custom", "en")).toBeUndefined();
+  });
+  it("uses the revised brochure prices, financing and crossed-out exclusions", () => {
+    expect(SKIN_PROGRAMS.filter(p => p.slug !== "discovery").map(p => [p.slug, p.price, p.regular, p.saving, p.payment])).toEqual([
+      ["glow-renewal", "$1,248", "$2,094", "Save $950", "$104/month · 12 monthly payments · 0% interest"],
+      ["essential", "$1,800", "$2,516", "Save $716", "$150/month · 12 monthly payments · 0% interest"],
+      ["platinum", "$2,712", "$3,773", "Save $1,061", "$226/month · 12 monthly payments · 0% interest"],
+      ["diamond", "$4,200", "$6,295", "Save $2,095", "$350/month · 12 monthly payments · 0% interest"],
+    ]);
+    for (const slug of ["glow-renewal", "diamond"]) {
+      const p = SKIN_PROGRAMS.find(p => p.slug === slug)!;
+      expect(p.included.join(" ")).not.toMatch(/Progress Tracking|Progress Monitoring|Chemical Peel|Oxygen/i);
+      expect(JSON.stringify(skinProgramDetails(slug, "en"))).not.toMatch(/before-and-after|Progress monitoring/i);
+    }
   });
 });

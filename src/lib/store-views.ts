@@ -103,7 +103,11 @@ export interface OrderView {
   note: string | null;
   subtotalCents: number;
   shippingCents: number;
+  taxCents: number;
   totalCents: number;
+  shippingCarrier: string | null;
+  trackingNumber: string | null;
+  trackingUrl: string | null;
   createdAt: string;
   updatedAt: string;
   reservationExpiresAt: string | null;
@@ -137,7 +141,11 @@ export function shapeOrder(o: OrderWithItems): OrderView {
     note: o.note,
     subtotalCents: o.subtotalCents,
     shippingCents: o.shippingCents,
+    taxCents: o.taxCents,
     totalCents: o.totalCents,
+    shippingCarrier: o.shippingCarrier,
+    trackingNumber: o.trackingNumber,
+    trackingUrl: o.trackingUrl,
     createdAt: o.createdAt.toISOString(),
     updatedAt: o.updatedAt.toISOString(),
     reservationExpiresAt: o.reservationExpiresAt?.toISOString() ?? null,
@@ -186,7 +194,11 @@ export function shapePublicOrder(order: OrderWithItems): PublicOrderView {
     note: shaped.note,
     subtotalCents: shaped.subtotalCents,
     shippingCents: shaped.shippingCents,
+    taxCents: shaped.taxCents,
     totalCents: shaped.totalCents,
+    shippingCarrier: shaped.shippingCarrier,
+    trackingNumber: shaped.trackingNumber,
+    trackingUrl: shaped.trackingUrl,
     createdAt: shaped.createdAt,
     updatedAt: shaped.updatedAt,
     reservationExpiresAt: shaped.reservationExpiresAt,

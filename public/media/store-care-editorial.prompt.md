@@ -1,0 +1,5 @@
+# Store hero image
+
+Generated with the built-in image generation tool. Illustrative imagery, not a representation of actual inventory.
+
+Prompt: Use case: product-mockup. Asset type: hero photograph for Maryam C Beauté beauty salon's skincare and haircare store website. Create an exceptionally elegant photorealistic editorial still life, landscape 4:3 composition. A thoughtfully curated small collection of unbranded ivory skincare cream jar, frosted serum dropper, pearl-white pump bottles and a haircare bottle on a pale travertine tray, folded ivory towel, one subtle dusty blush-pink fabric accent. Soft rose-beige architectural background, natural side lighting and graceful shadows, luxurious clean beauty aesthetic, realistic materials, restrained sophisticated palette echoing a dusty pink salon logo (#c7838e and pale #f7e5e8), cream and warm stone. Central balanced grouping fits responsive crop. No lettering, logos, watermark, people, salon chairs, medical devices, or fake product claims. This is atmospheric illustrative store photography, not a catalog listing.

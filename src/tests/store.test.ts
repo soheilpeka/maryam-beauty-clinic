@@ -23,6 +23,15 @@ const declined: PaymentProvider = {
   },
 };
 
+const hostedCheckout: PaymentProvider = {
+  async authorize(payment) {
+    return { ok: true, pending: true, reference: `cs_${payment.ref}`, checkoutUrl: "https://checkout.stripe.com/test-session" };
+  },
+  async resume() {
+    return "https://checkout.stripe.com/test-session";
+  },
+};
+
 let prisma: PrismaClient;
 
 async function product(overrides: Partial<{
@@ -123,6 +132,21 @@ describe("store validation and totals", () => {
 });
 
 describe("order pricing, snapshots and idempotency", () => {
+  it("keeps hosted checkout pending, reserves stock for at least 30 minutes, and resumes idempotently", async () => {
+    await product({ stock: 3 });
+    const args = checkout();
+    const first = await createOrder(prisma, args, { paymentProvider: hostedCheckout });
+    expect(first.order.status).toBe("PENDING");
+    expect(first.checkoutUrl).toBe("https://checkout.stripe.com/test-session");
+    expect(first.order.reservationExpiresAt!.getTime() - first.order.createdAt.getTime()).toBeGreaterThanOrEqual(30 * 60_000 - 1000);
+    expect(first.order.paymentAttempts[0].status).toBe("PENDING");
+    const retry = await createOrder(prisma, args, { paymentProvider: hostedCheckout });
+    expect(retry.reused).toBe(true);
+    expect(retry.checkoutUrl).toBe(first.checkoutUrl);
+    expect(await prisma.paymentAttempt.count()).toBe(1);
+    expect((await prisma.product.findUniqueOrThrow({ where: { slug: "demo-serum" } })).stock).toBe(2);
+  });
+
   it("uses database price, shipping and purchase-time snapshots", async () => {
     await product({ price: 8500, stock: 3 });
     const result = await createOrder(prisma, checkout({ lines: [{ slug: "demo-serum", quantity: 2 }] }), {

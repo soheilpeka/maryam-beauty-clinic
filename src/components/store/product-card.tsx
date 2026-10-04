@@ -7,6 +7,8 @@ import { formatPrice } from "@/lib/datetime";
 import { useCart } from "@/components/store/cart-context";
 import type { ProductView } from "@/lib/store-views";
 import Image from "next/image";
+import "./product-cards.css";
+import { productPricing } from "@/lib/product-pricing";
 
 /**
  * Product card for the store listing. The price/stock come from the server payload; the
@@ -18,24 +20,25 @@ export function ProductCard({ product, locale }: { product: ProductView; locale:
   const [added, setAdded] = useState(false);
 
   const soldOut = product.stock <= 0;
-  const onSale = product.compareAtPrice !== null && product.compareAtPrice > product.price;
+  const { price, original, onSale, percent } = productPricing(product);
 
   function handleAdd() {
-    add({ slug: product.slug, name: product.name, priceCents: product.price, imageUrl: product.imageUrl });
+    add({ slug: product.slug, name: product.name, priceCents: price, imageUrl: product.imageUrl });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
   }
 
   return (
-    <article className="product-editorial-card group flex flex-col border-b border-border pb-6">
-      <Link href={`/store/${product.slug}`} className="relative block aspect-[4/3] overflow-hidden bg-muted">
+    <article className="product-editorial-card group flex flex-col">
+      <Link href={`/store/${product.slug}`} className="product-card-photo relative block overflow-hidden bg-muted">
+        {onSale && <span className="product-discount-badge">−{percent}%</span>}
         {product.imageUrl ? (
           <Image
             src={product.imageUrl}
             alt={product.name}
             fill
             unoptimized={product.imageUrl.startsWith("https://")}
-            sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
+            sizes="(min-width: 1024px) 340px, (min-width: 640px) 33vw, (min-width: 375px) 50vw, 100vw"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
@@ -44,10 +47,10 @@ export function ProductCard({ product, locale }: { product: ProductView; locale:
           </div>
         )}
       </Link>
-      <div className="flex flex-1 flex-col pt-5">
+      <div className="product-card-copy flex flex-1 flex-col">
         <div className="flex items-center justify-between gap-3">
           <p className="text-xs font-semibold uppercase tracking-widest text-brand">
-            {t(("categories." + product.category) as never)}
+            {t.has("categories." + product.category) ? t(("categories." + product.category) as never) : product.category}
           </p>
           {soldOut ? (
             <span className="rounded-full bg-muted px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-muted-foreground">{t("soldOut")}</span>
@@ -65,13 +68,13 @@ export function ProductCard({ product, locale }: { product: ProductView; locale:
             {product.description}
           </p>
         )}
-        <div className="mt-4 flex items-baseline gap-2">
+        <div className="product-card-price flex items-baseline gap-2">
           <span className="text-lg font-medium text-foreground">
-            {formatPrice(product.price, locale)}
+            {formatPrice(price, locale)}
           </span>
           {onSale && (
             <span className="text-sm text-muted-foreground line-through">
-              {formatPrice(product.compareAtPrice as number, locale)}
+              {formatPrice(original, locale)}
             </span>
           )}
           {onSale && (
@@ -80,7 +83,7 @@ export function ProductCard({ product, locale }: { product: ProductView; locale:
             </span>
           )}
         </div>
-        <div className="mt-5 flex items-center gap-3">
+        <div className="product-card-action flex items-center gap-3">
           <button
             type="button"
             onClick={handleAdd}

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ProductCard } from "@/components/store/product-card";
 import type { ProductView } from "@/lib/store-views";
+import { productPricing } from "@/lib/product-pricing";
 
 type Sort = "featured" | "price-asc" | "price-desc" | "name";
 
@@ -33,8 +34,8 @@ export function StoreGrid({
       return matchesCategory && matchesQuery;
     });
     return filtered.toSorted((a, b) => {
-      if (sort === "price-asc") return a.price - b.price;
-      if (sort === "price-desc") return b.price - a.price;
+      if (sort === "price-asc") return productPricing(a).price - productPricing(b).price;
+      if (sort === "price-desc") return productPricing(b).price - productPricing(a).price;
       if (sort === "name") return a.name.localeCompare(b.name, locale);
       return Number(b.featured) - Number(a.featured) || a.order - b.order || a.name.localeCompare(b.name, locale);
     });
@@ -93,7 +94,7 @@ export function StoreGrid({
             </FilterButton>
             {categories.map((item) => (
               <FilterButton key={item} active={category === item} onClick={() => setCategory(item)}>
-                {t(("categories." + item) as never)}
+                {t.has("categories." + item) ? t(("categories." + item) as never) : item}
               </FilterButton>
             ))}
           </div>
@@ -110,7 +111,7 @@ export function StoreGrid({
       </div>
 
       {shown.length > 0 ? (
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="store-grid mt-6">
           {shown.map((product) => <ProductCard key={product.slug} product={product} locale={locale} />)}
         </div>
       ) : (

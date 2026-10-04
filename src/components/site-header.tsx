@@ -29,6 +29,7 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
   const rawPath = usePathname();
   const localePath = useLocalePathname();
   const instagram = BUSINESS.social.find(social => social.label.toLowerCase() === "instagram");
+  const facebook = BUSINESS.social.find(social => social.label.toLowerCase() === "facebook");
   const showMobileCta = !mobileOpen && !/^\/(booking|admin|store)(\/|$)/.test(localePath);
 
   // Close everything on route change.
@@ -203,9 +204,13 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
 
         {/* Right actions */}
         <div className="site-header-actions flex items-center gap-2 sm:gap-3">
-          {instagram && <a className="header-instagram" href={instagram.href} target="_blank" rel="noopener noreferrer" aria-label={locale === "fr" ? "Maryam C Beauté sur Instagram" : "Maryam C Beauté on Instagram"}>
+          {instagram && <a className="header-social" href={instagram.href} target="_blank" rel="noopener noreferrer" aria-label={locale === "fr" ? "Maryam C Beauté sur Instagram" : "Maryam C Beauté on Instagram"}>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none" /></svg>
             <span>Instagram</span>
+          </a>}
+          {facebook && <a className="header-social" href={facebook.href} target="_blank" rel="noopener noreferrer" aria-label={locale === "fr" ? "Maryam C Beauté sur Facebook" : "Maryam C Beauté on Facebook"}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8.2h2.8l.4-3.2h-3.2v-2c0-.9.3-1.5 1.6-1.5H17V4.2c-.3 0-1.3-.2-2.4-.2-2.5 0-4.2 1.5-4.2 4.3v2.4H7.6v3.2h2.8V22z" /></svg>
+            <span>Facebook</span>
           </a>}
           <div className="hidden sm:block"><CartBadge /></div>
           <LanguageSwitcher />

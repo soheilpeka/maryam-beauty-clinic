@@ -73,7 +73,7 @@ describe("public response privacy", () => {
       method: "POST", headers: { "content-type": "application/json" },
       body: JSON.stringify({
         idempotencyKey: "a82d3446-1d61-48eb-928a-bff9c7c74c64", locale: "en", name: "Fixture Guest",
-        email: "fixture@example.test", phone: "+1 555 0100", address: "123 Fixture Street", city: "Montreal", country: "Canada",
+        email: "fixture@example.test", phone: "+1 555 0100", address: "123 Fixture Street", city: "Montreal", postalCode: "H2X 1Y4", country: "Canada",
         lines: [{ slug: "fixture-serum", quantity: 1 }],
       }),
     }));

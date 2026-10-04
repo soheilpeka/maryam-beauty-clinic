@@ -30,7 +30,10 @@ publishes real products from the admin. Replace the catalog, configure shipping/
 notifications before launch. Payment selection defaults to a configuration-safe Stripe test-mode
 boundary; hosted Checkout/PaymentIntent and webhook reconciliation still require owner credentials
 and implementation. The mock provider is available only for isolated local/e2e demos and is blocked
-in production.
+in production. Admins can configure order acceptance, CAD shipping fee, free-shipping threshold and
+the duration of an unpaid inventory reservation at `/[locale]/admin/store-settings`; changes are
+session/CSRF protected, validated and audit logged. Production checkout remains closed until hosted
+Stripe Checkout, signed webhook reconciliation and an owner-approved test transaction are complete.
 
 ## Verification
 

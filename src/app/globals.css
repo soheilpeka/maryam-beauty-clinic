@@ -7,6 +7,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Restrained logo-rose highlights on the public editorial interface. */
+.site-header a[href$="/booking"] { background: #974454; border-color: #974454; }
+.store-page .preview-kicker, .preview-page .preview-kicker, .dark .store-page .preview-kicker { color: var(--color-brand); }
+.store-hero > img { border-radius: 1.25rem; }
+
 /*
  * Maryam C Beauté - design system.
  * Shared editorial palette: black, white and neutral grayscale.
@@ -15,11 +20,11 @@
 :root {
   --color-background: #ffffff;
   --color-foreground: #000000;
-  --color-primary: #000000;
+  --color-primary: #974454;
   --color-primary-foreground: #ffffff;
-  --color-brand: #000000;
+  --color-brand: #974454;
   --color-brand-foreground: #ffffff;
-  --color-brand-soft: #f1f1f1;
+  --color-brand-soft: #f7e5e8;
   --color-gold: #555555;
   --color-champagne: #f4f4f4;
   --color-accent: #f4f4f4;
@@ -84,10 +89,10 @@ body {
 .dark {
   --color-background: #000000;
   --color-foreground: #ffffff;
-  --color-primary: #ffffff;
-  --color-primary-foreground: #000000;
-  --color-brand: #ffffff;
-  --color-brand-soft: #222222;
+  --color-primary: #974454;
+  --color-primary-foreground: #ffffff;
+  --color-brand: #e2a8b3;
+  --color-brand-soft: #332329;
   --color-gold: #ffffff;
   --color-champagne: #222222;
   --color-accent: #1c1c1c;

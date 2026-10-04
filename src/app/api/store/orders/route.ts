@@ -17,11 +17,8 @@ const RATE_LIMIT = { limit: env.storeRateLimitPerMinute, windowMs: 60_000 };
  * POST /api/store/orders
  *
  * Guest checkout. The body carries contact + shipping details and the cart lines (slug +
- * quantity ONLY). Prices, stock and availability are re-read from the database here, so a
- * tampered client cart can never change what is charged. On success the order is captured
- * through the configured payment boundary (Stripe test-mode by default; mock only in isolated
- * local/e2e runs; see src/lib/payment.ts) and the response carries a signed link to the order
- * status page, mirroring the booking manage link.
+ * quantity ONLY). Prices, stock and availability are re-read from the database here. Stripe
+ * Checkout redirects the customer to its hosted payment page; a signed webhook confirms payment.
  */
 export async function POST(request: NextRequest) {
   const ip = clientIpFromHeaders(request.headers);
@@ -89,6 +86,7 @@ export async function POST(request: NextRequest) {
           totalCents: result.order.totalCents,
         },
         paymentReference: result.paymentReference,
+        checkoutUrl: result.checkoutUrl,
         orderUrl,
         reused: result.reused,
       },

@@ -18,6 +18,7 @@ const SECTIONS = [
   { key: "packages", suffix: "/packages" },
   { key: "gallery", suffix: "/gallery" },
   { key: "orders", suffix: "/orders" },
+  { key: "storeSettings", suffix: "/store-settings" },
 ] as const;
 
 export function AdminNav({ locale }: { locale: string }) {

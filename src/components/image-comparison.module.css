@@ -4,10 +4,11 @@
 /* Full boards remain intact. Each viewport reveals one panel only. */
 .images img.photo { position: absolute; width: 100%; height: 100%; max-width: none; border-radius: 0 !important; object-fit: fill; transform: none !important; transition: none !important; padding: 0; border: 0; pointer-events: none; }
 .line { position: absolute; top: 0; bottom: 0; width: 2px; background: #fff; transform: translateX(-50%); pointer-events: none; box-shadow: 0 0 8px #0003; }
-.line > span { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; color: #171717; background: #fff; font-size: 1.25rem; box-shadow: 0 2px 12px #0002; }
+.line > span { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; color: #fff; background: var(--color-brand, #974454); font-size: 1.25rem; box-shadow: 0 2px 12px #0003; }
 .badge { position: absolute; top: 1rem; padding: .45rem .7rem; border-radius: 2rem; background: #fffffff0; color: #202020; font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; pointer-events: none; }
 .before { left: .75rem; }
 .after { right: .75rem; }
+.after { background: var(--color-brand, #974454); color: #fff; }
 .range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; pointer-events: none; }
 .images:focus-within { outline: 2px solid var(--comparison-focus, #74634b); outline-offset: 4px; }
 .instruction { padding-top: 1rem; color: #625f5b; font-size: .75rem; line-height: 1.6; }

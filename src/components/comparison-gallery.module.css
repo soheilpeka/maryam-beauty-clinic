@@ -1,22 +1,23 @@
-.section { margin: 0 0 clamp(4rem, 8vw, 7rem); color: var(--color-foreground); }
+.section { margin: 0 0 clamp(4rem, 8vw, 7rem); padding: clamp(1.25rem, 4vw, 3rem); color: var(--color-foreground); background: color-mix(in srgb, var(--color-champagne) 72%, var(--color-background)); border: 1px solid color-mix(in srgb, var(--color-brand) 25%, var(--color-border)); border-radius: 1.25rem; }
 .heading { max-width: 44rem; margin-bottom: 2rem; }
 .heading h2 { margin-top: .75rem; font-family: var(--font-serif), Georgia, serif; font-weight: 400; font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.12; letter-spacing: -.03em; }
+.heading .eyebrow, .card .category { color: var(--color-brand); }
 .heading > p:last-child { margin-top: 1rem; color: var(--color-muted-foreground); line-height: 1.7; }
 .filters { display: flex; flex-wrap: wrap; gap: .6rem; }
 .filters button, .pagination button { min-height: 2.75rem; padding: .65rem 1.1rem; border: 1px solid var(--color-border); border-radius: .25rem; background: transparent; color: var(--color-foreground); font-size: .8rem; transition: border-color .2s, background-color .2s; }
-.filters button[aria-pressed="true"] { background: var(--color-foreground); border-color: var(--color-foreground); color: var(--color-background); }
-.filters button:focus-visible, .pagination button:focus-visible { outline: 2px solid var(--color-foreground); outline-offset: 4px; }
+.filters button[aria-pressed="true"] { background: var(--color-brand); border-color: var(--color-brand); color: #fff; }
+.filters button:focus-visible, .pagination button:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 4px; }
 .count { margin: 1.5rem 0; font-size: .75rem; color: var(--color-muted-foreground); }
 .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; align-items: start; }
-.card { --comparison-radius: .75rem; --comparison-focus: var(--color-foreground); min-width: 0; padding: clamp(.875rem, 2vw, 1.25rem); border: 1px solid var(--color-border); border-radius: 1rem; background: var(--color-muted); color: var(--color-foreground); }
+.card { --comparison-radius: .75rem; --comparison-focus: var(--color-brand); min-width: 0; padding: clamp(.875rem, 2vw, 1.25rem); border: 1px solid color-mix(in srgb, var(--color-brand) 22%, var(--color-border)); border-radius: 1rem; background: color-mix(in srgb, var(--color-brand-soft) 28%, var(--color-card)); color: var(--color-foreground); box-shadow: 0 12px 34px color-mix(in srgb, var(--color-brand) 7%, transparent); }
 /* Keep captions scoped: the salon-photo caption rules must not recolour this card. */
-.section .card figcaption { padding: .875rem 0; border-bottom: 1px solid var(--color-border); color: var(--color-muted-foreground); font-size: .75rem; font-weight: 400; }
+.section .card figcaption { padding: .875rem 0; border-bottom: 1px solid color-mix(in srgb, var(--color-brand) 22%, var(--color-border)); color: var(--color-muted-foreground); font-size: .75rem; font-weight: 400; }
 .card .category { margin-top: 1rem; color: var(--color-muted-foreground); font-size: .625rem; letter-spacing: .18em; text-transform: uppercase; }
 .card h3 { margin-top: .4rem; color: var(--color-foreground); font-family: var(--font-sans), Arial, sans-serif; font-weight: 500; font-size: clamp(1.25rem, 2.4vw, 1.65rem); line-height: 1.3; letter-spacing: -.025em; }
 .card > p:last-child:not(.category) { margin-top: .75rem; color: var(--color-muted-foreground); font-size: .875rem; line-height: 1.7; }
 .card > p:empty { display: none; }
 .pagination { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem; font-size: .8rem; }
 .pagination button:disabled { opacity: .4; cursor: not-allowed; }
-@media (hover: hover) and (pointer: fine) { .filters button:hover, .pagination button:not(:disabled):hover { border-color: var(--color-foreground); } }
+@media (hover: hover) and (pointer: fine) { .filters button:hover, .pagination button:not(:disabled):hover { border-color: var(--color-brand); } }
 @media (prefers-reduced-motion: reduce) { .filters button, .pagination button { transition: none; } }
 @media (min-width: 768px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; } }

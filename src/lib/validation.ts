@@ -274,7 +274,7 @@ const productObjectSchema = z.object({
     .min(0, { message: "validation.price.invalid" })
     .max(1_000_000, { message: "validation.price.invalid" })
     .optional(),
-  salePrice: z.number().int().min(0, { message: "validation.price.invalid" }).max(1_000_000, { message: "validation.price.invalid" }).nullable().optional(),
+  salePrice: z.number().int().min(1, { message: "validation.salePrice.invalid" }).max(1_000_000, { message: "validation.price.invalid" }).nullable().optional(),
   category: z
     .string()
     .trim()
@@ -396,12 +396,21 @@ export const checkoutSchema = z.object({
     .min(2, { message: "validation.city.min" })
     .max(80, { message: "validation.city.max" }),
   province: z.string().trim().max(60, { message: "validation.province.max" }).optional(),
-  postalCode: z.string().trim().max(20, { message: "validation.postalCode.max" }).optional(),
-  country: z.string().trim().min(2).max(80).default("Canada"),
+  postalCode: z.string().trim().regex(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/, { message: "validation.postalCode.max" }),
+  country: z.string().trim().refine((country) => country.toLowerCase() === "canada", { message: "validation.country.unsupported" }).default("Canada"),
   note: z.string().trim().max(500, { message: "validation.note.max" }).optional().or(z.literal("")),
   lines: z.array(checkoutLineSchema).min(1, { message: "validation.cart.empty" }).max(100),
 }).strict();
 export type CheckoutInput = z.infer<typeof checkoutSchema>;
+
+/** Admin-controlled store availability and shipping rules. Values are integer CAD cents. */
+export const storeSettingsSchema = z.object({
+  enabled: z.boolean(),
+  shippingFeeCents: z.number().int().min(0).max(500_000),
+  freeShippingThresholdCents: z.number().int().min(0).max(5_000_000),
+  reservationMinutes: z.number().int().min(30).max(60),
+}).strict();
+export type StoreSettingsInput = z.infer<typeof storeSettingsSchema>;
 
 /** Admin: advance an order's status. */
 export const orderStatusSchema = z.object({

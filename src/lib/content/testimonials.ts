@@ -1,4 +1,4 @@
-/** Short excerpts verified directly on the owner-provided Google Maps listing. */
+/** Short excerpts from reviews on the salon's Google listing, cross-checked against its public review profile. */
 export interface Testimonial {
   quote: string;
   author: string;
@@ -28,5 +28,26 @@ export const TESTIMONIALS: Testimonial[] = [
     location: "Google Maps",
     rating: 5,
     date: "3 months ago",
+  },
+  {
+    quote: "I had a great experience at Maryam C Beauté!",
+    author: "Tareq Tamanna",
+    location: "Google Maps",
+    rating: 5,
+    date: "2026-10-01",
+  },
+  {
+    quote: "Amazing experience at Maryam C Beauté!",
+    author: "Soheil",
+    location: "Google Maps",
+    rating: 5,
+    date: "2026-10-01",
+  },
+  {
+    quote: "Maryam et l'équipe sont très gentilles",
+    author: "Najla",
+    location: "Google Maps",
+    rating: 5,
+    date: "2026-10-02",
   },
 ];

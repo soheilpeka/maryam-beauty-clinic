@@ -6,7 +6,7 @@ import { randomBytes } from "node:crypto";
 import { mkdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { applyComparisonSchema } from "../../scripts/content-schema";
-import { publishSkinPrograms, importComparisons, refreshSalonMedia } from "../../scripts/content-upgrade";
+import { publishSkinPrograms, importComparisons, refreshSalonMedia, correctSkinProgramPrices } from "../../scripts/content-upgrade";
 import { GALLERY } from "@/lib/content/gallery";
 
 function fixtureUrl() {
@@ -16,6 +16,33 @@ function fixtureUrl() {
 }
 
 describe("backup-gated content upgrade operations, with isolated local fixtures", () => {
+  it("corrects only the four approved package prices and counts with recoverable audit entries", async () => {
+    const url = fixtureUrl();
+    const client = createClient({ url });
+    const db = new PrismaClient({ adapter: new PrismaLibSql({ url }) });
+    try {
+      await client.executeMultiple(readFileSync("prisma/initial.sql", "utf8"));
+      await publishSkinPrograms(db);
+      await db.package.update({ where: { slug: "essential" }, data: { price: 172200, sessions: 8, name: "Owner name", description: "Custom EN", descriptionFr: "Custom FR", active: false, order: 99 } });
+      await db.package.update({ where: { slug: "discovery" }, data: { price: 12345 } });
+      await db.package.create({ data: { slug: "custom", name: "Custom", nameFr: "Personnalisé", price: 55555 } });
+      const discovery = await db.package.findUnique({ where: { slug: "discovery" } });
+      const custom = await db.package.findUnique({ where: { slug: "custom" } });
+      expect(await correctSkinProgramPrices(db)).toBe(1);
+      expect(await correctSkinProgramPrices(db)).toBe(0);
+      expect(await db.package.findUnique({ where: { slug: "essential" } })).toMatchObject({ price: 180000, sessions: 6, name: "Owner name", description: "Custom EN", descriptionFr: "Custom FR", active: false, order: 99 });
+      expect(await db.package.findUnique({ where: { slug: "discovery" } })).toEqual(discovery);
+      expect(await db.package.findUnique({ where: { slug: "custom" } })).toEqual(custom);
+      const logs = await db.auditLog.findMany({ where: { action: "package.brochure-correction" } });
+      expect(logs).toHaveLength(1);
+      expect(JSON.parse(logs[0].detail!)).toMatchObject({ before: { price: 172200, sessions: 8 }, after: { price: 180000, sessions: 6 } });
+      await db.package.delete({ where: { slug: "diamond" } });
+      await db.package.update({ where: { slug: "essential" }, data: { price: 172200 } });
+      await expect(correctSkinProgramPrices(db)).rejects.toThrow(/Missing package/);
+      expect((await db.package.findUniqueOrThrow({ where: { slug: "essential" } })).price).toBe(172200);
+      expect(await db.auditLog.count({ where: { action: "package.brochure-correction" } })).toBe(1);
+    } finally { await db.$disconnect(); client.close(); }
+  });
   it("adds missing content while preserving CMS edits, visibility and customer records on repeats", async () => {
     const url = fixtureUrl();
     const client = createClient({ url });

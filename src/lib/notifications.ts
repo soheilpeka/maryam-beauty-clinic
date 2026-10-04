@@ -291,3 +291,55 @@ export function contactMessageEmail(data: { name: string; email: string; message
 export function sendContactMessage(data: { name: string; email: string; message: string; locale: string }): Promise<void> {
   return notificationProvider.sendEmail(contactMessageEmail(data));
 }
+
+export function orderPaidEmail(data: { name: string; email: string; ref: string; orderUrl: string; locale: string }): NotificationMessage {
+  const fr = data.locale === "fr";
+  return {
+    to: data.email,
+    subject: fr ? `Paiement confirmé — ${data.ref}` : `Payment confirmed — ${data.ref}`,
+    body: [
+      fr ? `Bonjour ${data.name},` : `Hello ${data.name},`,
+      fr ? "Votre paiement a été confirmé et votre commande est en préparation." : "Your payment is confirmed and your order is being prepared.",
+      `${fr ? "Référence" : "Order reference"}: ${data.ref}`,
+      fr ? "Suivre votre commande (lien privé) :" : "Track your order (private link):",
+      data.orderUrl,
+      "Maryam C Beauté",
+    ].join("\n\n"),
+  };
+}
+
+export function orderShippedEmail(data: { name: string; email: string; ref: string; orderUrl: string; carrier: string; trackingNumber: string; trackingUrl: string; locale: string }): NotificationMessage {
+  const fr = data.locale === "fr";
+  return {
+    to: data.email,
+    subject: fr ? `Commande expédiée — ${data.ref}` : `Your order has shipped — ${data.ref}`,
+    body: [
+      fr ? `Bonjour ${data.name},` : `Hello ${data.name},`,
+      fr ? "Votre commande est en route." : "Your order is on its way.",
+      `${fr ? "Transporteur" : "Carrier"}: ${data.carrier}`,
+      `${fr ? "Numéro de suivi" : "Tracking number"}: ${data.trackingNumber}`,
+      `${fr ? "Suivre le colis" : "Track shipment"}: ${data.trackingUrl}`,
+      `${fr ? "État de la commande" : "Order status"} (${fr ? "lien privé" : "private link"}): ${data.orderUrl}`,
+      "Maryam C Beauté",
+    ].join("\n\n"),
+  };
+}
+
+export function newPaidOrderAdminEmail(data: { ref: string; name: string; email: string; phone: string; address: string; city: string; postalCode: string; items: Array<{ name: string; quantity: number }>; totalCents: number }): NotificationMessage {
+  return {
+    to: env.notificationAdminEmail,
+    subject: `New paid store order — ${data.ref}`,
+    body: [
+      "A new store order has been paid and is ready to fulfil.",
+      `Reference: ${data.ref}`,
+      `Customer: ${data.name}`,
+      `Email: ${data.email}`,
+      `Phone: ${data.phone}`,
+      `Ship to: ${data.address}, ${data.city}, ${data.postalCode}, Canada`,
+      "Items:",
+      ...data.items.map((item) => `- ${item.name} × ${item.quantity}`),
+      `Paid total (CAD): $${(data.totalCents / 100).toFixed(2)}`,
+      `Open Admin → Orders in the site to fulfil and add tracking details.`,
+    ].join("\n\n"),
+  };
+}

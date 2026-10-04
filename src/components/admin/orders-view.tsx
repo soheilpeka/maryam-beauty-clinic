@@ -38,13 +38,13 @@ export function OrdersView({ locale }: { locale: string }) {
 
   useEffect(() => { void load(); }, [load]);
 
-  async function updateOrder(id: string, next: Status) {
+  async function updateOrder(id: string, next: Status, tracking?: { shippingCarrier: string; trackingNumber: string; trackingUrl: string }) {
     if (busy) return;
     setBusy(true); setError(null); setNotice("");
     try {
     const csrf = await getCsrfToken();
     if (!csrf) { setError(t("sessionExpired")); return; }
-    const response = await fetch(`/api/admin/orders/${id}/status`, { method: "PATCH", headers: { "content-type": "application/json", "x-admin-csrf": csrf }, body: JSON.stringify({ status: next }) });
+    const response = await fetch(`/api/admin/orders/${id}/status`, { method: "PATCH", headers: { "content-type": "application/json", "x-admin-csrf": csrf }, body: JSON.stringify({ status: next, ...tracking }) });
     if (!response.ok) { const body = await response.json().catch(() => ({})); setError(body.message ?? t("errorHint")); return; }
     void load();
     setNotice(locale === "fr" ? "Statut de la commande mis à jour." : "Order status updated.");
@@ -65,8 +65,11 @@ export function OrdersView({ locale }: { locale: string }) {
   </div>;
 }
 
-function OrderRow({ order, locale, statusLabel, busy, onStatus }: { order: OrderView; locale: string; busy: boolean; statusLabel: (status: string) => string; onStatus: (status: Status) => void }) {
+function OrderRow({ order, locale, statusLabel, busy, onStatus }: { order: OrderView; locale: string; busy: boolean; statusLabel: (status: string) => string; onStatus: (status: Status, tracking?: { shippingCarrier: string; trackingNumber: string; trackingUrl: string }) => void }) {
   const t = useTranslations("Admin");
+  const [carrier, setCarrier] = useState(order.shippingCarrier ?? "");
+  const [trackingNumber, setTrackingNumber] = useState(order.trackingNumber ?? "");
+  const [trackingUrl, setTrackingUrl] = useState(order.trackingUrl ?? "");
   const nextOptions = useMemo<Status[]>(() => {
     if (order.status === "PENDING") return ["CANCELLED"];
     if (order.status === "PAID") return ["PROCESSING", "CANCELLED", "REFUNDED"];
@@ -75,5 +78,19 @@ function OrderRow({ order, locale, statusLabel, busy, onStatus }: { order: Order
     if (order.status === "DELIVERED") return ["REFUNDED"];
     return [];
   }, [order.status]);
-  return <li className="rounded-2xl border border-border bg-card p-5 shadow-sm"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="font-serif text-lg font-semibold">{order.ref}</p><p className="mt-1 text-sm text-muted-foreground">{order.name} · {order.email}</p><p className="mt-2 text-sm"><span className="font-medium tabular-nums">{formatPrice(order.totalCents, locale)}</span><span className="mx-2 text-muted-foreground">·</span><span className="text-muted-foreground">{new Date(order.createdAt).toLocaleDateString(locale)}</span></p></div><span className="rounded-full border border-border px-3 py-1 text-xs font-semibold">{statusLabel(order.status)}</span></div><details className="mt-4 border-t border-border pt-4"><summary className="cursor-pointer text-sm font-medium text-brand">{t("viewOrder")}</summary><div className="mt-4 grid gap-5 lg:grid-cols-[minmax(0,1fr)_15rem]"><div><h3 className="text-sm font-semibold">{t("items")}</h3><ul className="mt-2 space-y-2 text-sm">{order.items.map((item) => <li key={item.id} className="flex justify-between gap-4"><span className="text-muted-foreground">{item.name} × {item.quantity}</span><span className="tabular-nums">{formatPrice(item.lineTotalCents, locale)}</span></li>)}</ul><h3 className="mt-5 text-sm font-semibold">{t("customerDetails")}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{order.phone}<br />{order.address}<br />{order.city}{order.province ? `, ${order.province}` : ""} {order.postalCode}<br />{order.country}</p></div><div>{nextOptions.length > 0 ? <label className="block text-sm"><span className="font-medium">{t("updateStatus")}</span><select disabled={busy} value="" onChange={(event) => { if (event.target.value) onStatus(event.target.value as Status); }} className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"><option value="">{statusLabel(order.status)}</option>{nextOptions.map((value) => <option key={value} value={value}>{statusLabel(value)}</option>)}</select></label> : <p className="text-sm text-muted-foreground">{order.inventoryRestoredAt ? t("inventoryRestored") : ""}</p>}</div></div></details></li>;
+  return <li className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+    <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="font-serif text-lg font-semibold">{order.ref}</p><p className="mt-1 text-sm text-muted-foreground">{order.name} · {order.email}</p><p className="mt-2 text-sm"><span className="font-medium tabular-nums">{formatPrice(order.totalCents, locale)}</span><span className="mx-2 text-muted-foreground">·</span><span className="text-muted-foreground">{new Date(order.createdAt).toLocaleDateString(locale)}</span></p></div><span className="rounded-full border border-border px-3 py-1 text-xs font-semibold">{statusLabel(order.status)}</span></div>
+    <details className="mt-4 border-t border-border pt-4"><summary className="cursor-pointer text-sm font-medium text-brand">{t("viewOrder")}</summary><div className="mt-4 grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <div><h3 className="text-sm font-semibold">{t("items")}</h3><ul className="mt-2 space-y-2 text-sm">{order.items.map((item) => <li key={item.id} className="flex justify-between gap-4"><span className="text-muted-foreground">{item.name} × {item.quantity}</span><span className="tabular-nums">{formatPrice(item.lineTotalCents, locale)}</span></li>)}</ul><h3 className="mt-5 text-sm font-semibold">{t("customerDetails")}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{order.phone}<br />{order.address}<br />{order.city}{order.province ? `, ${order.province}` : ""} {order.postalCode}<br />{order.country}</p>
+        {order.trackingUrl && <p className="mt-4 text-sm">{order.shippingCarrier}: {order.trackingNumber} · <a className="underline" href={order.trackingUrl} target="_blank" rel="noreferrer">{locale === "fr" ? "Suivre le colis" : "Track shipment"}</a></p>}
+      </div><div>
+        {order.status === "PROCESSING" ? <fieldset className="space-y-3"><legend className="text-sm font-medium">{locale === "fr" ? "Détails d’expédition" : "Shipment details"}</legend>
+          <input aria-label={locale === "fr" ? "Transporteur" : "Carrier"} value={carrier} onChange={(event) => setCarrier(event.target.value)} placeholder={locale === "fr" ? "Transporteur (ex. Canada Post)" : "Carrier (e.g. Canada Post)"} className="min-h-11 w-full rounded-lg border border-border bg-background px-3 text-sm" />
+          <input aria-label={locale === "fr" ? "Numéro de suivi" : "Tracking number"} value={trackingNumber} onChange={(event) => setTrackingNumber(event.target.value)} placeholder={locale === "fr" ? "Numéro de suivi" : "Tracking number"} className="min-h-11 w-full rounded-lg border border-border bg-background px-3 text-sm" />
+          <input type="url" aria-label={locale === "fr" ? "Lien de suivi HTTPS" : "HTTPS tracking link"} value={trackingUrl} onChange={(event) => setTrackingUrl(event.target.value)} placeholder="https://…" className="min-h-11 w-full rounded-lg border border-border bg-background px-3 text-sm" />
+          <button type="button" disabled={busy || !carrier.trim() || !trackingNumber.trim() || !trackingUrl.startsWith("https://")} onClick={() => onStatus("SHIPPED", { shippingCarrier: carrier.trim(), trackingNumber: trackingNumber.trim(), trackingUrl: trackingUrl.trim() })} className="min-h-11 w-full rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground disabled:opacity-50">{locale === "fr" ? "Marquer comme expédiée" : "Mark as shipped"}</button>
+          <label className="block text-sm"><span className="font-medium">{t("updateStatus")}</span><select disabled={busy} value="" onChange={(event) => { if (event.target.value) onStatus(event.target.value as Status); }} className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"><option value="">{statusLabel(order.status)}</option>{nextOptions.filter((value) => value !== "SHIPPED").map((value) => <option key={value} value={value}>{statusLabel(value)}</option>)}</select></label>
+        </fieldset> : nextOptions.length > 0 ? <label className="block text-sm"><span className="font-medium">{t("updateStatus")}</span><select disabled={busy} value="" onChange={(event) => { if (event.target.value) onStatus(event.target.value as Status); }} className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"><option value="">{statusLabel(order.status)}</option>{nextOptions.map((value) => <option key={value} value={value}>{statusLabel(value)}</option>)}</select></label> : <p className="text-sm text-muted-foreground">{order.inventoryRestoredAt ? t("inventoryRestored") : ""}</p>}
+      </div></div></details>
+  </li>;
 }

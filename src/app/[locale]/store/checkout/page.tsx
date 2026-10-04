@@ -60,6 +60,11 @@ export default function CheckoutPage() {
         refresh();
         return;
       }
+      sessionStorage.setItem("pendingStoreOrderRef", data.order.ref);
+      if (data.checkoutUrl) {
+        window.location.assign(data.checkoutUrl);
+        return;
+      }
       clear();
       router.push(`/store/order/${data.order.ref}?t=${encodeURIComponent(new URL(data.orderUrl).searchParams.get("t") ?? "")}`);
     } catch {
@@ -110,8 +115,8 @@ export default function CheckoutPage() {
                 <div className="sm:col-span-2"><Field label={t("address")} name="address" value={form.address} required onChange={(v) => update("address", v)} /></div>
                 <Field label={t("city")} name="city" value={form.city} required onChange={(v) => update("city", v)} />
                 <Field label={t("province")} name="province" value={form.province} onChange={(v) => update("province", v)} />
-                <Field label={t("postalCode")} name="postalCode" value={form.postalCode} onChange={(v) => update("postalCode", v)} />
-                <Field label={t("country")} name="country" value={form.country} required onChange={(v) => update("country", v)} />
+                <Field label={t("postalCode")} name="postalCode" value={form.postalCode} required onChange={(v) => update("postalCode", v)} />
+                <Field label={t("country")} name="country" value={form.country} required readOnly onChange={(v) => update("country", v)} />
                 <div className="sm:col-span-2">
                   <label htmlFor="order-note" className="block text-sm font-medium text-foreground">{t("note")} <span className="font-normal text-muted-foreground">({t("optional")})</span></label>
                   <textarea id="order-note" name="note" rows={3} value={form.note} onChange={(event) => update("note", event.target.value)} className="mt-2 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground focus:border-brand focus:outline-none" />
@@ -149,11 +154,11 @@ export default function CheckoutPage() {
   );
 }
 
-function Field({ label, name, type = "text", value, required, onChange }: { label: string; name: string; type?: string; value: string; required?: boolean; onChange: (value: string) => void }) {
+function Field({ label, name, type = "text", value, required, readOnly, onChange }: { label: string; name: string; type?: string; value: string; required?: boolean; readOnly?: boolean; onChange: (value: string) => void }) {
   return (
     <div>
       <label htmlFor={`checkout-${name}`} className="block text-sm font-medium text-foreground">{label}{required ? <span aria-hidden="true"> *</span> : null}</label>
-      <input id={`checkout-${name}`} name={name} type={type} value={value} required={required} onChange={(event) => onChange(event.target.value)} className="mt-2 min-h-12 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground focus:border-brand focus:outline-none" />
+      <input id={`checkout-${name}`} name={name} type={type} value={value} required={required} readOnly={readOnly} onChange={(event) => onChange(event.target.value)} className="mt-2 min-h-12 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground focus:border-brand focus:outline-none read-only:bg-muted" />
     </div>
   );
 }

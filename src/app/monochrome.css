@@ -12,7 +12,7 @@ body button, body a { -webkit-tap-highlight-color: transparent; }
 .site-header-inner { height: 64px; max-width: none; }
 .site-header-inner > a { flex-shrink: 0; }
 .site-header-inner > a, .site-header-inner > div { color: #000; }
-.site-header-inner > a img { filter: brightness(0); width: 92px; height: 44px; }
+.site-header-inner > a img { filter: none; width: 92px; height: 44px; }
 .site-header-inner > div button { color: #000; border-color: transparent; border-radius: 0; min-height: 40px; }
 .site-header-inner > div button:hover { background: #eee; }
 .site-header a[href$="/store/cart"] { color: #000; border-color: transparent; border-radius: 0; min-height: 40px; }
@@ -24,9 +24,9 @@ body button, body a { -webkit-tap-highlight-color: transparent; }
 .site-header nav[aria-label="Main"] .shadow-xl { box-shadow: 0 12px 24px #0002; border-radius: 0; }
 .site-header nav[aria-label="Main"] a:hover { text-decoration: underline; text-underline-offset: 5px; }
 .site-mobile-drawer { top: 64px; }
-.header-instagram { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 8px 12px; border: 1px solid #111; color: #111; font-size: 11px; font-weight: 600; white-space: nowrap; }
-.header-instagram:hover { background: #111; color: #fff; }
-@media(max-width:374px) { .header-instagram { width: 40px; padding: 8px; } .header-instagram span { display: none; } }
+.header-social { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 8px 12px; border: 1px solid #111; color: #111; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.header-social:hover { background: #111; color: #fff; }
+@media(max-width:639px) { .header-social { width: 40px; padding: 8px; } .header-social span { display: none; } }
 html { scroll-padding-top: 80px; }
 @media(min-width:1280px) { .site-header-inner { height: 72px; } .site-header-inner > a img { width: 106px; height: 48px; } }
 

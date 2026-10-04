@@ -492,7 +492,12 @@ model Order {
   /// Money snapshot in cents (CAD)
   subtotalCents Int
   shippingCents Int
+  taxCents Int @default(0)
   totalCents Int
+  /// Carrier details added by the salon when an order is dispatched.
+  shippingCarrier String?
+  trackingNumber String?
+  trackingUrl String?
   /// Reservation lifecycle. Stock is decremented atomically before payment, committed on
   /// PAID, and restored once on failure/expiry/cancellation/refund.
   reservationExpiresAt DateTime?
@@ -553,6 +558,8 @@ model PaymentAttempt {
   provider    String
   status      PaymentStatus
   reference   String?
+  /// PaymentIntent returned by Stripe Checkout; never a card credential.
+  paymentIntentId String?
   amountCents Int
   message     String?
   createdAt   DateTime      @default(now())
@@ -562,6 +569,7 @@ model PaymentAttempt {
 }
 
 enum PaymentStatus {
+  PENDING
   APPROVED
   DECLINED
   ERROR

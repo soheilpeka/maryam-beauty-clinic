@@ -39,9 +39,10 @@ export const BUSINESS = {
   officialSite: "https://maryamcbeaute.ca/",
   social: [
     { label: "Instagram", href: "https://www.instagram.com/maryamchampiri/" },
+    { label: "Facebook", href: "https://www.facebook.com/maryam.c.beaute/" },
   ],
   instagramHref: "https://www.instagram.com/maryamchampiri/",
-  facebookHref: null as string | null,
+  facebookHref: "https://www.facebook.com/maryam.c.beaute/",
   whatsappHref:
     "https://api.whatsapp.com/send/?phone=14388792513&text=Hi%2C+send+us+a+message+or+your+question%21&type=phone_number&app_absent=0",
   mapsHref: "https://maps.app.goo.gl/xjk753CJMQSqXuJeA",

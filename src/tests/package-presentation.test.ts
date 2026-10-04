@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { presentPackage } from "@/lib/package-presentation";
 
-const essential = { slug: "essential", name: "Essential Package", nameFr: "Forfait Essential", description: "Owner copy", descriptionFr: "Texte de la propriétaire", price: 172200, sessions: 6, badge: null, validityDays: null, services: [] };
+const essential = { slug: "essential", name: "Essential Package", nameFr: "Forfait Essential", description: "Owner copy", descriptionFr: "Texte de la propriétaire", price: 180000, sessions: 6, badge: null, validityDays: null, services: [] };
 
 describe("approved package presentation", () => {
   it("keeps CMS copy, price and session count authoritative", () => {
     const p = presentPackage(essential, "en");
     expect(p.description).toBe("Owner copy");
-    expect(p.price).toBe("$1,722");
+    expect(p.price).toBe("$1,800");
     expect(p.count).toBe(6);
-    expect(p.payment).toContain("$246/month");
+    expect(p.payment).toContain("$150/month");
     expect(p.included).toContain("3 Candela Matrix RF Microneedling treatments");
   });
   it("localizes CMS content, prices and savings in French", () => {
@@ -17,13 +17,13 @@ describe("approved package presentation", () => {
     expect(p.name).toBe("Forfait Essential");
     expect(p.description).toBe("Texte de la propriétaire");
     expect(p.price).toContain("1");
-    expect(p.price).toMatch(/722\s*\$/);
-    expect(p.saving).toMatch(/Économisez 675\s*\$/);
+    expect(p.price).toMatch(/800\s*\$/);
+    expect(p.saving).toMatch(/Économisez 716\s*\$/);
     expect(p.strapline).not.toContain("Your first");
   });
   it("does not show stale discounts or installments after a CMS price edit", () => {
-    const p = presentPackage({ ...essential, price: 180000 }, "en");
-    expect(p.price).toBe("$1,800");
+    const p = presentPackage({ ...essential, price: 190000 }, "en");
+    expect(p.price).toBe("$1,900");
     expect(p.payment).toBeUndefined();
     expect(p.regular).toBe("");
     expect(p.saving).toBe("");
