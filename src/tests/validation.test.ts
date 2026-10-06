@@ -199,6 +199,11 @@ describe("serviceSchema", () => {
     expect(serviceSchema.safeParse({ ...validService, bufferMin: 10, category: "Facials", active: false }).success).toBe(true);
   });
 
+  it("accepts full bilingual service copy up to 16,000 characters", () => {
+    expect(serviceSchema.safeParse({ ...validService, description: "x".repeat(6000), descriptionFr: "é".repeat(6000) }).success).toBe(true);
+    expect(hasIssue(issuesFor(serviceSchema, { ...validService, description: "x".repeat(16_001) }), ["description"], "validation.description.max")).toBe(true);
+  });
+
   it("rejects a negative or absurd price", () => {
     expect(hasIssue(issuesFor(serviceSchema, { ...validService, price: -1 }), ["price"], "validation.price.invalid")).toBe(true);
     expect(hasIssue(issuesFor(serviceSchema, { ...validService, price: 1_000_001 }), ["price"], "validation.price.invalid")).toBe(true);

@@ -6,7 +6,18 @@ import type { Locale } from "@/i18n/routing";
 import { SERVICE_COPY } from "@/lib/content/service-copy";
 
 export type ServiceCategory = "Hair" | "Makeup" | "Aesthetic" | "Wellness";
-export interface ServiceDetail { tagline?: string; paragraphs: string[]; highlights?: string[]; }
+export interface ServiceDetail {
+  tagline?: string;
+  paragraphs: string[];
+  highlights?: string[];
+  highlightsTitle?: string;
+  personalApproachTitle?: string;
+  personalApproach?: string[];
+  durationText?: string;
+  faqs?: { question: string; answer: string }[];
+  bookingPrompt?: string;
+  customSections?: boolean;
+}
 export interface Service {
   slug: string; name: string; nameFr?: string; category: ServiceCategory; priceLabel: string;
   price: number; duration: number; summary: string; summaryFr?: string; image: string;

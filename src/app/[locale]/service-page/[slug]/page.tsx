@@ -73,6 +73,16 @@ export default async function ServiceDetailPage({
   const related = publicCatalog.filter(
     (s) => s.category === service.category && s.slug !== service.slug,
   ).slice(0, 3);
+  const defaultFaqs = loc === "fr" ? [
+    { question: "À quoi puis-je m’attendre?", answer: "Votre spécialiste vous accueille, écoute vos envies et vous présente les étapes du soin pour une expérience personnalisée et tout en douceur." },
+    { question: "Comment prendre soin de ma peau après la visite?", answer: "Votre spécialiste vous partage des conseils personnalisés pour prolonger la sensation de fraîcheur et prendre soin de votre peau à la maison." },
+    { question: "Combien de visites prévoir?", answer: "Votre spécialiste peut vous proposer un rythme de visites personnalisé selon vos objectifs beauté et le soin choisi." },
+  ] : [
+    { question: "What can I expect?", answer: "Your specialist welcomes you, listens to your goals and guides you through the service for a personalized, feel-good experience." },
+    { question: "How can I care for my skin after my visit?", answer: "Your specialist shares personalized tips to help you enjoy a fresh feeling and care for your skin at home." },
+    { question: "How many visits should I plan?", answer: "Your specialist can suggest a personalized visit plan around your beauty goals and chosen service." },
+  ];
+  const serviceFaqs = service.detail?.faqs ?? (service.detail?.customSections ? [] : defaultFaqs);
 
   return (
     <article className="editorial-page service-editorial">
@@ -95,17 +105,18 @@ export default async function ServiceDetailPage({
               <h1 className="display-heading mt-4 text-4xl sm:text-5xl lg:text-6xl">
                 {service.name}
               </h1>
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">{service.summary}</p>
               {service.detail?.tagline && (
                 <p className="mt-4 font-serif text-xl italic text-brand">
                   {service.detail.tagline}
                 </p>
               )}
-              <div className="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-4 border-t border-border pt-6">
+              {!service.detail?.customSections && <div className="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-4 border-t border-border pt-6">
                 <div>
                   <p className="text-xs uppercase tracking-widest text-muted-foreground">{t("duration")}</p>
                   <p className="mt-1 text-sm">{service.duration > 0 ? `${service.duration} ${t("min")}` : t("consultationDuration")}</p>
                 </div>
-              </div>
+              </div>}
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href={`/booking?service=${service.slug}`}
@@ -152,7 +163,6 @@ export default async function ServiceDetailPage({
                 </div>
               ) : (
                 <div className="mt-8 space-y-6 text-base leading-relaxed text-muted-foreground">
-                  <p>{service.summary}</p>
                   <p>
                     {BUSINESS.neighborhood} &middot; <BusinessAddressLink />. {t("contactDetails")}:
                     {BUSINESS.email}, {tSections("contactEyebrow")} {BUSINESS.phone}.
@@ -163,7 +173,7 @@ export default async function ServiceDetailPage({
               {service.detail?.highlights && (
                 <div className="mt-12 rounded-2xl border border-border bg-card p-8">
                   <h3 className="text-xs font-semibold uppercase tracking-widest text-brand">
-                    {t("highlights")}
+                    {service.detail.highlightsTitle ?? t("highlights")}
                   </h3>
                   <ul className="mt-5 space-y-3">
                     {service.detail.highlights.map((hl) => (
@@ -182,23 +192,14 @@ export default async function ServiceDetailPage({
                 </div>
               )}
 
-              <section className="treatment-consultation" aria-labelledby="treatment-planning">
+              {(!service.detail?.customSections || service.detail.personalApproachTitle || service.detail.personalApproach?.length || service.detail.durationText || service.detail.faqs?.length || service.detail.bookingPrompt) && <section className="treatment-consultation" aria-labelledby="treatment-planning">
                 <p className="eyebrow">{loc === "fr" ? "Une approche personnelle" : "A personal approach"}</p>
-                <h3 id="treatment-planning" className="font-serif text-3xl mt-3">{loc === "fr" ? "Votre visite, en toute clarté." : "Your visit, clearly considered."}</h3>
-                <div className="treatment-facts">
-                  <div><h4>{loc === "fr" ? "Un soin qui vous ressemble" : "Made for you"}</h4><p>{loc === "fr" ? "Nous prenons le temps de connaître vos objectifs beauté et vos préférences afin de personnaliser votre expérience." : "We take time to understand your beauty goals and preferences, then personalize the experience around you."}</p></div>
-                  <div><h4>{loc === "fr" ? "Durée" : "Duration"}</h4><p>{service.duration > 0 ? `${service.duration} ${t("min")}` : t("consultationDuration")}.</p></div>
-                </div>
-                {(loc === "fr" ? [
-                  ["À quoi puis-je m’attendre?", "Votre spécialiste vous accueille, écoute vos envies et vous présente les étapes du soin pour une expérience personnalisée et tout en douceur."],
-                  ["Comment prendre soin de ma peau après la visite?", "Votre spécialiste vous partage des conseils personnalisés pour prolonger la sensation de fraîcheur et prendre soin de votre peau à la maison."],
-                  ["Combien de visites prévoir?", "Votre spécialiste peut vous proposer un rythme de visites personnalisé selon vos objectifs beauté et le soin choisi."],
-                ] : [
-                  ["What can I expect?", "Your specialist welcomes you, listens to your goals and guides you through the service for a personalized, feel-good experience."],
-                  ["How can I care for my skin after my visit?", "Your specialist shares personalized tips to help you enjoy a fresh feeling and care for your skin at home."],
-                  ["How many visits should I plan?", "Your specialist can suggest a personalized visit plan around your beauty goals and chosen service."],
-                ]).map(([question, answer]) => <details className="luxury-faq" key={question}><summary>{question}</summary><p>{answer}</p></details>)}
-              </section>
+                <h3 id="treatment-planning" className="font-serif text-3xl mt-3">{service.detail?.personalApproachTitle ?? (loc === "fr" ? "Votre visite, en toute clarté." : "Your visit, clearly considered.")}</h3>
+                {service.detail?.personalApproach?.length ? <div className="mt-5 space-y-4 text-base leading-relaxed text-muted-foreground">{service.detail.personalApproach.map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div> : !service.detail?.customSections && <div className="treatment-facts"><div><h4>{loc === "fr" ? "Un soin qui vous ressemble" : "Made for you"}</h4><p>{loc === "fr" ? "Nous prenons le temps de connaître vos objectifs beauté et vos préférences afin de personnaliser votre expérience." : "We take time to understand your beauty goals and preferences, then personalize the experience around you."}</p></div></div>}
+                <div className="treatment-facts"><div><h4>{loc === "fr" ? "Durée" : "Duration"}</h4><p>{service.detail?.durationText ?? (service.duration > 0 ? `${service.duration} ${t("min")}` : `${t("consultationDuration")}.`)}</p></div></div>
+                {serviceFaqs.map((faq) => <details className="luxury-faq" key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}
+                {service.detail?.bookingPrompt && <p className="mt-6 text-sm leading-relaxed text-muted-foreground">{service.detail.bookingPrompt}</p>}
+              </section>}
 
               <div className="mt-12 border-t border-border pt-8">
                 <h3 className="text-xs font-semibold uppercase tracking-widest text-brand">

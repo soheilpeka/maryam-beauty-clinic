@@ -816,6 +816,12 @@ Bookings, customers, service values, admin authentication and external provider 
 - Fixed storefront use of salePrice in product cards, product detail/structured offers, price sorting and both add-to-cart actions. Original prices are crossed out and the discount percentage is shown. Existing server quotes/checkout already independently use salePrice. Server validation rejects zero or non-discount sale prices; localized validation messages were added.
 - Typecheck and production build passed; lint: zero errors, 63 existing warnings. Inspected the local admin form: 100 CAD with 20% off becomes 80 CAD; removing the discount clears the sale price. The draft was cancelled without changing an owner product. No test suites, purchases, commit or deployment performed for this change.
 
+## 2026-10-06 — Service copy preview and upload verification
+
+- Fixed long service descriptions rejected by the previous 500-character English / 1,000-character French limits. The admin now accepts up to 16,000 characters in each language, displays field-level validation errors, and offers a readable saved preview for sectioned service copy. Public service pages render preview text, description paragraphs, highlights, personalized guidance, duration, FAQs and appointment copy from saved bilingual text.
+- Added the supplied English and French copy for Laser Hair Removal, Laser Vein Removal, AI Skin Analysis, Microneedling, RF Microneedling and Sublative RF. Existing untouched descriptions from the prior release resolve to this new copy; deliberate CMS edits continue to take precedence.
+- Verification: typecheck and production build passed; focused Vitest suites passed (47 tests); admin E2E saved 18 English and 22 French paragraphs and confirmed the final marker appears in both admin preview and public pages; upload E2E accepted a synthetic PNG over 7 MiB, compressed the request under 480 KiB, saved the WebP, kept it private before publication and served it to visitors after publication. ESLint had zero errors and four existing warnings. No user media was changed.
+
 ## 2026-10-04 — Gallery result presentation
 
 - Refined the before-and-after comparison area with a neutral premium surface, rose active filters and slider states, and restrained brand accents in salon image captions. Comparable salon and clinic galleries commonly pair simple service/concern filters with clear before/after labels and treatment context.

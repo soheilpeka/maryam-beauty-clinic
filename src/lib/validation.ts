@@ -96,10 +96,10 @@ export const serviceSchema = z.object({
   description: z
     .string()
     .trim()
-    .max(500, { message: "validation.note.max" })
+    .max(16000, { message: "validation.description.max" })
     .optional()
     .or(z.literal("")),
-  descriptionFr: z.string().trim().max(1000, { message: "validation.description.max" }).optional().or(z.literal("")),
+  descriptionFr: z.string().trim().max(16000, { message: "validation.description.max" }).optional().or(z.literal("")),
   price: z
     .number()
     .int()
