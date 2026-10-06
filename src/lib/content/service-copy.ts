@@ -227,6 +227,34 @@ export const LEGACY_SERVICE_SUMMARIES: Record<string, { en: string; fr: string }
   "laser-skin-rejuvenation": { en: "Technology-led skin care with suitability, expectations and aftercare reviewed before treatment.", fr: "Un soin de la peau assisté par technologie, avec pertinence, attentes et conseils après-traitement examinés avant le soin." },
 };
 
+/** Previous public-page previews found on the deployed site; only these exact strings are upgraded. */
+export const LEGACY_PUBLIC_SERVICE_PREVIEWS: Record<string, { en: string; fr: string }> = {
+  "laser-hair-removal": {
+    en: "Enjoy smoother skin with laser hair removal at Maryam C Beauté. The Candela GentleMax Pro Plus uses two wavelengths and is designed to treat all skin types, from light to dark. Each treatment is personalized based on your skin tone, hair type, and treatment area.",
+    fr: "Profitez d’une peau plus douce grâce à l’épilation au laser chez Maryam C Beauté. Le Candela GentleMax Pro Plus utilise deux longueurs d’onde et est conçu pour traiter tous les phototypes, des peaux claires aux peaux foncées. Chaque traitement est personnalisé selon votre peau, votre type de poil et la zone à traiter.",
+  },
+  "vein-removal-treatment": {
+    en: "Address the appearance of visible spider veins with a personalized laser treatment at Maryam C Beauté. Using the Candela GentleMax Pro Plus, we assess the treatment area and tailor the approach to your needs. A consultation helps determine whether the veins are suitable for laser treatment and what results you can expect.",
+    fr: "Atténuez l’apparence des petites veines apparentes grâce à un traitement personnalisé chez Maryam C Beauté. Avec le Candela GentleMax Pro Plus, nous évaluons la zone à traiter et adaptons le traitement à vos besoins. Une consultation permet de déterminer si les veines peuvent être traitées au laser et quels résultats vous pouvez espérer.",
+  },
+  "ai-skin-analysis": {
+    en: "Discover more about your skin with AI-powered skin analysis at Maryam C Beauté. The analysis provides a closer look at visible skin characteristics and concerns, helping us better understand your skin and personalize your skincare recommendations.",
+    fr: "Découvrez votre peau plus en détail grâce à une analyse assistée par l’intelligence artificielle chez Maryam C Beauté. Cette analyse offre un aperçu des caractéristiques visibles de votre peau et de ses préoccupations, afin de mieux comprendre ses besoins et de personnaliser vos recommandations de soins.",
+  },
+  microneedling: {
+    en: "microneedling uses fine needles to create controlled microchannels on the skin’s surface. This treatment helps improve the appearance of uneven skin texture and fine lines, leaving the skin looking smoother. Each treatment is tailored to your skin’s needs",
+    fr: "Le microneedling utilise de fines aiguilles pour créer de petites microperforations contrôlées à la surface de la peau. Ce soin aide à améliorer l’apparence des irrégularités de texture et des ridules, pour une peau d’apparence plus lisse. Chaque traitement est adapté aux besoins de votre peau.",
+  },
+  "rf-microneedling": {
+    en: "Improve the appearance of skin firmness, texture, fine lines, with RF microneedling at Maryam C Beauté. The Candela Matrix Pro combines microneedling with radiofrequency energy to stimulate collagen production. Its technology can deliver energy at up to three customizable skin depths in a single insertion, allowing treatment to be tailored to your skin concerns.",
+    fr: "Améliorez l’apparence de la fermeté et de la texture de votre peau, ainsi que des ridules , grâce au microneedling par radiofréquence chez Maryam C Beauté. Le Candela Matrix Pro combine le microneedling à l’énergie de radiofréquence pour stimuler la production de collagène. Sa technologie peut délivrer de l’énergie à jusqu’à trois profondeurs cutanées personnalisables en une seule insertion, afin d’adapter le traitement aux préoccupations de votre peau.",
+  },
+  "rf-skin-treatment": {
+    en: "Improve the appearance of fine lines, wrinkles, and uneven skin texture with a Sublative RF treatment at Maryam C Beauté. This fractional radiofrequency treatment is designed to refresh the skin’s surface and promote a smoother-looking complexion. Your treatment plan is personalized to your skin and goals.",
+    fr: "Améliorez l’apparence des ridules, des rides et des irrégularités de texture grâce au traitement Sublative RF chez Maryam C Beauté. Ce traitement par radiofréquence fractionnée est conçu pour renouveler la surface de la peau et favoriser un teint d’apparence plus lisse. Votre plan de traitement est personnalisé selon votre peau et vos objectifs.",
+  },
+};
+
 export function fullServiceDescription(slug: string, locale: "en" | "fr"): string | undefined {
   const ownerCopy = OWNER_SERVICE_COPY[slug];
   if (ownerCopy) return ownerCopy[locale];
@@ -240,7 +268,8 @@ export function resolveServiceDescription(slug: string, description: string | nu
   const previous = LEGACY_SERVICE_SUMMARIES[slug];
   const ownerCopy = OWNER_SERVICE_COPY[slug];
   const legacyFull = LEGACY_FULL_SERVICE_DESCRIPTIONS[slug]?.[locale];
-  const isOldContent = (previous && description === previous[locale]) || (legacyFull && description === legacyFull);
+  const legacyPublicPreview = LEGACY_PUBLIC_SERVICE_PREVIEWS[slug]?.[locale];
+  const isOldContent = (previous && description === previous[locale]) || (legacyFull && description === legacyFull) || (legacyPublicPreview && description === legacyPublicPreview);
   const text = !description?.trim() || isOldContent ? ownerCopy?.[locale] ?? fullServiceDescription(slug, locale) : description;
   if (!text) return undefined;
   const parsed = parseServiceDescription(slug, text, locale);

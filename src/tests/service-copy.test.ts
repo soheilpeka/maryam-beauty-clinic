@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { OWNER_SERVICE_COPY } from "@/lib/content/owner-service-copy";
-import { LEGACY_FULL_SERVICE_DESCRIPTIONS, parseServiceDescription, resolveServiceDescription } from "@/lib/content/service-copy";
+import { LEGACY_FULL_SERVICE_DESCRIPTIONS, LEGACY_PUBLIC_SERVICE_PREVIEWS, parseServiceDescription, resolveServiceDescription } from "@/lib/content/service-copy";
 
 describe("owner service copy", () => {
   it("renders all six supplied services in English and French as editable sections", () => {
@@ -32,5 +32,18 @@ describe("owner service copy", () => {
     );
     expect(resolved?.summary).toContain("Candela GentleMax Pro Plus");
     expect(resolved?.detail?.customSections).toBe(true);
+  });
+
+  it("replaces only exact previous public previews while preserving custom summaries", () => {
+    for (const [slug, previews] of Object.entries(LEGACY_PUBLIC_SERVICE_PREVIEWS)) {
+      for (const locale of ["en", "fr"] as const) {
+        const resolved = resolveServiceDescription(slug, previews[locale], locale);
+        const expected = parseServiceDescription(slug, OWNER_SERVICE_COPY[slug][locale], locale);
+        expect(resolved?.summary, `${locale}/${slug}`).toBe(expected?.summary);
+      }
+    }
+
+    const custom = "A custom administrator-authored summary.";
+    expect(resolveServiceDescription("laser-hair-removal", custom, "en")?.summary).toBe(custom);
   });
 });
