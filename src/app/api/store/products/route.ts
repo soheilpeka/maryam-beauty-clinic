@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { shapeProduct, localizeProduct } from "@/lib/store-views";
 import { releaseExpiredReservations } from "@/lib/order";
+import { listStoreCategories } from "@/lib/store-categories";
 
 export const dynamic = "force-dynamic";
 
@@ -31,8 +32,10 @@ export async function GET(request: Request) {
     orderBy: [{ order: "asc" }, { name: "asc" }],
   });
 
+  const categories = await listStoreCategories();
   return NextResponse.json({
     ok: true,
     products: products.map((product) => localizeProduct(shapeProduct(product), locale)),
+    categories: categories.map((category) => ({ ...category, label: locale === "fr" && category.nameFr ? category.nameFr : category.name })),
   });
 }

@@ -1,6 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
-import { SERVICES, localizeService, consultation, consultationFr, type Service } from "@/lib/content/services";
+import { SERVICES, localizeService, consultation, consultationFr, normalizeServiceCategory, type Service } from "@/lib/content/services";
 import { formatPrice } from "@/lib/content/format";
 import { resolveServiceDescription } from "@/lib/content/service-copy";
 import type { Locale } from "@/i18n/routing";
@@ -17,7 +17,8 @@ export async function publicServices(locale: Locale): Promise<Service[]> {
       name: locale === "fr" ? record.nameFr ?? record.name : record.name,
       summary: description?.summary ?? fallback?.summary ?? "",
       detail: description?.detail ?? fallback?.detail,
-      category: (["Hair", "Makeup", "Aesthetic", "Wellness"].includes(record.category) ? record.category : "Aesthetic") as Service["category"],
+      // Preserve custom CMS categories so every public menu can group them dynamically.
+      category: normalizeServiceCategory(record.category),
       price: record.price, duration: record.duration, order: record.order,
       priceLabel: record.price > 0 ? formatPrice(record.price, locale) : locale === "fr" ? consultationFr : consultation,
       image: record.imageUrl ?? record.images[0]?.url ?? fallback?.image ?? "/preview/salon-generated.png",

@@ -11,7 +11,9 @@ import { useCartQuote } from "@/components/store/use-cart-quote";
 import { ProductCard } from "@/components/store/product-card";
 import type { ProductView } from "@/lib/store-views";
 
-export function CartPageView({ recommendedProducts }: { recommendedProducts: ProductView[] }) {
+type StoreCategory = { id: string; name: string; nameFr: string | null; order: number };
+
+export function CartPageView({ recommendedProducts, categories = [] }: { recommendedProducts: ProductView[]; categories?: StoreCategory[] }) {
   const t = useTranslations("Store");
   const locale = useLocale();
   const { lines, ready, setQuantity, remove } = useCart();
@@ -112,7 +114,7 @@ export function CartPageView({ recommendedProducts }: { recommendedProducts: Pro
               </Link>
             </div>
             <div className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-              {productsToExplore.map((product) => <ProductCard key={product.slug} product={product} locale={locale} />)}
+              {productsToExplore.map((product) => <ProductCard key={product.slug} product={product} locale={locale} categories={categories} />)}
             </div>
           </section>
         )}

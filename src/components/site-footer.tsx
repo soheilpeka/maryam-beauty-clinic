@@ -2,7 +2,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { BUSINESS, localizedHours } from "@/lib/content/business";
 import { BusinessAddressLink } from "@/components/business-address-link";
-import { SERVICES, SERVICE_CATEGORIES, localizeService } from "@/lib/content/services";
+import { localizeService, serviceCategoriesFor, categoryLabel } from "@/lib/content/services";
 import type { Locale } from "@/i18n/routing";
 import { publicServices } from "@/lib/public-content";
 
@@ -13,10 +13,9 @@ import { publicServices } from "@/lib/public-content";
  */
 export async function SiteFooter() {
   const t = await getTranslations("Footer");
-  const tNav = await getTranslations("Nav");
-  const tServices = await getTranslations("Services");
   const locale = (await getLocale()) === "fr" ? "fr" : "en";
   const services = await publicServices(locale);
+  const serviceCategories = serviceCategoriesFor(services);
 
   const year = new Date().getFullYear();
 
@@ -56,10 +55,10 @@ export async function SiteFooter() {
               {t("treatments")}
             </p>
             <div className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
-              {SERVICE_CATEGORIES.map((cat) => (
+              {serviceCategories.map((cat) => (
                 <div key={cat}>
                   <p className="mb-2 text-sm font-medium text-foreground">
-                    {tServices(`categories.${cat}` as never)}
+                    {categoryLabel(cat, locale)}
                   </p>
                   <ul className="space-y-1.5">
                     {services.filter((s) => s.category === cat)

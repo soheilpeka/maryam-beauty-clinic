@@ -4,9 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { Link, useRouter, usePathname as useLocalePathname } from "@/i18n/routing";
-import { SERVICES, SERVICE_CATEGORIES, categoryLabel, localizeService } from "@/lib/content/services";
-import type { ServiceCategory } from "@/lib/content/services";
-import type { Service } from "@/lib/content/services";
+import { categoryLabel, serviceCategoriesFor } from "@/lib/content/services";
+import type { Service, ServiceCategory } from "@/lib/content/services";
 import { BUSINESS } from "@/lib/content/business";
 import { Locale } from "@/i18n/routing";
 import { CartBadge } from "@/components/store/cart-badge";
@@ -30,6 +29,7 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
   const localePath = useLocalePathname();
   const instagram = BUSINESS.social.find(social => social.label.toLowerCase() === "instagram");
   const facebook = BUSINESS.social.find(social => social.label.toLowerCase() === "facebook");
+  const serviceCategories = serviceCategoriesFor(services);
   const showMobileCta = !mobileOpen && !/^\/(booking|admin|store)(\/|$)/.test(localePath);
 
   // Close everything on route change.
@@ -135,7 +135,7 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
               <div className="absolute left-1/2 top-full z-50 w-[min(64rem,calc(100vw-2rem))] -translate-x-1/2 pt-3">
                 <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-xl shadow-black/5">
                   <div className="grid grid-cols-2 gap-x-8 gap-y-6 p-6 xl:grid-cols-3 xl:p-8">
-                    {SERVICE_CATEGORIES.map((cat) => (
+                    {serviceCategories.map((cat) => (
                       <div key={cat}>
                         <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand">
                           {categoryLabel(cat, locale)}
@@ -260,7 +260,7 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
       <div ref={drawer} className="site-mobile-drawer fixed inset-0 z-[60] overflow-y-auto bg-background xl:hidden">
           <nav className="mx-auto max-w-7xl px-4 pb-24 pt-4 sm:px-6" aria-label="Mobile">
             <MobileSection title={t("treatments")}>
-              {SERVICE_CATEGORIES.map((cat) => (
+              {serviceCategories.map((cat) => (
                 <div key={cat} className="py-3">
                   <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-brand">
                     {categoryLabel(cat, locale)}

@@ -5,7 +5,8 @@
 import type { Locale } from "@/i18n/routing";
 import { SERVICE_COPY } from "@/lib/content/service-copy";
 
-export type ServiceCategory = "Hair" | "Makeup" | "Aesthetic" | "Wellness";
+/** Categories are CMS text values; the four original groups remain the built-in defaults. */
+export type ServiceCategory = string;
 export interface ServiceDetail {
   tagline?: string;
   paragraphs: string[];
@@ -32,13 +33,24 @@ export const CATEGORY_LABEL: Record<ServiceCategory, { en: string; fr: string }>
   Wellness: { en: "Wellness", fr: "Bien-être" },
 };
 
+/** Keep the original groups in their familiar order, then include any CMS-created groups. */
+export function serviceCategoriesFor(services: readonly Pick<Service, "category">[]): string[] {
+  const custom = [...new Set(services.map((service) => service.category.trim()).filter(Boolean))]
+    .filter((category) => !SERVICE_CATEGORIES.includes(category as typeof SERVICE_CATEGORIES[number]));
+  return [...SERVICE_CATEGORIES, ...custom];
+}
+
+export function normalizeServiceCategory(category: string): string {
+  return category.trim() || "Aesthetic";
+}
+
 export const consultation = "Consultation required";
 export const consultationFr = "Consultation requise";
 export const durationPending = "Confirmed during consultation";
 export const durationPendingFr = "Confirmée lors de la consultation";
 
 export function categoryLabel(category: ServiceCategory, locale: Locale): string {
-  return CATEGORY_LABEL[category][locale];
+  return CATEGORY_LABEL[category]?.[locale] ?? category;
 }
 
 const image = (name: string) => ["salon-generated.png", "treatment.jpeg", "rf-device-product.jpg", "rf-device.jpeg"].includes(name) ? `/preview/${name}` : `/example-pics/${name}`;

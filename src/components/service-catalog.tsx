@@ -3,8 +3,8 @@
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { SERVICES, SERVICE_CATEGORIES, categoryLabel } from "@/lib/content/services";
-import type { Service, ServiceCategory } from "@/lib/content/services";
+import { SERVICES, categoryLabel, serviceCategoriesFor } from "@/lib/content/services";
+import type { Service } from "@/lib/content/services";
 import type { Locale } from "@/i18n/routing";
 
 /**
@@ -14,7 +14,7 @@ import type { Locale } from "@/i18n/routing";
 export function ServiceCatalog({ locale, services = SERVICES }: { locale: Locale; services?: Service[] }) {
   const t = useTranslations("Services");
   const tNav = useTranslations("Nav");
-  const [active, setActive] = useState<ServiceCategory | "All">("All");
+  const [active, setActive] = useState<string>("All");
   const [query, setQuery] = useState("");
 
   const visible = useMemo(() => {
@@ -30,7 +30,7 @@ export function ServiceCatalog({ locale, services = SERVICES }: { locale: Locale
     });
   }, [active, query, services]);
 
-  const tabs: (ServiceCategory | "All")[] = ["All", ...SERVICE_CATEGORIES];
+  const tabs = ["All", ...serviceCategoriesFor(services)];
 
   return (
     <div>

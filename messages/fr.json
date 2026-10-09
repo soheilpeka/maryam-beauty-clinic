@@ -31,7 +31,7 @@
     "results": "Résultats",
     "offers": "Offres",
     "contact": "Contact",
-    "clinic": "Clinique",
+    "clinic": "Salon",
     "blog": "Blogue",
     "bookOnline": "Rendez-vous",
     "packages": "Forfaits",
@@ -452,7 +452,9 @@
       "invalid": "La marge doit être comprise entre 0 et 240 minutes."
     },
     "category": {
-      "max": "La catégorie doit comporter au plus 40 caractères."
+      "min": "Le nom de la catégorie doit comporter au moins 2 caractères.",
+      "max": "La catégorie doit comporter au plus 40 caractères.",
+      "frenchMax": "Le nom français de la catégorie doit comporter au plus 40 caractères."
     },
     "role": {
       "max": "Le poste doit comporter au plus 60 caractères."

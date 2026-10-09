@@ -10,17 +10,23 @@ import Image from "next/image";
 import "./product-cards.css";
 import { productPricing } from "@/lib/product-pricing";
 
+type StoreCategory = { id: string; name: string; nameFr: string | null; order: number };
+
 /**
  * Product card for the store listing. The price/stock come from the server payload; the
  * Add button writes a line into the cart context and confirms it was added.
  */
-export function ProductCard({ product, locale }: { product: ProductView; locale: string }) {
+export function ProductCard({ product, locale, categories = [] }: { product: ProductView; locale: string; categories?: StoreCategory[] }) {
   const t = useTranslations("Store");
   const { add, ready } = useCart();
   const [added, setAdded] = useState(false);
 
   const soldOut = product.stock <= 0;
   const { price, original, onSale, percent } = productPricing(product);
+  const categoryName = categories.find((category) => category.name === product.category);
+  const categoryLabel = locale === "fr" && categoryName?.nameFr
+    ? categoryName.nameFr
+    : t.has("categories." + product.category) ? t(("categories." + product.category) as never) : product.category;
 
   function handleAdd() {
     add({ slug: product.slug, name: product.name, priceCents: price, imageUrl: product.imageUrl });
@@ -50,7 +56,7 @@ export function ProductCard({ product, locale }: { product: ProductView; locale:
       <div className="product-card-copy flex flex-1 flex-col">
         <div className="flex items-center justify-between gap-3">
           <p className="text-xs font-semibold uppercase tracking-widest text-brand">
-            {t.has("categories." + product.category) ? t(("categories." + product.category) as never) : product.category}
+            {categoryLabel}
           </p>
           {soldOut ? (
             <span className="rounded-full bg-muted px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-muted-foreground">{t("soldOut")}</span>

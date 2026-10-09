@@ -63,6 +63,10 @@ html { scroll-padding-top: 80px; }
 .home-section-heading h2, .home-visit h2 { font-weight: 600; font-size: clamp(32px, 4vw, 58px); }
 .home-category-grid h3, .home-visit h3 { font-weight: 600; font-size: 22px; }
 .preview-work, .preview-real { background: var(--color-muted); }
+.preview-service { --color-background: #f5e9ec; --color-foreground: #21191d; --color-muted-foreground: #55474c; --color-brand: #a95769; --color-border: #ddc8ce; background: #f5e9ec; color: #21191d; max-width: none; padding-inline: max(8vw, calc((100vw - 1400px) / 2)); }
+.home-service-menu { --color-background: #241d21; --color-foreground: #fff; --color-muted-foreground: #d7cbd0; --color-brand: #e2a8b3; --color-border: #55464d; background: #241d21; color: #fff; }
+.home-service-menu .preview-kicker { color: #e2a8b3; }
+.home-service-menu .preview-text-link:hover, .home-service-menu .home-category-grid li a:hover { color: #f0c3cb; }
 .preview-work-image, .preview-service-image { padding: clamp(8px, 1vw, 14px); border: 1px solid #aaa; background: #fff; box-shadow: 5px 5px 0 #0000000d; }
 .preview-team > img { padding: clamp(8px, 1vw, 14px); border: 1px solid #aaa; background: #fff; box-shadow: 5px 5px 0 #0000000d; }
 .preview-reviews { border-block: 1px solid var(--color-border); }

@@ -418,6 +418,20 @@ model AuditLog {
 // ============================================================
 
 /// A retail product sold through the online store. Prices are integer cents (CAD).
+/// Store categories are managed separately so the salon can prepare a category before
+/// products are assigned to it, and rename it without editing every product by hand.
+model StoreCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  nameFr    String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([order])
+}
+
+/// A retail product sold through the online store. Prices are integer cents (CAD).
 model Product {
   id          String   @id @default(cuid())
   /// Stable key used for URLs and translations

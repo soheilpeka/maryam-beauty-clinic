@@ -1,3 +1,9 @@
+## 2026-10-09 — Dynamic CMS service categories
+
+- Preserved custom service categories from the admin CMS instead of coercing them into the built-in Aesthetic group. The homepage menu, desktop/mobile header menus, footer index and service catalog now include categories used by active services; the booking picker already groups categories dynamically.
+- Added reusable category grouping/label helpers, category suggestions from existing services in the admin field, and EN/FR guidance explaining that category names entered there flow into the public menus. Existing built-in category translations and ordering are unchanged.
+- Verification: TypeScript passed; four focused category unit tests passed; local `/en`, `/en/book-online`, `/en/booking` and `/fr/book-online` returned HTTP 200. Confirmed the previously entered `new` category appears in the rendered homepage menu. No database schema changes or owner content were made.
+
 ## 2026-10-04 — Store operations settings
 
 - Added protected `/[locale]/admin/store-settings` controls for order acceptance, shipping fee, free-shipping threshold and pending-stock reservation duration. The EN/FR admin navigation and labels are complete.

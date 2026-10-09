@@ -6,6 +6,8 @@ import { ProductCard } from "@/components/store/product-card";
 import type { ProductView } from "@/lib/store-views";
 import { productPricing } from "@/lib/product-pricing";
 
+type StoreCategory = { id: string; name: string; nameFr: string | null; order: number };
+
 type Sort = "featured" | "price-asc" | "price-desc" | "name";
 
 export function StoreGrid({
@@ -14,7 +16,7 @@ export function StoreGrid({
   locale,
 }: {
   products: ProductView[];
-  categories: string[];
+  categories: StoreCategory[];
   locale: string;
 }) {
   const t = useTranslations("Store");
@@ -93,8 +95,8 @@ export function StoreGrid({
               {t("allCategories")}
             </FilterButton>
             {categories.map((item) => (
-              <FilterButton key={item} active={category === item} onClick={() => setCategory(item)}>
-                {t.has("categories." + item) ? t(("categories." + item) as never) : item}
+              <FilterButton key={item.id} active={category === item.name} onClick={() => setCategory(item.name)}>
+                {locale === "fr" && item.nameFr ? item.nameFr : t.has("categories." + item.name) ? t(("categories." + item.name) as never) : item.name}
               </FilterButton>
             ))}
           </div>
@@ -112,7 +114,7 @@ export function StoreGrid({
 
       {shown.length > 0 ? (
         <div className="store-grid mt-6">
-          {shown.map((product) => <ProductCard key={product.slug} product={product} locale={locale} />)}
+          {shown.map((product) => <ProductCard key={product.slug} product={product} locale={locale} categories={categories} />)}
         </div>
       ) : (
         <div className="mt-8 rounded-3xl border border-dashed border-border bg-card px-6 py-16 text-center">

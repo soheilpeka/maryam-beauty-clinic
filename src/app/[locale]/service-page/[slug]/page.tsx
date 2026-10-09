@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Link } from "@/i18n/routing";
-import { getServiceBySlug, SERVICES, categoryLabel, localizeService } from "@/lib/content/services";
+import { getServiceBySlug, SERVICES, categoryLabel, localizeService, normalizeServiceCategory } from "@/lib/content/services";
 import { BUSINESS, localizedHours } from "@/lib/content/business";
 import { BusinessAddressLink } from "@/components/business-address-link";
 import type { Locale } from "@/i18n/routing";
@@ -54,7 +54,7 @@ export default async function ServiceDetailPage({
     ? {
         slug: record.slug,
         name: locale === "fr" ? (record.nameFr ?? record.name) : record.name,
-        category: (record.category === "Hair" || record.category === "Makeup" || record.category === "Aesthetic" || record.category === "Wellness" ? record.category : "Aesthetic") as ContentService["category"],
+        category: normalizeServiceCategory(record.category),
         price: record.price,
         duration: record.duration,
         priceLabel: "",
@@ -73,16 +73,7 @@ export default async function ServiceDetailPage({
   const related = publicCatalog.filter(
     (s) => s.category === service.category && s.slug !== service.slug,
   ).slice(0, 3);
-  const defaultFaqs = loc === "fr" ? [
-    { question: "À quoi puis-je m’attendre?", answer: "Votre spécialiste vous accueille, écoute vos envies et vous présente les étapes du soin pour une expérience personnalisée et tout en douceur." },
-    { question: "Comment prendre soin de ma peau après la visite?", answer: "Votre spécialiste vous partage des conseils personnalisés pour prolonger la sensation de fraîcheur et prendre soin de votre peau à la maison." },
-    { question: "Combien de visites prévoir?", answer: "Votre spécialiste peut vous proposer un rythme de visites personnalisé selon vos objectifs beauté et le soin choisi." },
-  ] : [
-    { question: "What can I expect?", answer: "Your specialist welcomes you, listens to your goals and guides you through the service for a personalized, feel-good experience." },
-    { question: "How can I care for my skin after my visit?", answer: "Your specialist shares personalized tips to help you enjoy a fresh feeling and care for your skin at home." },
-    { question: "How many visits should I plan?", answer: "Your specialist can suggest a personalized visit plan around your beauty goals and chosen service." },
-  ];
-  const serviceFaqs = service.detail?.faqs ?? (service.detail?.customSections ? [] : defaultFaqs);
+  const serviceFaqs = service.detail?.faqs?.length ? service.detail.faqs : fallback?.detail?.faqs ?? [];
 
   return (
     <article className="editorial-page service-editorial">
@@ -192,7 +183,7 @@ export default async function ServiceDetailPage({
                 </div>
               )}
 
-              {(!service.detail?.customSections || service.detail.personalApproachTitle || service.detail.personalApproach?.length || service.detail.durationText || service.detail.faqs?.length || service.detail.bookingPrompt) && <section className="treatment-consultation" aria-labelledby="treatment-planning">
+              {(!service.detail?.customSections || service.detail.personalApproachTitle || service.detail.personalApproach?.length || service.detail.durationText || serviceFaqs.length || service.detail.bookingPrompt) && <section className="treatment-consultation" aria-labelledby="treatment-planning">
                 <p className="eyebrow">{loc === "fr" ? "Une approche personnelle" : "A personal approach"}</p>
                 <h3 id="treatment-planning" className="font-serif text-3xl mt-3">{service.detail?.personalApproachTitle ?? (loc === "fr" ? "Votre visite, en toute clarté." : "Your visit, clearly considered.")}</h3>
                 {service.detail?.personalApproach?.length ? <div className="mt-5 space-y-4 text-base leading-relaxed text-muted-foreground">{service.detail.personalApproach.map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div> : !service.detail?.customSections && <div className="treatment-facts"><div><h4>{loc === "fr" ? "Un soin qui vous ressemble" : "Made for you"}</h4><p>{loc === "fr" ? "Nous prenons le temps de connaître vos objectifs beauté et vos préférences afin de personnaliser votre expérience." : "We take time to understand your beauty goals and preferences, then personalize the experience around you."}</p></div></div>}

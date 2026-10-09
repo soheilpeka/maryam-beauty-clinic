@@ -440,4 +440,176 @@ Points forts du soin
 * Apparence des cicatrices d’acné
 * Traitement fractionné par radiofréquence personnalisé`,
   },
+  hydrafacial: {
+    en: `Preview
+
+Refresh and hydrate your skin with a personalized facial featuring gentle exfoliation and the infusion of hydrating serums.
+
+Service Description
+
+Our Hydra Facial combines cleansing and gentle exfoliation with the infusion of hydrating serums. The treatment is tailored to your skin’s needs, leaving it feeling refreshed, smooth, and hydrated.
+
+Your esthetician will discuss your skin concerns and guide you through each step of your appointment.
+
+Treatment Highlights
+
+* Cleansing and gentle exfoliation
+* Infusion of hydrating serums
+* A treatment tailored to your skin’s needs
+* Personalized guidance from your esthetician
+
+A Personal Approach
+
+Your visit, thoughtfully tailored to you.
+
+We take time to understand your skin goals and personalize your facial for a comfortable, refreshing experience.
+
+Duration
+
+Confirmed during consultation.
+
+What can I expect?
+
+Your esthetician will discuss your skin concerns and guide you through the facial. The steps and serums will be selected according to your skin’s needs.
+
+How can I care for my skin after my visit?
+
+Your esthetician will recommend any aftercare based on your skin and the products used during your facial.
+
+How often should I book?
+
+The ideal frequency depends on your skin and goals. Your esthetician can suggest a schedule during your appointment.
+
+Request an appointment
+
+Book your Hydra Facial for a personalized moment of cleansing and hydration.`,
+    fr: `Aperçu
+
+Rafraîchissez et hydratez votre peau grâce à un soin personnalisé comprenant une exfoliation douce et l’infusion de sérums hydratants.
+
+Description du service
+
+Notre soin Hydra Facial combine le nettoyage et une exfoliation douce à l’infusion de sérums hydratants. Le soin est adapté aux besoins de votre peau pour la laisser fraîche, lisse et hydratée.
+
+Votre esthéticienne discutera de vos préoccupations et vous guidera à chaque étape du rendez-vous.
+
+Points forts du soin
+
+* Nettoyage et exfoliation en douceur
+* Infusion de sérums hydratants
+* Soin adapté aux besoins de votre peau
+* Conseils personnalisés de votre esthéticienne
+
+Une approche personnalisée
+
+Un soin pensé pour votre peau.
+
+Nous prenons le temps de comprendre vos objectifs et de personnaliser votre soin pour une expérience confortable et rafraîchissante.
+
+Durée
+
+Confirmée lors de la consultation.
+
+À quoi puis-je m’attendre?
+
+Votre esthéticienne discutera de vos préoccupations et vous guidera tout au long du soin. Les étapes et les sérums seront choisis selon les besoins de votre peau.
+
+Comment prendre soin de ma peau après le rendez-vous?
+
+Votre esthéticienne vous recommandera les soins après le traitement selon votre peau et les produits utilisés pendant le soin.
+
+À quelle fréquence devrais-je prendre rendez-vous?
+
+La fréquence idéale dépend de votre peau et de vos objectifs. Votre esthéticienne pourra vous suggérer un intervalle adapté lors de votre rendez-vous.
+
+Demander un rendez-vous
+
+Réservez votre soin Hydra Facial pour un moment personnalisé de nettoyage et d’hydratation.`,
+  },
+  "laser-skin-rejuvenation": {
+    en: `Preview
+
+Refresh your complexion with a personalized laser treatment designed to support smoother, firmer-looking skin.
+
+Service Description
+
+Laser skin firming with the Candela GentleMax Pro Plus uses the 1064 nm Nd:YAG wavelength in a customized treatment approach. The service is designed to improve the appearance of fine lines and mild skin laxity for a smoother, firmer-looking complexion.
+
+Your specialist will assess your skin and discuss your goals to determine whether this treatment is suitable for you. Individual experiences and results vary.
+
+Treatment Highlights
+
+* 1064 nm Nd:YAG laser technology
+* Focus on the appearance of fine lines and mild skin laxity
+* Personalized treatment approach
+* Consultation and guidance from your specialist
+
+A Personal Approach
+
+Your treatment, tailored to your skin.
+
+We take time to understand your concerns and explain what to expect. Your specialist will answer your questions and personalize the treatment according to your skin and goals.
+
+Duration
+
+Confirmed during consultation.
+
+What can I expect?
+
+Your specialist will explain the treatment before your appointment. Temporary redness or sensitivity can occur afterward. Individual experiences vary.
+
+How can I care for my skin after my visit?
+
+Your specialist will provide aftercare guidance based on your skin and the treatment performed.
+
+How many visits should I plan?
+
+The number of visits depends on your skin, goals, and response to treatment. Your specialist can discuss a personalized plan with you.
+
+Request an appointment
+
+Book a consultation to find out whether laser skin firming is right for your skin.`,
+    fr: `Aperçu
+
+Rafraîchissez votre teint grâce à un soin au laser personnalisé conçu pour une peau d’apparence plus lisse et plus ferme.
+
+Description du service
+
+Le raffermissement de la peau au laser avec le Candela GentleMax Pro Plus utilise la longueur d’onde Nd:YAG de 1064 nm dans le cadre d’un traitement personnalisé. Le soin vise à améliorer l’apparence des ridules et du relâchement cutané léger pour une peau d’apparence plus lisse et plus ferme.
+
+Votre spécialiste évaluera votre peau et discutera de vos objectifs afin de déterminer si ce soin vous convient. Les résultats et la réaction au traitement varient d’une personne à l’autre.
+
+Points forts du soin
+
+* Technologie laser Nd:YAG de 1064 nm
+* Soin ciblant l’apparence des ridules et du relâchement cutané léger
+* Approche personnalisée
+* Consultation et conseils de votre spécialiste
+
+Une approche personnalisée
+
+Un soin adapté à votre peau.
+
+Nous prenons le temps de comprendre vos préoccupations et de vous expliquer à quoi vous attendre. Votre spécialiste répondra à vos questions et personnalisera le soin selon votre peau et vos objectifs.
+
+Durée
+
+Confirmée lors de la consultation.
+
+À quoi puis-je m’attendre?
+
+Votre spécialiste vous expliquera le soin avant le rendez-vous. Une rougeur ou une sensibilité temporaire peut survenir après le traitement. La réaction varie d’une personne à l’autre.
+
+Comment prendre soin de ma peau après le rendez-vous?
+
+Votre spécialiste vous donnera des conseils personnalisés selon votre peau et le soin reçu.
+
+Combien de séances dois-je prévoir?
+
+Le nombre de rendez-vous dépend de votre peau, de vos objectifs et de votre réaction au traitement. Votre spécialiste pourra discuter d’un plan personnalisé avec vous.
+
+Demander un rendez-vous
+
+Prenez rendez-vous pour une consultation afin de vérifier si le raffermissement de la peau au laser vous convient.`,
+  },
 };

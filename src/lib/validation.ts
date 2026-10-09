@@ -412,6 +412,13 @@ export const storeSettingsSchema = z.object({
 }).strict();
 export type StoreSettingsInput = z.infer<typeof storeSettingsSchema>;
 
+/** Admin: create or rename a bilingual retail category. */
+export const storeCategorySchema = z.object({
+  name: z.string().trim().min(2, { message: "validation.category.min" }).max(40, { message: "validation.category.max" }),
+  nameFr: z.string().trim().max(40, { message: "validation.category.frenchMax" }).optional().or(z.literal("")),
+}).strict();
+export type StoreCategoryInput = z.infer<typeof storeCategorySchema>;
+
 /** Admin: advance an order's status. */
 export const orderStatusSchema = z.object({
   status: z.enum(["PENDING", "PAID", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED", "REFUNDED"], {

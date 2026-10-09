@@ -10,6 +10,7 @@ import { ProductGallery } from "@/components/store/product-gallery";
 import { ProductCard } from "@/components/store/product-card";
 import { localizeProduct, shapeProduct } from "@/lib/store-views";
 import { releaseExpiredReservations } from "@/lib/order";
+import { listStoreCategories } from "@/lib/store-categories";
 
 export const dynamic = "force-dynamic";
 
@@ -62,6 +63,9 @@ export default async function ProductDetailPage({
     notFound();
   }
   const product = localizeProduct(shapeProduct(record), locale);
+  const categories = await listStoreCategories();
+  const category = categories.find((item) => item.name === product.category);
+  const categoryLabel = locale === "fr" && category?.nameFr ? category.nameFr : t.has("categories." + product.category) ? t(("categories." + product.category) as never) : product.category;
   const relatedRecords = await prisma.product.findMany({
     where: { active: true, demo: false, category: record.category, id: { not: record.id } },
     include: { _count: { select: { orderItems: true } }, images: { orderBy: { order: "asc" } } },
@@ -126,7 +130,7 @@ export default async function ProductDetailPage({
           </div>
 
           <div>
-            <p className="eyebrow">{t.has("categories." + product.category) ? t(("categories." + product.category) as never) : product.category}</p>
+            <p className="eyebrow">{categoryLabel}</p>
             <h1 className="display-heading mt-3 text-4xl sm:text-5xl">{product.name}</h1>
             <div className="mt-5 flex items-baseline gap-3">
               <span className="text-3xl font-light text-foreground">
@@ -168,7 +172,7 @@ export default async function ProductDetailPage({
             <p className="eyebrow">{t("relatedEyebrow")}</p>
             <h2 id="related-products" className="display-heading mt-3 text-3xl sm:text-4xl">{t("relatedTitle")}</h2>
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {related.map((item) => <ProductCard key={item.slug} product={item} locale={locale} />)}
+              {related.map((item) => <ProductCard key={item.slug} product={item} locale={locale} categories={categories} />)}
             </div>
           </section>
         )}

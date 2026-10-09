@@ -31,7 +31,7 @@
     "results": "Results",
     "offers": "Offers",
     "contact": "Contact",
-    "clinic": "Clinic",
+    "clinic": "Salon",
     "blog": "Blog",
     "bookOnline": "Book Online",
     "packages": "Packages",
@@ -452,7 +452,9 @@
       "invalid": "Buffer must be between 0 and 240 minutes."
     },
     "category": {
-      "max": "Category must be at most 40 characters."
+      "min": "The category name must be at least 2 characters.",
+      "max": "Category must be at most 40 characters.",
+      "frenchMax": "The French category name must be at most 40 characters."
     },
     "role": {
       "max": "Role must be at most 60 characters."

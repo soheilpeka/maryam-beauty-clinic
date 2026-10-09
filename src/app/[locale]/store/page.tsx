@@ -5,6 +5,7 @@ import { StoreGrid } from "@/components/store/store-grid";
 import { ProductCard } from "@/components/store/product-card";
 import { localizeProduct, shapeProduct } from "@/lib/store-views";
 import { releaseExpiredReservations } from "@/lib/order";
+import { listStoreCategories } from "@/lib/store-categories";
 
 export const dynamic = "force-dynamic";
 
@@ -26,12 +27,12 @@ export default async function StorePage({ params }: { params: Promise<{ locale: 
   await releaseExpiredReservations(prisma);
   const records = await prisma.product.findMany({ where: { active: true, demo: false }, include: { _count: { select: { orderItems: true } }, images: { orderBy: { order: "asc" } } }, orderBy: [{ order: "asc" }, { name: "asc" }] });
   const products = records.map((product) => localizeProduct(shapeProduct(product), locale));
-  const categories = [...new Set(products.map((p) => p.category))];
+  const categories = await listStoreCategories();
   const featured = products.filter((product) => product.featured).slice(0, 4);
   return (
     <div className="store-page editorial-page">
       <section className="store-hero"><div><p className="preview-kicker">{t.eyebrow}</p><h1>{t.subtitle}</h1><p>{t.body}</p>{products.length === 0 && <p className="store-demo-notice" role="note">{t.demoNotice}</p>}<a className="preview-button" href="#collection">{t.collection} <span aria-hidden="true">↗</span></a></div><img src="/media/store-care-editorial.webp" width={1440} height={1080} alt={locale === "fr" ? "Composition illustrative de flacons de soins sur un plateau en pierre, avec des accents rose poudré" : "Illustrative arrangement of care bottles on a stone tray with soft blush accents"} /></section>
-      <div id="collection" className="store-collection">{products.length === 0 ? <div className="store-empty">{t.empty}</div> : <><section aria-labelledby="store-featured"><p className="preview-kicker">{t.featured}</p><h2 id="store-featured">{t.title}</h2><div className="store-grid">{(featured.length ? featured : products.slice(0, 4)).map((product) => <ProductCard key={product.slug} product={product} locale={locale} />)}</div></section><section className="store-all" aria-labelledby="store-all"><p className="preview-kicker">{t.collection}</p><h2 id="store-all">{t.title}</h2><StoreGrid products={products} categories={categories} locale={locale} /></section></>}</div>
+      <div id="collection" className="store-collection">{products.length > 0 && <section aria-labelledby="store-featured"><p className="preview-kicker">{t.featured}</p><h2 id="store-featured">{t.title}</h2><div className="store-grid">{(featured.length ? featured : products.slice(0, 4)).map((product) => <ProductCard key={product.slug} product={product} locale={locale} categories={categories} />)}</div></section>}<section className="store-all" aria-labelledby="store-all"><p className="preview-kicker">{t.collection}</p><h2 id="store-all">{t.title}</h2>{products.length === 0 && <p className="store-empty">{t.empty}</p>}<StoreGrid products={products} categories={categories} locale={locale} /></section></div>
     </div>
   );
 }

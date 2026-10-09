@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { releaseExpiredReservations } from "@/lib/order";
 import { localizeProduct, shapeProduct } from "@/lib/store-views";
 import { CartPageView } from "@/components/store/cart-page-view";
+import { listStoreCategories } from "@/lib/store-categories";
 
 export const dynamic = "force-dynamic";
 
@@ -23,5 +24,6 @@ export default async function CartPage({ params }: { params: Promise<{ locale: s
     .slice(0, 3)
     .map((product) => localizeProduct(shapeProduct(product), locale));
 
-  return <CartPageView recommendedProducts={recommendations} />;
+  const categories = await listStoreCategories();
+  return <CartPageView recommendedProducts={recommendations} categories={categories} />;
 }

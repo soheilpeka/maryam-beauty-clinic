@@ -137,6 +137,7 @@ const headingAliases: Record<string, string> = Object.fromEntries([
   ["Duration", "duration"], ["Durée", "duration"],
   ["What can I expect?", "faq"], ["À quoi puis-je m’attendre?", "faq"],
   ["How can I care for my skin after my visit?", "faq"], ["Comment prendre soin de ma peau après le rendez-vous?", "faq"],
+  ["How often should I book?", "faq"], ["À quelle fréquence devrais-je prendre rendez-vous?", "faq"],
   ["How many visits should I plan?", "faq"], ["Combien de visites dois-je prévoir?", "faq"], ["Combien de séances dois-je prévoir?", "faq"],
   ["Can I track my progress?", "faq"], ["Puis-je suivre l’évolution de ma peau?", "faq"],
   ["Request an appointment", "booking"], ["Demander un rendez-vous", "booking"],
@@ -205,6 +206,125 @@ for (const [slug, copy] of Object.entries(OWNER_SERVICE_COPY)) {
     detail: en.detail ?? { paragraphs: [] },
     detailFr: fr.detail ?? { paragraphs: [] },
   };
+}
+
+/** Service-specific FAQ fallbacks for descriptions that do not supply their own questions. */
+const SERVICE_FAQ_FALLBACKS: Record<string, { en: { question: string; answer: string }[]; fr: { question: string; answer: string }[] }> = {
+  "deep-cleansing-facials": {
+    en: [
+      { question: "What does a deep-cleansing facial include?", answer: "Your specialist adapts the cleansing steps and products to your skin and daily routine, with a fresh, comfortable finish in mind." },
+      { question: "How do you choose the products for my skin?", answer: "Your specialist discusses your preferences and routine, then selects suitable products and steps for your visit." },
+      { question: "How often should I book a facial?", answer: "Your specialist can suggest a schedule based on your skin and the routine you would like to maintain." },
+    ],
+    fr: [
+      { question: "Que comprend un soin nettoyant en profondeur?", answer: "Votre spécialiste adapte les étapes de nettoyage et les produits à votre peau et à votre routine, en visant un fini frais et confortable." },
+      { question: "Comment choisissez-vous les produits pour ma peau?", answer: "Votre spécialiste discute de vos préférences et de votre routine, puis choisit les produits et les étapes adaptés à votre rendez-vous." },
+      { question: "À quelle fréquence réserver un soin du visage?", answer: "Votre spécialiste peut vous suggérer un rythme selon votre peau et la routine que vous souhaitez maintenir." },
+    ],
+  },
+  "rf-skin-treatment": {
+    en: [
+      { question: "What does fractional RF resurfacing address?", answer: "The treatment description focuses on the appearance of uneven texture, fine lines, wrinkles and acne scars. Your specialist will discuss whether it suits your skin and goals." },
+      { question: "How will I know if this treatment is suitable for me?", answer: "Your specialist will assess your skin, discuss your expectations and explain the proposed approach before treatment." },
+      { question: "Will I receive aftercare guidance?", answer: "Your specialist will explain the care relevant to your skin and the treatment planned for your appointment." },
+    ],
+    fr: [
+      { question: "À quelles préoccupations le resurfaçage fractionné par RF répond-il?", answer: "La description du soin cible l’apparence de la texture irrégulière, des ridules, des rides et des cicatrices d’acné. Votre spécialiste discutera de sa pertinence selon votre peau et vos objectifs." },
+      { question: "Comment savoir si ce soin me convient?", answer: "Votre spécialiste évaluera votre peau, discutera de vos attentes et vous expliquera l’approche proposée avant le traitement." },
+      { question: "Vais-je recevoir des conseils après le soin?", answer: "Votre spécialiste vous expliquera les conseils adaptés à votre peau et au soin prévu lors de votre rendez-vous." },
+    ],
+  },
+  "microblading-eyebrow-shaping": {
+    en: [
+      { question: "How are my brow shape and pigment selected?", answer: "Your appointment starts with a conversation about your natural features and preferred finish. The shape and pigment are chosen to complement your colouring and style." },
+      { question: "What happens during the appointment?", answer: "Your specialist discusses the brow design with you, explains the service and guides you through each step." },
+      { question: "What aftercare should I follow?", answer: "Your specialist will give you personalized aftercare guidance for your brows and answer questions about caring for them after the service." },
+    ],
+    fr: [
+      { question: "Comment choisir la forme et le pigment de mes sourcils?", answer: "Le rendez-vous commence par une discussion sur vos traits naturels et le fini souhaité. La forme et le pigment sont choisis pour harmoniser votre teint et votre style." },
+      { question: "Comment se déroule le rendez-vous?", answer: "Votre spécialiste discute du dessin avec vous, explique le soin et vous guide à chaque étape." },
+      { question: "Quels conseils après le soin dois-je suivre?", answer: "Votre spécialiste vous donnera des conseils personnalisés pour vos sourcils et répondra à vos questions sur les soins à leur apporter après le rendez-vous." },
+    ],
+  },
+  "lip-blush-dark-lip-neutralization": {
+    en: [
+      { question: "How do we choose a lip-blush shade?", answer: "Your specialist discusses your natural colouring, undertone and preferred look with you before selecting a shade together." },
+      { question: "What should I expect during my appointment?", answer: "The appointment begins with a consultation about colour, suitability and the finish you want. Your specialist explains the service before starting." },
+      { question: "What aftercare will I need?", answer: "Your specialist will provide personalized aftercare guidance and explain what to expect as the colour settles." },
+    ],
+    fr: [
+      { question: "Comment choisir la teinte du lip blush?", answer: "Votre spécialiste discute avec vous de votre couleur naturelle, de votre sous-ton et du résultat souhaité avant de choisir une teinte ensemble." },
+      { question: "À quoi m’attendre pendant le rendez-vous?", answer: "Le rendez-vous commence par une consultation sur la couleur, la pertinence du soin et le fini souhaité. Votre spécialiste explique le déroulement avant de commencer." },
+      { question: "Quels soins après le rendez-vous seront nécessaires?", answer: "Votre spécialiste vous donnera des conseils personnalisés et vous expliquera à quoi vous attendre pendant que la couleur se stabilise." },
+    ],
+  },
+  haircuts: {
+    en: [
+      { question: "How do we choose a cut that suits me?", answer: "Your stylist discusses your features, hair texture, daily routine and the shape or movement you would like." },
+      { question: "Can I bring a reference photo?", answer: "Yes. Bring an inspiration photo if you have one, and tell your stylist how you usually wear and care for your hair." },
+      { question: "Will the plan work with my current length and texture?", answer: "Your stylist will talk through what is achievable with your current hair, then refine the plan with you before cutting." },
+    ],
+    fr: [
+      { question: "Comment choisir une coupe qui me convient?", answer: "Votre coiffeuse discute avec vous de vos traits, de votre texture, de votre routine et de la forme ou du mouvement souhaité." },
+      { question: "Puis-je apporter une photo d’inspiration?", answer: "Oui. Apportez une photo si vous en avez une et décrivez à votre coiffeuse votre façon habituelle de porter et d’entretenir vos cheveux." },
+      { question: "Le plan tiendra-t-il compte de ma longueur et de ma texture actuelles?", answer: "Votre coiffeuse expliquera ce qui est réalisable avec vos cheveux, puis précisera le plan avec vous avant de couper." },
+    ],
+  },
+  "hair-colour-balayage": {
+    en: [
+      { question: "How is my colour or balayage plan created?", answer: "Your stylist considers your starting colour, inspiration, natural colouring and preferred upkeep when planning tones and placement." },
+      { question: "Should I bring inspiration photos?", answer: "Yes. Sharing the looks you like helps your stylist discuss the colour journey and finishing touches with you." },
+      { question: "How can I care for my colour at home?", answer: "Your stylist will share simple colour-care guidance suited to your new look and the maintenance you prefer." },
+    ],
+    fr: [
+      { question: "Comment préparer mon plan de coloration ou de balayage?", answer: "Votre styliste tient compte de votre couleur de départ, de vos inspirations, de votre carnation et de l’entretien souhaité pour planifier les tons et leur placement." },
+      { question: "Devrais-je apporter des photos d’inspiration?", answer: "Oui. Les styles que vous aimez aident votre styliste à discuter avec vous du parcours couleur et des finitions." },
+      { question: "Comment entretenir ma couleur à la maison?", answer: "Votre styliste vous donnera des conseils simples adaptés à votre nouveau look et à l’entretien souhaité." },
+    ],
+  },
+  "hair-botox-hydration": {
+    en: [
+      { question: "How do you choose a hair hydration treatment for me?", answer: "Your stylist considers your hair texture, colour history, needs and the finish you have in mind." },
+      { question: "What is the service designed to do?", answer: "It combines deep conditioning and smoothing to support hair that feels soft, polished and easier to style." },
+      { question: "How can I maintain the finish at home?", answer: "Your stylist will share simple care tips suited to your hair and the service you receive." },
+    ],
+    fr: [
+      { question: "Comment choisir un soin hydratant pour mes cheveux?", answer: "Votre styliste tient compte de votre texture, de l’historique de coloration, des besoins de vos cheveux et du fini souhaité." },
+      { question: "Quel est l’objectif du soin?", answer: "Il associe revitalisation en profondeur et lissage pour des cheveux doux, soignés et plus faciles à coiffer." },
+      { question: "Comment entretenir le fini à la maison?", answer: "Votre styliste vous donnera des conseils simples adaptés à vos cheveux et au soin reçu." },
+    ],
+  },
+  "swedish-relaxation-massage": {
+    en: [
+      { question: "Can I choose the pressure and focus areas?", answer: "Yes. Your therapist discusses your preferred pressure and areas of focus before shaping the session around your comfort." },
+      { question: "What techniques are used?", answer: "The service description includes flowing Swedish-style movements such as gentle gliding and kneading, with the pace personalized for you." },
+      { question: "What should I expect from the session?", answer: "The visit is planned as a calm pause, with time to settle in and receive attentive care from your therapist." },
+    ],
+    fr: [
+      { question: "Puis-je choisir la pression et les zones ciblées?", answer: "Oui. Votre thérapeute discute de la pression souhaitée et des zones à privilégier avant d’adapter la séance à votre confort." },
+      { question: "Quelles techniques sont utilisées?", answer: "La description du soin comprend des mouvements fluides inspirés du massage suédois, comme l’effleurage et le pétrissage, avec un rythme adapté à vous." },
+      { question: "À quoi m’attendre pendant la séance?", answer: "Le rendez-vous est pensé comme une pause apaisante, avec du temps pour vous installer et profiter d’une attention personnalisée." },
+    ],
+  },
+  "lash-brow-lamination": {
+    en: [
+      { question: "What is included in the lash and brow service?", answer: "The service pairs a lift for your natural lashes with brow lamination for a fuller, more polished-looking shape." },
+      { question: "Can the finish be tailored to my features?", answer: "Yes. Your specialist personalizes the shape and finish around your natural features and the look you prefer." },
+      { question: "Will I receive aftercare tips?", answer: "Your specialist will share simple aftercare guidance to help you care for your refreshed lashes and brows." },
+    ],
+    fr: [
+      { question: "Que comprend le soin des cils et des sourcils?", answer: "Le soin associe un rehaussement des cils naturels à une lamination des sourcils pour une forme d’apparence plus fournie et soignée." },
+      { question: "Le fini peut-il être adapté à mes traits?", answer: "Oui. Votre spécialiste personnalise la forme et le fini selon vos traits naturels et le style souhaité." },
+      { question: "Vais-je recevoir des conseils après le soin?", answer: "Votre spécialiste vous partagera des conseils simples pour prendre soin de vos cils et sourcils après le rendez-vous." },
+    ],
+  },
+};
+
+for (const [slug, faqs] of Object.entries(SERVICE_FAQ_FALLBACKS)) {
+  const copy = SERVICE_COPY[slug];
+  if (!copy) continue;
+  copy.detail.faqs ??= faqs.en;
+  copy.detailFr.faqs ??= faqs.fr;
 }
 
 /** Exact previous placeholders, used only to upgrade untouched database descriptions. */

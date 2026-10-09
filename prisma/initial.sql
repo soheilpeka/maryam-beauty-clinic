@@ -368,6 +368,22 @@ CREATE TABLE "StoreSetting" (
     "reservationMinutes" INTEGER NOT NULL DEFAULT 15
 );
 
+-- CreateTable
+CREATE TABLE "StoreCategory" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "nameFr" TEXT,
+    "order" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "StoreCategory_name_key" ON "StoreCategory"("name");
+
+-- CreateIndex
+CREATE INDEX "StoreCategory_order_idx" ON "StoreCategory"("order");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Service_slug_key" ON "Service"("slug");
 
