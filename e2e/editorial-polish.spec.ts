@@ -45,3 +45,49 @@ test("mobile menu traps focus and booking does not have an extra floating CTA", 
   await page.goto("/en/booking");
   await expect(page.locator(".mobile-consultation")).toHaveCount(0);
 });
+
+test("mobile menu keeps the masthead visible and scrolls without moving the page", async ({ page, isMobile }) => {
+  await page.setViewportSize({ width: 334, height: 656 });
+  await page.goto("/en");
+  const initialY = await page.evaluate(() => {
+    window.scrollTo({ top: 150, behavior: "instant" });
+    return window.scrollY;
+  });
+  expect(initialY).toBeGreaterThan(0);
+  await expect(page.locator(".site-header")).toHaveClass(/backdrop-blur-md/);
+
+  const open = page.getByRole("button", { name: "Open menu", exact: true });
+  const menuBox = await open.boundingBox();
+  if (!menuBox) throw new Error("Mobile menu button is missing");
+  // Click the visible sticky button without auto-scrolling the document to its original position.
+  const x = menuBox.x + menuBox.width / 2, y = menuBox.y + menuBox.height / 2;
+  if (isMobile) await page.touchscreen.tap(x, y);
+  else await page.mouse.click(x, y);
+  const close = page.getByRole("button", { name: "Close menu", exact: true });
+  const drawer = page.locator(".site-mobile-drawer");
+  const treatments = drawer.getByRole("button", { name: "Treatments", exact: true });
+
+  await expect.poll(() => drawer.evaluate(element => {
+    const header = document.querySelector(".site-header")!.getBoundingClientRect();
+    return [header.top, element.getBoundingClientRect().top - header.bottom];
+  })).toEqual([0, 0]);
+
+  await page.mouse.move(150, 300);
+  await page.mouse.wheel(0, 300);
+  await expect.poll(() => drawer.evaluate(element => element.scrollTop)).toBeGreaterThan(0);
+  await expect.poll(() => treatments.evaluate(button =>
+    button.getBoundingClientRect().top - button.closest(".site-mobile-drawer")!.getBoundingClientRect().top,
+  )).toBe(0);
+
+  await page.mouse.wheel(0, 3000);
+  await expect(drawer.getByRole("link", { name: "Book Appointment" })).toBeInViewport();
+  expect(await page.evaluate(() => window.scrollY)).toBe(initialY);
+  await expect(close).toBeInViewport();
+  if (isMobile) await page.touchscreen.tap(x, y);
+  else await page.mouse.click(x, y);
+  await expect(drawer).toHaveCount(0);
+  expect(await page.evaluate(() => window.scrollY)).toBe(initialY);
+
+  await page.mouse.wheel(0, 300);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(initialY);
+});

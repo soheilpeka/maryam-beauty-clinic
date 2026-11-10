@@ -1,6 +1,6 @@
 /* Owner-requested Blunt-inspired presentation, shared by every route family.
    Real photographs retain their colour; all interface surfaces are monochrome. */
-:root { --editorial-stone: #f5f5f5; --radius: 0; }
+:root { --editorial-stone: #f5f5f5; --radius: 0; --site-header-row-height: 58px; }
 ::selection { background: #000; color: #fff; }
 body :is(input, select, textarea) { accent-color: var(--color-primary); }
 body :is(a, button, input, select, textarea):focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
@@ -9,7 +9,7 @@ body button, body a { -webkit-tap-highlight-color: transparent; }
 
 /* Compact single-row masthead with balanced navigation and touch controls. */
 .site-header { background: #fff; color: #000; backdrop-filter: none; border-color: #ddd; }
-.site-header-inner { height: 60px; max-width: none; }
+.site-header-inner { height: var(--site-header-row-height); max-width: none; }
 .site-header-inner > a { flex-shrink: 0; }
 .site-header-inner > a, .site-header-inner > div { color: #000; }
 .site-header-inner > a img { filter: none; width: 92px; height: 44px; }
@@ -23,7 +23,11 @@ body button, body a { -webkit-tap-highlight-color: transparent; }
 .site-header nav[aria-label="Main"] > div > div { color: var(--color-foreground); }
 .site-header nav[aria-label="Main"] .shadow-xl { box-shadow: 0 12px 24px #0002; border-radius: 0; }
 .site-header nav[aria-label="Main"] a:hover { text-decoration: underline; text-underline-offset: 5px; }
-.site-mobile-drawer { top: 64px; }
+.site-mobile-drawer { top: calc(var(--site-header-row-height) + 1px); }
+@media (width < 80rem) {
+  /* Lock the viewport, since overflow on body breaks the header's sticky positioning. */
+  html:has(.site-mobile-drawer) { overflow: hidden; overscroll-behavior-y: none; }
+}
 .header-social { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 8px 12px; border: 1px solid #111; color: #111; font-size: 11px; font-weight: 600; white-space: nowrap; }
 .header-social:hover { background: #111; color: #fff; }
 .site-header .site-header-actions .header-cart-link { width: auto; min-height: 40px; border: 1px solid #111; border-radius: 0; background: transparent; color: #111; font-size: 12px; font-weight: 600; text-decoration: none; transition: background-color .18s ease, border-color .18s ease, color .18s ease; }
@@ -35,7 +39,7 @@ body button, body a { -webkit-tap-highlight-color: transparent; }
 .site-header .site-header-actions .header-language-switcher:hover { color: var(--color-brand); background: transparent; }
 html { scroll-padding-top: 72px; }
 @media(max-width:639px) {
-  .site-header-inner { height: 58px; gap: 6px; padding-inline: 12px; }
+  .site-header-inner { gap: 6px; padding-inline: 12px; }
   .site-header-inner > a img { width: clamp(66px, 18vw, 84px); height: 40px; }
   .site-header .site-header-actions { gap: 3px; }
   .header-social { width: 38px; height: 38px; min-height: 38px; padding: 7px; }
@@ -54,7 +58,8 @@ html { scroll-padding-top: 72px; }
   .site-header-actions .header-language-switcher { width: 40px; height: 36px; min-height: 36px; padding: 0 3px; }
 }
 @media(min-width:640px) and (max-width:1023px) {
-  .site-header-inner { height: 62px; gap: 6px; padding-inline: 14px; }
+  :root { --site-header-row-height: 62px; }
+  .site-header-inner { gap: 6px; padding-inline: 14px; }
   .site-header-inner > a img { width: 88px; height: 44px; }
   .site-header .site-header-actions { gap: 4px; }
   .header-social { width: 40px; height: 40px; min-height: 40px; padding: 7px; }
@@ -65,7 +70,8 @@ html { scroll-padding-top: 72px; }
   .site-header a[href$="/booking"] { padding: 9px 10px; font-size: 12px; }
 }
 @media(min-width:1024px) {
-  .site-header-inner { height: 64px; gap: clamp(9px, 1.2vw, 16px); padding-inline: clamp(18px, 2.3vw, 40px); }
+  :root { --site-header-row-height: 64px; }
+  .site-header-inner { gap: clamp(9px, 1.2vw, 16px); padding-inline: clamp(18px, 2.3vw, 40px); }
   .site-header-inner > a img { width: clamp(92px, 6.7vw, 110px); height: 46px; }
   .site-header .site-header-actions { gap: clamp(5px, .55vw, 8px); }
   .header-social { min-height: 40px; padding: 7px 11px; font-size: 11px; }
@@ -73,7 +79,8 @@ html { scroll-padding-top: 72px; }
   .site-header a[href$="/booking"] { padding: 9px 12px; font-size: 12px; }
 }
 @media(min-width:1280px) {
-  .site-header-inner { height: 68px; gap: clamp(10px, .95vw, 16px); padding-inline: clamp(22px, 2.4vw, 40px); }
+  :root { --site-header-row-height: 68px; }
+  .site-header-inner { gap: clamp(10px, .95vw, 16px); padding-inline: clamp(22px, 2.4vw, 40px); }
   .site-header-inner > a img { width: clamp(100px, 6.8vw, 114px); height: 50px; }
   .site-header nav[aria-label="Main"] { flex-shrink: 0; gap: clamp(10px, .9vw, 16px); }
   .site-header nav[aria-label="Main"] > a, .site-header nav[aria-label="Main"] > div > button { font-size: clamp(12px, .9vw, 14px); white-space: nowrap; }

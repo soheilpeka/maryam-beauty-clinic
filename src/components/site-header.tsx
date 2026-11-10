@@ -39,15 +39,13 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
     setTreatmentsOpen(false);
   }, [rawPath]);
 
-  // Lock body scroll while the mobile drawer is open.
+  // Keep the page behind the drawer out of the focus order.
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
     const regions = [document.getElementById("main"), document.querySelector("footer")];
     regions.forEach(region => { if (region) region.inert = mobileOpen; });
     const escape = (event: KeyboardEvent) => { if (event.key === "Escape") { setMobileOpen(false); setTreatmentsOpen(false); menuButton.current?.focus(); } };
     document.addEventListener("keydown", escape);
     return () => {
-      document.body.style.overflow = "";
       regions.forEach(region => { if (region) region.inert = false; });
       document.removeEventListener("keydown", escape);
     };
@@ -55,6 +53,9 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
 
   useEffect(() => {
     if (!mobileOpen) return;
+    const desktop = window.matchMedia("(min-width: 80rem)");
+    const closeOnDesktop = () => { if (desktop.matches) setMobileOpen(false); };
+    desktop.addEventListener("change", closeOnDesktop);
     const trap = (event: KeyboardEvent) => {
       if (event.key !== "Tab") return;
       const nodes = [menuButton.current, ...Array.from(drawer.current?.querySelectorAll<HTMLElement>('a[href],button:not([disabled])') ?? [])].filter((node): node is HTMLElement => !!node && node.getClientRects().length > 0);
@@ -63,7 +64,10 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
     };
     document.addEventListener("keydown", trap);
-    return () => document.removeEventListener("keydown", trap);
+    return () => {
+      desktop.removeEventListener("change", closeOnDesktop);
+      document.removeEventListener("keydown", trap);
+    };
   }, [mobileOpen]);
 
   useEffect(() => {
@@ -258,9 +262,9 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
       its close button visible; z-[60] lifts the drawer above the header and page content.
     */}
     {mobileOpen && (
-      <div ref={drawer} className="site-mobile-drawer fixed inset-0 z-[60] overflow-y-auto bg-background xl:hidden">
+      <div ref={drawer} className="site-mobile-drawer fixed inset-0 z-[60] overflow-y-auto overscroll-y-contain scroll-pt-14 bg-background xl:hidden">
           <nav className="mx-auto max-w-7xl px-4 pb-24 pt-4 sm:px-6" aria-label="Mobile">
-            <MobileSection title={t("treatments")}>
+            <MobileSection title={t("treatments")} stickyHeading>
               {serviceCategories.map((cat) => (
                 <div key={cat} className="py-3">
                   <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-brand">
@@ -312,9 +316,11 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
 function MobileSection({
   title,
   children,
+  stickyHeading = false,
 }: {
   title: string;
   children: React.ReactNode;
+  stickyHeading?: boolean;
 }) {
   const [open, setOpen] = useState(true);
   return (
@@ -322,7 +328,7 @@ function MobileSection({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between py-4 text-left"
+        className={`flex w-full items-center justify-between py-4 text-left${stickyHeading ? " sticky top-0 z-10 bg-background" : ""}`}
         aria-expanded={open}
       >
         <span className="font-serif text-base">{title}</span>
