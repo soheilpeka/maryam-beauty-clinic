@@ -9,7 +9,7 @@ body button, body a { -webkit-tap-highlight-color: transparent; }
 
 /* Compact single-row masthead with balanced navigation and touch controls. */
 .site-header { background: #fff; color: #000; backdrop-filter: none; border-color: #ddd; }
-.site-header-inner { height: 64px; max-width: none; }
+.site-header-inner { height: 60px; max-width: none; }
 .site-header-inner > a { flex-shrink: 0; }
 .site-header-inner > a, .site-header-inner > div { color: #000; }
 .site-header-inner > a img { filter: none; width: 92px; height: 44px; }
@@ -26,13 +26,66 @@ body button, body a { -webkit-tap-highlight-color: transparent; }
 .site-mobile-drawer { top: 64px; }
 .header-social { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 8px 12px; border: 1px solid #111; color: #111; font-size: 11px; font-weight: 600; white-space: nowrap; }
 .header-social:hover { background: #111; color: #fff; }
-@media(max-width:639px) { .header-social { width: 40px; padding: 8px; } .header-social span { display: none; } }
-html { scroll-padding-top: 80px; }
-@media(min-width:1280px) { .site-header-inner { height: 72px; } .site-header-inner > a img { width: 106px; height: 48px; } }
+.site-header .site-header-actions .header-cart-link { width: auto; min-height: 40px; border: 1px solid #111; border-radius: 0; background: transparent; color: #111; font-size: 12px; font-weight: 600; text-decoration: none; transition: background-color .18s ease, border-color .18s ease, color .18s ease; }
+.site-header .site-header-actions .header-cart-link:hover { border-color: var(--color-brand); background: #f8eeec; color: var(--color-brand); }
+.site-header .site-header-actions .header-cart-link:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 3px; }
+.header-cart-link svg { flex: 0 0 auto; }
+/* Keep the language control in the original compact, square-outline style. */
+.site-header .site-header-actions .header-language-switcher { width: auto; min-width: 0; height: 36px; min-height: 36px; padding: 0 12px; border: 0; border-radius: 0; background: transparent; color: #111; font-size: 12px; }
+.site-header .site-header-actions .header-language-switcher:hover { color: var(--color-brand); background: transparent; }
+html { scroll-padding-top: 72px; }
+@media(max-width:639px) {
+  .site-header-inner { height: 58px; gap: 6px; padding-inline: 12px; }
+  .site-header-inner > a img { width: clamp(66px, 18vw, 84px); height: 40px; }
+  .site-header .site-header-actions { gap: 3px; }
+  .header-social { width: 38px; height: 38px; min-height: 38px; padding: 7px; }
+  .header-social span { display: none; }
+  .site-header .site-header-actions .header-cart-link { width: 38px; height: 38px; min-height: 38px; justify-content: center; padding: 0; }
+  .header-cart-label { display: none; }
+  .site-header .header-cart-link > span:not(.header-cart-label) { position: absolute; top: -5px; right: -5px; height: 17px; min-width: 17px; padding-inline: 3px; font-size: 10px; }
+  .site-header-actions .header-language-switcher { width: 42px; height: 38px; min-height: 38px; justify-content: center; gap: 4px; padding: 0 4px; }
+  .site-header .header-menu-button { width: 38px; height: 38px; }
+}
+@media(max-width:374px) {
+  .site-header-inner { gap: 3px; padding-inline: 8px; }
+  .site-header-inner > a img { width: clamp(60px, 18vw, 68px); }
+  .site-header .site-header-actions { gap: 2px; }
+  .header-social, .site-header .site-header-actions .header-cart-link, .site-header .header-menu-button { width: 36px; height: 36px; min-height: 36px; }
+  .site-header-actions .header-language-switcher { width: 40px; height: 36px; min-height: 36px; padding: 0 3px; }
+}
+@media(min-width:640px) and (max-width:1023px) {
+  .site-header-inner { height: 62px; gap: 6px; padding-inline: 14px; }
+  .site-header-inner > a img { width: 88px; height: 44px; }
+  .site-header .site-header-actions { gap: 4px; }
+  .header-social { width: 40px; height: 40px; min-height: 40px; padding: 7px; }
+  .header-social span { display: none; }
+  .site-header .site-header-actions .header-cart-link { min-height: 40px; padding-inline: 9px; }
+  .site-header .site-header-actions .header-language-switcher { min-height: 40px; padding-inline: 8px; }
+  .site-header .header-menu-button { width: 40px; height: 40px; }
+  .site-header a[href$="/booking"] { padding: 9px 10px; font-size: 12px; }
+}
+@media(min-width:1024px) {
+  .site-header-inner { height: 64px; gap: clamp(9px, 1.2vw, 16px); padding-inline: clamp(18px, 2.3vw, 40px); }
+  .site-header-inner > a img { width: clamp(92px, 6.7vw, 110px); height: 46px; }
+  .site-header .site-header-actions { gap: clamp(5px, .55vw, 8px); }
+  .header-social { min-height: 40px; padding: 7px 11px; font-size: 11px; }
+  .site-header .site-header-actions .header-cart-link, .site-header .site-header-actions .header-language-switcher { min-height: 40px; font-size: 12px; }
+  .site-header a[href$="/booking"] { padding: 9px 12px; font-size: 12px; }
+}
+@media(min-width:1280px) {
+  .site-header-inner { height: 68px; gap: clamp(10px, .95vw, 16px); padding-inline: clamp(22px, 2.4vw, 40px); }
+  .site-header-inner > a img { width: clamp(100px, 6.8vw, 114px); height: 50px; }
+  .site-header nav[aria-label="Main"] { flex-shrink: 0; gap: clamp(10px, .9vw, 16px); }
+  .site-header nav[aria-label="Main"] > a, .site-header nav[aria-label="Main"] > div > button { font-size: clamp(12px, .9vw, 14px); white-space: nowrap; }
+  .site-header .site-header-actions { gap: clamp(5px, .55vw, 8px); }
+  .header-social { min-height: 40px; padding-inline: 9px; }
+  .site-header a[href$="/booking"] { padding-inline: 12px; }
+}
+@media(prefers-reduced-motion:reduce) { .site-header .site-header-actions .header-cart-link { transition: none; } }
 
 /* Strong sans-serif headings, open spacing and fine grayscale rules. */
 .salon-hero { padding: 0; width: 100%; }
-.salon-hero-main { position: relative; isolation: isolate; background: #f0eeea; color: #111; }
+.salon-hero-main { position: relative; isolation: isolate; background: #fff; color: #111; }
 .salon-hero-image { width: 100%; height: clamp(480px, 52vw, 790px); object-fit: cover; object-position: center; }
 .salon-hero-copy { position: absolute; inset: 0 auto 0 0; width: 49%; padding: clamp(24px, 4vw, 64px); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
 .salon-hero-copy .preview-kicker { color: #555; font-size: 9px; letter-spacing: .18em; margin-bottom: clamp(20px, 3vw, 44px); }
@@ -43,15 +96,18 @@ html { scroll-padding-top: 80px; }
 .salon-hero-actions a:first-child { padding: 14px 24px; background: #111; color: #fff; border: 1px solid #111; }
 .salon-hero-actions a:first-child:hover { background: #fff; color: #111; }
 @media(max-width:767px) {
-  .salon-hero-main { display: flex; flex-direction: column; background: #f5f4f1; }
+  .salon-hero-main { display: flex; flex-direction: column; background: #fff; }
   .salon-hero-copy { position: relative; width: 100%; padding: 14px 18px; order: -1; align-items: center; text-align: center; }
   .salon-hero-copy h1 { font-size: clamp(1.625rem, 6.4vw, 2.375rem); max-width: 12em; }
   .salon-hero-copy .preview-kicker { margin-bottom: 8px; }
   .salon-hero-intro { margin: 8px 0 10px; line-height: 1.5; }
   /* A portrait crop gives the photograph more presence beneath the compact copy. */
-  .salon-hero-image { height: auto; aspect-ratio: 0.68; max-height: 42rem; object-position: 85% center; }
-  .salon-hero-actions { gap: 14px; font-size: 10px; justify-content: center; }
-  .salon-hero-actions a:first-child { padding-inline: 18px; gap: 20px; }
+  .salon-hero-image { height: auto; aspect-ratio: 0.68; max-height: none; object-position: 85% center; }
+  .salon-hero-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(100%, 25rem); gap: 10px; font-size: 10px; justify-content: center; }
+  .salon-hero-actions a { min-width: 0; justify-content: center; gap: 8px; padding-inline: 8px; text-align: center; }
+  .salon-hero-actions a:first-child { padding-inline: 10px; gap: 10px; background: var(--color-brand); border-color: var(--color-brand); color: var(--color-brand-foreground); }
+  .salon-hero-actions a:first-child:hover { background: var(--color-brand); color: var(--color-brand-foreground); }
+  .salon-hero-actions a:last-child { border: 1px solid var(--color-border); background: #fff; }
 }
 .preview-page :is(h1, h2), .editorial-page h1.display-heading, .editorial-page h2.display-heading,
 .editorial-heading h1, .admin-page-heading h1, .admin-login-intro h1 { font-weight: 600; letter-spacing: -.045em; line-height: 1.08; }
@@ -63,11 +119,20 @@ html { scroll-padding-top: 80px; }
 .home-section-heading h2, .home-visit h2 { font-weight: 600; font-size: clamp(32px, 4vw, 58px); }
 .home-category-grid h3, .home-visit h3 { font-weight: 600; font-size: 22px; }
 .preview-work, .preview-real { background: var(--color-muted); }
-.preview-service { --color-background: #f5e9ec; --color-foreground: #21191d; --color-muted-foreground: #55474c; --color-brand: #a95769; --color-border: #ddc8ce; background: #f5e9ec; color: #21191d; max-width: none; padding-inline: max(8vw, calc((100vw - 1400px) / 2)); }
-.home-service-menu { --color-background: #241d21; --color-foreground: #fff; --color-muted-foreground: #d7cbd0; --color-brand: #e2a8b3; --color-border: #55464d; background: #241d21; color: #fff; }
-.home-service-menu .preview-kicker { color: #e2a8b3; }
-.home-service-menu .preview-text-link:hover, .home-service-menu .home-category-grid li a:hover { color: #f0c3cb; }
-.preview-work-image, .preview-service-image { padding: clamp(8px, 1vw, 14px); border: 1px solid #aaa; background: #fff; box-shadow: 5px 5px 0 #0000000d; }
+.preview-service { background: var(--color-background); color: var(--color-foreground); max-width: none; padding-inline: max(8vw, calc((100vw - 1400px) / 2)); }
+.home-service-menu { --color-background: var(--color-brand-soft); --color-foreground: #24191d; --color-muted-foreground: #655158; --color-border: color-mix(in srgb, var(--color-brand) 24%, transparent); background: var(--color-brand-soft); color: var(--color-foreground); }
+.home-service-menu .preview-kicker, .home-service-menu .preview-text-link:hover, .home-service-menu .home-category-grid li a:hover { color: var(--color-brand); }
+.home-service-menu .home-section-heading h2 { max-width: 12ch; }
+@media(max-width:767px) {
+  .salon-hero-copy { padding: 14px 18px 18px; }
+  .home-service-menu { padding-block: 3.25rem; }
+  .home-service-menu .home-section-heading h2 { font-size: clamp(2.25rem, 8.5vw, 3rem); line-height: 1.04; }
+  .home-service-menu .home-section-heading .preview-text-link { margin-top: 1.25rem; }
+  .home-service-menu .home-category-grid { gap: 2rem; margin-top: 2.5rem; }
+  .home-service-menu .home-category-grid h3 { margin-bottom: .65rem; color: var(--color-brand); }
+  .home-service-menu .home-category-grid li a { padding-block: .8rem; }
+}
+.preview-work-image, .preview-service-image { padding: clamp(8px, 1vw, 14px); border: 1px solid var(--color-border); background: var(--color-background); box-shadow: 5px 5px 0 color-mix(in srgb, var(--color-foreground) 6%, transparent); }
 .preview-team > img { padding: clamp(8px, 1vw, 14px); border: 1px solid #aaa; background: #fff; box-shadow: 5px 5px 0 #0000000d; }
 .preview-reviews { border-block: 1px solid var(--color-border); }
 .preview-review-grid blockquote { font-size: clamp(18px, 1.7vw, 23px); font-weight: 400; line-height: 1.65; }
@@ -78,7 +143,7 @@ html { scroll-padding-top: 80px; }
 .preview-button, .editorial-action { font-weight: 600; }
 
 /* Page title bands establish the same visual rhythm beyond the homepage. */
-.monochrome-title, .editorial-heading,
+.monochrome-title, .editorial-heading:not(:where(.cart-editorial *)),
 .booking-editorial > section, .contact-editorial > section:first-child {
   --color-background: #000; --color-foreground: #fff;
   --color-muted-foreground: #ccc; --color-primary: #fff; --color-primary-foreground: #000;
@@ -100,13 +165,21 @@ html { scroll-padding-top: 80px; }
 .booking-workspace section ul > li > button[aria-pressed="true"] { border: 2px solid var(--color-foreground); background: var(--color-muted); }
 .booking-summary, .commerce-summary { background: var(--color-muted) !important; }
 .luxury-faq summary { font-weight: 500; }
+.gallery-editorial .gallery-title, .cart-editorial .editorial-heading {
+  padding: clamp(28px, 5vw, 64px);
+  border: 1px solid color-mix(in srgb, var(--color-brand) 25%, var(--color-border));
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, var(--color-brand-soft) 55%, var(--color-background));
+  color: var(--color-foreground);
+}
+.gallery-title .eyebrow, .cart-editorial .editorial-heading .eyebrow { color: var(--color-brand); }
+.gallery-title p { max-width: 650px; }
 .gallery-editorial figure { border-radius: 0; }
 .gallery-editorial figcaption { border-bottom: 1px solid var(--color-border); }
 
 /* Store layout is explicit so empty and future populated states both share the design. */
-/* Matching photo mats on service pages and the complete gallery. */
-.service-discovery-card > div:first-child, .gallery-photo-card { padding: clamp(8px, 1vw, 12px); background: #fff; border: 1px solid #aaa; box-shadow: 4px 4px 0 #0000000d; }
-.service-editorial img { padding: clamp(8px, 1vw, 14px); background: #fff; border: 1px solid #aaa; box-shadow: 4px 4px 0 #0000000d; }
+/* The complete gallery has its own photo treatment. */
+.gallery-photo-card { padding: clamp(8px, 1vw, 12px); background: #fff; border: 1px solid #aaa; box-shadow: 4px 4px 0 #0000000d; }
 .gallery-photo-caption { padding: 16px 6px 6px; color: #111; --color-foreground: #111; --color-muted-foreground: #666; border-bottom: 0 !important; }
 .gallery-image-button { overflow: hidden; }
 .gallery-lightbox figure > img { padding: 10px; border: 1px solid #aaa; background: #fff; }
@@ -166,11 +239,11 @@ html { scroll-padding-top: 80px; }
 @media(max-width:900px) { .store-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
 @media(max-width:767px) {
   .store-hero { grid-template-columns: 1fr; gap: 30px; }
-  .monochrome-title, .editorial-heading { padding: 30px 22px; }
+  .monochrome-title, .editorial-heading, .gallery-editorial .gallery-title, .cart-editorial .editorial-heading { padding: 30px 22px; }
   .preview-reviews-heading h2 { font-size: 36px; }
   .preview-review-grid blockquote { font-size: 20px; }
   .preview-page h2 { font-size: 36px; }
   .hero-editorial-copy h1 { font-size: clamp(40px, 9vw, 60px); }
   .booking-workspace section ul > li > button { padding: 18px 14px; }
 }
-@media(max-width:374px) { .store-grid { grid-template-columns: 1fr; } .site-header-inner > a img { width: 105px; } }
+@media(max-width:374px) { .store-grid { grid-template-columns: 1fr; } }

@@ -18,6 +18,7 @@ import { BOOKING_URL } from "@/lib/site-config";
  */
 export function SiteHeader({ services = [] }: { services?: Service[] }) {
   const t = useTranslations("Nav");
+  const storeT = useTranslations("Store");
   const locale = (useLocale() === "fr" ? "fr" : "en") as Locale;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [treatmentsOpen, setTreatmentsOpen] = useState(false);
@@ -89,14 +90,14 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
           : "site-header border-transparent"
       }`}
     >
-      <div className="site-header-inner flex w-full items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="site-header-inner flex w-full items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
         {/* Brand */}
         <Link
           href="/"
           className="flex items-center gap-2.5 text-foreground transition-opacity hover:opacity-70"
           aria-label="Maryam C Beauté home"
         >
-          <img src="/preview/logo.png" alt="Maryam C Beauté" className="h-12 w-28 object-contain" />
+          <img src="/preview/logo.png" alt="Maryam C Beauté" className="header-brand-logo h-12 w-28 object-contain" />
         </Link>
 
         {/* Desktop nav */}
@@ -203,16 +204,16 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
         </nav>
 
         {/* Right actions */}
-        <div className="site-header-actions flex items-center gap-2 sm:gap-3">
-          {instagram && <a className="header-social" href={instagram.href} target="_blank" rel="noopener noreferrer" aria-label={locale === "fr" ? "Maryam C Beauté sur Instagram" : "Maryam C Beauté on Instagram"}>
+        <div className="site-header-actions flex shrink-0 items-center gap-1 sm:gap-3">
+          {instagram && <a className="header-social header-social--instagram" href={instagram.href} target="_blank" rel="noopener noreferrer" aria-label={locale === "fr" ? "Maryam C Beauté sur Instagram" : "Maryam C Beauté on Instagram"}>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none" /></svg>
             <span>Instagram</span>
           </a>}
-          {facebook && <a className="header-social" href={facebook.href} target="_blank" rel="noopener noreferrer" aria-label={locale === "fr" ? "Maryam C Beauté sur Facebook" : "Maryam C Beauté on Facebook"}>
+          {facebook && <a className="header-social header-social--facebook" href={facebook.href} target="_blank" rel="noopener noreferrer" aria-label={locale === "fr" ? "Maryam C Beauté sur Facebook" : "Maryam C Beauté on Facebook"}>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8.2h2.8l.4-3.2h-3.2v-2c0-.9.3-1.5 1.6-1.5H17V4.2c-.3 0-1.3-.2-2.4-.2-2.5 0-4.2 1.5-4.2 4.3v2.4H7.6v3.2h2.8V22z" /></svg>
             <span>Facebook</span>
           </a>}
-          <div className="hidden sm:block"><CartBadge /></div>
+          <CartBadge />
           <LanguageSwitcher />
 
           <Link
@@ -227,7 +228,7 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
             ref={menuButton}
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted xl:hidden"
+            className="header-menu-button inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted xl:hidden"
             aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
             aria-expanded={mobileOpen}
           >
@@ -285,7 +286,7 @@ export function SiteHeader({ services = [] }: { services?: Service[] }) {
 
             <MobileSection title={t("clinic")}>
               <Link href="/pricing-plans/packages" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{locale === "fr" ? "Forfaits" : "Packages"}</Link>
-              <Link href="/store" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("store")}</Link>
+              <Link href="/store#collection" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{storeT("shop")}</Link>
               <Link href="/about" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("about")}</Link>
               <Link href="/store/cart" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("cart")}</Link>
               <Link href="/gallery" className="block rounded-lg px-2 py-2.5 text-sm hover:bg-muted">{t("results")}</Link>
@@ -354,7 +355,7 @@ function LanguageSwitcher() {
     <button
       type="button"
       onClick={() => router.replace(`${pathname}${window.location.search}${window.location.hash}`, { locale: other })}
-      className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border px-3 text-xs font-medium text-foreground transition-colors hover:border-brand hover:text-brand"
+      className="header-language-switcher inline-flex h-9 items-center gap-1.5 rounded-full border border-border px-3 text-xs font-medium text-foreground transition-colors hover:border-brand hover:text-brand"
       aria-label={t("switchLanguage")}
     >
       <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">

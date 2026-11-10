@@ -47,9 +47,12 @@ test("bilingual contact forms validate and disclose simulated delivery", async (
     await expect(form.getByRole("alert").first()).toBeVisible();
     await page.locator("#contact-name").fill("QA Contact");
     await page.locator("#contact-email").fill("qa-contact@example.com");
+    await page.locator("#contact-phone").fill("+1 (514) 555-0199");
     await page.locator("#contact-message").fill("Temporary browser verification message, not a real appointment request.");
+    const request = page.waitForRequest(r => r.url().endsWith("/api/contact") && r.method() === "POST");
     const response = page.waitForResponse(r => r.url().endsWith("/api/contact") && r.request().method() === "POST");
     await form.locator('button[type="submit"]').click();
+    expect((await request).postDataJSON()).toMatchObject({ phone: "+1 (514) 555-0199" });
     expect((await response).status()).toBe(200);
     await expect(page.locator("#main [role=status]")).toBeVisible();
   }

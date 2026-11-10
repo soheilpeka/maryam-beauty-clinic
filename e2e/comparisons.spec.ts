@@ -1,48 +1,55 @@
 import { test, expect } from "./local-test";
 
-test("comparison text remains readable in light and dark themes", async ({ page }, info) => {
+test("comparison text remains readable under both device preferences", async ({ page }, info) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/en/gallery");
   const card = page.locator("#before-after article").first();
-  for (const dark of [false, true]) {
-    await page.evaluate(value => document.documentElement.classList.toggle("dark", value), dark);
+  for (const colorScheme of ["light", "dark"] as const) {
+    await page.emulateMedia({ colorScheme });
     await card.evaluate(element => element.scrollIntoView({ block: "center", behavior: "instant" }));
     const ratios = await card.evaluate(element => {
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = 1;
+      const context = canvas.getContext("2d")!;
       const luminance = (color: string) => {
-        const rgb = color.match(/[\d.]+/g)!.slice(0, 3).map(Number).map(value => {
+        // CSS color-mix() may serialize as color(srgb ...), not rgb(...).
+        context.clearRect(0, 0, 1, 1);
+        context.fillStyle = color;
+        context.fillRect(0, 0, 1, 1);
+        const rgb = Array.from(context.getImageData(0, 0, 1, 1).data.slice(0, 3), value => {
           const channel = value / 255;
           return channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4;
         });
         return rgb[0] * .2126 + rgb[1] * .7152 + rgb[2] * .0722;
       };
       const background = luminance(getComputedStyle(element).backgroundColor);
-      return [...element.querySelectorAll("h3, figcaption, p")].filter(node => node.textContent?.trim()).map(node => {
+      return [...element.querySelectorAll("h4, figcaption, p")].filter(node => node.textContent?.trim()).map(node => {
         const text = luminance(getComputedStyle(node).color);
         return (Math.max(text, background) + .05) / (Math.min(text, background) + .05);
       });
     });
     for (const ratio of ratios) expect(ratio).toBeGreaterThanOrEqual(4.5);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
-    await card.screenshot({ path: info.outputPath(`comparison-${dark ? "dark" : "light"}.png`) });
+    await card.screenshot({ path: info.outputPath(`comparison-device-${colorScheme}.png`) });
   }
 });
 
 for (const locale of ["en", "fr"]) {
-  test(`${locale}: all 18 comparisons are reachable, localized and filterable`, async ({ page }) => {
+  test(`${locale}: all treatment comparisons are reachable, localized and filterable`, async ({ page }) => {
     await page.goto(`/${locale}/gallery`);
     const gallery = page.locator("#before-after");
-    await expect(gallery.getByRole("slider")).toHaveCount(6);
-    await expect(gallery.getByRole("status")).toContainText("18");
+    await expect(gallery.locator("article")).toHaveCount(6);
+    await expect(gallery.getByRole("status")).toContainText("30");
     const images = new Set<string>();
-    for (let index = 0; index < 3; index++) {
+    for (let index = 0; index < 5; index++) {
       for (const image of await gallery.locator("img").all()) images.add((await image.getAttribute("src"))!);
-      if (index < 2) await gallery.getByRole("button", { name: locale === "fr" ? "Suivant" : "Next", exact: true }).click();
+      if (index < 4) await gallery.getByRole("button", { name: locale === "fr" ? "Suivant" : "Next", exact: true }).click();
     }
-    expect(images.size).toBe(18);
+    expect(images.size).toBe(30);
     await expect(gallery.getByRole("button", { name: locale === "fr" ? "Suivant" : "Next", exact: true })).toBeDisabled();
-    await gallery.getByRole("button", { name: locale === "fr" ? "Radiofréquence" : "Radiofrequency", exact: true }).click();
-    await expect(gallery.getByRole("status")).toContainText("8");
-    await expect(gallery.getByRole("status")).toContainText(locale === "fr" ? "Page 1 sur 2" : "Page 1 of 2");
+    await gallery.getByRole("combobox", { name: locale === "fr" ? "Traitement" : "Treatment" }).selectOption("rf-microneedling");
+    await expect(gallery.locator("article")).toHaveCount(2);
+    await expect(gallery.getByRole("status")).toContainText(locale === "fr" ? "2 comparaisons · Page 1 sur 1" : "2 comparisons · Page 1 of 1");
     for (const src of images) expect((await page.request.get(src)).status()).toBe(200);
   });
 

@@ -4,14 +4,16 @@ import { useRef, useState } from "react";
 import styles from "./packages.module.css";
 import { packageCopy } from "@/lib/content/skin-programs-fr";
 import { skinProgramDetails } from "@/lib/content/skin-program-details";
+import { formatPrice } from "@/lib/content/format";
 
 type Package = {
   slug: string; name: string; strapline: string; description: string; stats: string[];
-  included: string[]; idealFor: string[]; price: string; regular: string; saving: string; payment?: string; count?: number;
+  included: string[]; idealFor: string[]; price: string; regular: string; saving: string; payment?: string; count?: number; giftValueCents?: number;
 };
 
 const themes = ["Discover. Experience. Transform.", "Revive · Refresh · Radiate", "Renew · Refresh · Rejuvenate", "Rebuild · Renew · Restore", "Your most complete skin journey"];
 const counts = ["03", "06", "06", "10", "15"];
+const frenchTitles: Record<string, string> = { "Forfait Essential": "Forfait Essentiel", "Forfait Platinum": "Forfait Platine", "Forfait Diamond": "Forfait Diamant" };
 
 function Mark({ kind }: { kind: number }) {
   return <svg viewBox="0 0 100 100" fill="none" aria-hidden="true">
@@ -48,7 +50,47 @@ export function PackageExperience({ packages, locale }: { packages: Package[]; l
     {discovery && <section className={styles.discovery} aria-labelledby="discovery-title"><div className={styles.discoveryTitle}><span className={styles.pill}>{t("FOR NEW CLIENTS")}</span><h2 id="discovery-title">{t("Start with Discovery.")}</h2><p>{t("Three premium experiences. One visit.")}</p></div><div className={styles.discoverySteps}><span>01 <strong>{t("AI Skin Analysis")}</strong></span><span>02 <strong>{t("Hydra Facial")}</strong></span><span>03 <strong>{t("Matrix Consultation")}</strong></span></div><div className={styles.discoveryPrice}><div><del>{discovery.regular}</del><strong>{discovery.price}</strong></div><button onClick={() => choose(packages.indexOf(discovery), true)}>{t("Explore Discovery")} <span aria-hidden="true">↗</span></button></div></section>}
 
     <section id="programs" className={styles.programs} aria-labelledby="programs-heading"><div className={styles.sectionHeading}><div><p className={styles.kicker}>{t("THE COLLECTION")}</p><h2 id="programs-heading">{t("A little care.")}<br />{" "}{t("A lasting ritual.")}</h2></div><p>{t("Choose your program to explore the treatments, your journey and payment options.")}</p></div>
-      <div className={styles.selectors}>{packages.filter(p => p.slug !== "discovery").map(p => { const index = packages.indexOf(p); const cardKind = kindOf(p); const overview = skinProgramDetails(p.slug, locale); return <button key={p.slug} aria-pressed={selected === index} aria-controls="package-detail" className={`${styles.selector} ${selected === index ? styles.active : ""}`} onClick={() => choose(index, true)}><div className={styles.selectorTop}><span className={styles.kicker}>{t(cardKind === 1 ? "GLOW & MAINTENANCE" : cardKind === 2 ? "RENEWAL & PREVENTION" : cardKind === 3 ? "ADVANCED CARE" : "COMPLETE CARE")}</span><Mark kind={cardKind} /></div><h3>{p.name.replace(" Package", "").replace("Forfait ", "")}</h3><p className={styles.theme}>{t(themes[cardKind] ?? p.strapline)}</p>{overview && <ul className={styles.selectorBreakdown}>{overview.summary.map(line => <li key={line}>{line}</li>)}</ul>}<div className={styles.treatmentCount}><strong>{countOf(p)}</strong><span>{t("premium")}<br />{t("treatments")}</span></div><div className={styles.selectorPrice}><div><del>{p.regular}</del><strong>{p.price}</strong></div><span>{t(p.saving)}</span></div><div className={styles.selectorFooter}><span>{p.payment ? <>{monthlyOf(p)}{t(" / month")}</> : t("Book a consultation")}</span><span aria-hidden="true">{selected === index ? "✓" : "↗"}</span></div></button>; })}</div>
+      <div className={styles.selectors}>
+        {packages.map((p, index) => {
+          if (p.slug === "discovery") return null;
+          const cardKind = kindOf(p);
+          const treatments = skinProgramDetails(p.slug, locale)?.summary ?? p.included.slice(0, 3);
+          const gift = p.giftValueCents ? formatPrice(p.giftValueCents, fr ? "fr" : "en") : undefined;
+          const title = fr ? (frenchTitles[p.name] ?? p.name).replace(/^Forfait /, "") : p.name.replace(/ Package$/, "");
+          return (
+            <button type="button" key={p.slug} aria-pressed={selected === index} aria-controls="package-detail"
+              className={`${styles.selector} ${selected === index ? styles.active : ""}`} onClick={() => choose(index, true)}>
+              <div className={styles.selectorTop}>
+                <span className={styles.kicker}>{t(cardKind === 1 ? "GLOW & MAINTENANCE" : cardKind === 2 ? "RENEWAL & PREVENTION" : cardKind === 3 ? "ADVANCED CARE" : "COMPLETE CARE")}</span>
+                <Mark kind={cardKind} />
+              </div>
+              <h3>{title}</h3>
+              <p className={styles.theme}>{t(themes[cardKind] ?? p.strapline)}</p>
+              <ul className={styles.selectorBreakdown}>
+                {treatments.map((line, i) => <li key={`${i}-${line}`}>{t(line)}</li>)}
+              </ul>
+              <div className={styles.treatmentCount}><strong>{countOf(p)}</strong><span>{t("premium")}<br />{t("treatments")}</span></div>
+              <div className={styles.selectorPrice}>
+                <div>
+                  {p.regular && <del>{p.regular}</del>}
+                  <strong>{p.price}</strong>
+                  {gift && <span className={styles.selectorGift}>
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 11v9h16v-9M3 7h18v4H3zM12 7v13M12 7H8a2.5 2.5 0 1 1 2.3-3.4L12 7Zm0 0h4a2.5 2.5 0 1 0-2.3-3.4L12 7Z" />
+                    </svg>
+                    {fr ? `Cadeau de ${gift} offert` : `${gift} gift included`}
+                  </span>}
+                </div>
+                {p.saving && <span>{t(p.saving)}</span>}
+              </div>
+              <div className={styles.selectorFooter}>
+                <span>{p.payment ? <>{monthlyOf(p)}{t(" / month")}</> : t("Book a consultation")}</span>
+                <span aria-hidden="true">{selected === index ? "✓" : "↗"}</span>
+              </div>
+            </button>
+          );
+        })}
+      </div>
     </section>
 
     <section id="package-detail" ref={detail} className={styles.detail} aria-labelledby="detail-title"><div className={styles.detailHeading}><div><p className={styles.kicker}>{t("YOUR PROGRAM /")} 0{selected + 1}</p><h2 id="detail-title" tabIndex={-1} aria-live="polite" aria-atomic="true">{item.name.replace(" Package", "").replace("Forfait ", "")}</h2><p>{t(item.strapline)}</p>{extra && <p className={styles.motto}>{extra.motto}</p>}</div><div className={styles.detailSeal}><Mark kind={kind} /><span>{countOf(item)} {t(kind === 0 ? "EXPERIENCES" : "TREATMENTS")}</span></div></div>

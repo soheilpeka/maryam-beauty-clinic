@@ -1,4 +1,10 @@
 .comparison { margin: 0; min-width: 0; }
+.fullPair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+.images.fullPhoto { cursor: default; }
+.viewControls { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem; padding-top: .75rem; font-size: .7rem; }
+.viewControls button, .viewControls a { display: inline-flex; align-items: center; justify-content: center; min-height: 2.5rem; padding: .35rem .65rem; border: 1px solid var(--color-border); border-radius: 2rem; background: transparent; color: var(--color-foreground); text-decoration: none; }
+.viewControls button[aria-pressed="true"] { border-color: var(--color-brand); background: var(--color-brand); color: #fff; }
+.viewControls :is(button, a):focus-visible { outline: 2px solid var(--color-brand); outline-offset: 3px; }
 .images { position: relative; overflow: hidden; border-radius: var(--comparison-radius, 1.5rem); background: #e8e4de; isolation: isolate; cursor: ew-resize; touch-action: pan-y; user-select: none; }
 .layer { position: absolute; inset: 0; overflow: hidden; }
 /* Full boards remain intact. Each viewport reveals one panel only. */
@@ -11,5 +17,5 @@
 .after { background: var(--color-brand, #974454); color: #fff; }
 .range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; pointer-events: none; }
 .images:focus-within { outline: 2px solid var(--comparison-focus, #74634b); outline-offset: 4px; }
-.instruction { padding-top: 1rem; color: #625f5b; font-size: .75rem; line-height: 1.6; }
+.instruction { padding-top: .5rem; color: #625f5b; font-size: .75rem; line-height: 1.6; }
 @media (min-width: 768px) { .images { border-radius: var(--comparison-radius, 1.75rem); } }

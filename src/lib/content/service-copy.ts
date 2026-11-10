@@ -1,5 +1,5 @@
 import type { ServiceDetail } from "@/lib/content/services";
-import { OWNER_SERVICE_COPY } from "@/lib/content/owner-service-copy";
+import { OWNER_SERVICE_COPY, PREVIOUS_OWNER_SERVICE_COPY } from "@/lib/content/owner-service-copy";
 
 type BilingualCopy = {
   summary: string;
@@ -111,7 +111,7 @@ export const SERVICE_COPY: Record<string, BilingualCopy> = {
 
 const OWNER_COPY_SLUGS = Object.keys(OWNER_SERVICE_COPY);
 export const LEGACY_FULL_SERVICE_DESCRIPTIONS: Record<string, { en: string; fr: string }> = Object.fromEntries(
-  OWNER_COPY_SLUGS.map((slug) => {
+  OWNER_COPY_SLUGS.filter(slug => SERVICE_COPY[slug]).map((slug) => {
     const old = SERVICE_COPY[slug];
     const build = (locale: "en" | "fr") => {
       const summary = locale === "fr" ? old.summaryFr : old.summary;
@@ -133,7 +133,10 @@ const headingAliases: Record<string, string> = Object.fromEntries([
   ["Preview", "preview"], ["Aperçu", "preview"],
   ["Service Description", "description"], ["Description du service", "description"],
   ["Treatment Highlights", "highlights"], ["Points forts du traitement", "highlights"], ["Points forts du service", "highlights"], ["Points forts du soin", "highlights"],
+  ["Haircut Highlights", "highlights"], ["Les points forts", "highlights"], ["Les points forts de la coupe", "highlights"],
   ["A Personal Approach", "approach"], ["Une approche personnalisée", "approach"],
+  ["Your Visit, Thoughtfully Planned", "approach"], ["Une visite pensée pour vous", "approach"],
+  ["A Treatment Plan Made With Your Skin in Mind", "approach"], ["Un plan de traitement adapté à votre peau", "approach"],
   ["Duration", "duration"], ["Durée", "duration"],
   ["What can I expect?", "faq"], ["À quoi puis-je m’attendre?", "faq"],
   ["How can I care for my skin after my visit?", "faq"], ["Comment prendre soin de ma peau après le rendez-vous?", "faq"],
@@ -146,13 +149,27 @@ const headingAliases: Record<string, string> = Object.fromEntries([
 export function parseServiceDescription(slug: string, text: string | null | undefined, locale: "en" | "fr"): ParsedServiceDescription | undefined {
   if (!text?.trim()) return undefined;
   const sections = new Map<string, string[]>();
+  const sectionTitles = new Map<string, string>();
   const faqHeadings = new Map<string, string>();
   let sectionKey = "description";
   let faqQuestion = "";
-  for (const line of text.replace(/\r\n/g, "\n").split("\n")) {
+  let approachLabel: string | undefined;
+  let hasSectionHeading = false;
+  const lines = text.replace(/\r\n/g, "\n").split("\n");
+  for (const [index, line] of lines.entries()) {
     const normalized = normalizeHeading(line);
-    const mapped = headingAliases[normalized];
+    // The visit heading and its small label are separate from the approach prose.
+    if (sectionKey === "approach" && ["made for you", "une approche personnalisee"].includes(normalized) && !sections.get("approach")?.some(part => part.trim())) {
+      approachLabel = line.trim();
+      continue;
+    }
+    // CMS authors may supply service-specific questions beyond the original skin FAQs.
+    // Only standalone questions in a sectioned document are treated as FAQ headings.
+    const standaloneQuestion = hasSectionHeading && /^[^*•?？\n]{1,180}[?？]$/.test(line.trim())
+      && !lines[index - 1]?.trim() && !lines[index + 1]?.trim();
+    const mapped = headingAliases[normalized] ?? (standaloneQuestion ? "faq" : undefined);
     if (mapped) {
+      hasSectionHeading = true;
       if (mapped === "faq") {
         faqQuestion = line.replace(/^#+\s*/, "").trim().replace(/[?？]+$/, "?");
         sectionKey = `faq:${faqQuestion}`;
@@ -160,6 +177,7 @@ export function parseServiceDescription(slug: string, text: string | null | unde
       } else {
         sectionKey = mapped;
         faqQuestion = "";
+        sectionTitles.set(mapped, line.replace(/^#+\s*/, "").trim().replace(/:$/, ""));
       }
       if (!sections.has(sectionKey)) sections.set(sectionKey, []);
       continue;
@@ -174,27 +192,31 @@ export function parseServiceDescription(slug: string, text: string | null | unde
   const description = content("description");
   const highlightLines = content("highlights");
   const approachLines = blocks(content("approach"));
+  const approachHeading = sectionTitles.get("approach");
+  const visitHeading = approachHeading && /^(your visit|une visite|a treatment plan|un plan de traitement)/.test(normalizeHeading(approachHeading));
   const faqs = [...faqHeadings.entries()].map(([key, question]) => ({ question, answer: content(key) })).filter((faq) => faq.answer);
-  const structured = sections.has("preview") || sections.has("highlights") || sections.has("approach") || sections.has("duration") || faqs.length > 0 || sections.has("booking");
+  const hasDescriptionHeading = text.replace(/\r\n/g, "\n").split("\n").some((line) => headingAliases[normalizeHeading(line)] === "description");
+  const structured = sections.has("preview") || hasDescriptionHeading || sections.has("highlights") || sections.has("approach") || sections.has("duration") || faqs.length > 0 || sections.has("booking");
   if (!structured) {
     const paragraphs = blocks(text);
     const copy = SERVICE_COPY[slug];
     const fullDefault = fullServiceDescription(slug, locale);
     if (copy && text === fullDefault) return { summary: locale === "fr" ? copy.summaryFr : copy.summary, detail: locale === "fr" ? copy.detailFr : copy.detail };
-    return { summary: paragraphs[0] ?? "", detail: paragraphs.length > 1 ? { paragraphs: paragraphs.slice(1) } : undefined };
+    return { summary: "", detail: { paragraphs, customSections: true } };
   }
   const detail: ServiceDetail = {
     paragraphs: blocks(description),
     highlights: highlightLines ? list(highlightLines) : undefined,
-    highlightsTitle: sections.has("highlights") ? (locale === "fr" ? "Points forts du soin" : "Treatment Highlights") : undefined,
-    personalApproachTitle: approachLines[0],
-    personalApproach: approachLines.slice(1),
+    highlightsTitle: sectionTitles.get("highlights"),
+    personalApproachTitle: visitHeading ? approachHeading : approachLines[0],
+    personalApproachLabel: approachLabel,
+    personalApproach: visitHeading ? approachLines : approachLines.slice(1),
     durationText: content("duration") || undefined,
     faqs: faqs.length ? faqs : undefined,
     bookingPrompt: content("booking") || undefined,
     customSections: true,
   };
-  return { summary: summary || blocks(description)[0] || "", detail };
+  return { summary, detail };
 }
 
 for (const [slug, copy] of Object.entries(OWNER_SERVICE_COPY)) {
@@ -384,12 +406,19 @@ export function fullServiceDescription(slug: string, locale: "en" | "fr"): strin
   return [locale === "fr" ? copy.summaryFr : copy.summary, ...paragraphs].join("\n\n");
 }
 
-export function resolveServiceDescription(slug: string, description: string | null | undefined, locale: "en" | "fr"): ParsedServiceDescription | undefined {
+export function isLegacyServiceDescription(slug: string, description: string | null | undefined, locale: "en" | "fr"): boolean {
   const previous = LEGACY_SERVICE_SUMMARIES[slug];
-  const ownerCopy = OWNER_SERVICE_COPY[slug];
   const legacyFull = LEGACY_FULL_SERVICE_DESCRIPTIONS[slug]?.[locale];
   const legacyPublicPreview = LEGACY_PUBLIC_SERVICE_PREVIEWS[slug]?.[locale];
-  const isOldContent = (previous && description === previous[locale]) || (legacyFull && description === legacyFull) || (legacyPublicPreview && description === legacyPublicPreview);
+  const previousOwner = PREVIOUS_OWNER_SERVICE_COPY[slug]?.[locale];
+  return !!description?.trim() && [previous?.[locale], legacyFull, legacyPublicPreview, previousOwner].some(
+    candidate => candidate?.replace(/\r\n/g, "\n").trim() === description.replace(/\r\n/g, "\n").trim(),
+  );
+}
+
+export function resolveServiceDescription(slug: string, description: string | null | undefined, locale: "en" | "fr"): ParsedServiceDescription | undefined {
+  const ownerCopy = OWNER_SERVICE_COPY[slug];
+  const isOldContent = isLegacyServiceDescription(slug, description, locale);
   const text = !description?.trim() || isOldContent ? ownerCopy?.[locale] ?? fullServiceDescription(slug, locale) : description;
   if (!text) return undefined;
   const parsed = parseServiceDescription(slug, text, locale);

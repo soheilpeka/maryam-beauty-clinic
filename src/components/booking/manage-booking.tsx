@@ -94,7 +94,7 @@ export function ManageBooking({ booking, token, locale: _locale }: ManageBooking
           <h2 className="font-serif text-xl font-semibold text-neutral-900 dark:text-neutral-50">
             {booking.declined ? (tLocale === "fr" ? "Demande refusée" : "Request declined") : t("canceledTitle")}
           </h2>
-          <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">{booking.declined ? (tLocale === "fr" ? "Contactez le studio pour discuter d’une autre date." : "Contact the studio to discuss another date.") : t("canceledBody")}</p>
+          <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">{booking.declined ? (tLocale === "fr" ? "Contactez le salon pour discuter d’une autre date." : "Contact the salon to discuss another date.") : t("canceledBody")}</p>
         </div>
       ) : (
         <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-card">

@@ -31,6 +31,7 @@ export type CustomerInput = z.infer<typeof customerSchema>;
 export const contactSchema = z.object({
   name: z.string().trim().min(2, { message: "validation.name.min" }).max(80, { message: "validation.name.max" }),
   email: z.string().trim().toLowerCase().max(254, { message: "validation.email.invalid" }).email({ message: "validation.email.invalid" }),
+  phone: z.string().trim().max(40, { message: "validation.phone.invalid" }).regex(phoneRegex, { message: "validation.phone.invalid" }).refine(value => value.replace(/\D/g, "").length >= 7, { message: "validation.phone.invalid" }),
   message: z.string().trim().min(10, { message: "validation.message.min" }).max(2000, { message: "validation.message.max" }),
   locale: z.enum(["en", "fr"]).default("en"),
 }).strict();

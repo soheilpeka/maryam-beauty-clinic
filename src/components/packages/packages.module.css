@@ -33,6 +33,7 @@
 .page .kicker, .selectorPrice strong, .bigPrice, .selectorFooter > span:last-child { color: var(--color-brand); }
 .theme { color: var(--color-brand); opacity: .92; }
 .selectorTop svg, .detailSeal svg { stroke: #c7838e; }
+.selectorTop svg { width: clamp(2.125rem, 4vw, 2.75rem); height: auto; stroke: var(--rose-ink); stroke-width: 3; }
 .selector.active { background: var(--rose-soft); color: #241d20; border-color: #c7838e; }
 .active .kicker, .active .selectorPrice strong, .active .selectorFooter > span:last-child { color: var(--rose-ink); }
 .active .theme { color: #904454; }
@@ -67,8 +68,8 @@
   .theme, .treatmentCount { display: none; }
   .selectorTop { display: block; position: absolute; top: .9rem; right: .65rem; min-height: 0; }
   .selectorTop > .kicker { display: none; }
-  .selectorTop svg { display: block; width: 1.25rem; height: 1.25rem; }
-  .selector h3 { font-size: 1.25rem; line-height: 1.2; min-height: 2.4rem; margin: 0; padding-right: 1.35rem; overflow-wrap: anywhere; }
+  .selectorTop svg { display: block; width: 1.75rem; height: 1.75rem; }
+  .selector h3 { font-size: 1.25rem; line-height: 1.2; min-height: 2.4rem; margin: 0; padding-right: 2rem; overflow-wrap: anywhere; }
   .selectorBreakdown { min-height: 3.3rem; margin: 0; padding: 0; border: 0; font-size: .7rem; line-height: 1.6; }
   .selectorBreakdown li:before { display: none; }
   .selectorPrice { padding: .65rem 0 0; }
@@ -78,3 +79,6 @@
   .selectorPrice > span { display: none; }
   .selectorFooter { min-height: 2.5rem; align-items: center; padding: .65rem 0; font-size: .7rem; gap: .4rem; }
 }
+
+.selectorGift { display: inline-flex; align-items: center; gap: .3rem; margin-top: .25rem; font-size: .68rem; line-height: 1.35; }
+.selectorGift svg { width: .9rem; height: .9rem; flex: 0 0 auto; }

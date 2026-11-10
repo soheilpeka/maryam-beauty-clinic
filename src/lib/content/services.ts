@@ -4,15 +4,23 @@
  */
 import type { Locale } from "@/i18n/routing";
 import { SERVICE_COPY } from "@/lib/content/service-copy";
+import { SERVICE_PHOTOS } from "@/lib/content/service-photos";
 
 /** Categories are CMS text values; the four original groups remain the built-in defaults. */
 export type ServiceCategory = string;
+export interface ServicePhoto {
+  id: string;
+  url: string;
+  altEn: string;
+  altFr: string;
+}
 export interface ServiceDetail {
   tagline?: string;
   paragraphs: string[];
   highlights?: string[];
   highlightsTitle?: string;
   personalApproachTitle?: string;
+  personalApproachLabel?: string;
   personalApproach?: string[];
   durationText?: string;
   faqs?: { question: string; answer: string }[];
@@ -22,6 +30,7 @@ export interface ServiceDetail {
 export interface Service {
   slug: string; name: string; nameFr?: string; category: ServiceCategory; priceLabel: string;
   price: number; duration: number; summary: string; summaryFr?: string; image: string;
+  images?: ServicePhoto[];
   detail?: ServiceDetail; detailFr?: ServiceDetail; order: number;
 }
 
@@ -80,9 +89,12 @@ export const SERVICES: Service[] = [
   { slug: "swedish-relaxation-massage", name: "Swedish & Relaxation Massage", nameFr: "Massage suédois et de relaxation", category: "Wellness", priceLabel: consultation, price: 0, duration: 0, summary: "A calm massage experience with pressure, areas of focus and comfort discussed before the session.", summaryFr: "Une expérience de massage apaisante dont la pression, les zones ciblées et le confort sont discutés avant la séance.", image: image("salon-generated.png"), order: 14 },
   { slug: "lash-brow-lamination", name: "Lash & Brow Lamination", nameFr: "Rehaussement des cils et lamination des sourcils", category: "Makeup", priceLabel: consultation, price: 0, duration: 0, summary: "A refined lash and brow service selected around your natural growth, features and preferred finish.", summaryFr: "Un soin raffiné des cils et sourcils choisi selon leur croissance naturelle, vos traits et le fini souhaité.", image: "/media/salon/img_8204.webp", order: 15 },
   { slug: "laser-skin-rejuvenation", name: "Laser Skin Rejuvenation", nameFr: "Rajeunissement cutané au laser", category: "Aesthetic", priceLabel: consultation, price: 0, duration: 0, summary: "Technology-led skin care with suitability, expectations and aftercare reviewed before treatment.", summaryFr: "Un soin de la peau assisté par technologie, avec pertinence, attentes et conseils après-traitement examinés avant le soin.", image: image("rf-device.jpeg"), order: 16 },
+  { slug: "pigmented-lesions-laser-treatment", name: "Pigmented Lesion Laser Treatment", nameFr: "Traitement laser des taches pigmentaires", category: "Aesthetic", priceLabel: consultation, price: 0, duration: 0, summary: "", image: "/media/services/pigmented-lesions-laser-treatment/01.webp", order: 17 },
 ];
 
 for (const service of SERVICES) {
+  const photos = SERVICE_PHOTOS[service.slug];
+  if (photos?.length) { service.image = photos[0].url; service.images = photos; }
   const copy = SERVICE_COPY[service.slug];
   if (!copy) continue;
   service.summary = copy.summary;

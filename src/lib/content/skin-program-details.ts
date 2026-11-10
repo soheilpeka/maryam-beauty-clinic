@@ -88,7 +88,7 @@ export const SKIN_PROGRAM_DETAILS: Record<string, Detail> = {
       { title: c("Professional care", "Soins professionnels"), text: c("Advanced technology and professional care across both treatment phases.", "Technologie avancée et soins professionnels au cours des deux phases.") },
     ],
     goals: [c("Firmer, tighter-looking skin", "Peau d’apparence plus ferme et tonique"), c("Collagen support", "Soutien du collagène"), c("Deep hydration", "Hydratation profonde"), c("Improved skin texture", "Amélioration de la texture de la peau"), c("Long-term skin health", "Entretien durable de la peau")],
-    summary: [c("3 Matrix RF Microneedling", "3 microneedling RF Matrix"), c("3 Signature HydraFacial", "3 HydraFacial signature")],
+    summary: [c("3 Signature HydraFacial treatments", "3 soins HydraFacial signature"), c("3 Matrix RF Microneedling treatments", "3 soins de microneedling RF Matrix")],
     appointmentSummary: c("6 appointments · 2 treatment phases", "6 rendez-vous · 2 phases de soins"),
     phases: [
       { when: c("Months 1–3", "Mois 1–3"), name: c("Skin regeneration", "Régénération de la peau"), text: c("3 Matrix RF Microneedling treatments, one per month.", "3 soins de microneedling RF Matrix, un par mois.") },
@@ -106,7 +106,7 @@ export const SKIN_PROGRAM_DETAILS: Record<string, Detail> = {
     quote: c("Advanced science. Visible results.", "Science avancée. Progrès visibles."),
     closing: c("Invest in your skin. Invest in your confidence.", "Investissez dans votre peau. Investissez dans votre confiance."),
     highlights: advancedHighlights, goals: advancedGoals, extraConcerns: advancedConcerns,
-    summary: [c("3 Matrix + 3 RF", "3 Matrix + 3 RF"), c("4 Signature HydraFacial", "4 HydraFacial signature")],
+    summary: [c("3 RF treatments", "3 soins RF"), c("3 RF Microneedling treatments", "3 soins de microneedling RF"), c("4 Signature HydraFacial treatments", "4 soins HydraFacial signature")],
     appointmentSummary: c("Matrix + RF: 2.5 hours per visit · Hydra Facial: 1.5 hours per visit", "Matrix + RF : 2,5 heures par visite · Hydra Facial : 1,5 heure par visite"),
     phases: [
       { when: c("Phase 1", "Phase 1"), name: matrix, text: c("3 combined sessions, 2.5 hours each, 4 weeks apart.", "3 séances combinées de 2,5 heures, espacées de 4 semaines.") },
@@ -123,7 +123,7 @@ export const SKIN_PROGRAM_DETAILS: Record<string, Detail> = {
     quote: c("Advanced science. Visible results. Lasting confidence.", "Science avancée. Progrès visibles. Confiance durable."),
     closing: c("Invest in your skin. Invest in your confidence.", "Investissez dans votre peau. Investissez dans votre confiance."),
     highlights: advancedHighlights, goals: advancedGoals, extraConcerns: advancedConcerns,
-    summary: [c("5 Matrix + 5 RF", "5 Matrix + 5 RF"), c("5 Signature HydraFacial", "5 HydraFacial signature")],
+    summary: [c("5 RF treatments", "5 soins RF"), c("5 RF Microneedling treatments", "5 soins de microneedling RF"), c("5 Signature HydraFacial treatments", "5 soins HydraFacial signature")],
     appointmentSummary: c("10 appointments · 15 treatments · two complementary phases", "10 rendez-vous · 15 soins · deux phases complémentaires"),
     phases: [
       { when: c("Phase 1", "Phase 1"), name: c("Rebuild & renew", "Reconstruire et renouveler"), text: c("5 Candela Matrix RF Microneedling treatments + 5 RF treatments, focused on collagen support and skin tightening.", "5 soins de microneedling RF Candela Matrix + 5 soins RF, axés sur le soutien du collagène et la fermeté de la peau.") },

@@ -5,12 +5,15 @@ import { photoViewportStyle } from "@/lib/content/comparisons";
 import styles from "./image-comparison.module.css";
 
 /** Use only with an owner-approved pair of the same subject and treatment. */
-export function ImageComparison({ before, after, beforeLabel, afterLabel, label, aspectRatio = 4 / 3 }: {
+export function ImageComparison({ before, after, beforeLabel, afterLabel, label, aspectRatio = 4 / 3, locale = "en", fullPhotosInitially = false }: {
   before: { src: string; alt: string; viewport?: PhotoViewport }; after: { src: string; alt: string; viewport?: PhotoViewport };
   beforeLabel: string; afterLabel: string; label: string; aspectRatio?: number;
+  locale?: "en" | "fr"; fullPhotosInitially?: boolean;
 }) {
   const id = useId();
   const [position, setPosition] = useState(50);
+  const [fullPhotos, setFullPhotos] = useState(fullPhotosInitially);
+  const fr = locale === "fr";
   const range = useRef<HTMLInputElement>(null);
   const drag = useRef<{ id: number; x: number; y: number; horizontal: boolean } | null>(null);
   function move(clientX: number, element: HTMLElement) {
@@ -40,13 +43,23 @@ export function ImageComparison({ before, after, beforeLabel, afterLabel, label,
   }
   const photo = (value: typeof before) => <img className={styles.photo} src={value.src} alt={value.alt} loading="lazy" decoding="async" draggable={false} style={value.viewport ? photoViewportStyle(value.viewport) : undefined} />;
   return <figure className={styles.comparison}>
-    <div className={styles.images} style={{ aspectRatio }} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp}
+    {fullPhotos ? <div className={styles.fullPair}>
+      {[before, after].map((value, index) => <div key={index} className={`${styles.images} ${styles.fullPhoto}`} style={{ aspectRatio }}>
+        <div className={styles.layer}>{photo(value)}</div>
+        <span className={`${styles.badge} ${index ? styles.after : styles.before}`}>{index ? afterLabel : beforeLabel}</span>
+      </div>)}
+    </div> : <div className={styles.images} style={{ aspectRatio }} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp}
       onPointerCancel={() => { drag.current = null; }} onLostPointerCapture={() => { drag.current = null; }}>
       <div className={styles.layer}>{photo(after)}</div>
       <div className={styles.layer} style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}>{photo(before)}</div>
       <span className={styles.line} style={{ left: `${position}%` }} aria-hidden="true"><span>↔</span></span>
       <span className={`${styles.badge} ${styles.before}`}>{beforeLabel}</span><span className={`${styles.badge} ${styles.after}`}>{afterLabel}</span>
       <input ref={range} id={id} className={styles.range} type="range" min="0" max="100" step="1" value={position} onChange={event => setPosition(Number(event.target.value))} aria-label={label} aria-valuetext={`${beforeLabel} ${position}%, ${afterLabel} ${100 - position}%`} />
-    </div><figcaption className={styles.instruction}><label htmlFor={id}>{label}</label></figcaption>
+    </div>}
+    <div className={styles.viewControls} role="group" aria-label={fr ? "Affichage des photos" : "Photo view"}>
+      <button type="button" aria-pressed={!fullPhotos} onClick={() => setFullPhotos(false)}>{fr ? "Curseur" : "Slider"}</button>
+      <button type="button" aria-pressed={fullPhotos} onClick={() => setFullPhotos(true)}>{fr ? "Photos entières" : "Full photos"}</button>
+    </div>
+    <figcaption className={styles.instruction}>{fullPhotos ? `${beforeLabel} / ${afterLabel}` : <label htmlFor={id}>{label}</label>}</figcaption>
   </figure>;
 }

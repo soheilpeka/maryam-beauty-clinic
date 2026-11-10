@@ -29,14 +29,17 @@ test("sold-out, loading and quantity controls stay accessible in both locales", 
   }
 });
 
-test("dark theme and reduced motion retain the editorial palette and responsive layout", async ({ page }, info) => {
+test("dark device preference and an old dark setting still render the light site", async ({ page }, info) => {
   await page.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" });
+  await page.addInitScript(() => localStorage.setItem("mbc-theme", "dark"));
   for (const locale of ["en", "fr"]) {
-    for (const path of ["/about", "/booking", "/store", "/store/cart", "/store/checkout", "/service-page/rf-microneedling", "/contact", "/admin/login"]) {
+    for (const path of ["", "/about", "/booking", "/store", "/store/cart", "/store/checkout", "/service-page/rf-microneedling", "/pricing-plans/packages", "/contact", "/admin/login"]) {
       await page.goto(`/${locale}${path}`);
-      await expect(page.locator("html")).toHaveClass(/dark/);
+      await expect(page.locator("html")).not.toHaveClass(/\bdark\b/);
+      await expect(page.locator("html")).toHaveCSS("color-scheme", /^(light only|only light)$/);
+      await expect(page.locator("body")).toHaveCSS("background-color", "rgb(255, 255, 255)");
       expect(await page.evaluate(() => document.documentElement.scrollWidth), path).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
-      await page.screenshot({ path: info.outputPath(`dark-${locale}${path.replaceAll("/", "-")}.png`) });
+      await page.screenshot({ path: info.outputPath(`light-${locale}${path.replaceAll("/", "-")}.png`) });
     }
   }
 });

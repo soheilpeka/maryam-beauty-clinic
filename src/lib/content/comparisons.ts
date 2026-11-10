@@ -16,11 +16,19 @@ function example(index: number, title: string, titleFr: string, family: Comparis
   const crop = (rectangle: number[]): PhotoViewport => ({ x: rectangle[0] / boardWidth, y: rectangle[1] / boardHeight, width: rectangle[2] / boardWidth, height: rectangle[3] / boardHeight });
   return { id: `comparison-${String(index).padStart(2, "0")}`, image: `/media/comparisons/comparison-${String(index).padStart(2, "0")}.webp`, family, title, titleFr, before: crop(left), after: crop(right), boardRatio: boardWidth / boardHeight };
 }
+function pigmentation(index: number, imageNumber: number, title: string, titleFr: string): ComparisonExample {
+  return {
+    id: `comparison-${index}`, image: `/media/services/pigmented-lesions-laser-treatment/${String(imageNumber).padStart(2, "0")}.webp`,
+    family: "laser", title, titleFr, boardRatio: 1320 / 609,
+    before: { x: 1 / 1320, y: 86 / 609, width: 654 / 1320, height: 449 / 609 },
+    after: { x: 661 / 1320, y: 86 / 609, width: 654 / 1320, height: 449 / 609 },
+  };
+}
 export const COMPARISONS: ComparisonExample[] = [
   example(1, "Neck · hair", "Nuque · pilosité", "laser"),
   example(2, "Chin · hair", "Menton · pilosité", "laser"),
   example(3, "Cheek · hair", "Joue · pilosité", "laser", "pro"),
-  example(4, "Upper lip · hair", "Lèvre supérieure · pilosité", "laser", "pro"),
+  example(4, "Ear · hair", "Oreille · pilosité", "laser", "pro"),
   example(5, "Leg · visible vessels", "Jambe · vaisseaux visibles", "laser", "pro"),
   example(6, "Back · hair", "Dos · pilosité", "laser", "pro"),
   example(7, "Neck · hair", "Cou · pilosité", "laser", "pro"),
@@ -35,6 +43,8 @@ export const COMPARISONS: ComparisonExample[] = [
   example(16, "Cheek · skin texture", "Joue · texture de la peau", "rf"),
   example(17, "Face · skin appearance", "Visage · aspect de la peau", "rf"),
   example(18, "Underarm · hair", "Aisselle · pilosité", "laser", "underarm"),
+  pigmentation(19, 1, "Décolletage · pigmentation", "Décolleté · pigmentation"),
+  pigmentation(20, 2, "Shoulder · pigmentation", "Épaule · pigmentation"),
 ];
 export function photoViewportStyle(crop: PhotoViewport) {
   return { width: `${100 / crop.width}%`, height: `${100 / crop.height}%`, left: `${-100 * crop.x / crop.width}%`, top: `${-100 * crop.y / crop.height}%` };

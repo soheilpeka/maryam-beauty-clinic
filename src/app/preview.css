@@ -1,5 +1,5 @@
 /* Homepage editorial system. One set of rules replaces the legacy preview overrides. */
-.preview-page{background:var(--color-background);color:var(--color-foreground);font-family:var(--font-sans)}
+.preview-page{background:var(--color-background);color:var(--color-foreground);font-family:var(--font-sans);width:100%;min-width:0;overflow-x:clip}
 .preview-page img{display:block;max-width:100%}.preview-page a{text-decoration:none;color:inherit}
 .preview-kicker{font-size:10px;letter-spacing:.22em;text-transform:uppercase;margin:0 0 22px;color:var(--color-muted-foreground)}
 .preview-page :is(h1,h2){font-family:var(--font-serif);font-weight:600;letter-spacing:-.045em;line-height:1.06;text-wrap:balance;margin:0}
@@ -11,13 +11,13 @@
 .preview-model-full{overflow:hidden}.preview-model-full img{width:100%;height:auto;aspect-ratio:2.4;object-fit:cover;object-position:center 38%}
 .preview-button,.preview-text-link{display:inline-flex;align-items:center;gap:24px;font-size:11px;letter-spacing:.13em;text-transform:uppercase;border-bottom:1px solid currentColor;padding:12px 0;min-height:44px;transition:opacity .2s,gap .2s}
 .preview-button:hover,.preview-text-link:hover{opacity:.65;gap:30px}.preview-page a:focus-visible{outline:2px solid currentColor;outline-offset:5px}
-.preview-work,.preview-service,.preview-real,.preview-team{padding:100px 8vw;display:grid;grid-template-columns:1fr 1fr;gap:9vw;align-items:center;max-width:1600px;margin:auto}
+.preview-work,.preview-service,.preview-real,.preview-team{padding:100px 8vw;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9vw;align-items:center;width:100%;min-width:0;box-sizing:border-box;max-width:1600px;margin:auto}
 .preview-work-image img{width:100%;aspect-ratio:4/5;object-fit:cover}.preview-work p:not(.preview-kicker),.preview-service-copy>p:not(.preview-kicker),.preview-real>div>p:not(.preview-kicker),.preview-team p:not(.preview-kicker){font-size:15px;line-height:1.9;color:var(--color-muted-foreground);margin:28px 0;max-width:440px}
 .preview-work{background:var(--color-secondary)}
 .preview-parallax{min-height:620px;background:linear-gradient(90deg,#000a,#0004),url('/media/salon/salon.webp') center/cover;display:flex;align-items:center;padding:90px 8vw;color:#fff}
 .preview-parallax>div{max-width:700px}.preview-parallax h2{font-size:clamp(42px,6vw,88px)}.preview-parallax .preview-kicker{color:#fff}.preview-parallax-copy{max-width:420px;font-size:15px;line-height:1.9;margin:28px 0}
 .preview-service-image img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center}.preview-service-copy{min-width:0}
-.preview-real{background:var(--color-secondary)}.preview-gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.preview-gallery-grid img{width:100%;height:100%;aspect-ratio:3/4;object-fit:cover}.preview-gallery-grid img:first-child{grid-row:span 2;aspect-ratio:3/7}
+.preview-real{background:var(--color-secondary)}.preview-gallery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;min-width:0}.preview-gallery-grid img{width:100%;max-width:100%;height:100%;aspect-ratio:3/4;object-fit:cover}.preview-gallery-grid img:first-child{grid-row:span 2;aspect-ratio:3/7}
 .preview-team img{width:100%;aspect-ratio:4/3;object-fit:cover}
 .preview-reviews{padding:clamp(76px,10vw,142px) 8vw;background:var(--color-card)}
 .preview-reviews-heading{display:flex;flex-direction:column;align-items:center;gap:12px;margin:0 auto 42px;text-align:center}

@@ -14,6 +14,7 @@ const SECTIONS = [
   { key: "services", suffix: "/services" },
   { key: "staff", suffix: "/staff" },
   { key: "customers", suffix: "/customers" },
+  { key: "contactMessages", suffix: "/messages" },
   { key: "products", suffix: "/products" },
   { key: "packages", suffix: "/packages" },
   { key: "gallery", suffix: "/gallery" },

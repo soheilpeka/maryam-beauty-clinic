@@ -9,6 +9,7 @@ export type PackagePreview = {
   price: string;
   regular: string;
   saving: string;
+  giftValueCents?: number;
   payment?: string;
   schedule?: string[];
 };
@@ -51,6 +52,7 @@ export const SKIN_PROGRAMS: PackagePreview[] = [
     price: "$1,800",
     regular: "$2,516",
     saving: "Save $716",
+    giftValueCents: 15_000,
     payment: "$150/month · 12 monthly payments · 0% interest",
     schedule: ["Phase 1: Matrix RF Microneedling in months 1–3", "6-week healing period", "Phase 2: HydraFacial treatments approximately every 6 weeks"],
   },
@@ -65,6 +67,7 @@ export const SKIN_PROGRAMS: PackagePreview[] = [
     price: "$2,712",
     regular: "$3,773",
     saving: "Save $1,061",
+    giftValueCents: 20_000,
     payment: "$226/month · 12 monthly payments · 0% interest",
     schedule: ["3 Matrix + RF sessions, 4 weeks apart", "4 HydraFacial treatments, 2 months apart"],
   },
@@ -79,6 +82,7 @@ export const SKIN_PROGRAMS: PackagePreview[] = [
     price: "$4,200",
     regular: "$6,295",
     saving: "Save $2,095",
+    giftValueCents: 30_000,
     payment: "$350/month · 12 monthly payments · 0% interest",
     schedule: ["Phase 1: 5 Matrix + RF sessions during rebuild and renew", "Phase 2: 5 HydraFacial sessions during hydrate and maintain"],
   },

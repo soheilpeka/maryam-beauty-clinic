@@ -11,6 +11,7 @@ import { ProductCard } from "@/components/store/product-card";
 import { localizeProduct, shapeProduct } from "@/lib/store-views";
 import { releaseExpiredReservations } from "@/lib/order";
 import { listStoreCategories } from "@/lib/store-categories";
+import { isPublicStoreProduct } from "@/lib/store-public";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +26,7 @@ export async function generateMetadata({
     include: { _count: { select: { orderItems: true } }, images: { orderBy: { order: "asc" } } },
   });
   const product = record ? localizeProduct(shapeProduct(record), locale) : null;
-  if (!product || !product.active || product.demo) {
+  if (!product || !product.active || product.demo || !isPublicStoreProduct(product)) {
     return { title: locale === "fr" ? "Page introuvable" : "Not found" };
   }
   const t = await getTranslations({ locale, namespace: "Meta" });
@@ -59,7 +60,7 @@ export default async function ProductDetailPage({
     where: { slug },
     include: { _count: { select: { orderItems: true } }, images: { orderBy: { order: "asc" } } },
   });
-  if (!record || !record.active || record.demo) {
+  if (!record || !record.active || record.demo || !isPublicStoreProduct(record)) {
     notFound();
   }
   const product = localizeProduct(shapeProduct(record), locale);
@@ -72,7 +73,7 @@ export default async function ProductDetailPage({
     orderBy: [{ featured: "desc" }, { order: "asc" }],
     take: 4,
   });
-  const related = relatedRecords.map((item) => localizeProduct(shapeProduct(item), locale));
+  const related = relatedRecords.filter(isPublicStoreProduct).map((item) => localizeProduct(shapeProduct(item), locale));
   const gallery = product.images.length > 0
     ? product.images.map((image) => ({ url: image.url, alt: locale === "fr" ? image.altFr : image.altEn }))
     : product.imageUrl

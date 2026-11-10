@@ -59,6 +59,7 @@
     }
   },
   "Store": {
+    "shop": "Boutique",
     "eyebrow": "La sélection de la clinique",
     "title": "Une beauté réfléchie, choisie avec soin.",
     "subtitle": "Un espace calme et soigné pour la future collection de détail de la clinique. Tous les articles affichés sont des données de démonstration à remplacer avant le lancement.",
@@ -314,17 +315,18 @@
     "hoursSunday": "Dimanche : Fermé",
     "nameLabel": "Nom",
     "emailLabelField": "Courriel",
+    "phoneLabelField": "Numéro de téléphone",
     "messageLabel": "Message",
     "send": "Envoyer",
     "sending": "Envoi...",
     "sent": "Merci. Votre message a bien été reçu.",
-    "mockSent": "Votre message n’a pas été envoyé par courriel depuis cet aperçu. Veuillez appeler le studio ou lui écrire directement pour obtenir une réponse.",
+    "mockSent": "Votre message n’a pas été envoyé par courriel depuis cet aperçu. Veuillez appeler le salon ou lui écrire directement pour obtenir une réponse.",
     "sendError": "Votre message n’a pas pu être envoyé. Réessayez ou communiquez avec le salon par téléphone.",
     "formIntro": "Dites-nous comment nous pouvons vous aider. Nous répondons habituellement aux coordonnées fournies.",
     "mapTitle": "Nous trouver"
   },
   "Footer": {
-    "tagline": "Coiffure, maquillage et soins esthétiques à Brossard, Québec. Contactez le studio pour préparer votre prochaine visite.",
+    "tagline": "Coiffure, maquillage et soins esthétiques à Brossard, Québec. Contactez le salon pour préparer votre prochaine visite.",
     "treatments": "Soins",
     "clinic": "Clinique",
     "quickLinks": "Liens rapides",
@@ -332,7 +334,7 @@
     "hours": "Horaires",
     "hoursPending": "Les horaires affichés sont fournis par la propriétaire et peuvent être mis à jour par le salon.",
     "rights": "© 2026 Maryam C Beauté. Tous droits réservés.",
-    "demoNotice": "Les rendez-vous sont confirmés par le studio. Les paiements en ligne ne sont pas encore disponibles."
+    "demoNotice": "Les rendez-vous sont confirmés par le salon. Les paiements en ligne ne sont pas encore disponibles."
   },
   "Booking": {
     "title": "Rendez-vous en ligne",
@@ -597,6 +599,14 @@
     "servicesHint": "Prix, durées et services réservables en ligne.",
     "staffTitle": "Spécialistes",
     "staffHint": "Profils, services, heures de travail et congés.",
+    "contactMessages": "Messages de contact",
+    "contactMessagesHint": "Messages reçus du formulaire de contact, les plus récents en premier.",
+    "contactMessagesEmpty": "Aucun message de contact pour le moment.",
+    "contactDelivery": "Notification par courriel",
+    "contactDelivery_provider": "Envoyée",
+    "contactDelivery_mock": "Non configurée",
+    "contactDelivery_failed": "Échec — message enregistré ici",
+    "contactDelivery_pending": "En attente",
     "customersTitle": "Clientes",
     "customersHint": "Toutes les personnes ayant demandé un rendez-vous.",
     "loadingStats": "Chargement des statistiques...",

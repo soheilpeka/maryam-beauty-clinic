@@ -5,11 +5,12 @@
 @import "./editorial.css";
 @import "./monochrome.css";
 
+/* Keep legacy dark utilities opt-in; this site never sets the class. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* Restrained logo-rose highlights on the public editorial interface. */
 .site-header a[href$="/booking"] { background: #974454; border-color: #974454; }
-.store-page .preview-kicker, .preview-page .preview-kicker, .dark .store-page .preview-kicker { color: var(--color-brand); }
+.store-page .preview-kicker, .preview-page .preview-kicker { color: var(--color-brand); }
 .store-hero > img { border-radius: 1.25rem; }
 
 /*
@@ -18,6 +19,7 @@
  * Inter display typography and body text are shared across public and admin UI.
  */
 :root {
+  color-scheme: only light;
   --color-background: #ffffff;
   --color-foreground: #000000;
   --color-primary: #974454;
@@ -75,6 +77,8 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   scroll-padding-top: 6rem;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 body {
@@ -84,26 +88,27 @@ body {
   font-feature-settings: "kern", "liga";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
-.dark {
-  --color-background: #000000;
-  --color-foreground: #ffffff;
-  --color-primary: #974454;
-  --color-primary-foreground: #ffffff;
-  --color-brand: #e2a8b3;
-  --color-brand-soft: #332329;
-  --color-gold: #ffffff;
-  --color-champagne: #222222;
-  --color-accent: #1c1c1c;
-  --color-muted: #1c1c1c;
-  --color-muted-foreground: #bdbdbd;
-  --color-border: #444444;
-  --color-card: #111111;
-  --color-card-foreground: #ffffff;
-  --color-secondary: #1c1c1c;
-  --color-secondary-foreground: #ffffff;
-  --editorial-stone: #1c1c1c;
+/* Keep responsive layouts inside the viewport even when an editor supplies a
+ * long label, URL, or other content with a large intrinsic width. Individual
+ * scroll containers still opt into scrolling where they need it. */
+main, main > *, section, article, [role="main"] {
+  min-width: 0;
+}
+
+main > * {
+  max-width: 100%;
+}
+
+img, video, canvas, svg, iframe {
+  max-width: 100%;
+}
+
+:where(h1, h2, h3, h4, h5, h6, p, a, li, button, label, summary) {
+  overflow-wrap: anywhere;
 }
 
 /* Respect reduced motion: disable smooth scroll and long transitions. */
@@ -209,3 +214,6 @@ dialog::backdrop{background:#00000090;backdrop-filter:blur(4px)}
 .mobile-consultation{display:none}.image-comparison{max-width:100%;margin:0}.comparison-images{position:relative;aspect-ratio:4/3;overflow:hidden}.comparison-images>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.comparison-line{position:absolute;top:0;bottom:0;width:2px;background:white;display:flex;align-items:center;justify-content:center;color:white;font-size:32px;pointer-events:none}.comparison-before,.comparison-after{position:absolute;top:20px;padding:8px 12px;background:#000b;color:white;font-size:12px}.comparison-before{left:20px}.comparison-after{right:20px}.comparison-images input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;touch-action:pan-y}.comparison-images:focus-within{outline:3px solid var(--color-brand);outline-offset:3px}.image-comparison figcaption{padding:14px 0;font-size:14px}
 @media(max-width:639px){.mobile-consultation{display:flex;position:fixed;bottom:0;inset-inline:0;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--color-border);background:var(--color-background);color:var(--color-foreground);z-index:40}.mobile-consultation>span{font:16px var(--font-serif);max-width:100px}.mobile-consultation>a{display:flex;align-items:center;gap:12px;min-height:44px;font-size:11px;background:var(--color-primary);color:var(--color-primary-foreground);padding:10px 14px;border-radius:30px}body:has(.mobile-consultation){padding-bottom:90px}.treatment-facts{grid-template-columns:1fr}.gallery-lightbox{padding:14px}}
 @media(prefers-reduced-motion:reduce){.site-header nav>a::after,.service-discovery-card img,.gallery-image-button img{transition:none!important;transform:none!important}}
+
+/* The appointment bar is a black accent in the light theme. */
+.mobile-consultation { background: #000; color: #fff; }

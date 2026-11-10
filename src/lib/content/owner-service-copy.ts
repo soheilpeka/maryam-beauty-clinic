@@ -1,5 +1,7 @@
+import { LATEST_OWNER_SERVICE_COPY } from "@/lib/content/latest-owner-service-copy";
+
 /** Owner-provided service copy. Blank lines separate paragraphs; headings are rendered as sections. */
-export const OWNER_SERVICE_COPY: Record<string, { en: string; fr: string }> = {
+const BASE_OWNER_SERVICE_COPY: Record<string, { en: string; fr: string }> = {
   "laser-hair-removal": {
     en: `Preview
 
@@ -612,4 +614,213 @@ Demander un rendez-vous
 
 Prenez rendez-vous pour une consultation afin de vérifier si le raffermissement de la peau au laser vous convient.`,
   },
+};
+
+/** Latest owner-supplied descriptions from `new service decrption.docx`. */
+const UPDATED_OWNER_SERVICE_COPY: Record<string, { en: string; fr: string }> = {
+  "microblading-eyebrow-shaping": {
+    en: `Service Description
+
+Microblading is a semi-permanent makeup technique that creates fine strokes inspired by the look of natural brow hairs. The shape is personalized to complement your features and the look you want. Your appointment begins with a consultation to discuss your preferences.
+
+Treatment Highlights
+
+* Fine, natural-looking strokes
+* A brow shape personalized to your features
+* A consultation before the service
+
+Your Visit, Thoughtfully Planned
+
+MADE FOR YOU
+
+We take time to understand your preferences and discuss the brow shape you’d like.
+
+DURATION
+
+Confirmed during consultation.
+
+What can I expect?
+
+Your specialist will discuss your goals with you and draw a brow shape for you to review before the service begins. Results may vary depending on your skin and how it retains pigment.
+
+How should I prepare for my appointment?
+
+Arrive with clean skin and no makeup on your brows. You can bring inspiration photos to show the style you like.
+
+Is a touch-up needed?
+
+A touch-up may be recommended depending on healing and the result. Your specialist can advise you after your first appointment.`,
+    fr: `Description du service
+
+Le microblading est une technique de maquillage semi-permanent qui crée de fins traits inspirés de l’apparence des poils naturels des sourcils. La forme est personnalisée pour mettre en valeur vos traits et correspondre au résultat souhaité. Votre rendez-vous commence par une consultation pour discuter de vos préférences.
+
+Les points forts
+
+* Des traits fins d’apparence naturelle
+* Une forme de sourcils adaptée à vos traits
+* Une consultation avant le service
+
+Une visite pensée pour vous
+
+UNE APPROCHE PERSONNALISÉE
+
+Nous prenons le temps de comprendre vos préférences et de discuter de la forme de sourcils que vous souhaitez.
+
+DURÉE
+
+Confirmée lors de la consultation.
+
+À quoi puis-je m’attendre?
+
+Votre spécialiste discutera de vos attentes avec vous et dessinera une forme de sourcils que vous pourrez valider avant le début du service. Le résultat peut varier selon votre peau et la façon dont elle retient le pigment.
+
+Comment me préparer à mon rendez-vous?
+
+Arrivez avec la peau propre et sans maquillage sur les sourcils. Vous pouvez apporter des photos d’inspiration pour montrer le style que vous aimez.
+
+Une retouche est-elle nécessaire?
+
+Une retouche peut être recommandée selon la cicatrisation et le résultat obtenu. Votre spécialiste pourra vous conseiller après votre premier rendez-vous.`,
+  },
+  "lip-blush-dark-lip-neutralization": {
+    en: `Service Description
+
+Lip Blush is a semi-permanent makeup technique that adds a touch of colour and enhances the appearance of your lips. Dark lip neutralization uses a personalized approach to help balance darker tones and create a more harmonious lip colour. Your desired shade and results are discussed during a consultation.
+
+Treatment Highlights
+
+* A shade customized to your preferences
+* An approach tailored to darker lips
+* A consultation to discuss your desired results
+
+Your Visit, Thoughtfully Planned
+
+MADE FOR YOU
+
+We take time to understand your preferences and discuss the approach and shade that suit you.
+
+DURATION
+
+Confirmed during consultation.
+
+What can I expect?
+
+Your specialist will discuss your goals and desired shade before beginning. Dark lip neutralization may require a gradual approach; your specialist will explain the recommended steps.
+
+How should I prepare for my appointment?
+
+Arrive with clean, comfortably hydrated lips. If you have a history of cold sores, let your specialist know before your appointment so they can share the appropriate instructions.
+
+Is a touch-up needed?
+
+Your specialist will let you know whether a touch-up is recommended after your appointment.`,
+    fr: `Description du service
+
+Le Lip Blush est une technique de maquillage semi-permanent qui ajoute une touche de couleur et rehausse l’apparence des lèvres. La neutralisation des lèvres foncées suit une approche personnalisée afin d’aider à équilibrer les tons plus foncés et à créer une couleur plus harmonieuse. La teinte et le résultat souhaités sont discutés lors d’une consultation.
+
+Les points forts
+
+* Une teinte personnalisée selon vos préférences
+* Une approche adaptée aux lèvres foncées
+* Une consultation pour discuter du résultat souhaité
+
+Une visite pensée pour vous
+
+UNE APPROCHE PERSONNALISÉE
+
+Nous prenons le temps de comprendre vos préférences et de discuter de l’approche et de la teinte qui vous conviennent.
+
+DURÉE
+
+Confirmée lors de la consultation.
+
+À quoi puis-je m’attendre?
+
+Votre spécialiste discutera de vos attentes et de la teinte souhaitée avant de commencer. La neutralisation des lèvres foncées peut nécessiter une approche progressive. Votre spécialiste vous expliquera les étapes recommandées.
+
+Comment me préparer à mon rendez-vous?
+
+Arrivez avec les lèvres propres et confortablement hydratées. Si vous avez déjà eu des boutons de fièvre, informez votre spécialiste avant le rendez-vous afin de recevoir les consignes appropriées.
+
+Une retouche est-elle nécessaire?
+
+Votre spécialiste vous indiquera si une retouche est recommandée après votre rendez-vous.`,
+  },
+  haircuts: {
+    en: `Service Description
+
+Enjoy a personalized haircut designed to complement your style, hair texture, and natural movement. We often use a dry-cutting technique to see how your hair naturally falls, allowing us to refine the shape and create a balanced, flattering finish.
+
+Your visit begins with a consultation to discuss your preferences and the look you’d like to achieve. Your stylist will recommend the best approach for your hair.
+
+Haircut Highlights
+
+* A personalized cut tailored to your style and hair texture
+* Dry cutting to work with your hair’s natural movement
+* A polished shape that’s easy to wear and style
+
+Your Visit, Thoughtfully Planned
+
+MADE FOR YOU
+
+We take time to understand the look you want and personalize your haircut to suit your hair and preferences.
+
+DURATION
+
+Confirmed during consultation.
+
+What Can I Expect?
+
+Your stylist will discuss your goals with you, assess your hair’s natural movement, and create a personalized cut. Dry cutting is often used to refine the shape and details.
+
+How Should I Prepare for My Appointment?
+
+Settle in and enjoy a relaxing shampoo at the salon before your haircut begins.
+
+How Often Should I Book a Haircut?
+
+It depends on your style, hair growth, and how you like to maintain your shape. Your stylist can suggest a schedule during your visit.`,
+    fr: `Description du service
+
+Profitez d’une coupe personnalisée qui met en valeur votre style, la texture de vos cheveux et leur mouvement naturel. Nous utilisons souvent la technique de coupe sur cheveux secs afin d’observer leur tombé naturel, d’affiner la forme et de créer un résultat harmonieux et flatteur.
+
+Votre visite commence par une consultation pour discuter de vos préférences et du résultat souhaité. Votre styliste vous recommandera l’approche la mieux adaptée à vos cheveux.
+
+Les points forts de la coupe
+
+* Une coupe personnalisée selon votre style et la texture de vos cheveux
+* Une technique sur cheveux secs qui respecte leur mouvement naturel
+* Une forme soignée, facile à porter et à coiffer
+
+Une visite pensée pour vous
+
+UNE APPROCHE PERSONNALISÉE
+
+Nous prenons le temps de comprendre le style que vous souhaitez et d’adapter la coupe à vos cheveux et à vos préférences.
+
+DURÉE
+
+Confirmée lors de la consultation.
+
+À quoi puis-je m’attendre?
+
+Votre styliste discutera de vos attentes avec vous, observera le mouvement naturel de vos cheveux et réalisera une coupe personnalisée. La coupe sur cheveux secs est souvent utilisée pour ajuster la forme et les détails.
+
+Comment me préparer à mon rendez-vous?
+
+Installez-vous confortablement et profitez d’un shampoing relaxant au salon avant votre coupe.
+
+À quelle fréquence devrais-je prendre rendez-vous?
+
+Cela dépend de votre style, de la pousse de vos cheveux et de la façon dont vous souhaitez entretenir votre coupe. Votre styliste pourra vous suggérer une fréquence adaptée lors de votre visite.`,
+  },
+};
+
+export const PREVIOUS_OWNER_SERVICE_COPY: Record<string, { en: string; fr: string }> = {
+  ...BASE_OWNER_SERVICE_COPY,
+  ...UPDATED_OWNER_SERVICE_COPY,
+};
+export const OWNER_SERVICE_COPY = {
+  ...PREVIOUS_OWNER_SERVICE_COPY,
+  ...LATEST_OWNER_SERVICE_COPY,
 };

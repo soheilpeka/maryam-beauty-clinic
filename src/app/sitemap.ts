@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { SERVICES } from "@/lib/content/services";
 import { prisma } from "@/lib/prisma";
+import { isPublicService } from "@/lib/public-service";
 export const dynamic = "force-dynamic";
 
 /**
@@ -30,10 +31,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
   const products = await prisma.product.findMany({
     where: { active: true, demo: false },
-    select: { slug: true, updatedAt: true, imageUrl: true },
+    select: { slug: true, name: true, updatedAt: true, imageUrl: true },
     orderBy: { order: "asc" },
   });
-  const services = await prisma.service.findMany({ where: { active: true }, select: { slug: true, updatedAt: true } });
+  const publicProducts = products.filter(product => !/^(?:test|sample)(?:[-\s]?\d*)?$/i.test(product.slug.trim()) && !/^(?:test|sample)(?:[-\s]?\d*)?$/i.test(product.name.trim()));
+  const services = (await prisma.service.findMany({ where: { active: true }, select: { slug: true, name: true, updatedAt: true } })).filter(isPublicService);
 
   for (const locale of routing.locales) {
     for (const r of staticRoutes) {
@@ -54,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         alternates: { languages: langs(`/service-page/${s.slug}`) },
       });
     }
-    for (const product of products) {
+    for (const product of publicProducts) {
       entries.push({
         url: `${base}/${locale}/store/${product.slug}`,
         lastModified: product.updatedAt,

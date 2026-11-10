@@ -4,6 +4,7 @@ import { releaseExpiredReservations } from "@/lib/order";
 import { localizeProduct, shapeProduct } from "@/lib/store-views";
 import { CartPageView } from "@/components/store/cart-page-view";
 import { listStoreCategories } from "@/lib/store-categories";
+import { isPublicStoreProduct } from "@/lib/store-public";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,7 @@ export default async function CartPage({ params }: { params: Promise<{ locale: s
   });
 
   const recommendations = products
-    .filter((product) => !/^(?:test|sample)(?:[-\s]?\d*)?$/i.test(product.slug) && !/^(?:test|sample)(?:[-\s]?\d*)?$/i.test(product.name.trim()))
+    .filter(isPublicStoreProduct)
     .slice(0, 3)
     .map((product) => localizeProduct(shapeProduct(product), locale));
 

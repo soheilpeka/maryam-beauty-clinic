@@ -1,3 +1,73 @@
+## 2026-11-10 — Owner service descriptions and photography
+
+- Removed the marked Swedish massage introduction from the visible hero while keeping its booking links and details. Matched the cart header to the light gallery palette. Grouped before/after comparisons by treatment and included the published pairs from service pages.
+
+- Made the original light palette the only site theme, including its black title, contact, footer and Discovery panels. Removed the system and saved dark theme switch and declared the light browser color scheme.
+
+- Restored the original package card layout, seals, crossed-out regular prices and monthly footer. The gift line is the only addition to that layout; the latest treatment lists and package values remain in place.
+
+- Added the brochure gift values to the Essential, Platinum and Diamond cards in English and French, separately from the prices and savings.
+
+- Placed the supplied RF photo in the homepage feature and the pigmentation portrait in the service cover, keeping the comparison photos. Updated the homepage review and store headings, replaced the short highlighted review and increased the carousel to eight Google Maps excerpts. Reordered the package cards around the poster's treatment lists, monthly cost, term, totals and savings without changing prices. Verified the public pages in Edge and passed the focused package and comparison tests.
+
+- Matched the HydraFacial cover to the exact WebP served on the public Hostinger service page and added the supplied Vein Removal cover. Multi-photo service galleries now show one photo at a time with localized previous/next controls and a count. Verified both covers and carousel navigation in Edge at mobile and desktop widths.
+
+- Applied the latest bilingual descriptions to seven existing services and added Pigmented Lesion Laser Treatment to the local catalog. Added localized previews and filled in the missing RF consultation and duration sections without assigning a price or a session length.
+- Matched all 21 distinct photographs to 11 services. Retained the AI scanner as the cover and added the wrinkle map beside the other diagnostic maps. Added the new hair, brow and pigmentation boards to the existing slider, with the original image files preserved.
+- Removed white photo mats from service pages and catalog cards. The shared photo frame now uses the image's proportions where known and keeps the diagnostic labels and equipment visible.
+- Verified the preview build, TypeScript, focused lint and 12 tests. In Edge, loaded all 21 assigned images at mobile width and checked the catalog and French comparison viewer on desktop. Local CMS import only.
+
+## 2026-10-24 — Before/after photographs on service pages
+
+- Added a localized service-photo comparison viewer with side-by-side photographs, optional accessible slider, previous/next navigation, sample counts and original-artwork links. Kept the existing photo assets intact and removed repeated plain gallery boards when shown in the viewer.
+- Matched six supplied boards to hair hydration, lash/brow lamination, lip blush and microblading. Added the active CMS references for laser hair removal, visible vessels and explicitly labelled Matrix Pro RF microneedling; generic Matrix and pigmentation examples are not assigned to an unrelated service. CMS visibility, framing and captions remain authoritative; replacing a service's photos does not revive removed bundled boards.
+- Verification: four focused mapping/CMS regression tests passed, TypeScript and production preview build passed (90 routes), focused new-file lint passed. Browser checks confirmed mobile EN/FR content, next-example navigation, slider mode and keyboard range operation without horizontal overflow at 390px.
+
+## 2026-10-23 — Owner supplied service descriptions
+
+- Replaced the fallback EN/FR descriptions for Haircuts, Microblading & Eyebrow Shaping, and Lip Blush & Dark Lip Neutralization with the matching copy from `new service decrption.docx`, including highlights and consultation FAQs.
+- The document also contains laser treatment copy for pigmented lesions, but no matching service exists in the current catalog; it was not attached to a different laser service.
+- Fixed the shared EN/FR section parser to recognize haircut-specific highlights, the supplied visit-planning headings and labels, and standalone service-specific FAQ questions. Preserved the supplied section titles and kept each question's answer separate. Reviewed the 16 main services and retained their relevant localized FAQ content.
+- Verified seven focused service-copy tests, TypeScript and the production preview build (90 routes). Browser checks at the reported 485 x 664 mobile size confirmed the Haircuts highlight list and its preparation FAQ, plus the French microblading sections and three relevant FAQs.
+
+## 2026-10-10 — Disable automatic Vercel deployments
+
+- Added `vercel.json` with `git.deploymentEnabled: false`, so commits and pushes to the connected repository no longer trigger automatic Vercel deployments from any branch.
+- Manual deployments from the Vercel dashboard/CLI and existing deployments are unchanged; fully disconnecting those requires the Vercel project settings.
+
+## 2026-10-10 — Responsive overflow containment
+
+- Added a site-wide viewport guard for the public pages and gave editorial sections, grid columns and gallery cards explicit `min-width: 0`/border-box sizing so long CMS text and intrinsic image widths cannot push content outside the screen.
+- Media remains responsive with its natural aspect ratios; intentional horizontal scroll containers are unchanged. Whitespace and CSS diff checks passed after the update.
+- Restored the language switcher to its original compact text-and-globe control without a surrounding border while keeping the responsive header sizing.
+
+## 2026-10-10 — Homepage mobile hero and pink service menu
+
+- Reworked the mobile homepage hero actions into balanced, full-width brand buttons and restored the tall portrait crop so the subject stays visible on a phone viewport without extra side space.
+- Recolored the complete service menu with the salon's rose palette, using the existing theme tokens so dark mode keeps a deep rose surface with readable pink accents.
+- Reviewed the refreshed mobile homepage in the local browser; the hero actions and the service menu heading render without clipping.
+
+## 2026-10-10 — Service category visibility and theme-aware featured section
+
+- The service editor now displays every category currently assigned to a service (including inactive services) as selectable chips while keeping free-text entry for new categories.
+- The homepage featured-treatment section and its image frame now follow the active light/dark theme tokens.
+
+## 2026-10-09 — Contact phone capture and notification
+
+- Added a required, localized phone field to the public contact form and its shared client/server validation. The existing notification email now includes the caller's phone number so the salon can follow up by phone.
+- Verified EN/FR notification formatting, phone validation, and a local contact submission returning HTTP 200 with the phone in its API payload. This form delivers through the notification provider; it does not create an admin inbox record.
+
+## 2026-10-09 — Homepage white section backgrounds
+
+- Returned the homepage hero copy area and featured-treatment section to white, preserving the existing blush accent color and typography.
+- Verified both section backgrounds in the local homepage preview.
+
+## 2026-10-09 — Responsive header and mobile store shortcut
+
+- Added the cart icon to the compact header; it opens `/store/cart` and includes an accessible cart label/count.
+- Kept the cart control in the same minimal outlined style as the site's social links, and refined the mobile, tablet and desktop header sizes for a more balanced bar.
+- Verified the mobile cart shortcut opens `/en/store/cart` and checked header/document bounds from 320px through 1920px. All tested widths fit without horizontal overflow.
+
 ## 2026-10-09 — Dynamic CMS service categories
 
 - Preserved custom service categories from the admin CMS instead of coercing them into the built-in Aesthetic group. The homepage menu, desktop/mobile header menus, footer index and service catalog now include categories used by active services; the booking picker already groups categories dynamically.
@@ -832,3 +902,17 @@ Bookings, customers, service values, admin authentication and external provider 
 
 - Refined the before-and-after comparison area with a neutral premium surface, rose active filters and slider states, and restrained brand accents in salon image captions. Comparable salon and clinic galleries commonly pair simple service/concern filters with clear before/after labels and treatment context.
 - Checked the local EN dark-mode gallery at mobile width: contrast remains readable and no horizontal overflow appears. This was a style-only preview check; no production build was run for this adjustment.
+
+## 2026-10-09 — Isolated Shannon environment preparation
+
+- Created a source-only Docker environment in `C:\Users\My Pc\maryam-shannon-isolated-20261009`, with a dedicated `shannon-pentest.db` named volume, full current Prisma schema, bcrypt dummy admin, synthetic guest customers, booking and store fixtures. No `.env`, source databases, customer records or uploaded media were copied.
+- Kept the application on a single internal network with no gateway. Added a fixed-destination read-only ingress proxy publishing loopback port 3050; app has only its dedicated data volume and an exact local database adapter guard. Mock email/SMS/payment providers and blank external service credentials prevent live integration writes.
+- Verified the actual server's Prisma `PRAGMA database_list` and synthetic marker, dummy login (200), unauthorized admin session (401), mock contact (200), synthetic mock checkout (201 with mock payment record), signed booking and EN/FR/store pages (200), blocked app egress (ENETUNREACH), and a GET from the installed Shannon image with its entrypoint disabled via `host.docker.internal:3050`.
+- Added `scripts/prepare-shannon.mjs`, `scripts/verify-shannon.mjs` and `SHANNON-ISOLATION.md`. Source `dev.db` hash after stopping the owner-authorized preview matches after checks. Concurrent edits preserved; no production environment change, remote database access, deployment or actual penetration test.
+
+## 2026-10-23 — Correct owner service photographs
+
+- Visually reviewed all 19 photographs in `pics/service pics`. Assigned 16 distinct photographs to nine matching services; moved the actual AI scanner photograph out of the facial-cleansing group and omitted a duplicate lash photograph from public display. Bundled assets retain the complete originals without retouching. Source fallbacks, catalogue cards, featured RF image and service pages use the corrected media; supplied collages and diagrams are contained rather than cropped.
+- Restored the original ear board (`comparison-04`) instead of reusing the cheek photograph. Added accessible full-photo/slider controls with an original-image enlargement link. Ear and two supplied pigmentation boards open as complete side-by-side photographs; pigmentation boards are accurately captioned in the gallery rather than assigned to an unrelated active service.
+- Updated only the nine local service media records, ear comparison and two new comparisons through `prisma/correct-owner-media.ts --apply-local`, with a consistent SQLite backup under `.private/backups` and audit entries. Source conversion is reproducible with `node scripts/prepare-service-photos.mjs --write`. Custom services and other CMS fields are preserved.
+- Verification: typecheck and isolated production preview build passed; six focused comparison/import tests passed; scoped ESLint had zero errors and existing native-image warnings. Browser verified all nine EN/FR service pages at 390px and all nine EN pages at 1440px: correct loaded primary photographs, complete framing and no horizontal overflow. Catalogue and homepage featured-photo assignments also matched. Ear slider keyboard movement and full-photo toggle passed; French pigmentation labels verified. Preview remains on port 3050. No commit, push or deployment.

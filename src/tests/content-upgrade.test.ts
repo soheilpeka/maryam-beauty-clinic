@@ -56,7 +56,7 @@ describe("backup-gated content upgrade operations, with isolated local fixtures"
       await db.package.create({ data: { slug: "discovery", name: "Owner edit", nameFr: "Modification", price: 12345, active: false } });
       await db.galleryItem.create({ data: { id: `gallery-${GALLERY[0].slug}`, imageUrl: "/owner-edited.webp", altEn: "Owner photo", active: false } });
       expect(await publishSkinPrograms(db)).toBe(4);
-      expect(await importComparisons(db)).toBe(18);
+      expect(await importComparisons(db)).toBe(20);
       expect(await refreshSalonMedia(db)).toBe(GALLERY.length - 1);
       const comparison = await db.comparisonItem.findFirstOrThrow();
       await db.comparisonItem.update({ where: { id: comparison.id }, data: { name: "Owner comparison", active: false, order: 99 } });
@@ -67,7 +67,7 @@ describe("backup-gated content upgrade operations, with isolated local fixtures"
       expect(await db.galleryItem.findUnique({ where: { id: `gallery-${GALLERY[0].slug}` } })).toMatchObject({ imageUrl: "/owner-edited.webp", active: false });
       expect(await db.comparisonItem.findUnique({ where: { id: comparison.id } })).toMatchObject({ name: "Owner comparison", active: false, order: 99 });
       expect(await db.customer.findUnique({ where: { id: "synthetic-customer" } })).toEqual(customer);
-      expect(await db.auditLog.count({ where: { action: "comparison.import" } })).toBe(18);
+      expect(await db.auditLog.count({ where: { action: "comparison.import" } })).toBe(20);
     } finally { await db.$disconnect(); client.close(); }
   });
 

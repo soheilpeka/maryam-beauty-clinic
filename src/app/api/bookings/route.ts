@@ -15,6 +15,7 @@ import { formatLongDate, formatTime, toLocalMinutes } from "@/lib/datetime";
 
 export const dynamic = "force-dynamic";
 import { PUBLIC_STAFF_WHERE, isPublicStaff } from "@/lib/public-staff";
+import { isPublicService } from "@/lib/public-service";
 
 // Tight limit on request submission to protect against abuse and double-submits. The
 // per-minute budget is overridable via env (see env.bookingRateLimitPerMinute).
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest) {
   const data = parsed.data;
 
   const service = await prisma.service.findUnique({ where: { id: data.serviceId } });
-  if (!service || !service.active) {
+  if (!service || !service.active || !isPublicService(service)) {
     return NextResponse.json({ error: "NOT_FOUND", message: "Service unavailable" }, { status: 404 });
   }
 

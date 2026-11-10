@@ -1,9 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
-import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CartProvider } from "@/components/store/cart-context";
@@ -15,6 +14,7 @@ import "../site-motion.css";
 
 // Navigation reads owner-managed content and must not be frozen at build time.
 export const dynamic = "force-dynamic";
+export const viewport: Viewport = { colorScheme: "light", themeColor: "#ffffff" };
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -96,7 +96,7 @@ export default async function LocaleLayout({
   };
 
   return (
-    <html lang={locale} data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html lang={locale} data-scroll-behavior="smooth">
       <body>
         <script
           type="application/ld+json"
@@ -104,9 +104,8 @@ export default async function LocaleLayout({
             __html: JSON.stringify(localBusinessJsonLd).replace(/</g, "\\u003c"),
           }}
         />
-        <ThemeProvider>
-          <NextIntlClientProvider messages={messages}>
-            <CartProvider>
+        <NextIntlClientProvider messages={messages}>
+          <CartProvider>
             <a
               href="#main"
               className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
@@ -119,9 +118,8 @@ export default async function LocaleLayout({
             </main>
             <SiteFooter />
             <ScrollReveal />
-            </CartProvider>
-          </NextIntlClientProvider>
-        </ThemeProvider>
+          </CartProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

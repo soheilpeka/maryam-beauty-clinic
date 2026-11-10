@@ -25,15 +25,6 @@ export interface ServiceOption {
   bufferMin: number;
   category: string;
 }
-export interface StaffOption {
-  id: string;
-  slug: string;
-  name: string;
-  role: string;
-  bio: string | null;
-  serviceIds: string[];
-}
-
 interface BookingResult {
   ref: string;
   whenLabel: string;
@@ -44,8 +35,8 @@ interface BookingResult {
   manageUrl: string;
 }
 
-type Step = "service" | "staff" | "date" | "details" | "done";
-const STEP_ORDER: Step[] = ["service", "staff", "date", "details"];
+type Step = "service" | "date" | "details" | "done";
+const STEP_ORDER: Step[] = ["service", "date", "details"];
 
 /** "HH:mm" from an <input type="time"> -> minutes from midnight, or null when invalid. */
 function timeToMinutes(hhmm: string): number | null {
@@ -59,16 +50,12 @@ function timeToMinutes(hhmm: string): number | null {
 
 export function BookingFlow({
   services,
-  staff,
   initialServiceSlug,
-  initialStaffSlug,
   locale,
   bookingWindowDays,
 }: {
   services: ServiceOption[];
-  staff: StaffOption[];
   initialServiceSlug?: string;
-  initialStaffSlug?: string;
   locale: string;
   bookingWindowDays: number;
 }) {
@@ -87,16 +74,9 @@ export function BookingFlow({
     () => services.find((s) => s.slug === initialServiceSlug) ?? null,
     [services, initialServiceSlug],
   );
-  const initialStaff = useMemo(() => {
-    if (!initialService) return null;
-    if (initialStaffSlug === "any") return "any";
-    const found = staff.find((s) => s.slug === initialStaffSlug && s.serviceIds.includes(initialService.id));
-    return found ? found.id : null;
-  }, [staff, initialStaffSlug, initialService]);
-
-  const [step, setStep] = useState<Step>(initialService ? (initialStaff ? "date" : "staff") : "service");
+  const [step, setStep] = useState<Step>(initialService ? "date" : "service");
   const [serviceId, setServiceId] = useState<string | null>(initialService?.id ?? null);
-  const [staffId, setStaffId] = useState<string | null>(initialStaff);
+  const staffId = "any";
   // Preferred date (YYYY-MM-DD) and time (HH:mm): the customer asks, the salon decides.
   const [dayKey, setDayKey] = useState<string>("");
   const [time, setTime] = useState<string>("");
@@ -107,10 +87,6 @@ export function BookingFlow({
   const [result, setResult] = useState<BookingResult | null>(null);
 
   const service = useMemo(() => services.find((s) => s.id === serviceId) ?? null, [services, serviceId]);
-  const staffMember = useMemo(
-    () => (staffId === "any" ? null : (staff.find((s) => s.id === staffId) ?? null)),
-    [staff, staffId],
-  );
   const stepNumber = Math.min(STEP_ORDER.indexOf(step) + 1, STEP_ORDER.length);
 
   const minDate = useMemo(() => dayKeyForDate(new Date()), []);
@@ -124,13 +100,6 @@ export function BookingFlow({
 
   function handleServiceSelect(id: string) {
     setServiceId(id);
-    setStaffId(null);
-    setDayKey("");
-    setTime("");
-    setStep("staff");
-  }
-  function handleStaffSelect(id: string) {
-    setStaffId(id);
     setDayKey("");
     setTime("");
     setStep("date");
@@ -252,7 +221,6 @@ export function BookingFlow({
         <div className="mt-8 rounded-2xl border border-border bg-background p-6 text-left">
           <dl className="space-y-3 text-sm">
             <SummaryRow label={t("service")} value={result.service} />
-            <SummaryRow label={t("specialist")} value={result.staff} />
             <SummaryRow label={t("date")} value={result.whenLabel} />
             <SummaryRow label={t("duration")} value={result.durationMin > 0 ? formatDuration(result.durationMin, tLocale) : t("detailsPending")} />
           </dl>
@@ -373,59 +341,6 @@ export function BookingFlow({
         </section>
       )}
 
-      {step === "staff" && service && (
-        <section aria-label={t("chooseStaff")}>
-          <h3 className="font-serif text-2xl text-foreground">
-            {t("chooseStaff")}
-          </h3>
-          <ul className="mt-6 grid gap-4">
-            <li>
-              <button
-                type="button"
-                onClick={() => handleStaffSelect("any")}
-                className="flex w-full items-center gap-4 rounded-2xl border border-border bg-background p-5 text-left transition-all hover:border-brand hover:shadow-lg hover:shadow-black/5"
-              >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-soft font-semibold text-brand">
-                  &starf;
-                </span>
-                <span>
-                  <span className="block font-medium text-foreground">{t("anyStaff")}</span>
-                  <span className="mt-1 block text-sm text-muted-foreground">{t("anyStaffHint")}</span>
-                </span>
-              </button>
-            </li>
-            {staff
-              .filter((m) => m.serviceIds.includes(service.id))
-              .map((m) => (
-                <li key={m.id}>
-                  <button
-                    type="button"
-                    onClick={() => handleStaffSelect(m.id)}
-                    className="flex w-full items-center gap-4 rounded-2xl border border-border bg-background p-5 text-left transition-all hover:border-brand hover:shadow-lg hover:shadow-black/5"
-                  >
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary font-semibold text-primary-foreground">
-                      {m.name.charAt(0)}
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block font-medium text-foreground">{m.name}</span>
-                      <span className="block text-xs uppercase tracking-wide text-brand">
-                        {m.role}
-                      </span>
-                      {m.bio && (
-                        <span className="mt-1 block text-sm text-muted-foreground">{m.bio}</span>
-                      )}
-                    </span>
-                  </button>
-                </li>
-              ))}
-          </ul>
-          {staff.filter((m) => m.serviceIds.includes(service.id)).length === 0 && (
-            <p className="mt-6 text-sm text-muted-foreground">{t("errorNoStaff")}</p>
-          )}
-          <BackButton onClick={() => setStep("service")} label={t("back")} />
-        </section>
-      )}
-
       {step === "date" && service && (
         <section aria-label={t("chooseDate")}>
           <h3 className="font-serif text-2xl text-foreground">
@@ -496,7 +411,7 @@ export function BookingFlow({
             >
               {t("continue")}
             </button>
-            <BackButton onClick={() => setStep(staffId ? "staff" : "service")} label={t("back")} />
+            <BackButton onClick={() => setStep("service")} label={t("back")} />
           </div>
         </section>
       )}
@@ -561,10 +476,6 @@ export function BookingFlow({
             <h3 className="text-sm font-semibold text-foreground">{t("summary")}</h3>
             <dl className="mt-3 space-y-2 text-sm">
               <SummaryRow label={t("service")} value={service.name} />
-              <SummaryRow
-                label={t("specialist")}
-                value={staffId === "any" ? t("anyStaff") : (staffMember?.name ?? "")}
-              />
               {dayKey && startMinutes !== null && (
                 <SummaryRow
                   label={t("date")}
@@ -599,7 +510,6 @@ export function BookingFlow({
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-foreground/60">{t("summary")}</p>
         <p className="mt-3 font-serif text-2xl">{service?.name ?? t("chooseService")}</p>
         <dl className="mt-6 space-y-3 text-sm">
-          <SummaryRow label={t("specialist")} value={staffId === "any" ? t("anyStaff") : (staffMember?.name ?? "—")} inverted />
           <SummaryRow label={t("date")} value={dayKey && startMinutes !== null ? `${labelForDay(dayKey, tLocale)} · ${minutesToLabel(startMinutes, tLocale)}` : "—"} inverted />
         </dl>
         <div className="mt-8 border-t border-primary-foreground/20 pt-6">

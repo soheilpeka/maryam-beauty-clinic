@@ -1,0 +1,23 @@
+.section { --comparison-radius: .9rem; --comparison-focus: var(--color-brand); margin: 0 0 clamp(2.5rem, 5vw, 4rem); min-width: 0; }
+.heading { max-width: 38rem; margin-bottom: 1.5rem; }
+.eyebrow { color: var(--color-brand); font-size: .65rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; line-height: 1.6; }
+.heading h2 { margin-top: .6rem; font-family: var(--font-serif), Georgia, serif; font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1.1; letter-spacing: -.035em; }
+.heading > p:last-child { margin-top: .9rem; color: var(--color-muted-foreground); font-size: .875rem; line-height: 1.7; }
+.card { width: 100%; min-width: 0; margin-inline: auto; }
+.caption { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.caption h3 { margin: 0; color: var(--color-foreground); font-size: 1rem; line-height: 1.4; font-weight: 500; }
+.caption > span { flex-shrink: 0; font-size: .7rem; color: var(--color-muted-foreground); font-variant-numeric: tabular-nums; }
+.viewer { min-width: 0; }
+.section .viewer figcaption { padding: .65rem 0 0; color: var(--color-muted-foreground); font-size: .75rem; border: 0; }
+.navigation { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+.navigation button { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; flex-shrink: 0; border-radius: 50%; border: 1px solid var(--color-border); background: transparent; color: var(--color-foreground); }
+.navigation button:disabled { opacity: .3; cursor: default; }
+.dots { display: flex; flex-wrap: wrap; justify-content: center; }
+.dots button { border: 0; width: 1.8rem; }
+.dots span { width: .35rem; height: .35rem; border-radius: 1rem; background: var(--color-muted-foreground); opacity: .45; }
+.dots [aria-current="true"] span { width: 1rem; background: var(--color-brand); opacity: 1; }
+.progress { flex: 1; max-width: 8rem; height: 3px; border-radius: 1rem; background: var(--color-border); overflow: hidden; }
+.progress span { display: block; height: 100%; border-radius: inherit; background: var(--color-brand); }
+.navigation button:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 3px; }
+.note { max-width: 40rem; margin-top: 1rem; color: var(--color-muted-foreground); font-size: .7rem; line-height: 1.7; }
+@media (max-width: 360px) { .dots button { width: 1.5rem; } }

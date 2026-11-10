@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { shapeProduct, localizeProduct } from "@/lib/store-views";
 import { releaseExpiredReservations } from "@/lib/order";
+import { isPublicStoreProduct } from "@/lib/store-public";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ slug: s
     include: { _count: { select: { orderItems: true } }, images: { orderBy: { order: "asc" } } },
   });
 
-  if (!product || !product.active || product.demo) {
+  if (!product || !product.active || product.demo || !isPublicStoreProduct(product)) {
     return NextResponse.json({ error: "NOT_FOUND", message: "Product not found." }, { status: 404 });
   }
 

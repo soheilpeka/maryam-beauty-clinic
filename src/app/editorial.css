@@ -73,10 +73,6 @@
 .gallery-editorial figure{background:none}.unavailable-editorial{min-height:28rem;border-bottom:1px solid var(--color-border)}
 .admin-shell .overflow-x-auto{overscroll-behavior-inline:contain}.admin-shell table{min-width:34rem}
 .admin-shell button:disabled,.editorial-page button:disabled{cursor:not-allowed}
-.dark .store-hero{background:var(--editorial-stone);color:var(--color-foreground)}
-.dark .store-hero>div>p:not(.preview-kicker),.dark .store-empty,.dark .store-page .preview-kicker{color:var(--color-muted-foreground)}
-.dark .store-demo-notice{color:var(--color-muted-foreground)!important;border-color:var(--color-border)!important}
-.dark :is(.admin-shell,.admin-login) .bg-primary{color:var(--color-primary-foreground)}
 @media(max-width:900px){.admin-workspace{grid-template-columns:1fr;gap:2rem}.admin-navigation{position:static;flex-direction:row;flex-wrap:wrap}.admin-navigation a{flex:1 1 8rem}.editorial-empty-split{gap:2rem}.admin-login-intro{padding:2rem;min-height:20rem}}
 @media(max-width:640px){.editorial-empty-split,.admin-login{grid-template-columns:1fr}.editorial-empty-image{aspect-ratio:16/9}.editorial-heading{margin-bottom:2rem}.admin-login{gap:2rem}.admin-login-intro{min-height:0}.admin-login-intro h1{font-size:2.7rem}.admin-page-heading{gap:1rem}.service-editorial>section:first-child .aspect-\[4\/3\]{aspect-ratio:4/3}}
 @media(max-width:640px){

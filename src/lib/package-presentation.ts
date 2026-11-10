@@ -25,6 +25,7 @@ export function presentPackage(record: Record, locale: string) {
     count: record.slug === "discovery" ? 3 : record.sessions,
     regular: source && unchangedPrice ? price(source.regular) : "",
     saving: source && unchangedPrice ? record.slug === "discovery" ? packageCopy(source.saving, locale) : language === "fr" ? `Économisez ${price(source.saving)}` : source.saving : "",
+    giftValueCents: unchangedPrice ? source.giftValueCents : undefined,
     payment: source?.payment && unchangedPrice ? `${price(source.payment.split("/")[0])}/month · ${source.payment.split(" · ").slice(1).join(" · ")}` : undefined,
   };
 }

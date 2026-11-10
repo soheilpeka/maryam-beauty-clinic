@@ -4,6 +4,7 @@ import {
   adminLoginSchema,
   bookingRequestSchema,
   confirmRequestSchema,
+  contactSchema,
   customerSchema,
   dayOffSchema,
   declineRequestSchema,
@@ -102,6 +103,21 @@ describe("customerSchema", () => {
 
   it("rejects a note longer than 500 characters", () => {
     expect(hasIssue(issuesFor(customerSchema, { ...validCustomer, note: "a".repeat(501) }), ["note"], "validation.note.max")).toBe(true);
+  });
+});
+
+describe("contactSchema", () => {
+  const message = { name: "Alex Doe", email: "alex@example.com", phone: "+1 (514) 555-0199", message: "Please tell me more about your services.", locale: "en" };
+
+  it("accepts and normalizes a contact phone number", () => {
+    const parsed = contactSchema.safeParse(message);
+    expect(parsed.success).toBe(true);
+    if (parsed.success) expect(parsed.data.phone).toBe("+1 (514) 555-0199");
+  });
+
+  it("requires a usable phone number", () => {
+    expect(hasIssue(issuesFor(contactSchema, { ...message, phone: "(---) --" }), ["phone"], "validation.phone.invalid")).toBe(true);
+    expect(hasIssue(issuesFor(contactSchema, { ...message, phone: "" }), ["phone"], "validation.phone.invalid")).toBe(true);
   });
 });
 

@@ -24,7 +24,7 @@ export function AdminPageShell({
     <div className="admin-shell mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="admin-page-heading">
         <div>
-          <p className="eyebrow mb-4">Maryam C Beauté · {locale === "fr" ? "Espace de gestion" : "Studio management"}</p>
+          <p className="eyebrow mb-4">Maryam C Beauté · {locale === "fr" ? "Espace de gestion" : "Salon management"}</p>
           <h1 className="display-heading text-4xl sm:text-5xl">
             {title}
           </h1>

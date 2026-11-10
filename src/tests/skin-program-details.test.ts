@@ -30,11 +30,13 @@ describe("complete owner-supplied skin program detail", () => {
   });
   it("retains program-specific goals, aftercare-related concerns and package mix", () => {
     expect(skinProgramDetails("essential", "en")!.goals).toHaveLength(5);
-    for (const slug of ["platinum", "diamond"]) {
+    for (const [slug, rf, facial] of [["platinum", 3, 4], ["diamond", 5, 5]] as const) {
       const detail = skinProgramDetails(slug, "en")!;
       expect(detail.goals).toHaveLength(6);
       expect(detail.extraConcerns).toContain("Acne scars & skin damage");
-      expect(detail.summary).toHaveLength(2);
+      expect(detail.summary).toEqual([
+        `${rf} RF treatments`, `${rf} RF Microneedling treatments`, `${facial} Signature HydraFacial treatments`,
+      ]);
     }
   });
   it("provides nonempty English and French for every structured detail", () => {

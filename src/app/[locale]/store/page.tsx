@@ -6,12 +6,13 @@ import { ProductCard } from "@/components/store/product-card";
 import { localizeProduct, shapeProduct } from "@/lib/store-views";
 import { releaseExpiredReservations } from "@/lib/order";
 import { listStoreCategories } from "@/lib/store-categories";
+import { isPublicStoreProduct } from "@/lib/store-public";
 
 export const dynamic = "force-dynamic";
 
 const copy = {
-  en: { title: "The Maryam C edit", description: "Discover the Maryam C Beauté store and contact the studio for product information.", eyebrow: "The store", subtitle: "Bring the studio home.", body: "Thoughtful care continues between visits. Explore the studio’s collection, or ask us about care for your hair and skin.", demoNotice: "The online collection is being prepared. Products and ordering options will appear when available.", imageAlt: "Inside the Maryam C Beauté salon", featured: "Featured edit", collection: "Shop the collection", empty: "The collection is being prepared. Check back soon." },
-  fr: { title: "La sélection Maryam C", description: "Découvrez la boutique Maryam C Beauté et contactez le studio pour en savoir plus sur les produits.", eyebrow: "La boutique", subtitle: "Le studio, chez vous.", body: "Le soin se poursuit entre les visites. Découvrez la collection du studio ou demandez-nous conseil pour vos cheveux et votre peau.", demoNotice: "La collection en ligne est en préparation. Les produits et les options de commande seront affichés dès leur disponibilité.", imageAlt: "Intérieur du salon Maryam C Beauté", featured: "Sélection vedette", collection: "Découvrir la collection", empty: "La collection est en préparation. Revenez bientôt." },
+  en: { title: "The Maryam C edit", description: "Discover the Maryam C Beauté store and contact the salon for product information.", eyebrow: "The store", subtitle: "Bring the salon home.", body: "Thoughtful care continues between visits. Explore the salon’s collection, or ask us about care for your hair and skin.", demoNotice: "The online collection is being prepared. Products and ordering options will appear when available.", imageAlt: "Inside the Maryam C Beauté salon", featured: "Featured edit", collection: "Shop the collection", empty: "The collection is being prepared. Check back soon." },
+  fr: { title: "La sélection Maryam C", description: "Découvrez la boutique Maryam C Beauté et contactez le salon pour en savoir plus sur les produits.", eyebrow: "La boutique", subtitle: "Le salon, chez vous.", body: "Le soin se poursuit entre les visites. Découvrez la collection du salon ou demandez-nous conseil pour vos cheveux et votre peau.", demoNotice: "La collection en ligne est en préparation. Les produits et les options de commande seront affichés dès leur disponibilité.", imageAlt: "Intérieur du salon Maryam C Beauté", featured: "Sélection vedette", collection: "Découvrir la collection", empty: "La collection est en préparation. Revenez bientôt." },
 } as const;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -26,7 +27,7 @@ export default async function StorePage({ params }: { params: Promise<{ locale: 
   const t = copy[locale === "fr" ? "fr" : "en"];
   await releaseExpiredReservations(prisma);
   const records = await prisma.product.findMany({ where: { active: true, demo: false }, include: { _count: { select: { orderItems: true } }, images: { orderBy: { order: "asc" } } }, orderBy: [{ order: "asc" }, { name: "asc" }] });
-  const products = records.map((product) => localizeProduct(shapeProduct(product), locale));
+  const products = records.filter(isPublicStoreProduct).map((product) => localizeProduct(shapeProduct(product), locale));
   const categories = await listStoreCategories();
   const featured = products.filter((product) => product.featured).slice(0, 4);
   return (

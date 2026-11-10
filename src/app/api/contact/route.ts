@@ -1,4 +1,5 @@
 import { logServerError } from "@/lib/safe-log";
+import { prisma } from "@/lib/prisma";
 import { readJsonBody } from "@/lib/request-body";
 import { NextRequest, NextResponse } from "next/server";
 import { contactSchema, flattenZodErrors } from "@/lib/validation";
@@ -26,11 +27,25 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "VALIDATION", fieldErrors: flattenZodErrors(parsed) }, { status: 400 });
   }
 
+  let saved;
+  try {
+    saved = await prisma.contactMessage.create({ data: parsed.data });
+  } catch (error) {
+    logServerError("contact persistence failed", error);
+    return NextResponse.json({ error: "UNAVAILABLE" }, { status: 503 });
+  }
+
+  let delivery = "failed";
   try {
     await sendContactMessage(parsed.data);
-    return NextResponse.json({ ok: true, delivery: NOTIFICATION_PROVIDER_NAME === "resend" ? "provider" : "mock" });
+    delivery = NOTIFICATION_PROVIDER_NAME === "resend" ? "provider" : "mock";
   } catch (error) {
     logServerError("contact notification failed", error);
-    return NextResponse.json({ error: "DELIVERY_FAILED" }, { status: 503 });
   }
+  try {
+    await prisma.contactMessage.update({ where: { id: saved.id }, data: { delivery } });
+  } catch (error) {
+    logServerError("contact delivery status failed", error);
+  }
+  return NextResponse.json({ ok: true, delivery });
 }

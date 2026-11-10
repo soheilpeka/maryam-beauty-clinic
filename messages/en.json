@@ -59,6 +59,7 @@
     }
   },
   "Store": {
+    "shop": "Shop",
     "eyebrow": "The clinic edit",
     "title": "Considered beauty, selected with care.",
     "subtitle": "A calm, curated place for the clinic's future retail collection. Every item shown today is demonstration data and must be replaced before launch.",
@@ -314,17 +315,18 @@
     "hoursSunday": "Sunday: Closed",
     "nameLabel": "Name",
     "emailLabelField": "Email",
+    "phoneLabelField": "Phone number",
     "messageLabel": "Message",
     "send": "Send",
     "sending": "Sending...",
     "sent": "Thank you. Your message has been received.",
-    "mockSent": "Your message has not been emailed from this preview. Please call or email the studio directly for a reply.",
+    "mockSent": "Your message has not been emailed from this preview. Please call or email the salon directly for a reply.",
     "sendError": "We could not send your message. Please try again or contact the salon by phone.",
     "formIntro": "Tell us how we can help. We usually reply using the contact details you provide.",
     "mapTitle": "Find us"
   },
   "Footer": {
-    "tagline": "Hair, makeup and aesthetic care in Brossard, Québec. Contact the studio to plan your next visit.",
+    "tagline": "Hair, makeup and aesthetic care in Brossard, Québec. Contact the salon to plan your next visit.",
     "treatments": "Treatments",
     "clinic": "Clinic",
     "quickLinks": "Quick links",
@@ -332,7 +334,7 @@
     "hours": "Opening hours",
     "hoursPending": "Hours shown are owner-supplied and may be updated by the salon.",
     "rights": "© 2026 Maryam C Beauté. All rights reserved.",
-    "demoNotice": "Appointments are confirmed by the studio. Online payments are not available yet."
+    "demoNotice": "Appointments are confirmed by the salon. Online payments are not available yet."
   },
   "Booking": {
     "title": "Book Online",
@@ -399,7 +401,7 @@
     "canceledTitle": "Booking cancelled",
     "canceledBody": "Your appointment has been cancelled. We hope to see you again soon.",
     "invalidLinkTitle": "Link invalid or expired",
-    "invalidLinkBody": "This booking link is not valid. Check your confirmation email or contact the studio.",
+    "invalidLinkBody": "This booking link is not valid. Check your confirmation email or contact the salon.",
     "status": "Status",
     "confirmCancel": "Are you sure you want to cancel this appointment? This cannot be undone.",
     "statusPending": "Pending",
@@ -597,6 +599,14 @@
     "servicesHint": "Prices, durations and what is bookable online.",
     "staffTitle": "Specialists",
     "staffHint": "Profiles, services, working hours and days off.",
+    "contactMessages": "Contact messages",
+    "contactMessagesHint": "Messages received from the contact form, newest first.",
+    "contactMessagesEmpty": "No contact messages yet.",
+    "contactDelivery": "Email notification",
+    "contactDelivery_provider": "Sent",
+    "contactDelivery_mock": "Not configured",
+    "contactDelivery_failed": "Failed — message saved here",
+    "contactDelivery_pending": "Pending",
     "customersTitle": "Customers",
     "customersHint": "Everyone who has requested an appointment.",
     "loadingStats": "Loading statistics...",

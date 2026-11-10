@@ -4,9 +4,10 @@ import { resolve } from "node:path";
 import { COMPARISONS, photoViewportStyle } from "@/lib/content/comparisons";
 
 describe("photographic comparison viewports", () => {
-  it("keeps all 18 supplied pairs distinct and available locally", () => {
-    expect(COMPARISONS).toHaveLength(18);
-    expect(new Set(COMPARISONS.map(item => item.id)).size).toBe(18);
+  it("keeps every supplied pair distinct and available locally", () => {
+    expect(COMPARISONS).toHaveLength(20);
+    expect(new Set(COMPARISONS.map(item => item.id)).size).toBe(20);
+    expect(new Set(COMPARISONS.map(item => item.image)).size).toBe(20);
     for (const item of COMPARISONS) {
       expect(existsSync(resolve("public", item.image.slice(1)))).toBe(true);
       expect(item.titleFr).not.toBe(item.title);

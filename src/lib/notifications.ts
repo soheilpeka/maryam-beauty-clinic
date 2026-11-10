@@ -273,7 +273,7 @@ export function bookingDeclinedEmail(data: DeclinedData): NotificationMessage {
 
 export const NOTIFICATION_PROVIDER_NAME = env.notificationProvider;
 
-export function contactMessageEmail(data: { name: string; email: string; message: string; locale: string }): NotificationMessage {
+export function contactMessageEmail(data: { name: string; email: string; phone: string; message: string; locale: string }): NotificationMessage {
   return {
     to: env.notificationAdminEmail,
     subject: data.locale === "fr" ? `Nouveau message du site — ${data.name}` : `New website message — ${data.name}`,
@@ -282,13 +282,14 @@ export function contactMessageEmail(data: { name: string; email: string; message
       "",
       `${data.locale === "fr" ? "Nom" : "Name"}: ${data.name}`,
       `${data.locale === "fr" ? "Courriel" : "Email"}: ${data.email}`,
+      `${data.locale === "fr" ? "Téléphone" : "Phone"}: ${data.phone}`,
       "",
       data.message,
     ].join("\n"),
   };
 }
 
-export function sendContactMessage(data: { name: string; email: string; message: string; locale: string }): Promise<void> {
+export function sendContactMessage(data: { name: string; email: string; phone: string; message: string; locale: string }): Promise<void> {
   return notificationProvider.sendEmail(contactMessageEmail(data));
 }
 
