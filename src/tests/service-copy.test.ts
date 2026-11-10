@@ -81,6 +81,15 @@ describe("owner service copy", () => {
     expect(resolved?.detail?.customSections).toBe(true);
   });
 
+  it("restores the approved English Haircuts copy when the saved description is the test placeholder", () => {
+    expect(resolveServiceDescription("haircuts", " Test\r\n", "en")).toEqual(
+      parseServiceDescription("haircuts", OWNER_SERVICE_COPY.haircuts.en, "en"),
+    );
+    const custom = "Test a new look with a cut tailored to your natural texture.";
+    expect(resolveServiceDescription("haircuts", custom, "en")?.detail?.paragraphs).toEqual([custom]);
+    expect(resolveServiceDescription("haircuts", "Test", "fr")?.detail?.paragraphs).toEqual(["Test"]);
+  });
+
   it("replaces earlier owner text and keeps the latest treatment plan and FAQs in their own sections", () => {
     const rf = resolveServiceDescription("rf-skin-treatment", PREVIOUS_OWNER_SERVICE_COPY["rf-skin-treatment"].en, "en");
     expect(rf?.detail?.paragraphs.join(" ")).toContain("Fractional RF resurfacing");

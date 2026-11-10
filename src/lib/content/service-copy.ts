@@ -411,8 +411,11 @@ export function isLegacyServiceDescription(slug: string, description: string | n
   const legacyFull = LEGACY_FULL_SERVICE_DESCRIPTIONS[slug]?.[locale];
   const legacyPublicPreview = LEGACY_PUBLIC_SERVICE_PREVIEWS[slug]?.[locale];
   const previousOwner = PREVIOUS_OWNER_SERVICE_COPY[slug]?.[locale];
-  return !!description?.trim() && [previous?.[locale], legacyFull, legacyPublicPreview, previousOwner].some(
-    candidate => candidate?.replace(/\r\n/g, "\n").trim() === description.replace(/\r\n/g, "\n").trim(),
+  // An editor left this exact placeholder in the English Haircuts record.
+  const publishedPlaceholder = slug === "haircuts" && locale === "en" ? "Test" : undefined;
+  const normalized = description?.replace(/\r\n/g, "\n").trim();
+  return !!normalized && [previous?.[locale], legacyFull, legacyPublicPreview, previousOwner, publishedPlaceholder].some(
+    candidate => candidate?.replace(/\r\n/g, "\n").trim() === normalized,
   );
 }
 
